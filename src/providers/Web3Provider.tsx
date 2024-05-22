@@ -21,7 +21,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
     transports: supportedChains.reduce((acc, network) => ({
       ...acc,
       [network.id]: http(RPC_URL(network.id)),
-    })),
+    }), {}),
   });
 
   const theme = merge(
