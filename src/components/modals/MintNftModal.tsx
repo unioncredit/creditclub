@@ -24,7 +24,7 @@ export const MINT_NFT_MODAL = "mint-nft-modal";
 
 export const MintNftModal = () => {
   const { close } = useModals();
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const { data: creditClub, refetch: refetchCreditClub } = useCreditClub();
   const { data: creditPerMember } = useCreditPerMember();
   const { refetch: refetchMember } = useMember();
@@ -86,6 +86,11 @@ export const MintNftModal = () => {
           {!proof && (
             <Text color="red500" m="8px 0 0" weight="light">
               Your address is not whitelisted to mint
+            </Text>
+          )}
+          {!isConnected && (
+            <Text color="red500" m="8px 0 0" weight="light">
+              Your wallet must be connected to mint
             </Text>
           )}
         </Modal.Body>
