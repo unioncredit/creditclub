@@ -3,6 +3,12 @@
   border: 1px solid rgba(0, 0, 0, 0.05);
   background: rgba(255, 255, 255, 0.90);
 
+  a {
+    color: #27272A;
+    font-weight: 500;
+    font-size: 18px;
+  }
+
   &__rows {
     .Card__body {
       padding: 0;

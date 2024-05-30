@@ -15,6 +15,8 @@ export const RPC_URL = (chainId: number) =>
 
 export const CREDITCLUB_SAFE_ADDRESS: Address = "0x87349040756ed552f3ba7e2fcc3d11ec66475156";
 
+export const GRAPH_URL = "https://api.thegraph.com/subgraphs/name/geraldhost/union-optimism";
+
 export const DUST_THRESHOLD = 10000000000000000n;
 
 export const SortOrder = {
@@ -32,6 +34,14 @@ export const MultiStep = {
   SELECTED: "selected",
   PENDING: "pending",
   COMPLETE: "complete",
+};
+
+export const TransactionTypes = {
+  BORROW: "borrow",
+  REPAY: "repay",
+  CANCEL: "cancel",
+  TRUST: "trust",
+  TRUSTED: "trusted",
 };
 
 export const WagmiErrors: Record<string, { title: string; content: string; }> = {

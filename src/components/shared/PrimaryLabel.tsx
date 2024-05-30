@@ -1,20 +1,18 @@
-import { useEnsName, useNetwork } from "wagmi";
-import { mainnet, optimismGoerli } from "wagmi/chains";
+import { truncateAddress, truncateEns } from "@/utils/format";
+import { useEns } from "@/hooks/useEns.ts";
+import { Address } from "viem";
 
-import { truncateAddress, truncateEns } from "utils/truncateAddress";
-import useLabels from "hooks/useLabels";
-import { vouchFaucetContract } from "config/contracts/v2/optimismGoerli";
-import { AddressEnsMappings } from "../../constants";
-
-export function PrimaryLabel({ address, shouldTruncate = true }) {
-  const { data } = useEnsName({
-    address,
-    chainId: mainnet.id,
-  });
+export function PrimaryLabel({
+  address,
+  shouldTruncate = true
+}: {
+  address: Address;
+  shouldTruncate?: boolean;
+}) {
+  const { name } = useEns(address);
 
   return (
-    getLabel(address) ||
-    (ens && (shouldTruncate ? truncateEns(ens) : ens)) ||
+    (name && (shouldTruncate ? truncateEns(name) : name)) ||
     (shouldTruncate ? truncateAddress(address) : address)
   );
 }

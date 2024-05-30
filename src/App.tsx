@@ -8,6 +8,7 @@ import { Layout } from '@/components/shared/Layout.tsx';
 import { ModalManagerProvider } from "@/providers/ModalManagerProvider.tsx";
 import { ConnectedMemberProvider } from "@/providers/ConnectedMemberProvider.tsx";
 import { ToastsProvider } from "@/providers/ToastsProvider.tsx";
+import { CacheProvider } from '@/providers/CacheProvider';
 
 function App() {
   return (
@@ -15,13 +16,15 @@ function App() {
       <CreditClubDataProvider>
         <CreditClubContactsProvider>
           <ConnectedMemberProvider>
-            <ToastsProvider>
-              <ModalManagerProvider>
-                <Layout>
-                  <Homepage />
-                </Layout>
-              </ModalManagerProvider>
-            </ToastsProvider>
+            <CacheProvider>
+              <ToastsProvider>
+                <ModalManagerProvider>
+                  <Layout>
+                    <Homepage />
+                  </Layout>
+                </ModalManagerProvider>
+              </ToastsProvider>
+            </CacheProvider>
           </ConnectedMemberProvider>
         </CreditClubContactsProvider>
       </CreditClubDataProvider>

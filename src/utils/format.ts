@@ -52,7 +52,7 @@ export function commify(value: number, digits: number, rounded = true, stripTrai
   return rhs ? `${lhs}.${rhs}` : lhs;
 }
 
-export const truncateAddress = (address: string) => `${address.slice(0, 6)}...${address.slice(-4)}`;
+export const truncateAddress = (address: string) => address ? `${address.slice(0, 6)}...${address.slice(-4)}` : address;
 
 export const truncateEns = (ens: string, cutoff = 16) => {
   if (!ens || ens.length <= cutoff) {

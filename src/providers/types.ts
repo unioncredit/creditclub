@@ -65,3 +65,8 @@ export interface IToastsContext {
   addToast: (toast: IToast, autoClear?: boolean) => string;
   closeToast: (id: string) => void;
 }
+
+export interface ICacheContext {
+  get: (key: string) => any;
+  set: (key: string, value: any) => void;
+}
