@@ -1,6 +1,7 @@
 import "./DimmableTableCell.scss";
 
 import cn from "classnames";
+// @ts-ignore
 import { TableCell } from "@unioncredit/ui";
 import React from "react";
 

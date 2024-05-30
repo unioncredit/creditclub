@@ -6,6 +6,7 @@ import {
   WithdrawIcon,
   ArrowRightIcon,
   UnionIcon,
+  // @ts-ignore
 } from "@unioncredit/ui";
 
 import { IconCube } from "@/components/shared/IconCube.tsx";

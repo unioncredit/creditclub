@@ -3,6 +3,7 @@ import "./ClubDebtRow.scss";
 import {
   Button,
   RepayIcon,
+  // @ts-ignore
 } from "@unioncredit/ui";
 
 import { IconCube } from "@/components/shared/IconCube.tsx";
@@ -21,6 +22,7 @@ export const ClubDebtRow = () => {
       </div>
 
       <Button
+        // @ts-ignore
         onClick={() => window.open("https://app.union.finance", "_blank").focus()}
         label={
           <span className="flex items-center">

@@ -1,6 +1,7 @@
 import "./ContactsTable.scss";
 
 import { useContacts } from "@/providers/CreditClubContactsProvider.tsx";
+// @ts-ignore
 import { Box, Card, Table, EmptyState, SegmentedControl, Pagination } from "@unioncredit/ui";
 import { ContactsTableHead } from "@/components/table/ContactsTableHead.tsx";
 import { ContactsTableRow } from "@/components/table/ContactsTableRow.tsx";

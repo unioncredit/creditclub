@@ -1,5 +1,5 @@
 import "./ContactsFilterControls.scss";
-
+// @ts-ignore
 import { Box, Input, SearchIcon } from "@unioncredit/ui";
 import { FiltersPopover } from "@/components/table/FiltersPopover.tsx";
 import React, { Dispatch, SetStateAction } from "react";

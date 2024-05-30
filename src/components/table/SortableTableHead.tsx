@@ -3,10 +3,22 @@ import {
   SortAscending,
   SortDescending,
   TableHead,
+  // @ts-ignore
 } from "@unioncredit/ui";
 import { SortOrder } from "@/constants";
+import React from "react";
 
-export function SortableTableHead({ order, onClick, children, ...props }) {
+export function SortableTableHead({
+  order,
+  onClick,
+  children,
+  ...props
+}: {
+  order: string | false;
+  onClick: () => void;
+  children: React.ReactNode;
+  [_: string]: any;
+}) {
   const Icon = order
     ? order === SortOrder.ASC
       ? SortAscending

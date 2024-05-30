@@ -1,6 +1,8 @@
 import { useReadContract } from "wagmi";
 import { useCallback, useEffect, useState } from "react";
 import { Address, maxUint256 } from "viem";
+
+// @ts-ignore
 import { MultiStepButton } from "@unioncredit/ui";
 
 import { useWrite } from "@/hooks/useWrite";

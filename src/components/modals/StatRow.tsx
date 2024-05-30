@@ -1,5 +1,5 @@
 import "./StatRow.scss";
-
+// @ts-ignore
 import { Text } from "@unioncredit/ui";
 import React from "react";
 

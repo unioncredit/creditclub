@@ -1,7 +1,16 @@
+// @ts-ignore
 import { TableHead, TableRow } from "@unioncredit/ui";
 import { SortableTableHead } from "@/components/table/SortableTableHead.tsx";
 
-export function ContactsTableHead({ items, sort, setSortType }) {
+export function ContactsTableHead({
+  items,
+  sort,
+  setSortType
+}: {
+  items: { id: string; label: string; }[];
+  sort: { type: string; order: string; }
+  setSortType: (sortType: string) => void;
+}) {
   return (
     <TableRow>
       <TableHead></TableHead>

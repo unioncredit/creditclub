@@ -8,6 +8,7 @@ import {
   Dai,
   DelegateIcon,
   ArrowRightIcon,
+  // @ts-ignore
 } from "@unioncredit/ui";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { StatRow } from "@/components/modals/StatRow.tsx";

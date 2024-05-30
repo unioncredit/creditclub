@@ -2,6 +2,7 @@ import "./ActionsPanel.scss";
 
 import {
   Button,
+  // @ts-ignore
 } from "@unioncredit/ui";
 
 import BlackGlasses from "@/assets/glasses-black.svg";

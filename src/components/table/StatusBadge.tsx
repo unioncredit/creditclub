@@ -1,3 +1,4 @@
+// @ts-ignore
 import { BadgeIndicator } from "@unioncredit/ui";
 
 import { IContact } from "@/providers/types.ts";

@@ -1,5 +1,5 @@
 import "./ContactsTableRow.scss";
-
+// @ts-ignore
 import { Box, TableCell, TableRow, Text } from "@unioncredit/ui";
 import { DimmableTableCell } from "@/components/table/DimmableTableCell.tsx";
 import { Avatar } from "@/components/shared/Avatar.tsx";

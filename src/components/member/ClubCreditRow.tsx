@@ -3,6 +3,7 @@ import "./ClubCreditRow.scss";
 import {
   Button,
   WithdrawIcon
+  // @ts-ignore
 } from "@unioncredit/ui";
 
 import { IconCube } from "@/components/shared/IconCube.tsx";

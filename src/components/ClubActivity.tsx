@@ -1,14 +1,12 @@
 import "./ClubActivity.scss";
 
-import React from "react";
 import {
   Card,
   EmptyState,
-  BorrowIcon,
-  RepayIcon,
   ConfettiIcon,
-  WithdrawIcon,
+  // @ts-ignore
 } from "@unioncredit/ui";
+
 import { useClubActivity } from "@/hooks/useClubActivity.ts";
 import { CREDITCLUB_SAFE_ADDRESS, TransactionTypes } from "@/constants.ts";
 import { AddressLink } from "@/components/shared/AddressLink.tsx";
@@ -22,10 +20,6 @@ const texts = {
   // [TransactionTypes.BORROW]:    () => <>Borrow</>,
   // [TransactionTypes.REPAY]:     () => <>Repayment</>,
   // [TransactionTypes.TRUSTED]:   (x) => <>Trusted by <Address address={x.staker} /></>,
-};
-
-const types = {
-  [TransactionTypes.TRUST]: "win",
 };
 
 const ActivityRow = ({

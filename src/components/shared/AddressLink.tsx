@@ -1,3 +1,5 @@
+
+// @ts-ignore
 import { Text } from "@unioncredit/ui";
 import { Address as AddressType } from "viem";
 

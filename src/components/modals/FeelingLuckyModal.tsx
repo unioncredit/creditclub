@@ -7,6 +7,7 @@ import {
   InfoBanner,
   Union,
   DelegateIcon,
+  // @ts-ignore
 } from "@unioncredit/ui";
 import { useModals } from "@/providers/ModalManagerProvider";
 import { StatRow } from "@/components/modals/StatRow";
@@ -74,13 +75,13 @@ export const FeelingLuckyModal = () => {
           />
 
           <Button
+            {...feelingLuckyButtonProps}
             fluid
             mt="12px"
             label="Trigger the Raffle (0.00042 ETH)"
             color="primary"
             size="large"
             icon={DelegateIcon}
-            {...feelingLuckyButtonProps}
           />
         </Modal.Body>
       </Modal>

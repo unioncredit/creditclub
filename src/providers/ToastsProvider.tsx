@@ -2,6 +2,7 @@ import "./ToastsProvider.scss";
 
 import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 
+// @ts-ignore
 import { Notification, NotificationStack } from "@unioncredit/ui";
 import { IToast, IToastsContext } from "@/providers/types.ts";
 

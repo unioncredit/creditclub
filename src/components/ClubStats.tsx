@@ -9,6 +9,7 @@ import {
   ConfettiIcon,
   DistributionBar,
   NumericalBlock,
+  // @ts-ignore
 } from "@unioncredit/ui";
 
 import { useContacts } from "@/providers/CreditClubContactsProvider.tsx";

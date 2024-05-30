@@ -1,6 +1,7 @@
 import "./FiltersPopover.scss";
 
 import cn from "classnames";
+// @ts-ignore
 import { Box, Button, Control, FilterIcon, Modal, Popover, Text } from "@unioncredit/ui";
 import { Dispatch, SetStateAction } from "react";
 

@@ -1,4 +1,6 @@
 import { Address } from "viem";
+
+// @ts-ignore
 import { AvatarBadgeRow } from "@unioncredit/ui";
 
 import { Avatar } from "@/components/shared/Avatar.tsx";
