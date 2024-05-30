@@ -7,6 +7,11 @@
 
   .table-head {
     color: $grey700;
+
+    svg {
+      display: inline-block;
+      margin-left: auto;
+    }
   }
 
   &__header {

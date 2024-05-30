@@ -16,20 +16,24 @@ export type ICreditClubDataProviderContext = Omit<UseReadContractsReturnType, "d
     winnerPercent: number;
     totalPercent: number;
     percentageFull: number;
+    overdueTime: bigint;
   },
 };
 
+export interface IContact {
+  ens?: string;
+  address: Address;
+  locking: bigint;
+  trust: bigint;
+  vouch: bigint;
+  isMember: boolean;
+  isOverdue: boolean;
+  lastRepay: bigint;
+}
+
 export type ICreditClubContactsProviderReturnType = Omit<UseReadContractsReturnType, "data"|"refetch"> & {
   refetch: () => Promise<void>;
-  data: {
-    address: Address;
-    locking: bigint;
-    trust: bigint;
-    vouch: bigint;
-    isMember: boolean;
-    isOverdue: boolean;
-    lastRepay: bigint;
-  }[]
+  data: IContact[]
 };
 
 export type IConnectedMemberContext = Omit<UseReadContractsReturnType, "data"> & {

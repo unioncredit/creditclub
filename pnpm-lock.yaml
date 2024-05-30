@@ -26,6 +26,12 @@ dependencies:
   classnames:
     specifier: ^2.5.1
     version: 2.5.1
+  date-fns:
+    specifier: ^3.6.0
+    version: 3.6.0
+  dayjs:
+    specifier: ^1.11.11
+    version: 1.11.11
   ethereum-blockies-base64:
     specifier: ^1.0.2
     version: 1.0.2
@@ -5209,6 +5215,10 @@ packages:
     engines: {node: '>=0.11'}
     dependencies:
       '@babel/runtime': 7.24.5
+    dev: false
+
+  /date-fns@3.6.0:
+    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
     dev: false
 
   /dayjs@1.11.11:

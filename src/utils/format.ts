@@ -64,3 +64,31 @@ export const truncateEns = (ens: string, cutoff = 16) => {
 
   return `${name.slice(0, 4)}...${name.slice(-4)}.${parts.slice(-1)}`;
 };
+
+export const parseMilliseconds = (milliseconds: number) => {
+  return {
+    days: Math.trunc(milliseconds / 86400000),
+    hours: Math.trunc(milliseconds / 3600000) % 24,
+    minutes: Math.trunc(milliseconds / 60000) % 60,
+    seconds: Math.trunc(milliseconds / 1000) % 60,
+    milliseconds: Math.trunc(milliseconds) % 1000,
+    microseconds: Math.trunc(milliseconds * 1000) % 1000,
+    nanoseconds: Math.trunc(milliseconds * 1e6) % 1000,
+  };
+};
+
+export const formatTimestamp = (milliseconds: number) => {
+  if (!milliseconds) {
+    return null;
+  }
+
+  const { days, hours, minutes } = parseMilliseconds(milliseconds);
+
+  return days > 0
+    ? `${days} days`
+    : hours > 0
+      ? `${hours} hours`
+      : minutes > 0
+        ? `${minutes} minutes`
+        : null;
+};

@@ -2,7 +2,7 @@ import { useReadContracts } from "wagmi";
 import React, { createContext, useContext } from "react";
 
 import { CREDITCLUB_SAFE_ADDRESS } from "@/constants";
-import { clubPluginContract, userManagerContract } from "@/contracts/optimism";
+import { clubPluginContract, userManagerContract, uTokenContract } from "@/contracts/optimism";
 import { ICreditClubDataProviderContext } from "@/providers/types";
 
 const CreditClubDataContext = createContext({} as ICreditClubDataProviderContext);
@@ -62,6 +62,10 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
         ...clubPluginContract,
         functionName: "percentageFull",
       },
+      {
+        ...uTokenContract,
+        functionName: "overdueTime",
+      }
     ],
   });
 
@@ -78,6 +82,7 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
     callerPercent = 0,
     winnerPercent = 0,
     percentageFull = 0,
+    overdueTime = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 
   const totalPercent = bidBucketPercent + callerPercent + winnerPercent
@@ -96,6 +101,7 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
     winnerPercent,
     totalPercent,
     percentageFull,
+    overdueTime,
   };
 
   return (

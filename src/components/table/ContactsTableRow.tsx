@@ -1,37 +1,28 @@
 import "./ContactsTableRow.scss";
 
-import { BadgeIndicator, Box, TableCell, TableRow, Text } from "@unioncredit/ui";
+import { Box, TableCell, TableRow, Text } from "@unioncredit/ui";
 import { DimmableTableCell } from "@/components/table/DimmableTableCell.tsx";
 import { Avatar } from "@/components/shared/Avatar.tsx";
-import { Address } from "viem";
-import { useEns } from "@/hooks/useEns.ts";
-import { truncateAddress, truncateEns } from "@/utils/format.ts";
-
-export const COLUMNS = {
-  CLUB_CREDIT: {
-    id: "club-credit",
-    label: "Club Credit",
-  },
-  CLUB_DEBT: {
-    id: "club-debt",
-    label: "Club Debt",
-  },
-  LAST_PAYMENT: {
-    id: "last-payment",
-    label: "Last payment",
-  },
-  LOAN_STATUS: {
-    id: "loan-status",
-    label: "Loan status",
-  },
-};
+import { format, truncateAddress, truncateEns } from "@/utils/format.ts";
+import { COLUMNS } from "@/components/table/ContactsTable.tsx";
+import { IContact } from "@/providers/types.ts";
+import { useLastRepay } from "@/hooks/useLastRepay.ts";
+import { StatusBadge } from "@/components/table/StatusBadge.tsx";
 
 export const ContactsTableRow = ({
-  address,
+  contact,
 }: {
-  address: Address;
+  contact: IContact;
 }) => {
-  const { name } = useEns(address);
+  const {
+    address,
+    ens,
+    vouch,
+    locking,
+    lastRepay,
+  } = contact;
+
+  const { formatted: lastRepayFormatted, paymentDue } = useLastRepay(lastRepay);
 
   const columns = [
     {
@@ -39,8 +30,8 @@ export const ContactsTableRow = ({
       value: (
         <DimmableTableCell
           key={COLUMNS.CLUB_CREDIT.id}
-          dimmed={true}
-          value={`0.00 DAI`}
+          dimmed={vouch <= 0n}
+          value={`${format(vouch)} DAI`}
         />
       ),
     },
@@ -49,8 +40,8 @@ export const ContactsTableRow = ({
       value: (
         <DimmableTableCell
           key={COLUMNS.CLUB_DEBT.id}
-          dimmed={true}
-          value={`0.00 DAI`}
+          dimmed={locking <= 0n}
+          value={`${format(locking)} DAI`}
         />
       ),
     },
@@ -60,11 +51,15 @@ export const ContactsTableRow = ({
         <TableCell key={COLUMNS.LAST_PAYMENT.id} align="right" weight="medium">
           <Box direction="vertical" align="flex-end">
             <Text grey={800} m={0} size="medium" weight="medium">
-              {"---"}
+              {lastRepayFormatted ?? "---"}
             </Text>
 
             <Text size="small" grey={400} m={0}>
-              Nothing due
+              {locking > 0n
+                ? paymentDue.overdue
+                  ? `${paymentDue.formatted} overdue`
+                  : `Next due in ${paymentDue.formatted}`
+                : "Nothing due"}
             </Text>
           </Box>
         </TableCell>
@@ -75,7 +70,7 @@ export const ContactsTableRow = ({
       value: (
         <TableCell key={COLUMNS.LOAN_STATUS.id} align="right">
           <Box justify="flex-end" minw="120px">
-            <BadgeIndicator label="Inactive" />
+            <StatusBadge contact={contact} />
           </Box>
         </TableCell>
       ),
@@ -92,7 +87,7 @@ export const ContactsTableRow = ({
         <Box direction="vertical">
           <Box align="center">
             <Text grey={800} m={0} size="medium" weight="medium">
-              {name ? truncateEns(name) : truncateAddress(address)}
+              {ens ? truncateEns(ens) : truncateAddress(address)}
             </Text>
           </Box>
 
