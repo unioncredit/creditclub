@@ -28,8 +28,6 @@ export const ApprovalButton = ({
   const [action, setAction] = useState(initialButtonProps);
   const [showSteps, setShowSteps] = useState(false);
 
-  console.log("approve")
-
   /*--------------------------------------------------------------
     Contract Functions
    --------------------------------------------------------------*/
