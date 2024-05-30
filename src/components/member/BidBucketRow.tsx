@@ -24,8 +24,8 @@ export const BidBucketRow = () => {
   const { isMember } = member;
 
   return (
-    <div className="BidBucketRow flex justify-between mt-4">
-      <div className="BidBucketStat flex flex-1 justify-center items-center mr-2">
+    <div className="BidBucketRow flex justify-between mt-4 sm:flex-col">
+      <div className="BidBucketStat flex flex-1 justify-center items-center mr-2 sm:mr-0 sm:mb-2">
         <div className="BidBucketStat__dai">
           <p>Bid {format(memberBidPrice, 0)}</p>
           <DaiIcon />

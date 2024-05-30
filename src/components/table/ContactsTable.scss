@@ -1,12 +1,18 @@
 @import "@unioncredit/ui/src/variables";
 
 .ContactList {
-  .table {
-    overflow: visible;
+  &__table {
+    @media screen and (max-width: $breakpoint-tablet) {
+      overflow: scroll;
+    }
   }
 
   .table-head {
     color: $grey700;
+
+    @media screen and (max-width: $breakpoint-tablet) {
+      height: 35px;
+    }
 
     svg {
       display: inline-block;
@@ -27,12 +33,46 @@
 @media screen and (max-width: $breakpoint-tablet) {
   .ContactList {
     &__header {
+      align-items: center;
       padding: 16px !important;
+
+      .SegmentedControl {
+        margin-bottom: 8px;
+      }
+    }
+
+    &__toggle {
+      margin: 0 !important;
+    }
+
+    .table-head {
+      padding: 3px 4px;
+    }
+
+    .table-head:first-of-type,
+    .table-cell:first-of-type {
+      padding-left: 16px;
+    }
+
+    .table-head:last-of-type,
+    .table-cell:last-of-type {
+      padding-right: 16px;
+    }
+  }
+}
+
+@media screen and (max-width: 656px) {
+  .ContactList {
+    &__header {
       flex-direction: column !important;
 
       .SegmentedControl {
         width: 100%;
-        margin-bottom: 8px;
+      }
+
+      .ContactsFilterControls {
+        width: 100%;
+        margin-top: 6px;
       }
 
       input {
@@ -57,20 +97,6 @@
           }
         }
       }
-    }
-
-    .table-head {
-      padding: 3px 4px;
-    }
-
-    .table-head:first-of-type,
-    .table-cell:first-of-type {
-      padding-left: 16px;
-    }
-
-    .table-head:last-of-type,
-    .table-cell:last-of-type {
-      padding-right: 16px;
     }
   }
 }

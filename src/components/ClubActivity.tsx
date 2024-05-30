@@ -69,7 +69,7 @@ export const ClubActivity = () => {
             <EmptyState label="No activity to show" />
           </Card.Body>
         ) : (
-          activity.map((tx: any) => (
+          activity.slice(0, 4).map((tx: any) => (
             <ActivityRow {...tx}>
               {texts[tx.type]}
             </ActivityRow>

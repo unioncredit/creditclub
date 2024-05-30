@@ -14,8 +14,8 @@ export const ClubDebtRow = () => {
   const { owed } = member;
 
   return (
-    <div className="ClubDebtRow flex justify-between mt-4">
-      <div className="ClubDebtStat flex flex-1 justify-between items-center mr-2">
+    <div className="ClubDebtRow flex justify-between mt-4 sm:flex-col">
+      <div className="ClubDebtStat flex flex-1 justify-between items-center mr-2 sm:mr-0 sm:mb-2">
         <p className="text-gray-500 font-bold">Club Debt</p>
         <p className="text-gray-800 font-bold">${format(owed)}</p>
       </div>

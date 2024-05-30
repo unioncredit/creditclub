@@ -63,7 +63,7 @@ export function ContactsTable() {
           <EmptyState label="No contacts" />
         </Card.Body>
       ) : (
-        <>
+        <div className="ContactList__table">
           <Table>
             <ContactsTableHead
               sort={sort}
@@ -87,7 +87,7 @@ export function ContactsTable() {
           </Table>
 
           <Pagination pages={maxPages} activePage={activePage} onClick={onChange} />
-        </>
+        </div>
       )}
     </Card>
   );

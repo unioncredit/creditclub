@@ -4,4 +4,14 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+
+  @media screen and (max-width: 540px) {
+    padding: 0;
+  }
+
+  .Header {
+    @media screen and (max-width: 540px) {
+      padding: 2rem 2rem 0;
+    }
+  }
 }

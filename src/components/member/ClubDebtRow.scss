@@ -6,6 +6,10 @@
     padding: 12px;
     background: #EEF2FF !important;
 
+    @media screen and (max-width: 656px) {
+      justify-content: center;
+    }
+
     path {
       fill: #4F79FF !important;
     }
@@ -21,4 +25,8 @@
   border-radius: 12px;
   border: 0.5px solid rgba(42, 39, 54, 0.15);
   padding: 8px 16px;
+
+  @media screen and (max-width: 656px) {
+    padding: 22px 16px;
+  }
 }

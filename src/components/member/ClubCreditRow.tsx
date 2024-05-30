@@ -27,8 +27,8 @@ export const ClubCreditRow = () => {
   });
 
   return (
-    <div className="ClubCreditRow flex justify-between mt-6">
-      <div className="ClubCreditStat flex flex-1 justify-between items-center mr-2">
+    <div className="ClubCreditRow flex justify-between mt-6 sm:flex-col">
+      <div className="ClubCreditStat flex flex-1 justify-between items-center mr-2 sm:mr-0 sm:mb-2">
         <p className="text-gray-500 font-bold">Club Credit</p>
 
         <div>

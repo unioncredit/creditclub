@@ -8,7 +8,7 @@ import { ContactsTable } from "@/components/table/ContactsTable.tsx";
 export const Homepage = () => {
   return (
     <div className="mt-8 p-6 flex flex-col items-center bg-white rounded-2xl outline outline-1 outline-gray-100">
-      <div className="flex w-full mb-8">
+      <div className="flex w-full mb-8 lg:flex-col">
         <div className="flex flex-col justify-between flex-1 text-left">
           <div>
             <IconCube width={42} height={42} icon={BlackGlasses} color="#FFDFE8" />
@@ -22,7 +22,7 @@ export const Homepage = () => {
           <ClubStats />
         </div>
 
-        <div className="flex-1 pl-6">
+        <div className="flex-1 pl-6 lg:pl-0 lg:mt-6">
           <ActionsPanel />
           <ClubActivity />
         </div>
