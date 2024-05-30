@@ -21,6 +21,7 @@ import { useRewards } from "@/hooks/useRewards.ts";
 import { useAccount } from "wagmi";
 import { BID_BUCKET_MODAL } from "@/components/modals/BidBucketModal.tsx";
 import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { useCreditPerMember } from "@/hooks/useCreditPerMember.ts";
 
 export const ClubStats = () => {
   const { open } = useModals();
@@ -28,6 +29,7 @@ export const ClubStats = () => {
   const { data: contacts } = useContacts();
   const { data: stats } = useCreditClub();
   const { data: member } = useMember();
+  const { data: creditPerMember } = useCreditPerMember();
 
   const { stakedBalance, totalLockedStake } = stats;
   const { isMember } = member;
@@ -97,7 +99,7 @@ export const ClubStats = () => {
               value={format(availableAmount)}
             />
 
-            <p className="ClubStats__pill">${formattedNumber(stakedBalance / (contacts.length > 0 ? BigInt(contacts.length) : 1n))} per Member</p>
+            <p className="ClubStats__pill">${creditPerMember} per Member</p>
           </Box>
 
           <Box fluid className="ClubStats__item" pr="8px">

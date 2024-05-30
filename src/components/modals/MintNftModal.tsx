@@ -12,13 +12,13 @@ import {
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { StatRow } from "@/components/modals/StatRow.tsx";
 import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
-import { format, formattedNumber } from "@/utils/format.ts";
+import { format } from "@/utils/format.ts";
 import { ApprovalButton } from "@/components/shared/ApprovalButton.tsx";
 import { useAccount } from "wagmi";
 import { clubPluginContract, daiContract } from "@/contracts/optimism.ts";
-import { useContacts } from "@/providers/CreditClubContactsProvider.tsx";
 import { useWhitelistProof } from "@/hooks/useWhitelistProof.ts";
 import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { useCreditPerMember } from "@/hooks/useCreditPerMember.ts";
 
 export const MINT_NFT_MODAL = "mint-nft-modal";
 
@@ -26,13 +26,11 @@ export const MintNftModal = () => {
   const { close } = useModals();
   const { address } = useAccount();
   const { data: creditClub, refetch: refetchCreditClub } = useCreditClub();
-  const { data: contacts, refetch: refetchContacts } = useContacts();
+  const { data: creditPerMember } = useCreditPerMember();
   const { refetch: refetchMember } = useMember();
   const { proof } = useWhitelistProof();
 
-  const { costToMint, stakedBalance } = creditClub;
-
-  const creditPerMember = formattedNumber(stakedBalance / (contacts.length > 0 ? BigInt(contacts.length) : 1n))
+  const { costToMint } = creditClub;
 
   return (
     <ModalOverlay onClick={close}>
@@ -80,7 +78,6 @@ export const MintNftModal = () => {
               onComplete: async () => {
                 await refetchCreditClub();
                 await refetchMember();
-                await refetchContacts();
                 close();
               }
             }}

@@ -14,10 +14,13 @@ import { BidBucketRow } from "@/components/member/BidBucketRow.tsx";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { MINT_NFT_MODAL } from "@/components/modals/MintNftModal.tsx";
 import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { useCreditPerMember } from "@/hooks/useCreditPerMember.ts";
 
 export const ActionsPanel = () => {
   const { open } = useModals();
   const { data: member } = useMember();
+  const { data: creditPerMember } = useCreditPerMember();
+
   const { tokenId } = member;
 
   return (
@@ -37,7 +40,7 @@ export const ActionsPanel = () => {
           ) : (
             <span>
               <IconCube color="#FFDFE8" icon={BlackGlasses} width={32} height={32} />
-              <p className="mt-2 text-md" style={{ color: "#FF638D" }}>Mint to Join and claim $2,500 in credit</p>
+              <p className="mt-2 text-md" style={{ color: "#FF638D" }}>Mint to Join and claim ${creditPerMember} in credit</p>
             </span>
           )
 
