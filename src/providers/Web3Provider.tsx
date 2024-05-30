@@ -10,6 +10,7 @@ import {
 } from "@rainbow-me/rainbowkit";
 
 import { RPC_URL, supportedChains } from "@/constants";
+import { optimism } from "viem/chains";
 
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient();
@@ -43,6 +44,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
         <RainbowKitProvider
           theme={theme}
           modalSize="compact"
+          initialChain={optimism}
         >
           {children}
         </RainbowKitProvider>
