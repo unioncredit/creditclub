@@ -15,6 +15,7 @@ import { useRewards } from "@/hooks/useRewards";
 import { useWrite } from "@/hooks/useWrite.ts";
 import { clubPluginContract } from "@/contracts/optimism.ts";
 import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
+import { format } from "@/utils/format.ts";
 
 export const FEELING_LUCKY_MODAL = "feeling-lucky-modal";
 
@@ -78,7 +79,7 @@ export const FeelingLuckyModal = () => {
             {...feelingLuckyButtonProps}
             fluid
             mt="12px"
-            label="Trigger the Raffle (0.00042 ETH)"
+            label={`Trigger the Raffle (${format(costToCall, 5, false, false, false)} ETH)`}
             color="primary"
             size="large"
             icon={DelegateIcon}
