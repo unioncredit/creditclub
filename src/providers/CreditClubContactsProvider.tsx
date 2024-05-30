@@ -9,7 +9,7 @@ import { daiContract, unionLensContract, userManagerContract, uTokenContract } f
 
 const CreditClubContactsContext = createContext({} as ICreditClubContactsProviderReturnType);
 
-export const useCreditClubContacts = () => useContext(CreditClubContactsContext);
+export const useContacts = () => useContext(CreditClubContactsContext);
 
 export const CreditClubContactsProvider = ({ children }: { children: React.ReactNode; }) => {
   const {

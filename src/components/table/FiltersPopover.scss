@@ -1,0 +1,24 @@
+@import "@unioncredit/ui/src/variables";
+
+.FiltersPopover {
+  &__checkbox {
+    .Control__label {
+      color: $grey700;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 24px;
+    }
+
+    &:not(:last-of-type) {
+      margin-bottom: 8px;
+    }
+  }
+
+  &__button--active {
+    border: 1px solid $blue600 !important;
+
+    path {
+      fill: $blue600;
+    }
+  }
+}

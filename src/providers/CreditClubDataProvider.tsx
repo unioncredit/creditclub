@@ -2,12 +2,12 @@ import { useReadContracts } from "wagmi";
 import React, { createContext, useContext } from "react";
 
 import { CREDITCLUB_SAFE_ADDRESS } from "@/constants";
-import { userManagerContract } from "@/contracts/optimism";
-import { ICreditClubDataProviderReturnType } from "@/providers/types";
+import { clubPluginContract, userManagerContract } from "@/contracts/optimism";
+import { ICreditClubDataProviderContext } from "@/providers/types";
 
-const CreditClubDataContext = createContext({} as ICreditClubDataProviderReturnType);
+const CreditClubDataContext = createContext({} as ICreditClubDataProviderContext);
 
-export const useCreditClubData = () => useContext(CreditClubDataContext);
+export const useCreditClub = () => useContext(CreditClubDataContext);
 
 export const CreditClubDataProvider = ({ children }: { children: React.ReactNode; }) => {
   const result = useReadContracts({
@@ -22,17 +22,80 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
         functionName: "getStakerBalance",
         args: [CREDITCLUB_SAFE_ADDRESS],
       },
+      {
+        ...clubPluginContract,
+        functionName: "costToCall"
+      },
+      {
+        ...clubPluginContract,
+        functionName: "costToMint"
+      },
+      {
+        ...clubPluginContract,
+        functionName: "proRataAmount"
+      },
+      {
+        ...clubPluginContract,
+        functionName: "memberBidPrice"
+      },
+      {
+        ...clubPluginContract,
+        functionName: "publicBidPrice"
+      },
+      {
+        ...clubPluginContract,
+        functionName: "bidBucketBalance" // rewards to distribute
+      },
+      {
+        ...clubPluginContract,
+        functionName: "bidBucketPercent",
+      },
+      {
+        ...clubPluginContract,
+        functionName: "callerPercent",
+      },
+      {
+        ...clubPluginContract,
+        functionName: "winnerPercent",
+      },
+      {
+        ...clubPluginContract,
+        functionName: "percentageFull",
+      },
     ],
   });
 
   const [
-    totalLockedStaked = 0n,
+    totalLockedStake = 0n,
     stakedBalance = 0n,
-  ] = result.data?.map(d => d.result) || [];
+    costToCall = 0n,
+    costToMint = 0n,
+    proRataAmount = 0n,
+    memberBidPrice = 0n,
+    publicBidPrice = 0n,
+    unclaimedRewards = 0n,
+    bidBucketPercent = 0,
+    callerPercent = 0,
+    winnerPercent = 0,
+    percentageFull = 0,
+  ] = result.data?.map(d => d.result as never) || [];
+
+  const totalPercent = bidBucketPercent + callerPercent + winnerPercent
 
   const data = {
-    totalLockedStaked,
+    totalLockedStake,
     stakedBalance,
+    costToCall,
+    costToMint,
+    proRataAmount,
+    memberBidPrice,
+    publicBidPrice,
+    unclaimedRewards,
+    bidBucketPercent,
+    callerPercent,
+    winnerPercent,
+    totalPercent,
+    percentageFull,
   };
 
   return (

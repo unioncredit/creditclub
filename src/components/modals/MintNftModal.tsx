@@ -1,0 +1,98 @@
+import "./MintNftModal.scss";
+
+import {
+  Text,
+  Modal,
+  ModalOverlay,
+  InfoBanner,
+  Dai,
+  DelegateIcon,
+  ArrowRightIcon,
+} from "@unioncredit/ui";
+import { useModals } from "@/providers/ModalManagerProvider.tsx";
+import { StatRow } from "@/components/modals/StatRow.tsx";
+import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
+import { format, formattedNumber } from "@/utils/format.ts";
+import { ApprovalButton } from "@/components/shared/ApprovalButton.tsx";
+import { useAccount } from "wagmi";
+import { clubPluginContract, daiContract } from "@/contracts/optimism.ts";
+import { useContacts } from "@/providers/CreditClubContactsProvider.tsx";
+import { useWhitelistProof } from "@/hooks/useWhitelistProof.ts";
+import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+
+export const MINT_NFT_MODAL = "mint-nft-modal";
+
+export const MintNftModal = () => {
+  const { close } = useModals();
+  const { address } = useAccount();
+  const { data: creditClub, refetch: refetchCreditClub } = useCreditClub();
+  const { data: contacts, refetch: refetchContacts } = useContacts();
+  const { refetch: refetchMember } = useMember();
+  const { proof } = useWhitelistProof();
+
+  const { costToMint, stakedBalance } = creditClub;
+
+  const creditPerMember = formattedNumber(stakedBalance / (contacts.length > 0 ? BigInt(contacts.length) : 1n))
+
+  return (
+    <ModalOverlay onClick={close}>
+      <Modal className="MintNftModal">
+        <Modal.Header title="Mint Club NFT" onClose={close} />
+
+        <Modal.Body>
+          <InfoBanner
+            mb="12px"
+            align="left"
+            variant="warning"
+            label="Please be aware that your accessible credit limit may change as other members join the club and borrow."
+          />
+
+          <div className="mb-4">
+            <StatRow
+              title="Entry Fee"
+              content="The cost to join"
+              amount={format(costToMint, 0)}
+              token={<Dai />}
+            />
+
+            <ArrowRightIcon className="ArrowRightIcon" />
+
+            <StatRow
+              title="Credit Limit"
+              content="Your initial credit limit"
+              amount={creditPerMember.toFixed(2)}
+              token={<Dai />}
+            />
+          </div>
+
+          <ApprovalButton
+            owner={address}
+            amount={costToMint}
+            spender={clubPluginContract.address}
+            tokenContract={daiContract}
+            actionProps={{
+              ...clubPluginContract,
+              functionName: "mintMemberNFT",
+              label: "Mint Member NFT",
+              icon: DelegateIcon,
+              args: [proof],
+              disabled: !proof,
+              onComplete: async () => {
+                await refetchCreditClub();
+                await refetchMember();
+                await refetchContacts();
+                close();
+              }
+            }}
+          />
+
+          {!proof && (
+            <Text color="red500" m="8px 0 0" weight="light">
+              Your address is not whitelisted to mint
+            </Text>
+          )}
+        </Modal.Body>
+      </Modal>
+    </ModalOverlay>
+  );
+};

@@ -1,0 +1,24 @@
+.ClubDebtRow {
+  button {
+    justify-content: flex-start;
+    min-width: 166px;
+    height: 100%;
+    padding: 12px;
+    background: #EEF2FF !important;
+
+    path {
+      fill: #4F79FF !important;
+    }
+
+    .IconCube {
+      padding: 0.25em;
+    }
+  }
+}
+
+.ClubDebtStat {
+  background: white;
+  border-radius: 12px;
+  border: 0.5px solid rgba(42, 39, 54, 0.15);
+  padding: 8px 16px;
+}

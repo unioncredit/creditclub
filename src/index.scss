@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 @import "@unioncredit/ui/src/variables";
+@import "@unioncredit/ui/lib";
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Inter, system-ui, Avenir, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -31,7 +32,6 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }

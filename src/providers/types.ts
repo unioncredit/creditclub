@@ -1,12 +1,23 @@
 import { Address } from "viem";
 import { UseReadContractsReturnType } from "wagmi";
 
-export type ICreditClubDataProviderReturnType = Omit<UseReadContractsReturnType, "data"> & {
+export type ICreditClubDataProviderContext = Omit<UseReadContractsReturnType, "data"> & {
   data: {
-    totalLockedStaked: bigint;
+    totalLockedStake: bigint;
     stakedBalance: bigint;
+    costToCall: bigint;
+    costToMint: bigint;
+    proRataAmount: bigint;
+    memberBidPrice: bigint;
+    publicBidPrice: bigint;
+    unclaimedRewards: bigint;
+    bidBucketPercent: number;
+    callerPercent: number;
+    winnerPercent: number;
+    totalPercent: number;
+    percentageFull: number;
   },
-}
+};
 
 export type ICreditClubContactsProviderReturnType = Omit<UseReadContractsReturnType, "data"|"refetch"> & {
   refetch: () => Promise<void>;
@@ -20,3 +31,33 @@ export type ICreditClubContactsProviderReturnType = Omit<UseReadContractsReturnT
     lastRepay: bigint;
   }[]
 };
+
+export type IConnectedMemberContext = Omit<UseReadContractsReturnType, "data"> & {
+  data: {
+    isMember: boolean;
+    tokenBalance: bigint;
+    tokenId: bigint | undefined;
+    owed: bigint;
+  },
+}
+
+export interface IModalManagerContext {
+  open: (key: string, props?: any) => void;
+  close: () => void;
+}
+
+export type IToastStatus = "error" | "success" | "pending";
+
+export interface IToast {
+  id: string;
+  title: string;
+  content: string;
+  link: string | null;
+  variant: IToastStatus;
+}
+
+export interface IToastsContext {
+  toasts: IToast[];
+  addToast: (toast: IToast, autoClear?: boolean) => string;
+  closeToast: (id: string) => void;
+}

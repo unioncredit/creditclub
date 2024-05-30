@@ -1,0 +1,45 @@
+@import "@unioncredit/ui/src/variables";
+
+.RaffleDistribution {
+  display: flex;
+  border-radius: 16px;
+  border: 0.5px solid rgba(0, 0, 0, 0.08);
+  padding: 12px 20px 12px 12px;
+  align-items: center;
+  margin-bottom: 8px;
+
+  &__cube {
+    color: white;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    margin-right: 6px;
+  }
+  &__content {
+    padding-left: 6px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h3 {
+      color: $grey800;
+      font-weight: 500;
+      font-size: 20px;
+    }
+    p {
+      color: $grey500;
+      font-weight: 500;
+      margin-top: 4px;
+    }
+  }
+
+  .text {
+    align-self: flex-end;
+    margin-left: auto;
+    font-size: 20px;
+  }
+}

@@ -26,11 +26,14 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
 
   const theme = merge(
     darkTheme({
-      borderRadius: "small",
+      borderRadius: "large",
       overlayBlur: "small",
     }),
     {
-      colors: {},
+      colors: {
+        accentColor: "#2A2736",
+        connectButtonBackground: "#2A2736",
+      },
     } as Theme,
   );
 

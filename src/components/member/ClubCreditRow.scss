@@ -1,0 +1,38 @@
+.ClubCreditRow {
+  button {
+    justify-content: flex-start;
+    min-width: 166px;
+    height: 100%;
+    padding: 12px;
+    background: #E3F6EC !important;
+
+    path {
+      fill: #068940 !important;
+    }
+
+    .IconCube {
+      padding: 0.25em;
+    }
+  }
+}
+
+.ClubCreditStat {
+  background: white;
+  border-radius: 12px;
+  border: 0.5px solid rgba(42, 39, 54, 0.15);
+  padding: 8px 16px;
+
+  &__stat {
+    color: #18181B;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  &__highlight {
+    color: #71717A;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 12px;
+    letter-spacing: -0.2px;
+    text-align: right;
+  }
+}

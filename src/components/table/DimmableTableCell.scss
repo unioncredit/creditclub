@@ -1,0 +1,7 @@
+@import "@unioncredit/ui/src/variables";
+
+.DimmableTableCell {
+  &--dimmed {
+    color: $grey400;
+  }
+}
