@@ -25,7 +25,7 @@ export const ActionsPanel = () => {
   const { tokenId } = member;
 
   return (
-    <div className="ActionsPanel rounded-2xl p-6 text-left">
+    <div className="ActionsPanel rounded-2xl p-6 text-left sm:p-4">
       <h2 className="font-medium text-xl text-gray-600">Club Member Actions</h2>
 
       <Button

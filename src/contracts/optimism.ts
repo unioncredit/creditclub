@@ -5,6 +5,7 @@ import { unionLensAbi } from "@/abis/unionLens";
 import { uTokenAbi } from "@/abis/uToken";
 import { clubPluginAbi } from "@/abis/clubPlugin";
 import { clubNftAbi } from "@/abis/clubNft";
+import { comptrollerAbi } from "@/abis/comptroller.ts";
 
 export const userManagerContract = {
   address: "0x8E195D65b9932185Fcc76dB5144534e0f3597628" as Address,
@@ -34,4 +35,9 @@ export const clubPluginContract = {
 export const clubNftContract = {
   address: "0xB56D126D7dD740246a64EE1Ef109fB34282C9Deb" as Address,
   abi: clubNftAbi,
+};
+
+export const comptrollerContract = {
+  address: "0x06a31efa04453C5F9C0A711Cdb96075308C9d6E3" as Address,
+  abi: comptrollerAbi,
 };

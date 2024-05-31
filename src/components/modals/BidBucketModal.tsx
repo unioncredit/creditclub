@@ -27,7 +27,7 @@ export const BidBucketModal = () => {
   const { data: creditClub, refetch } = useCreditClub();
   const { data: member } = useMember();
 
-  const { publicBidPrice, memberBidPrice, unclaimedRewards } = creditClub;
+  const { publicBidPrice, memberBidPrice, bidBucketBalance } = creditClub;
   const { isMember } = member;
 
   const bidPrice = isMember ? memberBidPrice : publicBidPrice;
@@ -58,7 +58,7 @@ export const BidBucketModal = () => {
             <StatRow
               title="Bid Bucket"
               content="What you receive"
-              amount={format(unclaimedRewards)}
+              amount={format(bidBucketBalance)}
               token={<Union />}
             />
           </div>

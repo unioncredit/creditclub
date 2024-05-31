@@ -2,7 +2,13 @@ import { useReadContracts } from "wagmi";
 import React, { createContext, useContext } from "react";
 
 import { CREDITCLUB_SAFE_ADDRESS } from "@/constants";
-import { clubPluginContract, userManagerContract, uTokenContract } from "@/contracts/optimism";
+import {
+  clubPluginContract,
+  comptrollerContract,
+  daiContract,
+  userManagerContract,
+  uTokenContract,
+} from "@/contracts/optimism";
 import { ICreditClubDataProviderContext } from "@/providers/types";
 
 const CreditClubDataContext = createContext({} as ICreditClubDataProviderContext);
@@ -44,7 +50,7 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
       },
       {
         ...clubPluginContract,
-        functionName: "bidBucketBalance" // rewards to distribute
+        functionName: "bidBucketBalance"
       },
       {
         ...clubPluginContract,
@@ -65,6 +71,11 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
       {
         ...uTokenContract,
         functionName: "overdueTime",
+      },
+      {
+        ...comptrollerContract,
+        functionName: "calculateRewards",
+        args: [CREDITCLUB_SAFE_ADDRESS, daiContract.address],
       }
     ],
   });
@@ -77,12 +88,13 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
     proRataAmount = 0n,
     memberBidPrice = 0n,
     publicBidPrice = 0n,
-    unclaimedRewards = 0n,
+    bidBucketBalance = 0n,
     bidBucketPercent = 0,
     callerPercent = 0,
     winnerPercent = 0,
     percentageFull = 0,
     overdueTime = 0n,
+    unclaimedRewards = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 
   const totalPercent = bidBucketPercent + callerPercent + winnerPercent
@@ -95,13 +107,14 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
     proRataAmount,
     memberBidPrice,
     publicBidPrice,
-    unclaimedRewards,
+    bidBucketBalance,
     bidBucketPercent,
     callerPercent,
     winnerPercent,
     totalPercent,
     percentageFull,
     overdueTime,
+    unclaimedRewards,
   };
 
   return (

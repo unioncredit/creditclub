@@ -7,7 +7,7 @@ import { ContactsTable } from "@/components/table/ContactsTable.tsx";
 
 export const Homepage = () => {
   return (
-    <div className="mt-8 p-6 flex flex-col items-center bg-white rounded-2xl outline outline-1 outline-gray-100">
+    <div className="mt-8 p-6 flex flex-col items-center bg-white rounded-2xl outline outline-1 outline-gray-100 sm:p-4">
       <div className="flex w-full mb-8 lg:flex-col">
         <div className="flex flex-col justify-between flex-1 text-left">
           <div>

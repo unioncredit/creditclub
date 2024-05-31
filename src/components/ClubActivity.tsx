@@ -43,7 +43,7 @@ const ActivityRow = ({
   return (
     <div className="ActivityRow">
       <Icon />
-      <p className="text-lg font-medium text-gray-800">
+      <p className="text-lg sm:text-base font-medium text-gray-800">
         {text}
       </p>
     </div>
@@ -54,10 +54,10 @@ export const ClubActivity = () => {
   const { data: activity } = useClubActivity({ staker: CREDITCLUB_SAFE_ADDRESS });
 
   return (
-    <div className="ClubActivity mt-6 text-left p-6 justify-self-end">
+    <div className="ClubActivity mt-6 text-left p-6 justify-self-end sm:p-4">
       <h2 className="text-xl font-bold">Latest Club Activity</h2>
 
-      <div className="ClubActivity__rows mt-12">
+      <div className="ClubActivity__rows mt-12 sm:mt-6">
         {activity.length <= 0 ? (
           <Card.Body>
             <EmptyState label="No activity to show" />

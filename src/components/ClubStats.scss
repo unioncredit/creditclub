@@ -5,6 +5,7 @@
     flex-direction: column !important;
   }
   &__pill {
+    white-space: nowrap;
     height: 28px;
     padding: 2px 10px;
     background: #fafafa;
@@ -40,6 +41,18 @@
     display: flex;
     justify-content: space-between;
     align-items: center !important;
+
+    @media screen and (max-width: 500px) {
+      flex-direction: column !important;
+
+      .NumericalBlock {
+        padding-right: 0 !important;
+      }
+      .NumericalBlock__value {
+        justify-content: center;
+        margin-bottom: 1em !important;
+      }
+    }
   }
 }
 

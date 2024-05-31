@@ -10,13 +10,14 @@ export type ICreditClubDataProviderContext = Omit<UseReadContractsReturnType, "d
     proRataAmount: bigint;
     memberBidPrice: bigint;
     publicBidPrice: bigint;
-    unclaimedRewards: bigint;
+    bidBucketBalance: bigint;
     bidBucketPercent: number;
     callerPercent: number;
     winnerPercent: number;
     totalPercent: number;
     percentageFull: number;
     overdueTime: bigint;
+    unclaimedRewards: bigint;
   },
 };
 

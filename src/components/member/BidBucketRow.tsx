@@ -21,7 +21,7 @@ export const BidBucketRow = () => {
   const { data: creditClub } = useCreditClub();
   const { data: member } = useMember();
 
-  const { memberBidPrice, unclaimedRewards } = creditClub;
+  const { memberBidPrice, bidBucketBalance } = creditClub;
   const { isMember } = member;
 
   return (
@@ -33,7 +33,7 @@ export const BidBucketRow = () => {
         </div>
         <ArrowRightIcon />
         <div className="BidBucketStat__union">
-          <p>{format(unclaimedRewards)}</p>
+          <p>{format(bidBucketBalance)}</p>
           <UnionIcon />
         </div>
       </div>

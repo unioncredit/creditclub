@@ -59,7 +59,7 @@ export const MintNftModal = () => {
             <StatRow
               title="Credit Limit"
               content="Your initial credit limit"
-              amount={creditPerMember.toFixed(2)}
+              amount={creditPerMember}
               token={<Dai />}
             />
           </div>
