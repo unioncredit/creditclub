@@ -18,6 +18,9 @@ export type ICreditClubDataProviderContext = Omit<UseReadContractsReturnType, "d
     percentageFull: number;
     overdueTime: bigint;
     unclaimedRewards: bigint;
+    totalSupply: bigint;
+    checkpoint: bigint;
+    cooldown: number;
   },
 };
 
@@ -43,6 +46,8 @@ export type IConnectedMemberContext = Omit<UseReadContractsReturnType, "data"> &
     tokenBalance: bigint;
     tokenId: bigint | undefined;
     owed: bigint;
+    vouch: bigint;
+    unionCreditLimit: bigint;
   },
 }
 

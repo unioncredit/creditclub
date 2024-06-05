@@ -7,18 +7,18 @@ import {
 } from "@unioncredit/ui";
 
 import { IconCube } from "@/components/shared/IconCube.tsx";
-import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
 import { format } from "@/utils/format.ts";
 import { useWrite } from "@/hooks/useWrite.ts";
 import { clubPluginContract } from "@/contracts/optimism.ts";
 import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
+import cn from "classnames";
 
 export const ClubCreditRow = () => {
-  const { data: creditClub } = useCreditClub();
   const { data: member } = useMember();
+  const { current: currentCredit, difference: changeInCredit } = useMemberCredit();
 
-  const { proRataAmount } = creditClub;
-  const { tokenId } = member;
+  const { isMember, tokenId } = member;
 
   const updateTrustButtonProps = useWrite({
     ...clubPluginContract,
@@ -28,13 +28,15 @@ export const ClubCreditRow = () => {
   });
 
   return (
-    <div className="ClubCreditRow flex justify-between mt-6 sm:flex-col">
+    <div className={cn("ClubCreditRow flex justify-between mt-6 sm:flex-col", {
+      "blur-sm pointer-events-none": !isMember,
+    })}>
       <div className="ClubCreditStat flex flex-1 justify-between items-center mr-2 sm:mr-0 sm:mb-2">
         <p className="text-gray-500 font-bold">Club Credit</p>
 
         <div>
-          <p className="ClubCreditStat__stat">${format(proRataAmount)}</p>
-          <p className="ClubCreditStat__highlight mt-1">+$0.00</p>
+          <p className="ClubCreditStat__stat">${format(currentCredit)}</p>
+          <p className="ClubCreditStat__highlight mt-1">${format(changeInCredit)}</p>
         </div>
       </div>
 

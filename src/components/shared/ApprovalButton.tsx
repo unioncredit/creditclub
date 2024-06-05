@@ -18,6 +18,7 @@ export const ApprovalButton = ({
   tokenContract,
   actionProps,
   requireApproval = true,
+  disabled = false,
 }: {
   owner: Address | undefined;
   amount: bigint;
@@ -25,6 +26,7 @@ export const ApprovalButton = ({
   tokenContract: any;
   actionProps: any;
   requireApproval?: boolean;
+  disabled?: boolean;
 }) => {
   const [items, setItems] = useState(initialItems);
   const [action, setAction] = useState(initialButtonProps);
@@ -42,6 +44,7 @@ export const ApprovalButton = ({
 
   const transactionApproveProps = useWrite({
     ...tokenContract,
+    disabled,
     functionName: "approve",
     args: [spender, maxUint256],
     onComplete: useCallback(() => {
@@ -50,6 +53,7 @@ export const ApprovalButton = ({
   });
 
   const txButtonProps = useWrite({
+    disabled,
     ...actionProps,
   });
 
@@ -66,7 +70,7 @@ export const ApprovalButton = ({
           ...transactionApproveProps,
           label: transactionApproveProps.loading ? "Approving DAI..." : "Approve DAI",
           loading: false,
-          disabled: transactionApproveProps.loading,
+          disabled: transactionApproveProps.loading || disabled,
         });
 
         setShowSteps(true);

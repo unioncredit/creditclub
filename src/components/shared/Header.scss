@@ -1,7 +1,13 @@
 .Header {
-  svg {
-    @media screen and (max-width: 420px) {
-      width: 80%;
+  button {
+    height: 48px !important;
+  }
+
+  &__logo {
+    svg {
+      @media screen and (max-width: 420px) {
+        width: 150px;
+      }
     }
   }
 }

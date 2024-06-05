@@ -1,6 +1,6 @@
 import "./ContactsTableRow.scss";
 // @ts-ignore
-import { Box, TableCell, TableRow, Text } from "@unioncredit/ui";
+import { Box, TableCell, TableRow, Text, LinkOutIcon } from "@unioncredit/ui";
 import { DimmableTableCell } from "@/components/table/DimmableTableCell.tsx";
 import { Avatar } from "@/components/shared/Avatar.tsx";
 import { format, truncateAddress, truncateEns } from "@/utils/format.ts";
@@ -86,14 +86,14 @@ export const ContactsTableRow = ({
       <TableCell>
         <Box direction="vertical">
           <Box align="center">
-            <Text grey={800} m={0} size="medium" weight="medium">
+            <Text grey={800} m="0 2px 0 0" size="medium" weight="medium">
               {ens ? truncateEns(ens) : truncateAddress(address)}
             </Text>
-          </Box>
 
-          <Text size="small" grey={500} m={0} weight="medium">
-            {truncateAddress(address)}
-          </Text>
+            <a target="_blank" rel="noreferrer" href={`https://app.union.finance/profile/opt:${address}`}>
+              <LinkOutIcon width={18} />
+            </a>
+          </Box>
         </Box>
       </TableCell>
 

@@ -28,12 +28,12 @@ export const uTokenContract = {
 };
 
 export const clubPluginContract = {
-  address: "0x5F77cFA883E310699e6324C9dA71BE97a6574b38" as Address,
+  address: "0x5ed1532de62bc0492a1868cf5523ff248252a646" as Address,
   abi: clubPluginAbi,
 };
 
 export const clubNftContract = {
-  address: "0xB56D126D7dD740246a64EE1Ef109fB34282C9Deb" as Address,
+  address: "0x27be7878ec75291b84e36f2d17f5b47f0dab211b" as Address,
   abi: clubNftAbi,
 };
 

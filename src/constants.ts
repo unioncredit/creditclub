@@ -18,6 +18,9 @@ export const CREDITCLUB_SAFE_ADDRESS: Address = "0x87349040756ed552f3ba7e2fcc3d1
 export const GRAPH_URL = "https://api.thegraph.com/subgraphs/name/geraldhost/union-optimism";
 
 export const DUST_THRESHOLD = 10000000000000000n;
+export const MIN_REQUIRED_BID_BUCKET_BALANCE = 5000000000000000000000n;
+export const PRO_RATA_MIN_MEMBER_NUM = 10n;
+export const PRO_RATA_DENOMINATOR = 10000n;
 
 export const SortOrder = {
   ASC: "asc",

@@ -15,6 +15,7 @@ import { BID_BUCKET_MODAL } from "@/components/modals/BidBucketModal.tsx";
 import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
 import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
 import { format } from "@/utils/format.ts";
+import cn from "classnames";
 
 export const BidBucketRow = () => {
   const { open } = useModals();
@@ -25,7 +26,9 @@ export const BidBucketRow = () => {
   const { isMember } = member;
 
   return (
-    <div className="BidBucketRow flex justify-between mt-4 sm:flex-col">
+    <div className={cn("BidBucketRow flex justify-between mt-4 sm:flex-col", {
+      "blur-sm pointer-events-none": !isMember,
+    })}>
       <div className="BidBucketStat flex flex-1 justify-center items-center mr-2 sm:mr-0 sm:mb-2">
         <div className="BidBucketStat__dai">
           <p>Bid {format(memberBidPrice, 0)}</p>

@@ -15,6 +15,12 @@ export const useToastProps = (functionName: string) => {
         Pending transactions
       --------------------------------------------------------------*/
       switch (functionName) {
+        case "approve":
+          return {
+            ...props,
+            title: "Approving DAI",
+            content: "Transaction pending",
+          };
         case "feelingLucky":
           return {
             ...props,
@@ -46,6 +52,12 @@ export const useToastProps = (functionName: string) => {
       --------------------------------------------------------------*/
 
       switch (functionName) {
+        case "approve":
+          return {
+            ...props,
+            title: "Approved DAI",
+            content: "Transaction successful",
+          };
         case "feelingLucky":
           return {
             ...props,
@@ -77,6 +89,12 @@ export const useToastProps = (functionName: string) => {
       --------------------------------------------------------------*/
 
       switch (functionName) {
+        case "approve":
+          return {
+            ...props,
+            title: "Approving DAI",
+            content: "Transaction failed",
+          };
         case "feelingLucky":
           return {
             ...props,

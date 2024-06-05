@@ -1,6 +1,7 @@
 import "./BidBucketModal.scss";
 
 import {
+  Text,
   Modal,
   ModalOverlay,
   InfoBanner,
@@ -18,6 +19,7 @@ import { format } from "@/utils/format.ts";
 import { ApprovalButton } from "@/components/shared/ApprovalButton.tsx";
 import { useAccount } from "wagmi";
 import { clubPluginContract, daiContract } from "@/contracts/optimism.ts";
+import { MIN_REQUIRED_BID_BUCKET_BALANCE } from "@/constants.ts";
 
 export const BID_BUCKET_MODAL = "bid-bucket-modal";
 
@@ -31,6 +33,7 @@ export const BidBucketModal = () => {
   const { isMember } = member;
 
   const bidPrice = isMember ? memberBidPrice : publicBidPrice;
+  const canBid = bidBucketBalance > MIN_REQUIRED_BID_BUCKET_BALANCE;
 
   return (
     <ModalOverlay onClick={close}>
@@ -73,12 +76,19 @@ export const BidBucketModal = () => {
               functionName: "fixedBid",
               label: "Place Bid",
               icon: CheckIcon,
+              disabled: !canBid,
               onComplete: async () => {
                 close();
                 await refetch();
               }
             }}
           />
+
+          {!canBid && (
+            <Text color="red500" m="8px 0 0" weight="light">
+              The bid bucket balance must be greater than {format(MIN_REQUIRED_BID_BUCKET_BALANCE, 0)} to bid.
+            </Text>
+          )}
         </Modal.Body>
       </Modal>
     </ModalOverlay>

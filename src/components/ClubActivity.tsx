@@ -43,7 +43,7 @@ const ActivityRow = ({
   return (
     <div className="ActivityRow">
       <Icon />
-      <p className="text-lg sm:text-base font-medium text-gray-800">
+      <p className="text-lg font-medium text-gray-800">
         {text}
       </p>
     </div>

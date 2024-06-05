@@ -19,7 +19,7 @@ import { useAccount } from "wagmi";
 import { clubPluginContract, daiContract } from "@/contracts/optimism.ts";
 import { useWhitelistProof } from "@/hooks/useWhitelistProof.ts";
 import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
-import { useCreditPerMember } from "@/hooks/useCreditPerMember.ts";
+import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
 
 export const MINT_NFT_MODAL = "mint-nft-modal";
 
@@ -27,7 +27,7 @@ export const MintNftModal = () => {
   const { close } = useModals();
   const { address, isConnected } = useAccount();
   const { data: creditClub, refetch: refetchCreditClub } = useCreditClub();
-  const { data: creditPerMember } = useCreditPerMember();
+  const { new: creditPerMember } = useMemberCredit();
   const { refetch: refetchMember } = useMember();
   const { proof } = useWhitelistProof();
 
@@ -59,12 +59,13 @@ export const MintNftModal = () => {
             <StatRow
               title="Credit Limit"
               content="Your initial credit limit"
-              amount={creditPerMember}
+              amount={format(creditPerMember)}
               token={<Dai />}
             />
           </div>
 
           <ApprovalButton
+            disabled={!proof}
             owner={address}
             amount={costToMint}
             spender={clubPluginContract.address}

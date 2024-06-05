@@ -1,3 +1,5 @@
+@import "@unioncredit/ui/src/variables";
+
 .BidBucketModal {
   .InfoBanner {
     padding: 12px;
@@ -13,5 +15,11 @@
     height: 32px;
     margin: 0 auto 8px;
     transform: rotate(90deg);
+  }
+
+  .button {
+    @media screen and (max-width: $breakpoint-mobile) {
+      height: 64px !important;
+    }
   }
 }

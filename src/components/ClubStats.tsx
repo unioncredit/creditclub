@@ -9,6 +9,7 @@ import {
   ConfettiIcon,
   DistributionBar,
   NumericalBlock,
+  PlayIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
 
@@ -22,7 +23,8 @@ import { useRewards } from "@/hooks/useRewards.ts";
 import { useAccount } from "wagmi";
 import { BID_BUCKET_MODAL } from "@/components/modals/BidBucketModal.tsx";
 import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
-import { useCreditPerMember } from "@/hooks/useCreditPerMember.ts";
+import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
+import { useFeelingLuckyCountdown } from "@/hooks/useFeelingLuckyCountdown.ts";
 
 export const ClubStats = () => {
   const { open } = useModals();
@@ -30,7 +32,8 @@ export const ClubStats = () => {
   const { data: contacts } = useContacts();
   const { data: stats } = useCreditClub();
   const { data: member } = useMember();
-  const { data: creditPerMember } = useCreditPerMember();
+  const { active: creditPerMember } = useMemberCredit();
+  const { complete, hours, minutes, seconds } = useFeelingLuckyCountdown();
 
   const { stakedBalance, totalLockedStake } = stats;
   const { isMember } = member;
@@ -54,20 +57,19 @@ export const ClubStats = () => {
             align="left"
             title="Total Club Stake"
             value={format(stakedBalance)}
+            smallDecimals
           />
 
           <ButtonRow>
-            {!isMember && (
-              <Button
-                size="large"
-                label="Public Bid"
-                color="secondary"
-                variant="light"
-                icon={DepositIcon}
-                disabled={!isConnected}
-                onClick={() => open(BID_BUCKET_MODAL)}
-              />
-            )}
+            <Button
+              size="large"
+              label={isMember ? "Member Bid" : "Public Bid"}
+              color="secondary"
+              variant="light"
+              icon={DepositIcon}
+              disabled={!isConnected}
+              onClick={() => open(BID_BUCKET_MODAL)}
+            />
           </ButtonRow>
         </Box>
 
@@ -98,9 +100,10 @@ export const ClubStats = () => {
               title="Available"
               dotColor="blue500"
               value={format(availableAmount)}
+              smallDecimals
             />
 
-            <p className="ClubStats__pill">${creditPerMember} per Member</p>
+            <p className="ClubStats__pill">~${format(creditPerMember, 0)} per Member</p>
           </Box>
 
           <Box fluid className="ClubStats__item" pr="8px">
@@ -112,6 +115,7 @@ export const ClubStats = () => {
               title="Utilized"
               dotColor="violet500"
               value={format(totalLockedStake)}
+              smallDecimals
             />
 
             <AddressesAvatarBadgeRow
@@ -131,6 +135,7 @@ export const ClubStats = () => {
               title="Defaulting"
               dotColor="red500"
               value={format(defaultedAmount)}
+              smallDecimals
             />
 
             <AddressesAvatarBadgeRow
@@ -150,14 +155,15 @@ export const ClubStats = () => {
           align="left"
           title="Rewards to Distribute"
           value={rewardsToDistribute.toFixed(2)}
+          smallDecimals
         />
 
         <Button
           size="large"
-          label="Daily Distribution"
+          label={complete ? "Daily Distribution" : `Callable in ${hours}h:${minutes}m:${seconds}s`}
           color="secondary"
           variant="light"
-          icon={ConfettiIcon}
+          icon={complete ? ConfettiIcon : PlayIcon}
           onClick={() => open(FEELING_LUCKY_MODAL)}
           disabled={!isConnected}
         />

@@ -32,6 +32,16 @@ export const ConnectedMemberProvider = ({ children }: { children: React.ReactNod
         functionName: 'getLockedStake',
         args: [CREDITCLUB_SAFE_ADDRESS, address],
       },
+      {
+        ...userManagerContract,
+        functionName: 'getVouchingAmount',
+        args: [CREDITCLUB_SAFE_ADDRESS, address],
+      },
+      {
+        ...userManagerContract,
+        functionName: "getCreditLimit",
+        args: [address],
+      },
     ],
   });
 
@@ -39,6 +49,8 @@ export const ConnectedMemberProvider = ({ children }: { children: React.ReactNod
     balanceOf = 0n,
     tokenId,
     owed = 0n,
+    vouch = 0n,
+    unionCreditLimit = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -46,6 +58,8 @@ export const ConnectedMemberProvider = ({ children }: { children: React.ReactNod
     tokenBalance: balanceOf,
     tokenId,
     owed,
+    vouch,
+    unionCreditLimit,
   };
 
   return (

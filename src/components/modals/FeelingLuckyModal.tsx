@@ -6,6 +6,7 @@ import {
   ModalOverlay,
   InfoBanner,
   Union,
+  Text,
   DelegateIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
@@ -16,11 +17,13 @@ import { useWrite } from "@/hooks/useWrite.ts";
 import { clubPluginContract } from "@/contracts/optimism.ts";
 import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
 import { format } from "@/utils/format.ts";
+import { useFeelingLuckyCountdown } from "@/hooks/useFeelingLuckyCountdown.ts";
 
 export const FEELING_LUCKY_MODAL = "feeling-lucky-modal";
 
 export const FeelingLuckyModal = () => {
   const { close } = useModals();
+  const { complete } = useFeelingLuckyCountdown();
   const { data: creditClub } = useCreditClub();
   const { costToCall } = creditClub;
 
@@ -28,6 +31,7 @@ export const FeelingLuckyModal = () => {
     ...clubPluginContract,
     functionName: "feelingLucky",
     value: costToCall,
+    disabled: !complete,
   });
 
   const {
@@ -83,7 +87,14 @@ export const FeelingLuckyModal = () => {
             color="primary"
             size="large"
             icon={DelegateIcon}
+            className="FeelingLuckyButton"
           />
+
+          {!complete && (
+            <Text color="red500" m="8px 0 0" weight="light">
+              You must wait for the cooldown to finish
+            </Text>
+          )}
         </Modal.Body>
       </Modal>
     </ModalOverlay>

@@ -1,16 +1,62 @@
 import "./Header.scss";
 
-import CreditClubLogo from "@/assets/creditclub-logo.svg";
+// @ts-ignore
+import { Button, ProfileIcon } from "@unioncredit/ui";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
+import CreditClubLogo from "@/assets/creditclub-logo.svg";
+import { format } from "@/utils/format.ts";
+import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { useAccount } from "wagmi";
+
 export const Header = () => {
+  const { address, isConnected } = useAccount();
+  const { data: member } = useMember();
+
+  const { unionCreditLimit } = member;
+
   return (
     <header className="Header w-full items-center flex justify-between">
-      <a href="/">
-        <CreditClubLogo />
-      </a>
+      <div className="Header__logo">
+        <a href="/">
+          <CreditClubLogo />
+        </a>
+      </div>
 
-      <ConnectButton chainStatus="none" showBalance={false} />
+      <div className="flex">
+        {isConnected && (
+          <>
+            <Button
+              size="small"
+              className="CreditButton mr-2 sm:hidden"
+              label={
+                <p className="inline-flex items-center">
+                  Available Credit · <span className="ml-1 text-black">${format(unionCreditLimit)}</span>
+                </p>
+              }
+              color="secondary"
+              variant="light"
+              onClick={() => open(`https://app.union.finance/`)}
+            />
+
+            <Button
+              size="small"
+              className="ProfileButton mr-2 md:hidden"
+              icon={ProfileIcon}
+              label="Your profile"
+              color="secondary"
+              variant="light"
+              onClick={() => open(`https://app.union.finance/profile/opt:${address}`)}
+            />
+          </>
+        )}
+
+        <ConnectButton
+          showBalance={false}
+          chainStatus="none"
+          accountStatus="avatar"
+        />
+      </div>
     </header>
   );
 };

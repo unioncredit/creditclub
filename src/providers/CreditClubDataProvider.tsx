@@ -3,6 +3,7 @@ import React, { createContext, useContext } from "react";
 
 import { CREDITCLUB_SAFE_ADDRESS } from "@/constants";
 import {
+  clubNftContract,
   clubPluginContract,
   comptrollerContract,
   daiContract,
@@ -76,6 +77,18 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
         ...comptrollerContract,
         functionName: "calculateRewards",
         args: [CREDITCLUB_SAFE_ADDRESS, daiContract.address],
+      },
+      {
+        ...clubNftContract,
+        functionName: "totalSupply",
+      },
+      {
+        ...clubPluginContract,
+        functionName: "checkpoint",
+      },
+      {
+        ...clubPluginContract,
+        functionName: "cooldown",
       }
     ],
   });
@@ -95,6 +108,9 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
     percentageFull = 0,
     overdueTime = 0n,
     unclaimedRewards = 0n,
+    totalSupply = 0n,
+    checkpoint = 0n,
+    cooldown = 0,
   ] = result.data?.map(d => d.result as never) || [];
 
   const totalPercent = bidBucketPercent + callerPercent + winnerPercent
@@ -115,6 +131,9 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
     percentageFull,
     overdueTime,
     unclaimedRewards,
+    totalSupply,
+    checkpoint,
+    cooldown,
   };
 
   return (

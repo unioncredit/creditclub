@@ -15,12 +15,14 @@ import { BidBucketRow } from "@/components/member/BidBucketRow.tsx";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { MINT_NFT_MODAL } from "@/components/modals/MintNftModal.tsx";
 import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
-import { useCreditPerMember } from "@/hooks/useCreditPerMember.ts";
+import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
+import { format } from "@/utils/format.ts";
+import { clubNftContract } from "@/contracts/optimism.ts";
 
 export const ActionsPanel = () => {
-  const { open } = useModals();
+  const { open: openModal } = useModals();
   const { data: member } = useMember();
-  const { data: creditPerMember } = useCreditPerMember();
+  const { new: creditPerMember } = useMemberCredit();
 
   const { tokenId } = member;
 
@@ -31,7 +33,6 @@ export const ActionsPanel = () => {
       <Button
         className="MintButton mt-4"
         size="large"
-        disabled={tokenId}
         label={
           tokenId ? (
             <span className="inline-flex items-center">
@@ -40,15 +41,15 @@ export const ActionsPanel = () => {
             </span>
           ) : (
             <span>
-              <IconCube color="#FFDFE8" icon={BlackGlasses} width={32} height={32} />
-              <p className="mt-2 text-md" style={{ color: "#FF638D" }}>Mint to Join and claim ${creditPerMember} in credit</p>
+              <IconCube color="#FFDFE8" icon={BlackGlasses} width={24} height={24} />
+              <p className="mt-1 text-sm" style={{ color: "#FF638D" }}>Mint to Join and claim ${format(creditPerMember)} in credit</p>
             </span>
           )
 
         }
         color="secondary"
         variant="light"
-        onClick={() => open(MINT_NFT_MODAL)}
+        onClick={() => tokenId ? open(`https://opensea.io/assets/optimism/${clubNftContract.address}/${tokenId}`) : openModal(MINT_NFT_MODAL)}
       />
 
       <ClubCreditRow />
