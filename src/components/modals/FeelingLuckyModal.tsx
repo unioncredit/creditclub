@@ -24,7 +24,7 @@ export const FEELING_LUCKY_MODAL = "feeling-lucky-modal";
 export const FeelingLuckyModal = () => {
   const { close } = useModals();
   const { complete } = useFeelingLuckyCountdown();
-  const { data: creditClub } = useCreditClub();
+  const { data: creditClub, refetch: refetchCreditClubData } = useCreditClub();
   const { costToCall } = creditClub;
 
   const feelingLuckyButtonProps = useWrite({
@@ -32,6 +32,9 @@ export const FeelingLuckyModal = () => {
     functionName: "feelingLucky",
     value: costToCall,
     disabled: !complete,
+    onComplete: async () => {
+      await refetchCreditClubData();
+    }
   });
 
   const {
