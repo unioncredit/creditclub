@@ -18,8 +18,6 @@ export const ClubCreditRow = () => {
   const { data: member } = useMember();
   const { current: currentCredit, difference: changeInCredit } = useMemberCredit();
 
-  console.log({ changeInCredit });
-
   const { isMember, tokenId } = member;
 
   const updateTrustButtonProps = useWrite({
