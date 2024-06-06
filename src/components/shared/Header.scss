@@ -5,9 +5,30 @@
 
   &__logo {
     svg {
+      max-width: 200px;
+
       @media screen and (max-width: 420px) {
         width: 150px;
       }
+    }
+  }
+
+  .ConnectButton button {
+    outline: none !important;
+    border: 1px solid transparent;
+  }
+  .ConnectButton.disconnected button {
+    display: flex;
+    align-items: center;
+
+    &::before {
+      content: ' ';
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      margin-right: 4px;
+      margin-bottom: 2px;
+      background: url("/wallet-icon.png") no-repeat center / contain;
     }
   }
 }

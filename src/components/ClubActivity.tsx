@@ -55,10 +55,12 @@ export const ClubActivity = () => {
 
   return (
     <div className="ClubActivity mt-6 text-left p-6 justify-self-end sm:p-4">
-      <h2 className="text-xl font-bold">Latest Club Activity</h2>
+      <header className="ClubActivity__header">
+        <h2 className="text-xl font-bold">Latest Club Activity</h2>
+      </header>
 
-      <div className="ClubActivity__rows mt-12 sm:mt-6">
-        {activity.length <= 0 ? (
+      <div className="ClubActivity__rows sm:mt-6">
+      {activity.length <= 0 ? (
           <Card.Body>
             <EmptyState label="No activity to show" />
           </Card.Body>

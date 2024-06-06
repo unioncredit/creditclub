@@ -28,29 +28,32 @@ export const ActionsPanel = () => {
 
   return (
     <div className="ActionsPanel rounded-2xl p-6 text-left sm:p-4">
-      <h2 className="font-medium text-xl text-gray-600">Club Member Actions</h2>
+      <header className="ActionsPanel__header">
+        <h2 className="font-medium text-xl text-gray-600">Club Member Actions</h2>
 
-      <Button
-        className="MintButton mt-4"
-        size="large"
-        label={
-          tokenId ? (
-            <span className="inline-flex items-center">
+        <Button
+          className="MintButton mt-4"
+          size="large"
+          label={
+            tokenId ? (
+              <span className="inline-flex items-center">
               <PinkGlasses />
               <p className="ml-2 text-md" style={{ color: "#FF638D" }}>BCC: ID#{tokenId.toString(10)}</p>
             </span>
-          ) : (
-            <span>
+            ) : (
+              <span>
               <IconCube color="#FFDFE8" icon={BlackGlasses} width={24} height={24} />
-              <p className="mt-1 text-sm" style={{ color: "#FF638D" }}>Mint to Join and claim ${format(creditPerMember)} in credit</p>
+              <p className="mt-1 text-sm"
+                 style={{ color: "#FF638D" }}>Mint to Join and claim ${format(creditPerMember)} in credit</p>
             </span>
-          )
+            )
 
-        }
-        color="secondary"
-        variant="light"
-        onClick={() => tokenId ? open(`https://opensea.io/assets/optimism/${clubNftContract.address}/${tokenId}`) : openModal(MINT_NFT_MODAL)}
-      />
+          }
+          color="secondary"
+          variant="light"
+          onClick={() => tokenId ? open(`https://opensea.io/assets/optimism/${clubNftContract.address}/${tokenId}`) : openModal(MINT_NFT_MODAL)}
+        />
+      </header>
 
       <ClubCreditRow />
       <ClubDebtRow />

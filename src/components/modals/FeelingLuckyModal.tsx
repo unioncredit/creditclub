@@ -7,6 +7,7 @@ import {
   InfoBanner,
   Union,
   Text,
+  PlayIcon,
   DelegateIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
@@ -23,7 +24,7 @@ export const FEELING_LUCKY_MODAL = "feeling-lucky-modal";
 
 export const FeelingLuckyModal = () => {
   const { close } = useModals();
-  const { complete } = useFeelingLuckyCountdown();
+  const { complete, hours, minutes, seconds } = useFeelingLuckyCountdown();
   const { data: creditClub, refetch: refetchCreditClubData } = useCreditClub();
   const { costToCall } = creditClub;
 
@@ -86,10 +87,14 @@ export const FeelingLuckyModal = () => {
             {...feelingLuckyButtonProps}
             fluid
             mt="12px"
-            label={`Trigger the Raffle (${format(costToCall, 5, false, false, false)} ETH)`}
+            label={
+              complete
+                ? `Trigger the Raffle (${format(costToCall, 5, false, false, false)} ETH)`
+                : `Callable in ${hours}h:${minutes}m:${seconds}s`
+            }
             color="primary"
             size="large"
-            icon={DelegateIcon}
+            icon={complete ? DelegateIcon : PlayIcon}
             className="FeelingLuckyButton"
           />
 

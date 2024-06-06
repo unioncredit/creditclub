@@ -8,6 +8,7 @@ import CreditClubLogo from "@/assets/creditclub-logo.svg";
 import { format } from "@/utils/format.ts";
 import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
 import { useAccount } from "wagmi";
+import cn from "classnames";
 
 export const Header = () => {
   const { address, isConnected } = useAccount();
@@ -51,11 +52,15 @@ export const Header = () => {
           </>
         )}
 
-        <ConnectButton
-          showBalance={false}
-          chainStatus="none"
-          accountStatus="avatar"
-        />
+        <div className={cn("ConnectButton", {
+          "disconnected": !isConnected,
+        })}>
+          <ConnectButton
+            showBalance={false}
+            chainStatus="none"
+            accountStatus="avatar"
+          />
+        </div>
       </div>
     </header>
   );

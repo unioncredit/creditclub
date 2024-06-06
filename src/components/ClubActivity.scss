@@ -1,3 +1,5 @@
+@import "@unioncredit/ui/src/variables";
+
 .ClubActivity {
   border-radius: 16px;
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -7,6 +9,12 @@
     color: #27272A;
     font-weight: 500;
     font-size: 18px;
+  }
+
+  &__header {
+    padding-bottom: 16px;
+    border-bottom: 1px solid $grey100;
+    margin-bottom: 20px;
   }
 
   &__rows {
