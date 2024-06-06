@@ -42,7 +42,7 @@ export const Header = () => {
 
             <Button
               size="small"
-              className="ProfileButton mr-2 md:hidden"
+              className="ProfileButton mr-2 lg:hidden"
               icon={ProfileIcon}
               label="Your profile"
               color="secondary"
@@ -57,8 +57,11 @@ export const Header = () => {
         })}>
           <ConnectButton
             showBalance={false}
-            chainStatus="none"
-            accountStatus="avatar"
+            chainStatus="icon"
+            accountStatus={{
+              largeScreen: "full",
+              smallScreen: "avatar",
+            }}
           />
         </div>
       </div>

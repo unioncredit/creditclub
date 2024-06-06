@@ -9,17 +9,17 @@ import {
   Theme,
 } from "@rainbow-me/rainbowkit";
 
-import { RPC_URL, supportedChains } from "@/constants";
+import { RPC_URL, rpcChains } from "@/constants";
 import { optimism } from "viem/chains";
 
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient();
 
   const config = getDefaultConfig({
-    chains: supportedChains,
+    chains: rpcChains,
     appName: "CreditClub",
     projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
-    transports: supportedChains.reduce((acc, network) => ({
+    transports: rpcChains.reduce((acc, network) => ({
       ...acc,
       [network.id]: http(RPC_URL(network.id)),
     }), {}),
