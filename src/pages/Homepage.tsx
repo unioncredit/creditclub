@@ -7,15 +7,17 @@ import { ContactsTable } from "@/components/table/ContactsTable.tsx";
 import { useNftInfo } from "@/hooks/useNftInfo.ts";
 import cn from "classnames";
 import { useIsSupportedNetwork } from "@/hooks/useIsSupportedNetwork.ts";
+import { useAccount } from "wagmi";
 
 export const Homepage = () => {
+  const { isConnected } = useAccount();
   const isSupported = useIsSupportedNetwork();
   const { name, description } = useNftInfo();
 
 
   return (
     <div className={cn("mt-8 p-6 flex flex-col items-center bg-white rounded-2xl outline outline-1 outline-gray-100 sm:p-4", {
-      "blur pointer-events-none": !isSupported
+      "blur pointer-events-none": isConnected && !isSupported
     })}>
       <div className="flex w-full mb-8 lg:flex-col">
         <div className="flex flex-col justify-between flex-1 text-left">
