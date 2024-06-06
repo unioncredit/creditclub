@@ -96,7 +96,7 @@ export const ClubStats = () => {
             <NumericalBlock
               align="left"
               token="dai"
-              size="regular"
+              size="medium"
               title="Available"
               dotColor="blue500"
               value={format(availableAmount)}
@@ -111,7 +111,7 @@ export const ClubStats = () => {
               fluid
               align="left"
               token="dai"
-              size="regular"
+              size="medium"
               title="Utilized"
               dotColor="violet500"
               value={format(totalLockedStake)}
@@ -131,7 +131,7 @@ export const ClubStats = () => {
               fluid
               align="left"
               token="dai"
-              size="regular"
+              size="medium"
               title="Defaulting"
               dotColor="red500"
               value={format(defaultedAmount)}

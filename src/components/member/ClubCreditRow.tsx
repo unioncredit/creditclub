@@ -18,6 +18,8 @@ export const ClubCreditRow = () => {
   const { data: member } = useMember();
   const { current: currentCredit, difference: changeInCredit } = useMemberCredit();
 
+  console.log({ changeInCredit });
+
   const { isMember, tokenId } = member;
 
   const updateTrustButtonProps = useWrite({
@@ -36,7 +38,7 @@ export const ClubCreditRow = () => {
 
         <div>
           <p className="ClubCreditStat__stat">${format(currentCredit)}</p>
-          <p className="ClubCreditStat__highlight mt-1">${format(changeInCredit)}</p>
+          <p className="ClubCreditStat__highlight mt-1">{changeInCredit}</p>
         </div>
       </div>
 

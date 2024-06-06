@@ -18,6 +18,7 @@ import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
 import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
 import { format } from "@/utils/format.ts";
 import { clubNftContract } from "@/contracts/optimism.ts";
+import cn from "classnames";
 
 export const ActionsPanel = () => {
   const { open: openModal } = useModals();
@@ -32,14 +33,16 @@ export const ActionsPanel = () => {
         <h2 className="font-medium text-xl text-gray-600">Club Member Actions</h2>
 
         <Button
-          className="MintButton mt-4"
+          className={cn("MintButton mt-4", {
+            "token": tokenId,
+          })}
           size="large"
           label={
             tokenId ? (
               <span className="inline-flex items-center">
-              <PinkGlasses />
-              <p className="ml-2 text-md" style={{ color: "#FF638D" }}>BCC: ID#{tokenId.toString(10)}</p>
-            </span>
+                <PinkGlasses />
+                <p className="ml-2 text-md" style={{ color: "#FF638D" }}>BCC: ID#{tokenId.toString(10)}</p>
+              </span>
             ) : (
               <span>
               <IconCube color="#FFDFE8" icon={BlackGlasses} width={24} height={24} />
