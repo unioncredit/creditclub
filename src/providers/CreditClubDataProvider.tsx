@@ -89,6 +89,10 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
       {
         ...clubPluginContract,
         functionName: "cooldown",
+      },
+      {
+        ...clubNftContract,
+        functionName: "contractURI"
       }
     ],
   });
@@ -111,6 +115,7 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
     totalSupply = 0n,
     checkpoint = 0n,
     cooldown = 0,
+    contractURI= "",
   ] = result.data?.map(d => d.result as never) || [];
 
   const totalPercent = bidBucketPercent + callerPercent + winnerPercent
@@ -134,6 +139,7 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
     totalSupply,
     checkpoint,
     cooldown,
+    contractURI
   };
 
   return (
