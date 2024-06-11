@@ -54,6 +54,10 @@
       }
     }
   }
+
+  .DailyDistributionButton {
+    min-width: 290px;
+  }
 }
 
 @media screen and (max-width: $breakpoint-mobile) {

@@ -159,6 +159,7 @@ export const ClubStats = () => {
         />
 
         <Button
+          className="DailyDistributionButton"
           size="large"
           label={complete ? "Daily Distribution" : `Callable in ${hours}h:${minutes}m:${seconds}s`}
           color="secondary"
