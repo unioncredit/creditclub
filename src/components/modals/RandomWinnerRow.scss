@@ -1,17 +1,19 @@
 @import "@unioncredit/ui/src/variables";
 
-.StatRow {
+.RandomWinnerRow {
   display: flex;
   border-radius: 16px;
-  border: 0.5px solid rgba(0, 0, 0, 0.08);
   padding: 12px 20px 12px 12px;
   align-items: center;
   margin-bottom: 8px;
+  background: linear-gradient(white, white) padding-box,
+  linear-gradient(to left, #FBC224, #E879F9, #4338CA, #60A5FA) border-box;
+  border: 3.5px solid transparent;
 
-  &__cube {
+  .avatar {
     color: white;
-    width: 48px;
-    height: 48px;
+    width: 48px !important;
+    height: 48px !important;
     display: flex;
     justify-content: center;
     align-items: center;
