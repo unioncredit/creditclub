@@ -18,7 +18,7 @@ export const useWrite = ({
   functionName: string;
   args?: any[];
   disabled?: boolean;
-  onComplete?: () => Promise<void>;
+  onComplete?: (hash: string) => Promise<void>;
   value?: bigint;
   icon?: string;
   [_: string]: any;
@@ -67,7 +67,7 @@ export const useWrite = ({
         hash,
       })
 
-      onComplete && (await onComplete());
+      onComplete && (await onComplete(hash));
 
       addToast(createToast(status === "success" ? ToastStatus.SUCCESS : ToastStatus.FAILED, hash));
 

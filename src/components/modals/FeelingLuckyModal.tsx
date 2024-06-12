@@ -19,24 +19,15 @@ import { clubPluginContract } from "@/contracts/optimism.ts";
 import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
 import { format } from "@/utils/format.ts";
 import { useFeelingLuckyCountdown } from "@/hooks/useFeelingLuckyCountdown.ts";
+import { FEELING_LUCKY_WINNER_MODAL } from "@/components/modals/FeelingLuckyWinnerModal.tsx";
 
 export const FEELING_LUCKY_MODAL = "feeling-lucky-modal";
 
 export const FeelingLuckyModal = () => {
-  const { close } = useModals();
+  const { open, close } = useModals();
   const { complete, hours, minutes, seconds } = useFeelingLuckyCountdown();
   const { data: creditClub, refetch: refetchCreditClubData } = useCreditClub();
   const { costToCall } = creditClub;
-
-  const feelingLuckyButtonProps = useWrite({
-    ...clubPluginContract,
-    functionName: "feelingLucky",
-    value: costToCall,
-    disabled: !complete,
-    onComplete: async () => {
-      await refetchCreditClubData();
-    }
-  });
 
   const {
     bidBucketBalance,
@@ -46,6 +37,26 @@ export const FeelingLuckyModal = () => {
     winnerBalance,
     winnerPercentage,
   } = useRewards();
+
+  const feelingLuckyButtonProps = useWrite({
+    ...clubPluginContract,
+    functionName: "feelingLucky",
+    value: costToCall,
+    disabled: !complete,
+    onComplete: async (hash) => {
+      const winner = winnerBalance;
+      const bidBucket = bidBucketBalance;
+      const caller = callerBalance;
+      await refetchCreditClubData();
+
+      open(FEELING_LUCKY_WINNER_MODAL, {
+        hash,
+        winnerBalance: winner,
+        bidBucketBalance: bidBucket,
+        callerBalance: caller,
+      })
+    }
+  });
 
   return (
     <ModalOverlay onClick={close}>

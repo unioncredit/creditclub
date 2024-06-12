@@ -19,14 +19,14 @@ export const StatRow = ({
   token: React.ReactNode;
 }) => {
   return (
-    <div className="RaffleDistribution">
+    <div className="StatRow">
       {percentage && (
-        <div className="RaffleDistribution__cube" style={{ background: color }}>
+        <div className="StatRow__cube" style={{ background: color }}>
           {percentage}
         </div>
       )}
 
-      <div className="RaffleDistribution__content">
+      <div className="StatRow__content">
         <h3>{title}</h3>
         <p>{content}</p>
       </div>

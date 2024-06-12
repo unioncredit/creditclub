@@ -4,6 +4,7 @@ import { FEELING_LUCKY_MODAL, FeelingLuckyModal } from "@/components/modals/Feel
 import { IModalManagerContext } from "@/providers/types.ts";
 import { BID_BUCKET_MODAL, BidBucketModal } from "@/components/modals/BidBucketModal.tsx";
 import { MINT_NFT_MODAL, MintNftModal } from "@/components/modals/MintNftModal.tsx";
+import { FEELING_LUCKY_WINNER_MODAL, FeelingLuckyWinnerModal } from "@/components/modals/FeelingLuckyWinnerModal.tsx";
 
 const ModalContext = createContext({} as IModalManagerContext);
 
@@ -12,6 +13,7 @@ export const useModals = () => useContext(ModalContext);
 const modals: Record<string, any> = {
   [BID_BUCKET_MODAL]: BidBucketModal,
   [FEELING_LUCKY_MODAL]: FeelingLuckyModal,
+  [FEELING_LUCKY_WINNER_MODAL]: FeelingLuckyWinnerModal,
   [MINT_NFT_MODAL]: MintNftModal,
 };
 
