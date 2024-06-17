@@ -23,6 +23,7 @@ export const DUST_THRESHOLD = 10000000000000000n;
 export const MIN_REQUIRED_BID_BUCKET_BALANCE = 5000000000000000000000n;
 export const PRO_RATA_MIN_MEMBER_NUM = 10n;
 export const PRO_RATA_DENOMINATOR = 10000n;
+export const UNION_TOKEN_PRICE_USD = 0.015;
 
 export const SortOrder = {
   ASC: "asc",
