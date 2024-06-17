@@ -25,6 +25,7 @@ import { BID_BUCKET_MODAL } from "@/components/modals/BidBucketModal.tsx";
 import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
 import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
 import { useFeelingLuckyCountdown } from "@/hooks/useFeelingLuckyCountdown.ts";
+import { UNION_TOKEN_PRICE_USD } from "@/constants.ts";
 
 export const ClubStats = () => {
   const { open } = useModals();
@@ -155,6 +156,7 @@ export const ClubStats = () => {
           align="left"
           title="Rewards to Distribute"
           value={rewardsToDistribute.toFixed(2)}
+          subtitle={`~$${(rewardsToDistribute * UNION_TOKEN_PRICE_USD).toFixed(2)}`}
           smallDecimals
         />
 
