@@ -158,6 +158,7 @@ export const ClubStats = () => {
           value={rewardsToDistribute.toFixed(2)}
           subtitle={`~$${(rewardsToDistribute * UNION_TOKEN_PRICE_USD).toFixed(2)}`}
           smallDecimals
+          className="RewardsToDistribute"
         />
 
         <Button
