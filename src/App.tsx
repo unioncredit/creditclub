@@ -9,6 +9,7 @@ import { ModalManagerProvider } from "@/providers/ModalManagerProvider.tsx";
 import { ConnectedMemberProvider } from "@/providers/ConnectedMemberProvider.tsx";
 import { ToastsProvider } from "@/providers/ToastsProvider.tsx";
 import { CacheProvider } from '@/providers/CacheProvider';
+import { SettingsProvider } from "@/providers/SettingsProvider.tsx";
 
 function App() {
   return (
@@ -19,9 +20,11 @@ function App() {
             <CacheProvider>
               <ToastsProvider>
                 <ModalManagerProvider>
-                  <Layout>
-                    <Homepage />
-                  </Layout>
+                  <SettingsProvider>
+                    <Layout>
+                      <Homepage />
+                    </Layout>
+                  </SettingsProvider>
                 </ModalManagerProvider>
               </ToastsProvider>
             </CacheProvider>

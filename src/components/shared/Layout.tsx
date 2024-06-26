@@ -4,6 +4,7 @@ import { InfoBanner, WarningIcon } from "@unioncredit/ui";
 import { Header } from "@/components/shared/Header.tsx";
 import { useIsSupportedNetwork } from "@/hooks/useIsSupportedNetwork.ts";
 import { useAccount } from "wagmi";
+import { EnableNotificationsBanner } from "@/components/shared/EnableNotificationsBanner.tsx";
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
   const { isConnected } = useAccount();
@@ -12,6 +13,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <main className="pb-24">
       <Header />
+      <EnableNotificationsBanner />
 
       {isConnected && !isSupported && (
         <InfoBanner
