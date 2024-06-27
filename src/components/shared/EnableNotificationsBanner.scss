@@ -6,7 +6,8 @@
   }
 
   .InfoBanner {
-    padding: 12px 12px;
+    position: relative;
+    padding: 12px 36px 12px 12px;
 
     & > svg {
       @media screen and (max-width: 540px) {
@@ -28,6 +29,9 @@
     }
   }
   .CloseButton {
+    position: absolute;
+    top: 0;
+    right: 0;
     background: transparent !important;
     border: none !important;
     width: 38px;
@@ -36,8 +40,8 @@
     margin-left: 0;
 
     svg {
-      width: 24px;
-      height: 24px;
+      width: 18px;
+      height: 18px;
     }
 
     path {
