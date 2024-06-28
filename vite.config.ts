@@ -17,6 +17,7 @@ export default defineConfig({
     VitePWA({
       strategies: "injectManifest",
       registerType: "autoUpdate",
+      filename: "service-worker.js",
       manifest: {
         name: "Beta Credit Club",
         short_name: "CreditClub",
