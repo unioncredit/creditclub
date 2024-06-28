@@ -22,6 +22,7 @@ export type ICreditClubDataProviderContext = Omit<UseReadContractsReturnType, "d
     checkpoint: bigint;
     cooldown: number;
     contractURI: string;
+    borrowRatePerSecond: bigint;
   },
 };
 

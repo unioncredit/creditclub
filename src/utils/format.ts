@@ -92,3 +92,10 @@ export const formatTimestamp = (milliseconds: number) => {
         ? `${minutes} minutes`
         : null;
 };
+
+export const toPercent = (number: string | bigint, digits = 0) =>
+  Number(number).toLocaleString(undefined, {
+    style: "percent",
+    maximumFractionDigits: digits,
+    minimumFractionDigits: digits,
+  });
