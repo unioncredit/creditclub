@@ -12,7 +12,7 @@ export const EnableNotificationsBanner = () => {
   const { isSubscribed, subscribe } = usePushNotifications();
   const { settings, setSetting } = useSettings();
 
-  const shouldShowBanner = !settings[SETTINGS.HIDE_NOTIFICATION_BANNER] && address && !isSubscribed;
+  const shouldShowBanner = !settings[SETTINGS.HIDE_NOTIFICATION_BANNER] && address && isSubscribed;
 
   return shouldShowBanner && (
     <Box mt="8px" className="EnableNotificationsBanner">

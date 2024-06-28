@@ -7,7 +7,11 @@
 
   .InfoBanner {
     position: relative;
-    padding: 12px 36px 12px 12px;
+    padding: 12px;
+
+    @media screen and (max-width: 500px) {
+      padding: 12px 36px 12px 12px;
+    }
 
     & > svg {
       @media screen and (max-width: 540px) {
@@ -23,15 +27,11 @@
       div {
         @media screen and (max-width: 500px) {
           margin-top: 12px;
-          padding-left: 18px;
         }
       }
     }
   }
   .CloseButton {
-    position: absolute;
-    top: 0;
-    right: 0;
     background: transparent !important;
     border: none !important;
     width: 38px;
@@ -39,9 +39,20 @@
     padding: 0 !important;
     margin-left: 0;
 
+    @media screen and (max-width: 500px) {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
     svg {
-      width: 18px;
-      height: 18px;
+      width: 24px;
+      height: 24px;
+
+      @media screen and (max-width: 500px) {
+        width: 18px;
+        height: 18px;
+      }
     }
 
     path {
