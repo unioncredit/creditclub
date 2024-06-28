@@ -36,11 +36,11 @@ export const FeelingLuckyWinnerModal = ({
 }) => {
   const { close } = useModals();
 
-  const event = useEventLog({
+  const { data: event, isFetched } = useEventLog({
     hash,
     eventName: "RoundCompleted",
     abi: clubPluginAbi,
-  })
+  });
 
   // @ts-ignore
   const amountWon = event?.args.amountToWinner || 0n;
@@ -55,23 +55,33 @@ export const FeelingLuckyWinnerModal = ({
       <Modal className="FeelingLuckyModal">
         <Modal.Header title="BCC Club Random Raffle" onClose={close} />
         <Modal.Body>
-          <Heading mb="32px" level={2} size="large" align="center">
-            The {amountWon > 0n ? "lucky" : "unlucky"} winner is...
-          </Heading>
+          {isFetched ? (
+            <Heading mb="32px" level={2} size="large" align="center">
+              The {amountWon > 0n ? "lucky" : "unlucky"} winner is...
+            </Heading>
+          ) : (
+            <Heading mb="32px" level={2} size="large" align="center">
+              Picking a winner...
+            </Heading>
+          )}
 
-          <RandomWinnerRow
-            title="Random Trustee"
-            amount={amountWon <= 0n ? 0 : winnerBalance}
-            // @ts-ignore
-            address={event?.args?.winner || zeroAddress}
-          />
+          {isFetched && (
+            <>
+              <RandomWinnerRow
+                title="Random Trustee"
+                amount={amountWon <= 0n ? 0 : winnerBalance}
+                // @ts-ignore
+                address={event?.args?.winner || zeroAddress}
+              />
 
-          {amountWon <= 0n && (
-            <InfoBanner
-              align="center"
-              variant="warning"
-              label="Sadly, the winner is in default or not registered so they get 0."
-            />
+              {amountWon <= 0n && (
+                <InfoBanner
+                  align="center"
+                  variant="warning"
+                  label="Sadly, the winner is in default or not registered so they get 0."
+                />
+              )}
+            </>
           )}
 
           <Text m="48px 0 12px" size="medium">With the remainder being sent to:</Text>
@@ -115,4 +125,4 @@ export const FeelingLuckyWinnerModal = ({
       </Modal>
     </ModalOverlay>
   );
-}
+};

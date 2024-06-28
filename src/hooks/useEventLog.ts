@@ -14,7 +14,7 @@ export const useEventLog = <
   hash: Hash,
   abi: abi,
 }) => {
-  const { data: logs } = useEventLogs({
+  const { data: logs, isLoading, isFetched } = useEventLogs({
     hash,
     abi,
   })
@@ -23,5 +23,9 @@ export const useEventLog = <
     log => log?.eventName === eventName
   );
 
-  return eventLogs.length > 0 ? eventLogs[0] : null;
+  return {
+    data: eventLogs.length > 0 ? eventLogs[0] : null,
+    isLoading,
+    isFetched,
+  };
 }
