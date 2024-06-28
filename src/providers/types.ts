@@ -77,3 +77,8 @@ export interface ICacheContext {
   get: (key: string) => any;
   set: (key: string, value: any) => void;
 }
+
+export interface ISettingsContext {
+  settings: Record<string, string>;
+  setSetting: (key: string, value: string) => void;
+}
