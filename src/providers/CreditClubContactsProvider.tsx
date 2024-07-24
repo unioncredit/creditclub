@@ -7,6 +7,7 @@ import { ICreditClubContactsProviderReturnType } from "@/providers/types";
 import useRelatedAddresses from "@/hooks/useRelatedAddresses";
 import { daiContract, unionLensContract, userManagerContract, uTokenContract } from "@/contracts/optimism";
 import { usePopulateEns } from "@/hooks/usePopulateEns.ts";
+import { usePopulateFnames } from "@/hooks/usePopulateFnames.ts";
 
 const CreditClubContactsContext = createContext({} as ICreditClubContactsProviderReturnType);
 
@@ -64,8 +65,11 @@ export const CreditClubContactsProvider = ({ children }: { children: React.React
     await result.refetch();
   };
 
+  const ensPopulated = usePopulateEns(data);
+  const fnamePopulated = usePopulateFnames(ensPopulated);
+
   return (
-    <CreditClubContactsContext.Provider value={{ ...result, refetch, data: usePopulateEns(data) }}>
+    <CreditClubContactsContext.Provider value={{ ...result, refetch, data: fnamePopulated }}>
       {children}
     </CreditClubContactsContext.Provider>
   )
