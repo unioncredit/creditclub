@@ -13,7 +13,7 @@ export const StatRow = ({
 }: {
   percentage?: string;
   title: string;
-  content: string;
+  content: string | React.ReactNode;
   amount: string;
   color?: string;
   token: React.ReactNode;
@@ -31,7 +31,7 @@ export const StatRow = ({
         <p>{content}</p>
       </div>
 
-      <Text size="large" weight="medium">
+      <Text className="StatRow__value" size="large" weight="medium">
         {amount}
         {token}
       </Text>
