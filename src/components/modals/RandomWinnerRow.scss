@@ -3,12 +3,16 @@
 .RandomWinnerRow {
   display: flex;
   border-radius: 16px;
-  padding: 12px 20px 12px 12px;
+  padding: 12px;
   align-items: center;
   margin-bottom: 8px;
   background: linear-gradient(white, white) padding-box,
   linear-gradient(to left, #FBC224, #E879F9, #4338CA, #60A5FA) border-box;
   border: 3.5px solid transparent;
+
+  @media screen and (max-width: 450px) {
+    margin-top: -15px;
+  }
 
   .avatar {
     color: white;
@@ -31,11 +35,27 @@
       color: $grey800;
       font-weight: 500;
       font-size: 20px;
+      white-space: nowrap;
+
+      @media screen and (max-width: 450px) {
+        font-size: 17px;
+      }
     }
     p {
       color: $grey500;
       font-weight: 500;
       margin-top: 4px;
+
+      @media screen and (max-width: 450px) {
+        font-size: 15px;
+      }
+    }
+  }
+  &__value {
+    white-space: nowrap;
+
+    @media screen and (max-width: 450px) {
+      font-size: 18px !important;
     }
   }
 

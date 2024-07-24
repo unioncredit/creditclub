@@ -1,4 +1,17 @@
 .FeelingLuckyModal {
+  .Card__body {
+    @media screen and (max-width: 400px) {
+      padding: 24px 12px;
+    }
+  }
+
+  .ScreenshotButton {
+    svg {
+      width: 20px !important;
+      margin-right: 8px !important;
+    }
+  }
+
   .InfoBanner {
     padding: 12px;
 

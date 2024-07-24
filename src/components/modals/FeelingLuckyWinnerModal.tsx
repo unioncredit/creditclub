@@ -8,7 +8,6 @@ import {
   Text,
   ButtonRow,
   Button,
-  CopyIcon,
   LinkOutIcon,
   InfoBanner,
   // @ts-ignore
@@ -20,6 +19,10 @@ import { RandomWinnerRow } from "@/components/modals/RandomWinnerRow.tsx";
 import { zeroAddress } from "viem";
 import { clubPluginAbi } from "@/abis/clubPlugin.ts";
 import { useEventLog } from "@/hooks/useEventLog.ts";
+import { useNftInfo } from "@/hooks/useNftInfo.ts";
+import { useAccount } from "wagmi";
+import { usePrimaryLabel } from "@/hooks/usePrimaryLabel.ts";
+import { FaCamera } from "react-icons/fa";
 
 export const FEELING_LUCKY_WINNER_MODAL = "feeling-lucky-winner-modal";
 
@@ -35,6 +38,10 @@ export const FeelingLuckyWinnerModal = ({
   callerBalance: number;
 }) => {
   const { close } = useModals();
+  const { name } = useNftInfo();
+  const { address } = useAccount();
+
+  const { data: receiverLabel } = usePrimaryLabel({ address });
 
   const { data: event, isFetched } = useEventLog({
     hash,
@@ -53,7 +60,7 @@ export const FeelingLuckyWinnerModal = ({
   return (
     <ModalOverlay onClick={close}>
       <Modal className="FeelingLuckyModal">
-        <Modal.Header title="BCC Club Random Raffle" onClose={close} />
+        <Modal.Header title={`${name} Random Raffle`} onClose={close} />
         <Modal.Body>
           {isFetched ? (
             <Heading mb="32px" level={2} size="large" align="center">
@@ -68,7 +75,6 @@ export const FeelingLuckyWinnerModal = ({
           {isFetched && (
             <>
               <RandomWinnerRow
-                title="Random Trustee"
                 amount={amountWon <= 0n ? 0 : winnerBalance}
                 // @ts-ignore
                 address={event?.args?.winner || zeroAddress}
@@ -84,12 +90,12 @@ export const FeelingLuckyWinnerModal = ({
             </>
           )}
 
-          <Text m="48px 0 12px" size="medium">With the remainder being sent to:</Text>
+          <Text m="48px 0 12px" size="medium" weight="medium">With the remainder being sent to:</Text>
 
           <StatRow
             percentage={`${bidBucketPercentage}%`}
             title="Bid Bucket"
-            content="Accrues to help grow club stake"
+            content="Helps to grow club stake"
             amount={bidBucketBalance.toFixed(2)}
             color="#3B82F6"
             token={<Union />}
@@ -97,7 +103,7 @@ export const FeelingLuckyWinnerModal = ({
           <StatRow
             percentage={`${callerPercentage}%`}
             title="Caller"
-            content="For calling the tx you receive"
+            content={<><span className="underline">{receiverLabel}</span> receives</>}
             amount={callerBalance.toFixed(2)}
             color="#8B5CF6"
             token={<Union />}
@@ -106,11 +112,12 @@ export const FeelingLuckyWinnerModal = ({
           <ButtonRow mt="24px">
             <Button
               fluid
+              className="ScreenshotButton"
               color="secondary"
               variant="light"
               size="small"
               label="Screenshot this!"
-              icon={CopyIcon}
+              icon={FaCamera}
               style={{ pointerEvents: "none" }}
             />
             <Button
