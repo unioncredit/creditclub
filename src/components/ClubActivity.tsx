@@ -49,6 +49,7 @@ const ActivityRow = ({
     <div className="ActivityRow">
       <Icon />
       <p className="text-lg font-medium text-gray-800">
+        {/* @ts-ignore */}
         {text}
       </p>
     </div>
