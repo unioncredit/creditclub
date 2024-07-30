@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 
 import { useCache } from "@/providers/CacheProvider.tsx";
-import { fetchUserTransactions } from "@/fetchers/fetchUserTransactions";
-import { fetchUTokenTransactions } from "@/fetchers/fetchUTokenTransactions";
 import { Address, zeroAddress } from "viem";
+import { fetchClubEvents } from "@/fetchers/fetchClubEvents.ts";
 
 export const useClubActivity = ({ staker = zeroAddress }: { staker: Address; }) => {
   const cacheKey = `useTxHistory__${staker}`;
@@ -20,15 +19,10 @@ export const useClubActivity = ({ staker = zeroAddress }: { staker: Address; }) 
       }
 
       setData([]);
-      const utokenTransactions = await fetchUTokenTransactions(staker);
-      const userTransactions = await fetchUserTransactions(staker);
+      const clubEvents = await fetchClubEvents();
 
-      const txHistory = [...utokenTransactions, ...userTransactions].sort(
-        (a, b) => Number(b.timestamp) - Number(a.timestamp)
-      );
-
-      set(cacheKey, txHistory);
-      setData(txHistory);
+      set(cacheKey, clubEvents);
+      setData(clubEvents);
       setLoading(false);
     }
 

@@ -4,6 +4,9 @@ import {
   Card,
   EmptyState,
   ConfettiIcon,
+  WithdrawIcon,
+  DepositIcon,
+  CheckIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
 
@@ -11,34 +14,36 @@ import { useClubActivity } from "@/hooks/useClubActivity.ts";
 import { CREDITCLUB_SAFE_ADDRESS, TransactionTypes } from "@/constants.ts";
 import { AddressLink } from "@/components/shared/AddressLink.tsx";
 import { Address } from "viem";
+import { format } from "@/utils/format.ts";
 
 // prettier-ignore
 const texts = {
-  [TransactionTypes.TRUST]:     (x: any) => <><AddressLink address={x.borrower} /> · <span className="text-gray-500">Joined the club!</span></>,
-
-  // [TransactionTypes.CANCEL]:    (x: any) => <>Cancel vouch <Address address={x.borrower} /></>,
-  // [TransactionTypes.BORROW]:    () => <>Borrow</>,
-  // [TransactionTypes.REPAY]:     () => <>Repayment</>,
-  // [TransactionTypes.TRUSTED]:   (x) => <>Trusted by <Address address={x.staker} /></>,
+  [TransactionTypes.JOINED_CLUB]:   (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Joined the club!</span></>,
+  [TransactionTypes.BORROWED]:      (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Borrowed</span> {format(x.amount)} DAI</>,
+  [TransactionTypes.REPAID]:        (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Repaid</span> {format(x.amount)} DAI</>,
+  [TransactionTypes.UPDATED_TRUST]: () => (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Updated trust</span> {format(x.amount)} DAI</>,
+  [TransactionTypes.ROUND_WON]:     (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Won</span> {format(x.amount)} UNION</>,
 };
 
 const ActivityRow = ({
  amount,
  type,
- staker,
- borrower
+ address,
 }: {
   type: "trust";
   amount: bigint;
-  staker: Address;
-  borrower: Address;
+  address: Address;
 }) => {
   const icons = {
-    [TransactionTypes.TRUST]: ConfettiIcon,
+    [TransactionTypes.JOINED_CLUB]:   ConfettiIcon,
+    [TransactionTypes.BORROWED]:      WithdrawIcon,
+    [TransactionTypes.REPAID]:        DepositIcon,
+    [TransactionTypes.UPDATED_TRUST]: CheckIcon,
+    [TransactionTypes.ROUND_WON]:     ConfettiIcon
   };
 
   const Icon = icons[type];
-  const text = texts[type]({ amount, staker, borrower });
+  const text = texts[type]({ type, amount, address });
 
   return (
     <div className="ActivityRow">
@@ -71,15 +76,6 @@ export const ClubActivity = () => {
             </ActivityRow>
           ))
         )}
-        {/*<ActivityRow type="repay">*/}
-        {/*  sashbear.eth <span className="text-gray-500">Repaid</span> 244.44 DAI*/}
-        {/*</ActivityRow>*/}
-        {/*<ActivityRow type="borrow">*/}
-        {/*  sashbear.eth <span className="text-gray-500">Borrowed</span> 242.12 DAI*/}
-        {/*</ActivityRow>*/}
-        {/*<ActivityRow type="transfer">*/}
-        {/*  sashbear.eth <span className="text-gray-500">Transferred to</span> 0xb3...342a*/}
-        {/*</ActivityRow>*/}
       </div>
     </div>
   );
