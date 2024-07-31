@@ -1,0 +1,14 @@
+.MobileNav {
+  @media all and (max-width: 540px) {
+    padding: 0 2rem;
+  }
+  @media all and (max-width: 420px) {
+    justify-content: space-between !important;
+  }
+
+  .ProfileButton {
+    @media all and (max-width: 520px) {
+      display: none;
+    }
+  }
+}

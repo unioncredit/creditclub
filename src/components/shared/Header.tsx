@@ -34,7 +34,7 @@ export const Header = () => {
           <>
             <Button
               size="small"
-              className="CreditButton mr-2 sm:hidden lg:px-2"
+              className="CreditButton mr-2 md:hidden lg:px-2"
               label={
                 <p className="inline-flex items-center">
                   Available Credit · <span className="ml-1 text-black">${format(unionCreditLimit)}</span>
