@@ -6,7 +6,7 @@ import {
   ConfettiIcon,
   WithdrawIcon,
   DepositIcon,
-  CheckIcon,
+  IncreaseVouchIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
 
@@ -21,7 +21,7 @@ const texts = {
   [TransactionTypes.JOINED_CLUB]:   (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Joined the club!</span></>,
   [TransactionTypes.BORROWED]:      (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Borrowed</span> {format(x.amount)} DAI</>,
   [TransactionTypes.REPAID]:        (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Repaid</span> {format(x.amount)} DAI</>,
-  [TransactionTypes.UPDATED_TRUST]: () => (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Updated trust</span> {format(x.amount)} DAI</>,
+  [TransactionTypes.UPDATED_TRUST]: (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Updated trust</span> {format(x.amount)} DAI</>,
   [TransactionTypes.ROUND_WON]:     (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Won</span> {format(x.amount)} UNION</>,
 };
 
@@ -38,12 +38,14 @@ const ActivityRow = ({
     [TransactionTypes.JOINED_CLUB]:   ConfettiIcon,
     [TransactionTypes.BORROWED]:      WithdrawIcon,
     [TransactionTypes.REPAID]:        DepositIcon,
-    [TransactionTypes.UPDATED_TRUST]: CheckIcon,
+    [TransactionTypes.UPDATED_TRUST]: IncreaseVouchIcon,
     [TransactionTypes.ROUND_WON]:     ConfettiIcon
   };
 
   const Icon = icons[type];
   const text = texts[type]({ type, amount, address });
+
+  console.log({ type, text });
 
   return (
     <div className="ActivityRow">
@@ -72,9 +74,7 @@ export const ClubActivity = () => {
           </Card.Body>
         ) : (
           activity.slice(0, 4).map((tx: any) => (
-            <ActivityRow {...tx}>
-              {texts[tx.type]}
-            </ActivityRow>
+            <ActivityRow {...tx} />
           ))
         )}
       </div>
