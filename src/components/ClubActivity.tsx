@@ -45,8 +45,6 @@ const ActivityRow = ({
   const Icon = icons[type];
   const text = texts[type]({ type, amount, address });
 
-  console.log({ type, text });
-
   return (
     <div className="ActivityRow">
       <Icon />
