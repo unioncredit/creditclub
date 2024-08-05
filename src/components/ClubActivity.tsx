@@ -13,37 +13,74 @@ import {
 import { useClubActivity } from "@/hooks/useClubActivity.ts";
 import { CREDITCLUB_SAFE_ADDRESS, TransactionTypes } from "@/constants.ts";
 import { AddressLink } from "@/components/shared/AddressLink.tsx";
-import { Address } from "viem";
+import { Address, Hash } from "viem";
 import { format } from "@/utils/format.ts";
 
 // prettier-ignore
 const texts = {
-  [TransactionTypes.JOINED_CLUB]:   (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Joined the club!</span></>,
-  [TransactionTypes.BORROWED]:      (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Borrowed</span> {format(x.amount)} DAI</>,
-  [TransactionTypes.REPAID]:        (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Repaid</span> {format(x.amount)} DAI</>,
-  [TransactionTypes.UPDATED_TRUST]: (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Updated trust</span> {format(x.amount)} DAI</>,
-  [TransactionTypes.ROUND_WON]:     (x: any) => <><AddressLink address={x.address} /> · <span className="text-gray-500">Won</span> {format(x.amount)} UNION</>,
+  [TransactionTypes.JOINED_CLUB]: (x: any) => (
+    <>
+      <AddressLink address={x.address} /> ·
+      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+        <span className="text-gray-500">Joined the club!</span>
+      </a>
+    </>
+  ),
+  [TransactionTypes.BORROWED]: (x: any) => (
+    <>
+      <AddressLink address={x.address} /> ·
+      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+        <span className="text-gray-500">Borrowed</span> {format(x.amount)} DAI
+      </a>
+    </>
+  ),
+  [TransactionTypes.REPAID]: (x: any) => (
+    <>
+      <AddressLink address={x.address} /> ·
+      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+        <span className="text-gray-500">Repaid</span> {format(x.amount)} DAI
+      </a>
+    </>
+  ),
+  [TransactionTypes.UPDATED_TRUST]: (x: any) => (
+    <>
+      <AddressLink address={x.address} /> ·
+      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+        <span className="text-gray-500">Updated trust</span> {format(x.amount)} DAI
+      </a>
+    </>
+  ),
+  [TransactionTypes.ROUND_WON]: (x: any) => (
+    <>
+      <AddressLink address={x.address} /> ·
+      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+        <span className="text-gray-500">Won</span> {format(x.amount)} UNION
+      </a>
+    </>
+  ),
 };
 
 const ActivityRow = ({
- amount,
- type,
- address,
+  amount,
+  type,
+  address,
+  hash,
 }: {
   type: "trust";
   amount: bigint;
   address: Address;
+  hash: Hash;
 }) => {
   const icons = {
-    [TransactionTypes.JOINED_CLUB]:   ConfettiIcon,
-    [TransactionTypes.BORROWED]:      WithdrawIcon,
-    [TransactionTypes.REPAID]:        DepositIcon,
+    [TransactionTypes.JOINED_CLUB]: ConfettiIcon,
+    [TransactionTypes.BORROWED]: WithdrawIcon,
+    [TransactionTypes.REPAID]: DepositIcon,
     [TransactionTypes.UPDATED_TRUST]: IncreaseVouchIcon,
-    [TransactionTypes.ROUND_WON]:     ConfettiIcon
+    [TransactionTypes.ROUND_WON]: ConfettiIcon,
   };
 
   const Icon = icons[type];
-  const text = texts[type]({ type, amount, address });
+  const text = texts[type]({ type, amount, address, hash });
 
   return (
     <div className="ActivityRow">
@@ -66,7 +103,7 @@ export const ClubActivity = () => {
       </header>
 
       <div className="ClubActivity__rows sm:mt-6">
-      {activity.length <= 0 ? (
+        {activity.length <= 0 ? (
           <Card.Body>
             <EmptyState label="No activity to show" />
           </Card.Body>
