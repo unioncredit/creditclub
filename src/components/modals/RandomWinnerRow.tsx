@@ -15,17 +15,19 @@ export const RandomWinnerRow = ({
 }) => {
   return (
     <div className="RandomWinnerRow">
-      <Avatar size={24} address={address} />
+      <div className="RandomWinnerRow__container">
+        <Avatar size={24} address={address} />
 
-      <div className="RandomWinnerRow__content">
-        <h3><PrimaryLabel address={address} defaultValue="Random Trustee" /></h3>
-        <p>{truncateAddress(address)}</p>
+        <div className="RandomWinnerRow__content">
+          <h3><PrimaryLabel address={address} defaultValue="Random Trustee" /></h3>
+          <p>{truncateAddress(address)}</p>
+        </div>
+
+        <Text className="RandomWinnerRow__value" size="large" weight="medium">
+          {amount.toFixed(2)}
+          <Union />
+        </Text>
       </div>
-
-      <Text className="RandomWinnerRow__value" size="large" weight="medium">
-        {amount.toFixed(2)}
-        <Union />
-      </Text>
     </div>
   );
 };
