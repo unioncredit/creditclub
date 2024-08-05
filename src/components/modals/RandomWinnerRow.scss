@@ -3,25 +3,33 @@
 .RandomWinnerRow {
   display: flex;
   border-radius: 16px;
-  padding: 12px;
+  padding: 4px;
   align-items: center;
   margin-bottom: 8px;
-  background: linear-gradient(white, white) padding-box,
-  linear-gradient(to left, #FBC224, #E879F9, #4338CA, #60A5FA) border-box;
-  border: 3.5px solid transparent;
+  background: linear-gradient(to left, #FBC224, #E879F9, #4338CA, #60A5FA);
 
   @media screen and (max-width: 450px) {
     margin-top: -15px;
   }
 
+  &__container {
+    border-radius: 12px;
+    display: flex;
+    background: white;
+    padding: 10px;
+    flex: 1;
+  }
+
   .avatar {
     color: white;
+    min-width: 48px;
+    min-height: 48px;
     width: 48px !important;
     height: 48px !important;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 12px;
+    border-radius: 10px;
     margin-right: 6px;
   }
   &__content {
