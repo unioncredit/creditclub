@@ -9,6 +9,7 @@ export const fetchClubEvents = async () =>{
               type
               timestamp
               amount
+              hash
               account {
                   id
               }
@@ -27,6 +28,7 @@ export const fetchClubEvents = async () =>{
     type: item.type,
     amount: item.amount,
     address: item.account.id,
+    hash: item.hash,
   }));
 
   return flattened;
