@@ -30,7 +30,7 @@ const texts = {
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500">Borrowed</span> {format(x.amount)} DAI
+        <span className="text-gray-500">Borrowed</span> {format(x.amount, 0)} DAI
       </a>
     </>
   ),
@@ -38,7 +38,7 @@ const texts = {
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500">Repaid</span> {format(x.amount)} DAI
+        <span className="text-gray-500">Repaid</span> {format(x.amount, 0)} DAI
       </a>
     </>
   ),
@@ -46,7 +46,7 @@ const texts = {
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500">Updated trust</span> {format(x.amount)} DAI
+        <span className="text-gray-500">Updated trust</span> {format(x.amount, 0)} DAI
       </a>
     </>
   ),
@@ -54,7 +54,7 @@ const texts = {
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500">Won</span> {format(x.amount)} UNION
+        <span className="text-gray-500">Won</span> {format(x.amount, 0)} UNION
       </a>
     </>
   ),

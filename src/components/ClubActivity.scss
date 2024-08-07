@@ -29,10 +29,20 @@
   align-items: center;
   margin-top: 4px;
 
+  a {
+    @media screen and (max-width: 500px) {
+      font-size: 16px;
+    }
+  }
+
   svg {
     margin-right: 6px;
     width: 28px;
     height: 28px;
+
+    @media screen and (max-width: 500px) {
+      display: none;
+    }
 
     path {
       fill: #2563EB;
