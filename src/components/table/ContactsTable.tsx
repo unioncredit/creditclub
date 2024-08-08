@@ -20,6 +20,14 @@ export const COLUMNS = {
     id: "club-debt",
     label: "Club Debt",
   },
+  UNION_WON: {
+    id: "union-won",
+    label: "UNION Won",
+  },
+  UNION_EARNED: {
+    id: "union-earned",
+    label: "UNION Earned",
+  },
   LAST_PAYMENT: {
     id: "last-payment",
     label: "Last payment",
@@ -73,6 +81,8 @@ export function ContactsTable() {
                 [
                   COLUMNS.CLUB_CREDIT,
                   COLUMNS.CLUB_DEBT,
+                  COLUMNS.UNION_WON,
+                  COLUMNS.UNION_EARNED,
                   COLUMNS.LAST_PAYMENT,
                   COLUMNS.LOAN_STATUS,
                 ]

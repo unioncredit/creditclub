@@ -2,8 +2,13 @@
 
 .ContactList {
   &__table {
-    @media screen and (max-width: $breakpoint-tablet) {
-      overflow: scroll;
+    overflow-x: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    &::-webkit-scrollbar {
+      display: none;
     }
   }
 
