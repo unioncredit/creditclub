@@ -17,6 +17,14 @@ export const useContactSort = (contacts: IContact[]) => {
       [SortOrder.ASC]: (a: IContact, b: IContact) => Number(a.locking - b.locking),
       [SortOrder.DESC]: (a: IContact, b: IContact) => Number(b.locking - a.locking),
     },
+    [COLUMNS.UNION_WON.id]: {
+      [SortOrder.ASC]: (a: IContact, b: IContact) => Number(a.unionWon - b.unionWon),
+      [SortOrder.DESC]: (a: IContact, b: IContact) => Number(b.unionWon - a.unionWon),
+    },
+    [COLUMNS.UNION_EARNED.id]: {
+      [SortOrder.ASC]: (a: IContact, b: IContact) => Number(a.unionEarned - b.unionEarned),
+      [SortOrder.DESC]: (a: IContact, b: IContact) => Number(b.unionEarned - a.unionEarned),
+    },
     [COLUMNS.LAST_PAYMENT.id]: {
       [SortOrder.ASC]: (a: IContact, b: IContact) => Number(a.lastRepay - b.lastRepay),
       [SortOrder.DESC]: (a: IContact, b: IContact) => Number(b.lastRepay - a.lastRepay),

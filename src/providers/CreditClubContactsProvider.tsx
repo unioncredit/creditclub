@@ -8,6 +8,7 @@ import useRelatedAddresses from "@/hooks/useRelatedAddresses";
 import { daiContract, unionLensContract, userManagerContract, uTokenContract } from "@/contracts/optimism";
 import { usePopulateEns } from "@/hooks/usePopulateEns.ts";
 import { usePopulateFnames } from "@/hooks/usePopulateFnames.ts";
+import { useSubgraphAccounts } from "@/hooks/useSubgraphAccounts.ts";
 
 const CreditClubContactsContext = createContext({} as ICreditClubContactsProviderReturnType);
 
@@ -58,6 +59,8 @@ export const CreditClubContactsProvider = ({ children }: { children: React.React
     isMember: d[1],
     isOverdue: d[2],
     lastRepay: d[3],
+    unionWon: 0n,
+    unionEarned: 0n,
   }));
 
   const refetch = async () => {
@@ -65,7 +68,8 @@ export const CreditClubContactsProvider = ({ children }: { children: React.React
     await result.refetch();
   };
 
-  const ensPopulated = usePopulateEns(data);
+  const subgraphPopulated = useSubgraphAccounts(data);
+  const ensPopulated = usePopulateEns(subgraphPopulated);
   const fnamePopulated = usePopulateFnames(ensPopulated);
 
   return (

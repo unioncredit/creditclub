@@ -35,6 +35,8 @@ export interface IContact {
   isMember: boolean;
   isOverdue: boolean;
   lastRepay: bigint;
+  unionWon: bigint;
+  unionEarned: bigint;
 }
 
 export type ICreditClubContactsProviderReturnType = Omit<UseReadContractsReturnType, "data"|"refetch"> & {

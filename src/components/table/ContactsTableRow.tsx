@@ -20,6 +20,8 @@ export const ContactsTableRow = ({
     vouch,
     locking,
     lastRepay,
+    unionWon,
+    unionEarned,
   } = contact;
 
   const { formatted: lastRepayFormatted, paymentDue } = useLastRepay(lastRepay);
@@ -42,6 +44,26 @@ export const ContactsTableRow = ({
           key={COLUMNS.CLUB_DEBT.id}
           dimmed={locking <= 0n}
           value={`${format(locking)} DAI`}
+        />
+      ),
+    },
+    {
+      ...COLUMNS.UNION_WON,
+      value: (
+        <DimmableTableCell
+          key={COLUMNS.UNION_WON.id}
+          dimmed={unionWon <= 0n}
+          value={`${format(unionWon, 0)} DAI`}
+        />
+      ),
+    },
+    {
+      ...COLUMNS.UNION_EARNED,
+      value: (
+        <DimmableTableCell
+          key={COLUMNS.UNION_EARNED.id}
+          dimmed={unionEarned <= 0n}
+          value={`${format(unionEarned, 0)} DAI`}
         />
       ),
     },
