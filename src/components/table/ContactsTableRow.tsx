@@ -33,7 +33,7 @@ export const ContactsTableRow = ({
         <DimmableTableCell
           key={COLUMNS.CLUB_CREDIT.id}
           dimmed={vouch <= 0n}
-          value={`${format(vouch)} DAI`}
+          value={`$${format(vouch)}`}
         />
       ),
     },
@@ -43,7 +43,7 @@ export const ContactsTableRow = ({
         <DimmableTableCell
           key={COLUMNS.CLUB_DEBT.id}
           dimmed={locking <= 0n}
-          value={`${format(locking)} DAI`}
+          value={`$${format(locking)}`}
         />
       ),
     },
@@ -53,7 +53,7 @@ export const ContactsTableRow = ({
         <DimmableTableCell
           key={COLUMNS.UNION_WON.id}
           dimmed={unionWon <= 0n}
-          value={`${format(unionWon, 0)} DAI`}
+          value={`${format(unionWon, 0)} UNION`}
         />
       ),
     },
@@ -63,7 +63,7 @@ export const ContactsTableRow = ({
         <DimmableTableCell
           key={COLUMNS.UNION_EARNED.id}
           dimmed={unionEarned <= 0n}
-          value={`${format(unionEarned, 0)} DAI`}
+          value={`${format(unionEarned, 0)} UNION`}
         />
       ),
     },
