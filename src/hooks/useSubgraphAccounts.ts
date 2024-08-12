@@ -18,8 +18,8 @@ export const useSubgraphAccounts = (contacts: IContact[]) => {
 
     return {
       ...row,
-      unionWon: data.unionWon || 0n,
-      unionEarned: data.unionEarned || 0n,
+      unionWon: data?.unionWon || 0n,
+      unionEarned: data?.unionEarned || 0n,
     }
   });
 }

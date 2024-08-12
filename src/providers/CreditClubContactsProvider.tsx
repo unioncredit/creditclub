@@ -68,12 +68,12 @@ export const CreditClubContactsProvider = ({ children }: { children: React.React
     await result.refetch();
   };
 
-  const subgraphPopulated = useSubgraphAccounts(data);
-  const ensPopulated = usePopulateEns(subgraphPopulated);
+  const ensPopulated = usePopulateEns(data);
   const fnamePopulated = usePopulateFnames(ensPopulated);
+  const subgraphPopulated = useSubgraphAccounts(fnamePopulated);
 
   return (
-    <CreditClubContactsContext.Provider value={{ ...result, refetch, data: fnamePopulated }}>
+    <CreditClubContactsContext.Provider value={{ ...result, refetch, data: subgraphPopulated }}>
       {children}
     </CreditClubContactsContext.Provider>
   )
