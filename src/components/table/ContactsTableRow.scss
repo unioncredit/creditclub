@@ -1,6 +1,12 @@
 @import "@unioncredit/ui/src/variables";
 
 .ContactsTableRow {
+  .DimmableTableCell {
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+  }
+
   &__icon {
     height: 16px;
     margin-left: 4px;
