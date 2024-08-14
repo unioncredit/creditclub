@@ -1,6 +1,6 @@
 import "./ContactsTableRow.scss";
 // @ts-ignore
-import { Box, TableCell, TableRow, Text, LinkOutIcon } from "@unioncredit/ui";
+import { Box, TableCell, TableRow, Text, LinkOutIcon, UnionIcon } from "@unioncredit/ui";
 import { DimmableTableCell } from "@/components/table/DimmableTableCell.tsx";
 import { Avatar } from "@/components/shared/Avatar.tsx";
 import { format, truncateAddress, truncateEns } from "@/utils/format.ts";
@@ -53,7 +53,11 @@ export const ContactsTableRow = ({
         <DimmableTableCell
           key={COLUMNS.UNION_WON.id}
           dimmed={unionWon <= 0n}
-          value={`${format(unionWon, 0)} UNION`}
+          value={
+            unionWon > 0n
+              ? <Box>{`${format(unionWon, 0)}`} <UnionIcon /></Box>
+              : `${format(unionWon, 0)}`
+          }
         />
       ),
     },
@@ -63,7 +67,11 @@ export const ContactsTableRow = ({
         <DimmableTableCell
           key={COLUMNS.UNION_EARNED.id}
           dimmed={unionEarned <= 0n}
-          value={`${format(unionEarned, 0)} UNION`}
+          value={
+            unionEarned > 0n
+              ? <Box>{`${format(unionEarned, 0)}`} <UnionIcon /></Box>
+              : `${format(unionEarned, 0)}`
+          }
         />
       ),
     },
