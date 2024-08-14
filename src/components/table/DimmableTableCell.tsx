@@ -13,7 +13,7 @@ export const DimmableTableCell = ({
   ...props
 }: {
   dimmed: boolean;
-  value?: string;
+  value?: string | React.ReactNode;
   children?: React.ReactNode;
   className?: string;
 }) => (
