@@ -13,9 +13,18 @@
     opacity: 1 !important;
     width: 100%;
     height: auto;
-    border: 1.5px solid rgba(0, 0, 0, 0.05);
-    background: #FFF1F5 !important;
+    border: 1.5px solid rgba(0, 0, 0, 0.075);
+    background: linear-gradient(#FFF1F5, #efd8df) !important;
     padding: 8px 24px;
+    box-shadow: inset 1.85px 1.42px 2.85px #FFF1F5;
+
+    .IconCube {
+      border: 1.5px solid rgba(0, 0, 0, 0.05);
+
+      svg {
+        transition: 200ms ease;
+      }
+    }
 
     &.token {
       max-width: 200px;
@@ -28,7 +37,11 @@
     }
 
     &:hover {
-      background: #fceaee !important;
+      background: linear-gradient(#FFF1F5, #ecced7) !important;
+
+      .IconCube svg {
+        transform: scale(1.25);
+      }
     }
 
     p {

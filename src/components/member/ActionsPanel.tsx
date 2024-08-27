@@ -47,7 +47,7 @@ export const ActionsPanel = () => {
               <span>
               <IconCube color="#FFDFE8" icon={BlackGlasses} width={24} height={24} />
               <p className="mt-1 text-sm"
-                 style={{ color: "#FF638D" }}>Mint to Join and claim ${format(creditPerMember)} in credit</p>
+                 style={{ color: "#FF638D" }}>Click to mint and claim ${format(creditPerMember)} in credit</p>
             </span>
             )
 
