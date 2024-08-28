@@ -13,13 +13,15 @@ import {
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { StatRow } from "@/components/modals/StatRow.tsx";
 import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
-import { format } from "@/utils/format.ts";
+import { format, formattedNumber } from "@/utils/format.ts";
 import { ApprovalButton } from "@/components/shared/ApprovalButton.tsx";
 import { useAccount } from "wagmi";
 import { clubPluginContract, daiContract } from "@/contracts/optimism.ts";
 import { useWhitelistProof } from "@/hooks/useWhitelistProof.ts";
 import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
 import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
+import { useVesting } from "@/hooks/useVesting.ts";
+import { useNftInfo } from "@/hooks/useNftInfo.ts";
 
 export const MINT_NFT_MODAL = "mint-nft-modal";
 
@@ -30,26 +32,29 @@ export const MintNftModal = () => {
   const { new: creditPerMember } = useMemberCredit();
   const { refetch: refetchMember } = useMember();
   const { proof } = useWhitelistProof();
+  const { name } = useNftInfo();
 
   const { costToMint } = creditClub;
+
+  const { data: vestingData } = useVesting();
+  const { percentage, duration } = vestingData;
 
   return (
     <ModalOverlay onClick={close}>
       <Modal className="MintNftModal">
-        <Modal.Header title="Mint Club NFT" onClose={close} />
+        <Modal.Header title={`Mint ${name} membership`} onClose={close} />
+
+        <InfoBanner
+          mb="12px"
+          align="left"
+          variant="warning"
+          label="Your entry fee is added to the club stake to back yours and fellow members Credit."
+        />
 
         <Modal.Body>
-          <InfoBanner
-            mb="12px"
-            align="left"
-            variant="warning"
-            label="Please be aware that your accessible credit limit may change as other members join the club and borrow."
-          />
-
           <div className="mb-4">
             <StatRow
-              title="Entry Fee"
-              content="The cost to join"
+              title="Membership Fee"
               amount={format(costToMint, 0)}
               token={<Dai />}
             />
@@ -57,8 +62,15 @@ export const MintNftModal = () => {
             <ArrowRightIcon className="ArrowRightIcon" />
 
             <StatRow
-              title="Credit Limit"
-              content="Your initial credit limit"
+              title="Starting Credit Limit"
+              content={`You start at ${percentage * 100}% vested`}
+              amount={(formattedNumber(creditPerMember) * percentage).toFixed(2)}
+              token={<Dai />}
+            />
+
+            <StatRow
+              title="Full Membership"
+              content={`Credit limit after ${duration} days`}
               amount={format(creditPerMember)}
               token={<Dai />}
             />

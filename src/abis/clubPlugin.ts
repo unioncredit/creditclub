@@ -1,21 +1,5 @@
 export const clubPluginAbi = [{
-  "inputs": [{
-    "internalType": "address",
-    "name": "_safe",
-    "type": "address",
-  }, { "internalType": "address", "name": "_userManager", "type": "address" }, {
-    "internalType": "address",
-    "name": "_uToken",
-    "type": "address",
-  }, { "internalType": "address", "name": "_union", "type": "address" }, {
-    "internalType": "address",
-    "name": "_auth",
-    "type": "address",
-  }, { "internalType": "uint96", "name": "_maxAuthTrust", "type": "uint96" }, {
-    "internalType": "address",
-    "name": "_assetToken",
-    "type": "address",
-  }, { "internalType": "uint32", "name": "_cooldown", "type": "uint32" }],
+  "inputs": [],
   "stateMutability": "nonpayable",
   "type": "constructor",
 }, {
@@ -26,12 +10,28 @@ export const clubPluginAbi = [{
   "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
   "name": "AddressInsufficientBalance",
   "type": "error",
-}, { "inputs": [], "name": "FailedInnerCall", "type": "error" }, {
+}, {
+  "inputs": [{ "internalType": "address", "name": "implementation", "type": "address" }],
+  "name": "ERC1967InvalidImplementation",
+  "type": "error",
+}, { "inputs": [], "name": "ERC1967NonPayable", "type": "error" }, {
+  "inputs": [],
+  "name": "FailedInnerCall",
+  "type": "error",
+}, { "inputs": [], "name": "InvalidInitialization", "type": "error" }, {
+  "inputs": [],
+  "name": "NotInitializing",
+  "type": "error",
+}, {
+  "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
+  "name": "SafeERC20FailedOperation",
+  "type": "error",
+}, { "inputs": [], "name": "UUPSUnauthorizedCallContext", "type": "error" }, {
   "inputs": [{
-    "internalType": "address",
-    "name": "token",
-    "type": "address",
-  }], "name": "SafeERC20FailedOperation", "type": "error",
+    "internalType": "bytes32",
+    "name": "slot",
+    "type": "bytes32",
+  }], "name": "UUPSUnsupportedProxiableUUID", "type": "error",
 }, {
   "anonymous": false,
   "inputs": [{ "indexed": false, "internalType": "address", "name": "oldAuth", "type": "address" }, {
@@ -124,6 +124,11 @@ export const clubPluginAbi = [{
   "type": "event",
 }, {
   "anonymous": false,
+  "inputs": [{ "indexed": false, "internalType": "uint64", "name": "version", "type": "uint64" }],
+  "name": "Initialized",
+  "type": "event",
+}, {
+  "anonymous": false,
   "inputs": [{ "indexed": false, "internalType": "uint96", "name": "oldTrust", "type": "uint96" }, {
     "indexed": false,
     "internalType": "uint96",
@@ -206,6 +211,31 @@ export const clubPluginAbi = [{
   "anonymous": false,
   "inputs": [{
     "indexed": false,
+    "internalType": "uint256",
+    "name": "oldPercent",
+    "type": "uint256",
+  }, { "indexed": false, "internalType": "uint256", "name": "newPercent", "type": "uint256" }],
+  "name": "StartingPercentTrustUpdated",
+  "type": "event",
+}, {
+  "anonymous": false,
+  "inputs": [{ "indexed": true, "internalType": "address", "name": "implementation", "type": "address" }],
+  "name": "Upgraded",
+  "type": "event",
+}, {
+  "anonymous": false,
+  "inputs": [{
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "oldDuration",
+    "type": "uint256",
+  }, { "indexed": false, "internalType": "uint256", "name": "newDuration", "type": "uint256" }],
+  "name": "VestingDurationUpdated",
+  "type": "event",
+}, {
+  "anonymous": false,
+  "inputs": [{
+    "indexed": false,
     "internalType": "uint16",
     "name": "oldWinnerPercent",
     "type": "uint16",
@@ -220,7 +250,19 @@ export const clubPluginAbi = [{
   "type": "function",
 }, {
   "inputs": [],
+  "name": "MIN_MEMBER_NUM",
+  "outputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
+  "stateMutability": "view",
+  "type": "function",
+}, {
+  "inputs": [],
   "name": "NAME",
+  "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+  "stateMutability": "view",
+  "type": "function",
+}, {
+  "inputs": [],
+  "name": "UPGRADE_INTERFACE_VERSION",
   "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
   "stateMutability": "view",
   "type": "function",
@@ -273,6 +315,12 @@ export const clubPluginAbi = [{
   "stateMutability": "view",
   "type": "function",
 }, {
+  "inputs": [{ "internalType": "address", "name": "recipient", "type": "address" }, {
+    "internalType": "address",
+    "name": "token",
+    "type": "address",
+  }], "name": "claim", "outputs": [], "stateMutability": "nonpayable", "type": "function",
+}, {
   "inputs": [],
   "name": "clubMemberNFT",
   "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
@@ -297,6 +345,12 @@ export const clubPluginAbi = [{
   "stateMutability": "view",
   "type": "function",
 }, {
+  "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
+  "name": "currentPercentTrust",
+  "outputs": [{ "internalType": "uint256", "name": "percentTrust", "type": "uint256" }],
+  "stateMutability": "view",
+  "type": "function",
+}, {
   "inputs": [],
   "name": "feelingLucky",
   "outputs": [],
@@ -314,6 +368,24 @@ export const clubPluginAbi = [{
   "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
   "stateMutability": "view",
   "type": "function",
+}, {
+  "inputs": [{ "internalType": "address", "name": "_safe", "type": "address" }, {
+    "internalType": "address",
+    "name": "_userManager",
+    "type": "address",
+  }, { "internalType": "address", "name": "_uToken", "type": "address" }, {
+    "internalType": "address",
+    "name": "_union",
+    "type": "address",
+  }, { "internalType": "address", "name": "_auth", "type": "address" }, {
+    "internalType": "address",
+    "name": "_assetToken",
+    "type": "address",
+  }, { "internalType": "uint96", "name": "_maxAuthTrust", "type": "uint96" }, {
+    "internalType": "uint32",
+    "name": "_cooldown",
+    "type": "uint32",
+  }], "name": "initialize", "outputs": [], "stateMutability": "nonpayable", "type": "function",
 }, {
   "inputs": [],
   "name": "maxAuthTrust",
@@ -339,6 +411,12 @@ export const clubPluginAbi = [{
   "stateMutability": "nonpayable",
   "type": "function",
 }, {
+  "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
+  "name": "percentVested",
+  "outputs": [{ "internalType": "uint256", "name": "percent", "type": "uint256" }],
+  "stateMutability": "view",
+  "type": "function",
+}, {
   "inputs": [],
   "name": "percentageFull",
   "outputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
@@ -348,6 +426,12 @@ export const clubPluginAbi = [{
   "inputs": [],
   "name": "proRataAmount",
   "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+  "stateMutability": "view",
+  "type": "function",
+}, {
+  "inputs": [],
+  "name": "proxiableUUID",
+  "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
   "stateMutability": "view",
   "type": "function",
 }, {
@@ -459,6 +543,12 @@ export const clubPluginAbi = [{
   "stateMutability": "nonpayable",
   "type": "function",
 }, {
+  "inputs": [{ "internalType": "uint256", "name": "newPercent", "type": "uint256" }],
+  "name": "setStartingPercentTrust",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
   "inputs": [{
     "internalType": "address[]",
     "name": "membersToUpdate",
@@ -469,10 +559,22 @@ export const clubPluginAbi = [{
   "stateMutability": "nonpayable",
   "type": "function",
 }, {
+  "inputs": [{ "internalType": "uint256", "name": "newDuration", "type": "uint256" }],
+  "name": "setVestingDuration",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
   "inputs": [{ "internalType": "uint16", "name": "_winnerPercent", "type": "uint16" }],
   "name": "setWinnerPercent",
   "outputs": [],
   "stateMutability": "nonpayable",
+  "type": "function",
+}, {
+  "inputs": [],
+  "name": "startingPercentTrust",
+  "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+  "stateMutability": "view",
   "type": "function",
 }, {
   "inputs": [],
@@ -487,6 +589,16 @@ export const clubPluginAbi = [{
   "stateMutability": "view",
   "type": "function",
 }, {
+  "inputs": [{
+    "internalType": "address",
+    "name": "newImplementation",
+    "type": "address",
+  }, { "internalType": "bytes", "name": "data", "type": "bytes" }],
+  "name": "upgradeToAndCall",
+  "outputs": [],
+  "stateMutability": "payable",
+  "type": "function",
+}, {
   "inputs": [],
   "name": "userManager",
   "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
@@ -497,7 +609,7 @@ export const clubPluginAbi = [{
     "internalType": "address",
     "name": "to",
     "type": "address",
-  }],
+  }, { "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
   "name": "validateUpdate",
   "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
   "stateMutability": "nonpayable",
@@ -506,6 +618,12 @@ export const clubPluginAbi = [{
   "inputs": [{ "internalType": "address", "name": "winner", "type": "address" }],
   "name": "validateWinner",
   "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+  "stateMutability": "view",
+  "type": "function",
+}, {
+  "inputs": [],
+  "name": "vestingDuration",
+  "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
   "stateMutability": "view",
   "type": "function",
 }, {
@@ -520,4 +638,4 @@ export const clubPluginAbi = [{
   "outputs": [],
   "stateMutability": "nonpayable",
   "type": "function",
-}, { "stateMutability": "payable", "type": "receive" }] as const;
+}, { "stateMutability": "payable", "type": "receive" }];
