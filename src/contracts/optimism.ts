@@ -28,7 +28,7 @@ export const uTokenContract = {
 };
 
 export const clubPluginContract = {
-  address: "0x5ed1532de62bc0492a1868cf5523ff248252a646" as Address,
+  address: "0xfa0BD360cf3b3b2BbAB921B73c44337c861b8b29" as Address,
   abi: clubPluginAbi,
 };
 
