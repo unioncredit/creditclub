@@ -18,13 +18,20 @@ import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
 import { clubNftContract } from "@/contracts/optimism.ts";
 import cn from "classnames";
 import { useNftInfo } from "@/hooks/useNftInfo.ts";
+import { useVesting } from "@/hooks/useVesting.ts";
 
 export const ActionsPanel = () => {
   const { open: openModal } = useModals();
   const { data: member } = useMember();
+  const { data: vestingData } = useVesting();
   const { name } = useNftInfo();
 
+  const { vestedPercentage } = vestingData;
   const { tokenId } = member;
+
+  const vestingStatus = vestedPercentage >= 100
+    ? "Full Member"
+    : `${(vestedPercentage * 100).toFixed(2)}% vested`
 
   return (
     <div className="ActionsPanel rounded-2xl p-6 text-left sm:p-4">
@@ -40,7 +47,9 @@ export const ActionsPanel = () => {
             tokenId ? (
               <span className="inline-flex items-center">
                 <PinkGlasses />
-                <p className="ml-2 text-md" style={{ color: "#FF638D" }}>BCC: ID#{tokenId.toString(10)}</p>
+                <p className="ml-2 text-md" style={{ color: "#FF638D" }}>
+                  BCC: ID#{tokenId.toString(10)} : {vestingStatus}
+                </p>
               </span>
             ) : (
               <span>

@@ -54,6 +54,7 @@ export type IConnectedMemberContext = Omit<UseReadContractsReturnType, "data"> &
     owed: bigint;
     vouch: bigint;
     unionCreditLimit: bigint;
+    percentVested: bigint | undefined;
   },
 }
 

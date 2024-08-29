@@ -3,7 +3,7 @@ import React, { createContext, useContext } from "react";
 
 import { IConnectedMemberContext } from "@/providers/types";
 import {
-  clubNftContract, userManagerContract,
+  clubNftContract, clubPluginContract, userManagerContract,
 } from "@/contracts/optimism";
 import { zeroAddress } from "viem";
 import { CREDITCLUB_SAFE_ADDRESS } from "@/constants.ts";
@@ -15,7 +15,7 @@ export const useMember = () => useContext(ConnectedMemberContext);
 export const ConnectedMemberProvider = ({ children }: { children: React.ReactNode; }) => {
   const { address = zeroAddress } = useAccount();
 
-  const result = useReadContracts({
+  const resultOne = useReadContracts({
     contracts: [
       {
         ...clubNftContract,
@@ -41,17 +41,34 @@ export const ConnectedMemberProvider = ({ children }: { children: React.ReactNod
         ...userManagerContract,
         functionName: "getCreditLimit",
         args: [address],
-      },
+      }
     ],
   });
 
   const [
     balanceOf = 0n,
-    tokenId,
+    tokenId= undefined,
     owed = 0n,
     vouch = 0n,
     unionCreditLimit = 0n,
-  ] = result.data?.map(d => d.result as never) || [];
+  ] = resultOne.data?.map(d => d.result as never) || [];
+
+  const resultTwo = useReadContracts({
+    contracts: [
+      {
+        ...clubPluginContract,
+        functionName: "percentVested",
+        args: [tokenId],
+      }
+    ],
+    query: {
+      enabled: tokenId !== undefined,
+    }
+  });
+
+  const [
+    percentVested = undefined,
+  ] = resultTwo.data?.map(d => d.result as never) || [];
 
   const data = {
     isMember: balanceOf > 0n,
@@ -60,10 +77,11 @@ export const ConnectedMemberProvider = ({ children }: { children: React.ReactNod
     owed,
     vouch,
     unionCreditLimit,
+    percentVested,
   };
 
   return (
-    <ConnectedMemberContext.Provider value={{ ...result, data }}>
+    <ConnectedMemberContext.Provider value={{ ...resultOne, data }}>
       {children}
     </ConnectedMemberContext.Provider>
   )

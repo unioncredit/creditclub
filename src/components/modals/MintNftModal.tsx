@@ -37,7 +37,7 @@ export const MintNftModal = () => {
   const { costToMint } = creditClub;
 
   const { data: vestingData } = useVesting();
-  const { percentage, duration } = vestingData;
+  const { startingPercentage, duration } = vestingData;
 
   return (
     <ModalOverlay onClick={close}>
@@ -63,8 +63,8 @@ export const MintNftModal = () => {
 
             <StatRow
               title="Starting Credit Limit"
-              content={`You start at ${percentage * 100}% vested`}
-              amount={(formattedNumber(creditPerMember) * percentage).toFixed(2)}
+              content={`You start at ${startingPercentage * 100}% vested`}
+              amount={(formattedNumber(creditPerMember) * startingPercentage).toFixed(2)}
               token={<Dai />}
             />
 
