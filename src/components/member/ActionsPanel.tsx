@@ -19,6 +19,7 @@ import { clubNftContract } from "@/contracts/optimism.ts";
 import cn from "classnames";
 import { useNftInfo } from "@/hooks/useNftInfo.ts";
 import { useVesting } from "@/hooks/useVesting.ts";
+import { RainbowBar } from "@/components/shared/RainbowBar.tsx";
 
 export const ActionsPanel = () => {
   const { open: openModal } = useModals();
@@ -27,7 +28,7 @@ export const ActionsPanel = () => {
   const { name } = useNftInfo();
 
   const { vestedPercentage } = vestingData;
-  const { tokenId } = member;
+  const { tokenId, isMember } = member;
 
   const vestingStatus = vestedPercentage >= 100
     ? "Full Member"
@@ -64,6 +65,10 @@ export const ActionsPanel = () => {
           variant="light"
           onClick={() => tokenId ? open(`https://opensea.io/assets/optimism/${clubNftContract.address}/${tokenId}`) : openModal(MINT_NFT_MODAL)}
         />
+
+        {isMember && (
+          <RainbowBar mt="24px" percentage={vestedPercentage * 100} />
+        )}
       </header>
 
       <ClubCreditRow />
