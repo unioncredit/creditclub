@@ -15,17 +15,24 @@ import { BidBucketRow } from "@/components/member/BidBucketRow.tsx";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { MINT_NFT_MODAL } from "@/components/modals/MintNftModal.tsx";
 import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
-import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
-import { format } from "@/utils/format.ts";
 import { clubNftContract } from "@/contracts/optimism.ts";
 import cn from "classnames";
+import { useNftInfo } from "@/hooks/useNftInfo.ts";
+import { useVesting } from "@/hooks/useVesting.ts";
+import { RainbowBar } from "@/components/shared/RainbowBar.tsx";
 
 export const ActionsPanel = () => {
   const { open: openModal } = useModals();
   const { data: member } = useMember();
-  const { new: creditPerMember } = useMemberCredit();
+  const { data: vestingData } = useVesting();
+  const { name } = useNftInfo();
 
-  const { tokenId } = member;
+  const { vestedPercentage } = vestingData;
+  const { tokenId, isMember } = member;
+
+  const vestingStatus = vestedPercentage >= 100
+    ? "Full Member"
+    : `${(vestedPercentage * 100).toFixed(2)}% vested`
 
   return (
     <div className="ActionsPanel rounded-2xl p-6 text-left sm:p-4">
@@ -41,13 +48,15 @@ export const ActionsPanel = () => {
             tokenId ? (
               <span className="inline-flex items-center">
                 <PinkGlasses />
-                <p className="ml-2 text-md" style={{ color: "#FF638D" }}>BCC: ID#{tokenId.toString(10)}</p>
+                <p className="ml-2 text-md" style={{ color: "#FF638D" }}>
+                  BCC: ID#{tokenId.toString(10)} : {vestingStatus}
+                </p>
               </span>
             ) : (
               <span>
-              <IconCube color="#FFDFE8" icon={BlackGlasses} width={24} height={24} />
+              <IconCube color="#FFDFE8" icon={BlackGlasses} width={32} height={32} />
               <p className="mt-1 text-sm"
-                 style={{ color: "#FF638D" }}>Mint to Join and claim ${format(creditPerMember)} in credit</p>
+                 style={{ color: "#FF638D" }}>Mint to Join {name && `"${name}"`}</p>
             </span>
             )
 
@@ -56,6 +65,10 @@ export const ActionsPanel = () => {
           variant="light"
           onClick={() => tokenId ? open(`https://opensea.io/assets/optimism/${clubNftContract.address}/${tokenId}`) : openModal(MINT_NFT_MODAL)}
         />
+
+        {isMember && (
+          <RainbowBar mt="24px" percentage={vestedPercentage * 100} />
+        )}
       </header>
 
       <ClubCreditRow />
