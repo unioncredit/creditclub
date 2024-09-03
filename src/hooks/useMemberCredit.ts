@@ -18,7 +18,7 @@ export const useMemberCredit = () => {
   const proRataStakedAmount = stakedBalance * PRO_RATA_DENOMINATOR;
   const proRataTotalSupply = totalSupply < PRO_RATA_MIN_MEMBER_NUM
     ? PRO_RATA_MIN_MEMBER_NUM
-    : totalSupply + 1n;
+    : totalSupply;
   const newMemberProRataAmount = percentageFull && proRataTotalSupply
     ? proRataStakedAmount / BigInt(percentageFull) / proRataTotalSupply
     : 0n;
