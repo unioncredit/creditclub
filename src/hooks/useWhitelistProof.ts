@@ -17,7 +17,8 @@ const whitelist = [
         "0x95a52074D9c28043c7D890d31f648612B7dd45A0",
         "0x99C5968eEccd940fB35aAeBAF31c3035Cfa71d66",
         "0x1C92efDB6C924cB2aCF7DcEec29B7aBB69aB58BC",
-        "0xd0f46a5d48596409264d4eFc1f3B229878fFf743"
+        "0xd0f46a5d48596409264d4eFc1f3B229878fFf743",
+        "0x2BB5B5f11b35ACeadd4cc35eCdC20410e9E6A981"
     ];
 
 export const useWhitelistProof = () => {
