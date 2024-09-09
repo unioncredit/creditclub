@@ -6,29 +6,35 @@ import { CreditClubDataProvider } from "@/providers/CreditClubDataProvider";
 import { CreditClubContactsProvider } from "@/providers/CreditClubContactsProvider";
 import { Layout } from '@/components/shared/Layout.tsx';
 import { ModalManagerProvider } from "@/providers/ModalManagerProvider.tsx";
-import { ConnectedMemberProvider } from "@/providers/ConnectedMemberProvider.tsx";
+import { CreditClubMemberProvider } from "@/providers/CreditClubMemberProvider.tsx";
 import { ToastsProvider } from "@/providers/ToastsProvider.tsx";
 import { CacheProvider } from '@/providers/CacheProvider';
 import { SettingsProvider } from "@/providers/SettingsProvider.tsx";
+import { UnionDataProvider } from "@/providers/UnionDataProvider.tsx";
+import { UnionMemberProvider } from "@/providers/UnionMemberProvider.tsx";
 
 function App() {
   return (
     <Web3Provider>
       <CreditClubDataProvider>
         <CreditClubContactsProvider>
-          <ConnectedMemberProvider>
-            <CacheProvider>
-              <ToastsProvider>
-                <ModalManagerProvider>
-                  <SettingsProvider>
-                    <Layout>
-                      <Homepage />
-                    </Layout>
-                  </SettingsProvider>
-                </ModalManagerProvider>
-              </ToastsProvider>
-            </CacheProvider>
-          </ConnectedMemberProvider>
+          <CreditClubMemberProvider>
+            <UnionDataProvider>
+              <UnionMemberProvider>
+                <CacheProvider>
+                  <ToastsProvider>
+                    <ModalManagerProvider>
+                      <SettingsProvider>
+                        <Layout>
+                          <Homepage />
+                        </Layout>
+                      </SettingsProvider>
+                    </ModalManagerProvider>
+                  </ToastsProvider>
+                </CacheProvider>
+              </UnionMemberProvider>
+            </UnionDataProvider>
+          </CreditClubMemberProvider>
         </CreditClubContactsProvider>
       </CreditClubDataProvider>
     </Web3Provider>

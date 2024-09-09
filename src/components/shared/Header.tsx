@@ -6,19 +6,22 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import CreditClubLogo from "@/assets/creditclub-logo.svg";
 import { format, toPercent } from "@/utils/format.ts";
-import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
 import { useAccount } from "wagmi";
 import cn from "classnames";
-import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
+import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
 import { formatUnits } from "viem";
 import { BLOCKS_PER_YEAR } from "@/constants.ts";
+import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
+import { useModals } from "@/providers/ModalManagerProvider.tsx";
+import { BORROW_MODAL } from "@/components/modals/BorrowModal.tsx";
 
 export const Header = () => {
   const { address, isConnected } = useAccount();
-  const { data: member } = useMember();
-  const { data: creditClub } = useCreditClub();
+  const { data: member } = useUnionMember();
+  const { data: creditClub } = useClubData();
+  const { open: openModal } = useModals();
 
-  const { unionCreditLimit } = member;
+  const { creditLimit } = member;
   const { borrowRatePerSecond } = creditClub;
 
   return (
@@ -37,12 +40,12 @@ export const Header = () => {
               className="CreditButton mr-2 md:hidden lg:px-2"
               label={
                 <p className="inline-flex items-center">
-                  Available Credit · <span className="ml-1 text-black">${format(unionCreditLimit)}</span>
+                  Available Credit · <span className="ml-1 text-black">${format(creditLimit)}</span>
                 </p>
               }
               color="secondary"
               variant="light"
-              onClick={() => open(`https://app.union.finance/`)}
+              onClick={() => openModal(BORROW_MODAL)}
             />
 
             <Button

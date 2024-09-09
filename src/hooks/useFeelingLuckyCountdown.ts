@@ -1,9 +1,9 @@
 import { useCountdown } from "@/hooks/useCountdown.ts";
-import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
+import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
 import { useMemo } from "react";
 
 export const useFeelingLuckyCountdown = () => {
-  const { data: creditClub } = useCreditClub();
+  const { data: creditClub } = useClubData();
   const { cooldown, checkpoint } = creditClub;
   const deadline = useMemo(() => new Date((Number(checkpoint) * 1000) + cooldown * 1000), [checkpoint, cooldown]);
 

@@ -13,8 +13,8 @@ import {
 } from "@unioncredit/ui";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { StatRow } from "@/components/modals/StatRow.tsx";
-import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
-import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
+import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { format } from "@/utils/format.ts";
 import { ApprovalButton } from "@/components/shared/ApprovalButton.tsx";
 import { useAccount } from "wagmi";
@@ -26,8 +26,8 @@ export const BID_BUCKET_MODAL = "bid-bucket-modal";
 export const BidBucketModal = () => {
   const { close } = useModals();
   const { address } = useAccount();
-  const { data: creditClub, refetch } = useCreditClub();
-  const { data: member } = useMember();
+  const { data: creditClub, refetch } = useClubData();
+  const { data: member } = useClubMember();
 
   const { publicBidPrice, memberBidPrice, bidBucketBalance } = creditClub;
   const { isMember } = member;

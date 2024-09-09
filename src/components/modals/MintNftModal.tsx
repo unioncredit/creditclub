@@ -12,13 +12,13 @@ import {
 } from "@unioncredit/ui";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { StatRow } from "@/components/modals/StatRow.tsx";
-import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
+import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
 import { format, formattedNumber } from "@/utils/format.ts";
 import { ApprovalButton } from "@/components/shared/ApprovalButton.tsx";
 import { useAccount } from "wagmi";
 import { clubPluginContract, daiContract } from "@/contracts/optimism.ts";
 import { useWhitelistProof } from "@/hooks/useWhitelistProof.ts";
-import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
 import { useVesting } from "@/hooks/useVesting.ts";
 import { useNftInfo } from "@/hooks/useNftInfo.ts";
@@ -28,9 +28,9 @@ export const MINT_NFT_MODAL = "mint-nft-modal";
 export const MintNftModal = () => {
   const { close } = useModals();
   const { address, isConnected } = useAccount();
-  const { data: creditClub, refetch: refetchCreditClub } = useCreditClub();
+  const { data: creditClub, refetch: refetchCreditClub } = useClubData();
   const { new: creditPerMember } = useMemberCredit();
-  const { refetch: refetchMember } = useMember();
+  const { refetch: refetchMember } = useClubMember();
   const { proof } = useWhitelistProof();
   const { name } = useNftInfo();
 

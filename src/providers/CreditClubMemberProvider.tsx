@@ -1,18 +1,18 @@
 import { useAccount, useReadContracts } from "wagmi";
 import React, { createContext, useContext } from "react";
 
-import { IConnectedMemberContext } from "@/providers/types";
+import { ICreditClubMemberContext } from "@/providers/types";
 import {
   clubNftContract, clubPluginContract, userManagerContract,
 } from "@/contracts/optimism";
 import { zeroAddress } from "viem";
 import { CREDITCLUB_SAFE_ADDRESS } from "@/constants.ts";
 
-const ConnectedMemberContext = createContext({} as IConnectedMemberContext);
+const CreditClubMemberContext = createContext({} as ICreditClubMemberContext);
 
-export const useMember = () => useContext(ConnectedMemberContext);
+export const useClubMember = () => useContext(CreditClubMemberContext);
 
-export const ConnectedMemberProvider = ({ children }: { children: React.ReactNode; }) => {
+export const CreditClubMemberProvider = ({ children }: { children: React.ReactNode; }) => {
   const { address = zeroAddress } = useAccount();
 
   const resultOne = useReadContracts({
@@ -37,11 +37,6 @@ export const ConnectedMemberProvider = ({ children }: { children: React.ReactNod
         functionName: 'getVouchingAmount',
         args: [CREDITCLUB_SAFE_ADDRESS, address],
       },
-      {
-        ...userManagerContract,
-        functionName: "getCreditLimit",
-        args: [address],
-      }
     ],
   });
 
@@ -50,7 +45,6 @@ export const ConnectedMemberProvider = ({ children }: { children: React.ReactNod
     tokenId= undefined,
     owed = 0n,
     vouch = 0n,
-    unionCreditLimit = 0n,
   ] = resultOne.data?.map(d => d.result as never) || [];
 
   const resultTwo = useReadContracts({
@@ -76,13 +70,12 @@ export const ConnectedMemberProvider = ({ children }: { children: React.ReactNod
     tokenId,
     owed,
     vouch,
-    unionCreditLimit,
     percentVested,
   };
 
   return (
-    <ConnectedMemberContext.Provider value={{ ...resultOne, data }}>
+    <CreditClubMemberContext.Provider value={{ ...resultOne, data }}>
       {children}
-    </ConnectedMemberContext.Provider>
+    </CreditClubMemberContext.Provider>
   )
 }
