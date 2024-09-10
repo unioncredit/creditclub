@@ -1,0 +1,56 @@
+@import "@unioncredit/ui/src/variables";
+
+.RepayModal {
+  .OptionCard,
+  .OptionSelect {
+    background: white;
+  }
+  .OptionCard {
+    min-height: 90px;
+    border: 1px solid $grey200;
+
+    &--checked {
+      background: $blue50;
+      border: 1px solid $blue600;
+      box-shadow: none !important;
+
+      .Control {
+        background: $blue600;
+
+        &::after {
+          width: 9px;
+          height: 9px;
+          background: white;
+        }
+      }
+
+      .OptionCard__value {
+        background: $blue100;
+        border: 1px solid $blue200;
+      }
+      p {
+        color: $blue600 !important;
+      }
+    }
+  }
+  .OptionCard[paymenttype="custom"]:not(.OptionCard--checked) {
+    .input-wrapper {
+      width: 80px !important;
+    }
+    .input__suffix {
+      padding: 0 10px;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        margin-left: 4px;
+      }
+    }
+    .input--disabled input {
+      border: 0.5px solid #d4d4d8 !important;
+      border-radius: 4px;
+      padding: 4px 8px;
+      height: 38px;
+    }
+  }
+}

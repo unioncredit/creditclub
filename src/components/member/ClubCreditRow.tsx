@@ -10,12 +10,12 @@ import { IconCube } from "@/components/shared/IconCube.tsx";
 import { format } from "@/utils/format.ts";
 import { useWrite } from "@/hooks/useWrite.ts";
 import { clubPluginContract } from "@/contracts/optimism.ts";
-import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
 import cn from "classnames";
 
 export const ClubCreditRow = () => {
-  const { data: member } = useMember();
+  const { data: member } = useClubMember();
   const { current: currentCredit, difference: changeInCredit } = useMemberCredit();
 
   const { isMember, tokenId } = member;

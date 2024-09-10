@@ -1,9 +1,9 @@
 import { useBlockTime } from "@/hooks/useBlockTime.ts";
-import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
+import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
 import { formatTimestamp } from "@/utils/format.ts";
 
 export const useLastRepay = (lastRepay: bigint) => {
-  const { data: creditClub } = useCreditClub();
+  const { data: creditClub } = useClubData();
   const { overdueTime } = creditClub;
 
   const today = new Date();

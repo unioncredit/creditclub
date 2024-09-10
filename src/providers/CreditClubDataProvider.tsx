@@ -14,7 +14,7 @@ import { ICreditClubDataProviderContext } from "@/providers/types";
 
 const CreditClubDataContext = createContext({} as ICreditClubDataProviderContext);
 
-export const useCreditClub = () => useContext(CreditClubDataContext);
+export const useClubData = () => useContext(CreditClubDataContext);
 
 export const CreditClubDataProvider = ({ children }: { children: React.ReactNode; }) => {
   const result = useReadContracts({

@@ -6,6 +6,7 @@ import { uTokenAbi } from "@/abis/uToken";
 import { clubPluginAbi } from "@/abis/clubPlugin";
 import { clubNftAbi } from "@/abis/clubNft";
 import { comptrollerAbi } from "@/abis/comptroller.ts";
+import { assetManagerAbi } from "@/abis/assetManager.ts";
 
 export const userManagerContract = {
   address: "0x8E195D65b9932185Fcc76dB5144534e0f3597628" as Address,
@@ -41,3 +42,8 @@ export const comptrollerContract = {
   address: "0x06a31efa04453C5F9C0A711Cdb96075308C9d6E3" as Address,
   abi: comptrollerAbi,
 };
+
+export const assetManagerContract = {
+  address: "0xE4ADdfdf5641EB4e15F60a81F63CEd4884B49823" as Address,
+  abi: assetManagerAbi,
+}

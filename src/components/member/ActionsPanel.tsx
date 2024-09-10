@@ -14,7 +14,7 @@ import { ClubDebtRow } from "@/components/member/ClubDebtRow.tsx";
 import { BidBucketRow } from "@/components/member/BidBucketRow.tsx";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { MINT_NFT_MODAL } from "@/components/modals/MintNftModal.tsx";
-import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { clubNftContract } from "@/contracts/optimism.ts";
 import cn from "classnames";
 import { useNftInfo } from "@/hooks/useNftInfo.ts";
@@ -23,7 +23,7 @@ import { RainbowBar } from "@/components/shared/RainbowBar.tsx";
 
 export const ActionsPanel = () => {
   const { open: openModal } = useModals();
-  const { data: member } = useMember();
+  const { data: member } = useClubMember();
   const { data: vestingData } = useVesting();
   const { name } = useNftInfo();
 

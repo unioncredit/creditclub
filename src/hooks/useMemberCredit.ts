@@ -1,11 +1,11 @@
-import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
-import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
+import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { PRO_RATA_DENOMINATOR, PRO_RATA_MIN_MEMBER_NUM } from "@/constants.ts";
 import { format } from "@/utils/format.ts";
 
 export const useMemberCredit = () => {
-  const { data: creditClub } = useCreditClub();
-  const { data: member } = useMember();
+  const { data: creditClub } = useClubData();
+  const { data: member } = useClubMember();
 
   const { vouch } = member;
   const {

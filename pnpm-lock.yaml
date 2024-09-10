@@ -18,8 +18,8 @@ dependencies:
     specifier: ^5.37.1
     version: 5.37.1(react@18.3.1)
   '@unioncredit/ui':
-    specifier: ^2.0.30
-    version: 2.0.30(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1)
+    specifier: ^2.0.36
+    version: 2.0.36(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1)
   '@wagmi/core':
     specifier: ^2.10.4
     version: 2.10.4(@types/react@18.3.2)(react@18.3.1)(typescript@5.4.5)(viem@2.11.0)
@@ -4031,8 +4031,8 @@ packages:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
     dev: true
 
-  /@unioncredit/ui@2.0.30(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-plWdTEowtIzbZkkiQcKjkSk9xYMIoes3+hfaimp0BrnFECBkJRDtriv71EJp4Jup9GiGnDfSSmFiLYyouGxv9g==}
+  /@unioncredit/ui@2.0.36(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-5eVF8OVjcAl7M8b1haVXdK9SrIOCmFphU/TVnTzNCZkXiVrN4y32bTLBrv8/uFY6EQHMqKFGCwnQZwT9tnfd0A==}
     peerDependencies:
       react: 18.2.0
       react-dom: 18.2.0

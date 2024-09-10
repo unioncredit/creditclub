@@ -1,6 +1,27 @@
 import { Address } from "viem";
 import { UseReadContractsReturnType } from "wagmi";
 
+export type IUnionDataProviderContext = Omit<UseReadContractsReturnType, "data"> & {
+  data: {
+    minBorrow: bigint;
+    originationFee: bigint;
+    overdueTime: bigint;
+    borrowRatePerSecond: bigint;
+    getLoanableAmount: bigint;
+  }
+}
+
+export type IUnionMemberContext = Omit<UseReadContractsReturnType, "data"> & {
+  data: {
+    isOverdue: boolean;
+    creditLimit: bigint;
+    owed: bigint;
+    daiBalance: bigint;
+    interest: bigint;
+    minPayment: bigint;
+  },
+}
+
 export type ICreditClubDataProviderContext = Omit<UseReadContractsReturnType, "data"> & {
   data: {
     totalLockedStake: bigint;
@@ -46,14 +67,13 @@ export type ICreditClubContactsProviderReturnType = Omit<UseReadContractsReturnT
   data: IContact[]
 };
 
-export type IConnectedMemberContext = Omit<UseReadContractsReturnType, "data"> & {
+export type ICreditClubMemberContext = Omit<UseReadContractsReturnType, "data"> & {
   data: {
     isMember: boolean;
     tokenBalance: bigint;
     tokenId: bigint | undefined;
     owed: bigint;
     vouch: bigint;
-    unionCreditLimit: bigint;
     percentVested: bigint | undefined;
   },
 }

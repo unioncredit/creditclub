@@ -14,7 +14,7 @@ import {
 } from "@unioncredit/ui";
 
 import { useContacts } from "@/providers/CreditClubContactsProvider.tsx";
-import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
+import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
 import { format, formattedNumber } from "@/utils/format.ts";
 import { AddressesAvatarBadgeRow } from "@/components/shared/AddressesAvatarBadgeRow.tsx";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
@@ -22,7 +22,7 @@ import { FEELING_LUCKY_MODAL } from "@/components/modals/FeelingLuckyModal.tsx";
 import { useRewards } from "@/hooks/useRewards.ts";
 import { useAccount } from "wagmi";
 import { BID_BUCKET_MODAL } from "@/components/modals/BidBucketModal.tsx";
-import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
 import { useFeelingLuckyCountdown } from "@/hooks/useFeelingLuckyCountdown.ts";
 import { UNION_TOKEN_PRICE_USD } from "@/constants.ts";
@@ -31,8 +31,8 @@ export const ClubStats = () => {
   const { open } = useModals();
   const { isConnected } = useAccount();
   const { data: contacts } = useContacts();
-  const { data: stats } = useCreditClub();
-  const { data: member } = useMember();
+  const { data: stats } = useClubData();
+  const { data: member } = useClubMember();
   const { active: creditPerMember } = useMemberCredit();
   const { complete, hours, minutes, seconds } = useFeelingLuckyCountdown();
 

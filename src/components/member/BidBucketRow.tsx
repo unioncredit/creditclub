@@ -12,15 +12,15 @@ import {
 import { IconCube } from "@/components/shared/IconCube.tsx";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { BID_BUCKET_MODAL } from "@/components/modals/BidBucketModal.tsx";
-import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
-import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
+import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { format } from "@/utils/format.ts";
 import cn from "classnames";
 
 export const BidBucketRow = () => {
   const { open } = useModals();
-  const { data: creditClub } = useCreditClub();
-  const { data: member } = useMember();
+  const { data: creditClub } = useClubData();
+  const { data: member } = useClubMember();
 
   const { memberBidPrice, bidBucketBalance } = creditClub;
   const { isMember } = member;

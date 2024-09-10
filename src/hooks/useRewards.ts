@@ -1,8 +1,8 @@
-import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
+import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
 import { formattedNumber } from "@/utils/format.ts";
 
 export const useRewards = () => {
-  const { data: creditClub } = useCreditClub();
+  const { data: creditClub } = useClubData();
 
   const {
     bidBucketPercent,

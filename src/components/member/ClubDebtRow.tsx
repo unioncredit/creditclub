@@ -8,12 +8,12 @@ import {
 } from "@unioncredit/ui";
 
 import { IconCube } from "@/components/shared/IconCube.tsx";
-import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { format } from "@/utils/format.ts";
 import cn from "classnames";
 
 export const ClubDebtRow = () => {
-  const { data: member } = useMember();
+  const { data: member } = useClubMember();
 
   const { isMember, owed } = member;
 

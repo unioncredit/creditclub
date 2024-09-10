@@ -5,21 +5,20 @@ import { Button, ProfileIcon } from "@unioncredit/ui";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import CreditClubLogo from "@/assets/creditclub-logo.svg";
-import { format, toPercent } from "@/utils/format.ts";
-import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { format } from "@/utils/format.ts";
 import { useAccount } from "wagmi";
 import cn from "classnames";
-import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
-import { formatUnits } from "viem";
-import { BLOCKS_PER_YEAR } from "@/constants.ts";
+import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
+import { useModals } from "@/providers/ModalManagerProvider.tsx";
+import { BORROW_MODAL } from "@/components/modals/BorrowModal.tsx";
+import { REPAY_MODAL } from "@/components/modals/RepayModal.tsx";
 
 export const Header = () => {
   const { address, isConnected } = useAccount();
-  const { data: member } = useMember();
-  const { data: creditClub } = useCreditClub();
+  const { data: member } = useUnionMember();
+  const { open: openModal } = useModals();
 
-  const { unionCreditLimit } = member;
-  const { borrowRatePerSecond } = creditClub;
+  const { creditLimit, owed } = member;
 
   return (
     <header className="Header w-full items-center flex justify-between">
@@ -37,12 +36,12 @@ export const Header = () => {
               className="CreditButton mr-2 md:hidden lg:px-2"
               label={
                 <p className="inline-flex items-center">
-                  Available Credit · <span className="ml-1 text-black">${format(unionCreditLimit)}</span>
+                  Available · <span className="ml-1 text-black">${format(creditLimit)}</span>
                 </p>
               }
               color="secondary"
               variant="light"
-              onClick={() => open(`https://app.union.finance/`)}
+              onClick={() => openModal(BORROW_MODAL)}
             />
 
             <Button
@@ -50,19 +49,26 @@ export const Header = () => {
               className="BorrowRateButton mr-2 md:hidden lg:px-2"
               label={
                 <p className="inline-flex items-center">
-                  Rate · <span className="ml-1 text-black">{toPercent(formatUnits(borrowRatePerSecond * BLOCKS_PER_YEAR, 18))}</span>
+                  {owed <= 0n ? (
+                    "No payment due"
+                  ) : (
+                    <>
+                      Payment Due ·
+                      <span className="text-black ml-1">${format(owed)} </span>
+                    </>
+                  )}
                 </p>
               }
               color="secondary"
               variant="light"
-              onClick={() => open(`https://data.union.finance/optimism`)}
+              onClick={() => openModal(REPAY_MODAL)}
             />
 
             <Button
               size="small"
               className="ProfileButton mr-2 lg:hidden"
               icon={ProfileIcon}
-              label="Your profile"
+              label="Profile"
               color="secondary"
               variant="light"
               onClick={() => open(`https://app.union.finance/profile/opt:${address}`)}

@@ -2,6 +2,7 @@ import { Chain, optimism } from "viem/chains";
 import { Address } from "viem";
 import { mainnet } from "wagmi/chains";
 import { IToastStatus } from "@/providers/types.ts";
+import { format } from "@/utils/format.ts";
 
 export const supportedChains: readonly [Chain, ...Chain[]] = [optimism];
 
@@ -26,6 +27,7 @@ export const PRO_RATA_DENOMINATOR = 10000n;
 export const UNION_TOKEN_PRICE_USD = 0.015;
 export const BLOCKS_PER_YEAR = 31536000n;
 export const SECONDS_PER_DAY = 86400;
+export const BLOCK_SPEED = 1e3;
 
 export const SortOrder = {
   ASC: "asc",
@@ -61,4 +63,12 @@ export const WagmiErrors: Record<string, { title: string; content: string; }> = 
     title: "Transaction failed",
     content: "User rejected the request",
   }
+};
+
+export const FormErrors = {
+  INSUFFICIENT_BALANCE: "Insufficient balance",
+  INSUFFICIENT_CREDIT_LIMIT: "Insufficient credit limit",
+  INSUFFICIENT_FUNDS: "Insufficient funds in protocol",
+  MIN_BORROW: (amount: bigint) => `Amount less than minimum borrow (${format(amount)})`,
+  IS_OVERDUE: "You cannot borrow with an overdue balance",
 };

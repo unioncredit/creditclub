@@ -6,13 +6,13 @@ import { useAccount } from "wagmi";
 
 import { usePushNotifications } from "@/hooks/usePushNotifications.ts";
 import { SETTINGS, useSettings } from "@/providers/SettingsProvider.tsx";
-import { useMember } from "@/providers/ConnectedMemberProvider.tsx";
+import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 
 export const EnableNotificationsBanner = () => {
   const { address } = useAccount();
   const { isSubscribed, subscribe } = usePushNotifications();
   const { settings, setSetting } = useSettings();
-  const { data: member } = useMember();
+  const { data: member } = useClubMember();
   const { isMember } = member;
 
   const shouldShowBanner = !settings[SETTINGS.HIDE_NOTIFICATION_BANNER]

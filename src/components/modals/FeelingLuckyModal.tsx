@@ -16,7 +16,7 @@ import { StatRow } from "@/components/modals/StatRow";
 import { useRewards } from "@/hooks/useRewards";
 import { useWrite } from "@/hooks/useWrite.ts";
 import { clubPluginContract } from "@/contracts/optimism.ts";
-import { useCreditClub } from "@/providers/CreditClubDataProvider.tsx";
+import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
 import { format } from "@/utils/format.ts";
 import { useFeelingLuckyCountdown } from "@/hooks/useFeelingLuckyCountdown.ts";
 import { FEELING_LUCKY_WINNER_MODAL } from "@/components/modals/FeelingLuckyWinnerModal.tsx";
@@ -26,7 +26,7 @@ export const FEELING_LUCKY_MODAL = "feeling-lucky-modal";
 export const FeelingLuckyModal = () => {
   const { open, close } = useModals();
   const { complete, hours, minutes, seconds } = useFeelingLuckyCountdown();
-  const { data: creditClub, refetch: refetchCreditClubData } = useCreditClub();
+  const { data: creditClub, refetch: refetchCreditClubData } = useClubData();
   const { costToCall } = creditClub;
 
   const {
