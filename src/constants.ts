@@ -66,6 +66,7 @@ export const WagmiErrors: Record<string, { title: string; content: string; }> = 
 };
 
 export const FormErrors = {
+  INSUFFICIENT_BALANCE: "Insufficient balance",
   INSUFFICIENT_CREDIT_LIMIT: "Insufficient credit limit",
   INSUFFICIENT_FUNDS: "Insufficient funds in protocol",
   MIN_BORROW: (amount: bigint) => `Amount less than minimum borrow (${format(amount)})`,

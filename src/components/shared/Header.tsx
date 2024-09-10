@@ -14,6 +14,7 @@ import { BLOCKS_PER_YEAR } from "@/constants.ts";
 import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { BORROW_MODAL } from "@/components/modals/BorrowModal.tsx";
+import { REPAY_MODAL } from "@/components/modals/RepayModal.tsx";
 
 export const Header = () => {
   const { address, isConnected } = useAccount();
@@ -58,7 +59,7 @@ export const Header = () => {
               }
               color="secondary"
               variant="light"
-              onClick={() => open(`https://data.union.finance/optimism`)}
+              onClick={() => openModal(REPAY_MODAL)}
             />
 
             <Button

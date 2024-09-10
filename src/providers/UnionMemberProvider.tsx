@@ -3,9 +3,11 @@ import React, { createContext, useContext } from "react";
 
 import { IUnionMemberContext } from "@/providers/types";
 import {
+  daiContract,
   userManagerContract, uTokenContract,
 } from "@/contracts/optimism";
 import { zeroAddress } from "viem";
+import { calculateMinPayment } from "@/utils/numbers.ts";
 
 const UnionMemberContext = createContext({} as IUnionMemberContext);
 
@@ -31,6 +33,16 @@ export const UnionMemberProvider = ({ children }: { children: React.ReactNode; }
         functionName: "borrowBalanceView",
         args: [address],
       },
+      {
+        ...daiContract,
+        functionName: "balanceOf",
+        args: [address],
+      },
+      {
+        ...uTokenContract,
+        functionName: "calculatingInterest",
+        args: [address],
+      },
     ],
   });
 
@@ -38,12 +50,17 @@ export const UnionMemberProvider = ({ children }: { children: React.ReactNode; }
     isOverdue = false,
     creditLimit = 0n,
     owed = 0n,
+    daiBalance = 0n,
+    interest = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
     isOverdue,
     creditLimit,
     owed,
+    daiBalance,
+    interest,
+    minPayment: owed > 0 ? calculateMinPayment(interest) : 0n,
   };
 
   return (

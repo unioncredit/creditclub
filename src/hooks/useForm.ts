@@ -1,20 +1,7 @@
 import React, { useState } from "react";
 import { format } from "@/utils/format.ts";
 import { formatEther, parseUnits } from "viem";
-
-export interface IFormField {
-  raw: bigint;
-  display: string;
-  formatted: string;
-}
-
-export type IFormValues = Record<string, IFormField | string>;
-type IFormErrors = Record<string, string | void>;
-
-type ISetNumberFunc = {
-  (name: string, value: string, type: "display", rounded: boolean): void;
-  (name: string, value: bigint, type: "raw", rounded: boolean): void;
-};
+import { IFormErrors, IFormValues, ISetNumberFunc } from "@/hooks/useForm.types.ts";
 
 export const useForm = ({
   validate,
@@ -99,12 +86,11 @@ export const useForm = ({
     setErrors({});
   };
 
-
-
   return {
     values,
     errors,
     setValue,
+    setNumber,
     setRawValue,
     setSimple,
     register,

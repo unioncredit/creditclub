@@ -11,6 +11,7 @@ import { useAccount } from "wagmi";
 import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { BORROW_MODAL } from "@/components/modals/BorrowModal.tsx";
+import { REPAY_MODAL } from "@/components/modals/RepayModal.tsx";
 
 export const MobileNav = () => {
   const { address, isConnected } = useAccount();
@@ -46,7 +47,7 @@ export const MobileNav = () => {
         }
         color="secondary"
         variant="light"
-        onClick={() => open(`https://data.union.finance/optimism`)}
+        onClick={() => openModal(REPAY_MODAL)}
       />
 
       <Button

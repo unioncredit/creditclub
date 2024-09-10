@@ -16,6 +16,9 @@ export type IUnionMemberContext = Omit<UseReadContractsReturnType, "data"> & {
     isOverdue: boolean;
     creditLimit: bigint;
     owed: bigint;
+    daiBalance: bigint;
+    interest: bigint;
+    minPayment: bigint;
   },
 }
 
