@@ -6,7 +6,7 @@ export interface IRepayOption {
   value?: string;
   token?: string;
   title?: string;
-  content?: string;
+  content?: string | false;
   inputProps?: any;
   tooltip?: {
     title: string;

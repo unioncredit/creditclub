@@ -1,3 +1,5 @@
+import "./RepayModal.scss";
+
 import { useAccount } from "wagmi";
 import {
   Box,
@@ -7,11 +9,12 @@ import {
   Text,
   OptionSelect,
   NumericalRows,
+  RepayIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FormErrors } from "@/constants.ts";
 import { format } from "@/utils/format.ts";
 import { useForm } from "@/hooks/useForm.ts";
@@ -29,6 +32,8 @@ const PaymentType: Record<string, IRepayType> = {
 };
 
 export const RepayModal = () => {
+  const [paymentType, setPaymentType] = useState<IRepayType>(PaymentType.MAX);
+
   const { close } = useModals();
   const { address } = useAccount();
   const { data: member, refetch: refetchMember } = useUnionMember();
@@ -53,6 +58,7 @@ export const RepayModal = () => {
   } = useForm({ validate });
 
   const handleSelect = (option: IRepayOption) => {
+    setPaymentType(option.paymentType);
     setRawValue("amount", option.amount ?? 0n);
   };
 
@@ -75,10 +81,10 @@ export const RepayModal = () => {
       value: format(maxRepay),
       amount: maxRepay,
       paymentType: PaymentType.MAX,
-      title: maxRepay >= owed ? "Full balance" : "Max available",
-      content: maxRepay >= owed
+      title: maxRepay >= owed ? "Pay-off entire loan" : "Full balance",
+      content: paymentType === PaymentType.MAX && (maxRepay >= owed
         ? "Pay-off your outstanding balance in its entirety"
-        : "The maximum amount available in your wallet",
+        : "The maximum amount available in your wallet"),
       tooltip: maxRepay >= owed &&
         format(maxRepay) !== format(owed) && {
           title: "Why is this more than my balance owed?",
@@ -93,14 +99,14 @@ export const RepayModal = () => {
       token: "dai",
       paymentType: PaymentType.MIN,
       title: "Minimum due",
-      content: "Minimum required to cover the interest due on your loan",
+      content: paymentType === PaymentType.MIN && "Minimum required to cover the interest due on your loan",
     },
     {
       value: "",
       token: "dai",
       paymentType: PaymentType.CUSTOM,
       title: "Custom amount",
-      content: "Enter a custom amount you wish to repay",
+      content: paymentType === PaymentType.CUSTOM && "Enter a custom amount you wish to repay",
       inputProps: {
         w: "150px",
         placeholder: "0.00",
@@ -173,6 +179,7 @@ export const RepayModal = () => {
                   enabled: !isErrored,
                   functionName: "repayBorrow",
                   label: `Repay ${amount.display} DAI`,
+                  icon: RepayIcon,
                   onComplete: async () => {
                     await refetchMember();
                     close();
