@@ -3,7 +3,7 @@ import { useAccount } from "wagmi";
 import { useEffect, useMemo, useState } from "react";
 
 const whitelist = [
-        "0xb8150a1b6945e75d05769d685b127b41e6335bbc",
+         "0xb8150a1b6945e75d05769d685b127b41e6335bbc",
         "0xDD470917C52a25179a6B5260eAA9609230Be4ce0",
         "0xCbD1c32A1b3961cC43868B8bae431Ab0dA65beEb",
         "0x7a0C61EdD8b5c0c5C1437AEb571d7DDbF8022Be4",
@@ -18,7 +18,8 @@ const whitelist = [
         "0x99C5968eEccd940fB35aAeBAF31c3035Cfa71d66",
         "0x1C92efDB6C924cB2aCF7DcEec29B7aBB69aB58BC",
         "0xd0f46a5d48596409264d4eFc1f3B229878fFf743",
-        "0x2BB5B5f11b35ACeadd4cc35eCdC20410e9E6A981"
+        "0x2BB5B5f11b35ACeadd4cc35eCdC20410e9E6A981",
+        0x3b12b46Ea59f30e3012701221A0635F394afc246
     ];
 
 export const useWhitelistProof = () => {
