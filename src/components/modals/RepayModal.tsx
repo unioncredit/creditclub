@@ -2,7 +2,6 @@ import { useAccount } from "wagmi";
 import {
   Box,
   Button,
-  Card,
   Modal,
   ModalOverlay,
   Text,
@@ -76,10 +75,10 @@ export const RepayModal = () => {
       value: format(maxRepay),
       amount: maxRepay,
       paymentType: PaymentType.MAX,
-      title: maxRepay >= owed ? "Pay-off entire loan" : "Pay maximum DAI available",
+      title: maxRepay >= owed ? "Full balance" : "Max available",
       content: maxRepay >= owed
-        ? "Make a payment equal to the outstanding balance"
-        : "Make a payment with the maximum amount available in your wallet",
+        ? "Pay-off your outstanding balance in its entirety"
+        : "The maximum amount available in your wallet",
       tooltip: maxRepay >= owed &&
         format(maxRepay) !== format(owed) && {
           title: "Why is this more than my balance owed?",
@@ -93,8 +92,8 @@ export const RepayModal = () => {
       amount: minPayment,
       token: "dai",
       paymentType: PaymentType.MIN,
-      title: "Pay minimum due",
-      content: "Make the payment required to cover the interest due on your loan",
+      title: "Minimum due",
+      content: "Minimum required to cover the interest due on your loan",
     },
     {
       value: "",
@@ -183,21 +182,19 @@ export const RepayModal = () => {
             </>
           ) : (
             <>
-              <Card>
-                <Card.Body>
-                  <Box h="80px" align="center" justify="center">
-                    <Text m="0" size="medium">
-                      You have nothing to repay.
-                    </Text>
-                  </Box>
-                </Card.Body>
-              </Card>
+              <Box h="80px" align="center" justify="center">
+                <Text grey={500} m="0" size="medium">
+                  You have nothing to repay.
+                </Text>
+              </Box>
 
               <Button
                 fluid
                 mt="16px"
                 size="large"
                 label="Close"
+                color="secondary"
+                variant="light"
                 onClick={close}
               />
             </>
