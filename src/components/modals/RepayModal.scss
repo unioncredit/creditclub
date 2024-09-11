@@ -1,6 +1,9 @@
 @import "@unioncredit/ui/src/variables";
 
 .RepayModal {
+  .button {
+    height: 64px !important;
+  }
   .OptionCard,
   .OptionSelect {
     background: white;

@@ -186,6 +186,7 @@ export const BorrowModal = () => {
             {...buttonProps}
             fluid
             mt="16px"
+            h="64px"
             size="large"
             icon={BorrowIcon}
             label={`Borrow ${amount.display} DAI`}
