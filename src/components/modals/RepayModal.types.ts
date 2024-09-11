@@ -1,4 +1,4 @@
-export type IRepayType = "min" | "max" | "custom"
+export type IRepayType = "min" | "max" | "balance" | "custom"
 
 export interface IRepayOption {
   paymentType: IRepayType;

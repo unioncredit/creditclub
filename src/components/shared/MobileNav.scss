@@ -6,9 +6,16 @@
     justify-content: space-between !important;
   }
 
+  .button {
+    @media all and (max-width: 420px) {
+      flex: 1;
+    }
+  }
+
   .RepayButton {
     @media all and (max-width: 600px) {
       margin-right: 0;
+      margin-left: 0.5rem;
     }
   }
   .UnionButton {
