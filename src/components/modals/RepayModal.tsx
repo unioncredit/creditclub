@@ -109,6 +109,7 @@ export const RepayModal = () => {
       content: paymentType === PaymentType.CUSTOM && "Enter a custom amount you wish to repay",
       inputProps: {
         w: "150px",
+        type: "number",
         placeholder: "0.00",
         value: amount.display,
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
