@@ -3,7 +3,7 @@ import React, { createContext, useContext } from "react";
 
 import { IUnionMemberContext } from "@/providers/types";
 import {
-  daiContract,
+  daiContract, unionContract,
   userManagerContract, uTokenContract,
 } from "@/contracts/optimism";
 import { zeroAddress } from "viem";
@@ -43,6 +43,11 @@ export const UnionMemberProvider = ({ children }: { children: React.ReactNode; }
         functionName: "calculatingInterest",
         args: [address],
       },
+      {
+        ...unionContract,
+        functionName: "balanceOf",
+        args: [address],
+      }
     ],
   });
 
@@ -52,6 +57,7 @@ export const UnionMemberProvider = ({ children }: { children: React.ReactNode; }
     owed = 0n,
     daiBalance = 0n,
     interest = 0n,
+    unionBalance = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -60,6 +66,7 @@ export const UnionMemberProvider = ({ children }: { children: React.ReactNode; }
     owed,
     daiBalance,
     interest,
+    unionBalance,
     minPayment: owed > 0 ? calculateMinPayment(interest) : 0n,
   };
 

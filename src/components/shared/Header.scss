@@ -1,6 +1,11 @@
 .Header {
   button {
+    padding: 12px;
     height: 48px !important;
+  }
+
+  @media all and (max-width: 600px) {
+    padding: 2rem 1.25rem 0 !important;
   }
 
   &__logo {
@@ -9,6 +14,22 @@
 
       @media screen and (max-width: 420px) {
         width: 150px;
+      }
+    }
+  }
+
+  .UnionButton {
+    @media all and (max-width: 900px) {
+      display: none;
+    }
+  }
+  .ProfileButton {
+    @media all and (max-width: 600px) {
+      display: block !important;
+      font-size: 0;
+
+      svg {
+        margin: 0 !important;
       }
     }
   }

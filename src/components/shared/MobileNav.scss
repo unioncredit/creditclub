@@ -6,8 +6,18 @@
     justify-content: space-between !important;
   }
 
+  .RepayButton {
+    @media all and (max-width: 600px) {
+      margin-right: 0;
+    }
+  }
+  .UnionButton {
+    @media all and (max-width: 480px) {
+      display: none;
+    }
+  }
   .ProfileButton {
-    @media all and (max-width: 520px) {
+    @media all and (max-width: 600px) {
       display: none;
     }
   }

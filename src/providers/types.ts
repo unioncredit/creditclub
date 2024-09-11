@@ -19,6 +19,7 @@ export type IUnionMemberContext = Omit<UseReadContractsReturnType, "data"> & {
     daiBalance: bigint;
     interest: bigint;
     minPayment: bigint;
+    unionBalance: bigint;
   },
 }
 
