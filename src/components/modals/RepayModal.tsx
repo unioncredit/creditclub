@@ -175,6 +175,7 @@ export const RepayModal = () => {
                 tokenContract={daiContract}
                 actionProps={{
                   ...uTokenContract,
+                  size: "large",
                   args: [address, amount.raw],
                   enabled: !isErrored,
                   functionName: "repayBorrow",
