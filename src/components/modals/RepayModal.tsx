@@ -28,6 +28,7 @@ export const REPAY_MODAL = "repay-modal";
 const PaymentType: Record<string, IRepayType> = {
   MIN: "min",
   MAX: "max",
+  BALANCE: "balance",
   CUSTOM: "custom",
 };
 
@@ -78,20 +79,19 @@ export const RepayModal = () => {
   const options: IRepayOption[] = [
     {
       token: "dai",
+      value: format(owed),
+      amount: owed,
+      paymentType: PaymentType.MAX,
+      title: "Full balance",
+      content: paymentType === PaymentType.MAX && "Pay-off your outstanding balance in its entirety",
+    },
+    {
+      token: "dai",
       value: format(maxRepay),
       amount: maxRepay,
-      paymentType: PaymentType.MAX,
-      title: maxRepay >= owed ? "Pay-off entire loan" : "Full balance",
-      content: paymentType === PaymentType.MAX && (maxRepay >= owed
-        ? "Pay-off your outstanding balance in its entirety"
-        : "The maximum amount available in your wallet"),
-      tooltip: maxRepay >= owed &&
-        format(maxRepay) !== format(owed) && {
-          title: "Why is this more than my balance owed?",
-          content:
-            "As interest increases per block, when paying off the entire loan we factor in a small margin to ensure the transaction succeeds.",
-          position: "right",
-        },
+      paymentType: PaymentType.BALANCE,
+      title: "Wallet balance",
+      content: paymentType === PaymentType.BALANCE && "The maximum amount available in your wallet",
     },
     {
       value: format(minPayment),
@@ -177,10 +177,15 @@ export const RepayModal = () => {
                   ...uTokenContract,
                   size: "large",
                   args: [address, amount.raw],
+                  disabled: amount.raw > daiBalance,
                   enabled: !isErrored,
                   functionName: "repayBorrow",
-                  label: `Repay ${amount.display} DAI`,
-                  icon: RepayIcon,
+                  label: amount.raw > daiBalance
+                    ? "Not enough wallet balance"
+                    : `Repay ${amount.display} DAI`,
+                  icon: amount.raw > daiBalance
+                    ? false
+                    : RepayIcon,
                   onComplete: async () => {
                     await refetchMember();
                     close();

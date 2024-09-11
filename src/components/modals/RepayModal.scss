@@ -4,13 +4,25 @@
   .button {
     height: 64px !important;
   }
+  .Card__body {
+    @media all and (max-width: 600px) {
+      padding: 12px;
+    }
+  }
   .OptionCard,
   .OptionSelect {
     background: white;
   }
   .OptionCard {
-    min-height: 90px;
+    min-height: 84px;
+    height: 84px;
     border: 1px solid $grey200;
+
+    @media all and (max-width: 600px) {
+      height: 76px;
+      min-height: 76px;
+      padding: 6px 12px;
+    }
 
     &--checked {
       background: $blue50;
@@ -54,6 +66,11 @@
       border-radius: 4px;
       padding: 4px 8px;
       height: 38px;
+    }
+  }
+  .NumericalRows {
+    @media all and (max-width: 600px) {
+      margin: 12px 0 !important;
     }
   }
 }
