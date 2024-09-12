@@ -22,6 +22,7 @@ import { IFormField, IFormValues } from "@/hooks/useForm.types.ts";
 import { IRepayOption, IRepayType } from "@/components/modals/RepayModal.types.ts";
 import { ApprovalButton } from "@/components/shared/ApprovalButton.tsx";
 import { daiContract, uTokenContract } from "@/contracts/optimism.ts";
+import { useFirstPaymentDueDate } from "@/hooks/useFirstPaymentDueDate.ts";
 
 export const REPAY_MODAL = "repay-modal";
 
@@ -38,6 +39,7 @@ export const RepayModal = () => {
   const { close } = useModals();
   const { address } = useAccount();
   const { data: member, refetch: refetchMember } = useUnionMember();
+  const firstPaymentDueDate = useFirstPaymentDueDate();
 
   const { owed, daiBalance, minPayment } = member;
 
@@ -112,6 +114,9 @@ export const RepayModal = () => {
         type: "number",
         placeholder: "0.00",
         value: amount.display,
+        inputProps: {
+          ref: (input: any) => input && input.focus()
+        },
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
           setNumber("amount", e.target.value, "display", false);
         }
@@ -152,7 +157,9 @@ export const RepayModal = () => {
                   },
                   {
                     label: "Next payment due",
-                    value: `${format(minPayment)} DAI`,
+                    value: amount.raw <= 0n && owed <= 0n
+                      ? "N/A"
+                      : `${format(minPayment)} DAI · ${firstPaymentDueDate}`,
                   },
                   {
                     label: "New balance owed",
