@@ -66,3 +66,9 @@ button:focus-visible {
 .modal > .InfoBanner {
   border-radius: 0;
 }
+.modal-overlay {
+  touch-action: none;
+}
+.no-scroll {
+  overflow: hidden;
+}
