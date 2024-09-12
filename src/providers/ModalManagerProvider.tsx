@@ -24,17 +24,23 @@ const modals: Record<string, any> = {
 export const ModalManagerProvider = ({ children }: { children: React.ReactNode; }) => {
   const [props, setProps] = useState<any>(null);
   const [modal, setModal] = useState<string>("");
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   const close = () => {
-    document.documentElement.classList.remove("no-scroll");
     document.body.classList.remove("no-scroll");
+    document.body.style.top = "";
+    window.scrollTo(0, scrollPosition);
+
     setModal("");
     setProps(null);
   };
 
   const open = (key: string, props?: any) => {
-    document.documentElement.classList.add("no-scroll");
+    const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+    setScrollPosition(scrollPosition);
+
     document.body.classList.add("no-scroll");
+    document.body.style.top = `-${scrollPosition}px`;
     setModal(key);
     if (props) setProps(props);
   };
