@@ -26,12 +26,14 @@ export const ModalManagerProvider = ({ children }: { children: React.ReactNode; 
   const [modal, setModal] = useState<string>("");
 
   const close = () => {
+    document.documentElement.classList.remove("no-scroll");
     document.body.classList.remove("no-scroll");
     setModal("");
     setProps(null);
   };
 
   const open = (key: string, props?: any) => {
+    document.documentElement.classList.add("no-scroll");
     document.body.classList.add("no-scroll");
     setModal(key);
     if (props) setProps(props);
