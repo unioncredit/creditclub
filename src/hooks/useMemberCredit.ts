@@ -20,7 +20,7 @@ export const useMemberCredit = () => {
     ? PRO_RATA_MIN_MEMBER_NUM
     : totalSupply;
   const newMemberProRataAmount = percentageFull && proRataTotalSupply
-    ? proRataStakedAmount / BigInt(percentageFull) / proRataTotalSupply
+    ? proRataStakedAmount / BigInt(percentageFull) / (proRataTotalSupply + 1n)
     : 0n;
 
   const difference = newMemberProRataAmount - vouch;
