@@ -5,10 +5,14 @@ const MINUTE = SECOND * 60;
 const HOUR = MINUTE * 60;
 const DAY = HOUR * 24;
 
-export const useCountdown = (deadline: Date, interval = SECOND) => {
+export const useCountdown = (enabled: boolean, deadline: Date, interval = SECOND) => {
   const [timespan, setTimespan] = useState(deadline.getTime() - Date.now());
 
   useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
     const intervalId = setInterval(() => {
       setTimespan((_timespan) => _timespan - interval);
     }, interval);
@@ -16,7 +20,7 @@ export const useCountdown = (deadline: Date, interval = SECOND) => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [interval]);
+  }, [enabled, interval]);
 
   useEffect(() => {
     setTimespan(deadline.getTime() - Date.now());
