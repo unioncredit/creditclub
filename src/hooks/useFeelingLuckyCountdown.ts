@@ -6,9 +6,10 @@ export const useFeelingLuckyCountdown = () => {
   const { data: creditClub } = useClubData();
   const { cooldown, checkpoint } = creditClub;
   const deadline = useMemo(() => new Date((Number(checkpoint) * 1000) + cooldown * 1000), [checkpoint, cooldown]);
+  const complete = deadline.getTime() <= Date.now();
 
   return {
-    complete: deadline.getTime() <= Date.now(),
-    ...useCountdown(deadline),
+    complete,
+    ...useCountdown(!complete, deadline),
   }
 }
