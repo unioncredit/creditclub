@@ -32,7 +32,7 @@ export const ClubCreditRow = () => {
       "blur-sm pointer-events-none": !isMember,
     })}>
       <div className="ClubCreditStat flex flex-1 justify-between items-center mr-2 sm:mr-0 sm:mb-2">
-        <p className="text-gray-500 font-bold">Club Credit</p>
+        <p className="text-gray-500 font-medium">Club Credit</p>
 
         <div>
           <p className="ClubCreditStat__stat">${format(currentCredit)}</p>
