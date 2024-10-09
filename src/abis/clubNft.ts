@@ -1,26 +1,22 @@
-export const clubNftAbi = [{
-  "inputs": [{
-    "internalType": "address",
-    "name": "_plugin",
-    "type": "address",
-  }, { "internalType": "bytes32", "name": "_root", "type": "bytes32" }, {
-    "internalType": "string",
-    "name": "_name",
-    "type": "string",
-  }, { "internalType": "string", "name": "_symbol", "type": "string" }, {
-    "internalType": "string",
-    "name": "_uri",
-    "type": "string",
-  }], "stateMutability": "nonpayable", "type": "constructor",
-}, { "inputs": [], "name": "AccessControlBadConfirmation", "type": "error" }, {
-  "inputs": [{
-    "internalType": "address",
-    "name": "account",
-    "type": "address",
-  }, { "internalType": "bytes32", "name": "neededRole", "type": "bytes32" }],
-  "name": "AccessControlUnauthorizedAccount",
+export const clubNftAbi = [{ "inputs": [], "stateMutability": "nonpayable", "type": "constructor" }, {
+  "inputs": [],
+  "name": "AccessControlBadConfirmation",
   "type": "error",
 }, {
+  "inputs": [{ "internalType": "address", "name": "account", "type": "address" }, {
+    "internalType": "bytes32",
+    "name": "neededRole",
+    "type": "bytes32",
+  }], "name": "AccessControlUnauthorizedAccount", "type": "error",
+}, {
+  "inputs": [{ "internalType": "address", "name": "target", "type": "address" }],
+  "name": "AddressEmptyCode",
+  "type": "error",
+}, {
+  "inputs": [{ "internalType": "address", "name": "implementation", "type": "address" }],
+  "name": "ERC1967InvalidImplementation",
+  "type": "error",
+}, { "inputs": [], "name": "ERC1967NonPayable", "type": "error" }, {
   "inputs": [],
   "name": "ERC721EnumerableForbiddenBatchMint",
   "type": "error",
@@ -29,9 +25,7 @@ export const clubNftAbi = [{
     "internalType": "uint256",
     "name": "tokenId",
     "type": "uint256",
-  }, { "internalType": "address", "name": "owner", "type": "address" }],
-  "name": "ERC721IncorrectOwner",
-  "type": "error",
+  }, { "internalType": "address", "name": "owner", "type": "address" }], "name": "ERC721IncorrectOwner", "type": "error",
 }, {
   "inputs": [{ "internalType": "address", "name": "operator", "type": "address" }, {
     "internalType": "uint256",
@@ -68,6 +62,28 @@ export const clubNftAbi = [{
     "name": "index",
     "type": "uint256",
   }], "name": "ERC721OutOfBoundsIndex", "type": "error",
+}, { "inputs": [], "name": "FailedInnerCall", "type": "error" }, {
+  "inputs": [],
+  "name": "InvalidInitialization",
+  "type": "error",
+}, { "inputs": [], "name": "NotInitializing", "type": "error" }, {
+  "inputs": [],
+  "name": "UUPSUnauthorizedCallContext",
+  "type": "error",
+}, {
+  "inputs": [{ "internalType": "bytes32", "name": "slot", "type": "bytes32" }],
+  "name": "UUPSUnsupportedProxiableUUID",
+  "type": "error",
+}, {
+  "anonymous": false,
+  "inputs": [{ "indexed": false, "internalType": "uint256", "name": "tokenId", "type": "uint256" }, {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "active",
+    "type": "bool",
+  }],
+  "name": "ActiveSet",
+  "type": "event",
 }, {
   "anonymous": false,
   "inputs": [{ "indexed": true, "internalType": "address", "name": "owner", "type": "address" }, {
@@ -87,6 +103,66 @@ export const clubNftAbi = [{
     "type": "address",
   }, { "indexed": false, "internalType": "bool", "name": "approved", "type": "bool" }],
   "name": "ApprovalForAll",
+  "type": "event",
+}, {
+  "anonymous": false,
+  "inputs": [{ "indexed": false, "internalType": "uint256", "name": "tokenId", "type": "uint256" }, {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "baseTrust",
+    "type": "uint256",
+  }],
+  "name": "BaseTrustSet",
+  "type": "event",
+}, {
+  "anonymous": false,
+  "inputs": [{ "indexed": false, "internalType": "string", "name": "oldBaseURI", "type": "string" }, {
+    "indexed": false,
+    "internalType": "string",
+    "name": "newBaseURI",
+    "type": "string",
+  }],
+  "name": "BaseURIUpdated",
+  "type": "event",
+}, {
+  "anonymous": false,
+  "inputs": [{
+    "indexed": false,
+    "internalType": "string",
+    "name": "oldContractURI",
+    "type": "string",
+  }, { "indexed": false, "internalType": "string", "name": "newContractURI", "type": "string" }],
+  "name": "ContractURIUpdated",
+  "type": "event",
+}, {
+  "anonymous": false,
+  "inputs": [{ "indexed": true, "internalType": "uint256", "name": "tokenId", "type": "uint256" }, {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "baseTrust",
+    "type": "uint256",
+  }, { "indexed": false, "internalType": "bool", "name": "active", "type": "bool" }, {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "badDebt",
+    "type": "uint256",
+  }, { "indexed": false, "internalType": "enum ClubTiers.Tier", "name": "tier", "type": "uint8" }, {
+    "indexed": false,
+    "internalType": "uint8",
+    "name": "invites",
+    "type": "uint8",
+  }],
+  "name": "CreditProfileSet",
+  "type": "event",
+}, {
+  "anonymous": false,
+  "inputs": [{ "indexed": false, "internalType": "uint64", "name": "version", "type": "uint64" }],
+  "name": "Initialized",
+  "type": "event",
+}, {
+  "anonymous": false,
+  "inputs": [{ "indexed": false, "internalType": "uint8", "name": "invites", "type": "uint8" }],
+  "name": "MaxInviteSet",
   "type": "event",
 }, {
   "anonymous": false,
@@ -140,13 +216,13 @@ export const clubNftAbi = [{
   "type": "event",
 }, {
   "anonymous": false,
-  "inputs": [{
+  "inputs": [{ "indexed": false, "internalType": "uint256", "name": "tokenId", "type": "uint256" }, {
     "indexed": false,
-    "internalType": "string",
-    "name": "oldTokenURI",
-    "type": "string",
-  }, { "indexed": false, "internalType": "string", "name": "newTokenURI", "type": "string" }],
-  "name": "TokenURIUpdated",
+    "internalType": "enum ClubTiers.Tier",
+    "name": "tier",
+    "type": "uint8",
+  }],
+  "name": "TierSet",
   "type": "event",
 }, {
   "anonymous": false,
@@ -167,6 +243,11 @@ export const clubNftAbi = [{
     "type": "address",
   }],
   "name": "UnionClubPluginUpdated",
+  "type": "event",
+}, {
+  "anonymous": false,
+  "inputs": [{ "indexed": true, "internalType": "address", "name": "implementation", "type": "address" }],
+  "name": "Upgraded",
   "type": "event",
 }, {
   "anonymous": false,
@@ -197,6 +278,18 @@ export const clubNftAbi = [{
   "stateMutability": "view",
   "type": "function",
 }, {
+  "inputs": [],
+  "name": "UPGRADE_INTERFACE_VERSION",
+  "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+  "stateMutability": "view",
+  "type": "function",
+}, {
+  "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }, {
+    "internalType": "uint8",
+    "name": "count",
+    "type": "uint8",
+  }], "name": "addInvite", "outputs": [], "stateMutability": "nonpayable", "type": "function",
+}, {
   "inputs": [{ "internalType": "address", "name": "to", "type": "address" }, {
     "internalType": "uint256",
     "name": "tokenId",
@@ -220,6 +313,18 @@ export const clubNftAbi = [{
   "outputs": [],
   "stateMutability": "nonpayable",
   "type": "function",
+}, {
+  "inputs": [],
+  "name": "contractURI",
+  "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+  "stateMutability": "view",
+  "type": "function",
+}, {
+  "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }, {
+    "internalType": "uint8",
+    "name": "count",
+    "type": "uint8",
+  }], "name": "decInvite", "outputs": [], "stateMutability": "nonpayable", "type": "function",
 }, {
   "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
   "name": "getApproved",
@@ -249,6 +354,47 @@ export const clubNftAbi = [{
   "stateMutability": "view",
   "type": "function",
 }, {
+  "inputs": [{ "internalType": "address", "name": "_plugin", "type": "address" }, {
+    "internalType": "bytes32",
+    "name": "_root",
+    "type": "bytes32",
+  }, { "internalType": "string", "name": "_name", "type": "string" }, {
+    "internalType": "string",
+    "name": "_symbol",
+    "type": "string",
+  }, { "internalType": "string", "name": "_contractUri", "type": "string" }, {
+    "internalType": "string",
+    "name": "_baseUri",
+    "type": "string",
+  }], "name": "initialize", "outputs": [], "stateMutability": "nonpayable", "type": "function",
+}, {
+  "inputs": [{ "internalType": "address", "name": "_plugin", "type": "address" }, {
+    "internalType": "bytes32",
+    "name": "_root",
+    "type": "bytes32",
+  }, { "internalType": "string", "name": "_name", "type": "string" }, {
+    "internalType": "string",
+    "name": "_symbol",
+    "type": "string",
+  }, {
+    "internalType": "string",
+    "name": "_contractUri",
+    "type": "string",
+  }, {
+    "components": [{ "internalType": "string", "name": "name", "type": "string" }, {
+      "internalType": "string",
+      "name": "description",
+      "type": "string",
+    }, { "internalType": "string", "name": "image", "type": "string" }],
+    "internalType": "struct ClubMemberNFTV3.TokenBase",
+    "name": "_tokenBase",
+    "type": "tuple",
+  }, { "internalType": "uint8", "name": "_maxInvite", "type": "uint8" }],
+  "name": "initialize",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
   "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }, {
     "internalType": "address",
     "name": "operator",
@@ -257,6 +403,18 @@ export const clubNftAbi = [{
   "name": "isApprovedForAll",
   "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
   "stateMutability": "view",
+  "type": "function",
+}, {
+  "inputs": [],
+  "name": "maxInvite",
+  "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
+  "stateMutability": "view",
+  "type": "function",
+}, {
+  "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
+  "name": "mint",
+  "outputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
+  "stateMutability": "nonpayable",
   "type": "function",
 }, {
   "inputs": [{ "internalType": "address", "name": "account", "type": "address" }, {
@@ -269,15 +427,49 @@ export const clubNftAbi = [{
   "stateMutability": "nonpayable",
   "type": "function",
 }, {
+  "inputs": [{ "internalType": "address", "name": "account", "type": "address" }, {
+    "internalType": "uint256",
+    "name": "baseTrust",
+    "type": "uint256",
+  }, { "internalType": "enum ClubTiers.Tier", "name": "tier", "type": "uint8" }, {
+    "internalType": "bool",
+    "name": "active",
+    "type": "bool",
+  }],
+  "name": "mint",
+  "outputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
   "inputs": [],
   "name": "name",
   "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
   "stateMutability": "view",
   "type": "function",
 }, {
+  "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+  "name": "nftCreditStatus",
+  "outputs": [{ "internalType": "uint256", "name": "baseTrust", "type": "uint256" }, {
+    "internalType": "bool",
+    "name": "active",
+    "type": "bool",
+  }, { "internalType": "uint256", "name": "badDebt", "type": "uint256" }, {
+    "internalType": "enum ClubTiers.Tier",
+    "name": "tier",
+    "type": "uint8",
+  }, { "internalType": "uint8", "name": "invites", "type": "uint8" }],
+  "stateMutability": "view",
+  "type": "function",
+}, {
   "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
   "name": "ownerOf",
   "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+  "stateMutability": "view",
+  "type": "function",
+}, {
+  "inputs": [],
+  "name": "proxiableUUID",
+  "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
   "stateMutability": "view",
   "type": "function",
 }, {
@@ -319,14 +511,70 @@ export const clubNftAbi = [{
     "type": "bytes",
   }], "name": "safeTransferFrom", "outputs": [], "stateMutability": "nonpayable", "type": "function",
 }, {
+  "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }, {
+    "internalType": "bool",
+    "name": "active",
+    "type": "bool",
+  }], "name": "setActive", "outputs": [], "stateMutability": "nonpayable", "type": "function",
+}, {
   "inputs": [{ "internalType": "address", "name": "operator", "type": "address" }, {
     "internalType": "bool",
     "name": "approved",
     "type": "bool",
   }], "name": "setApprovalForAll", "outputs": [], "stateMutability": "nonpayable", "type": "function",
 }, {
+  "inputs": [{ "internalType": "address", "name": "account", "type": "address" }, {
+    "internalType": "uint256",
+    "name": "badDebt",
+    "type": "uint256",
+  }], "name": "setBadDebt", "outputs": [], "stateMutability": "nonpayable", "type": "function",
+}, {
+  "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }, {
+    "internalType": "uint256",
+    "name": "baseTrust",
+    "type": "uint256",
+  }], "name": "setBaseTrust", "outputs": [], "stateMutability": "nonpayable", "type": "function",
+}, {
+  "inputs": [{ "internalType": "string", "name": "_newBaseUri", "type": "string" }],
+  "name": "setBaseURI",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
+  "inputs": [{ "internalType": "address", "name": "account", "type": "address" }, {
+    "internalType": "bool",
+    "name": "isBlock",
+    "type": "bool",
+  }], "name": "setBlockList", "outputs": [], "stateMutability": "nonpayable", "type": "function",
+}, {
+  "inputs": [{ "internalType": "string", "name": "newContractURI", "type": "string" }],
+  "name": "setContractURI",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
+  "inputs": [{ "internalType": "uint8", "name": "_maxInvite", "type": "uint8" }],
+  "name": "setMaxInvite",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
   "inputs": [{ "internalType": "string", "name": "newName", "type": "string" }],
   "name": "setName",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
+  "inputs": [{ "internalType": "address", "name": "account", "type": "address" }, {
+    "internalType": "uint256",
+    "name": "baseTrust",
+    "type": "uint256",
+  }, { "internalType": "bool", "name": "active", "type": "bool" }, {
+    "internalType": "enum ClubTiers.Tier",
+    "name": "tier",
+    "type": "uint8",
+  }, { "internalType": "uint8", "name": "invites", "type": "uint8" }],
+  "name": "setNftCreditStatus",
   "outputs": [],
   "stateMutability": "nonpayable",
   "type": "function",
@@ -337,11 +585,27 @@ export const clubNftAbi = [{
   "stateMutability": "nonpayable",
   "type": "function",
 }, {
-  "inputs": [{ "internalType": "string", "name": "newTokenURI", "type": "string" }],
-  "name": "setTokenURI",
+  "inputs": [{
+    "internalType": "uint256",
+    "name": "tokenId",
+    "type": "uint256",
+  }, { "internalType": "enum ClubTiers.Tier", "name": "tier", "type": "uint8" }],
+  "name": "setTier",
   "outputs": [],
   "stateMutability": "nonpayable",
   "type": "function",
+}, {
+  "inputs": [{
+    "components": [{
+      "internalType": "string",
+      "name": "name",
+      "type": "string",
+    }, { "internalType": "string", "name": "description", "type": "string" }, {
+      "internalType": "string",
+      "name": "image",
+      "type": "string",
+    }], "internalType": "struct ClubMemberNFTV3.TokenBase", "name": "_tokenBase", "type": "tuple",
+  }], "name": "setTokenBase", "outputs": [], "stateMutability": "nonpayable", "type": "function",
 }, {
   "inputs": [{ "internalType": "address", "name": "newPlugin", "type": "address" }],
   "name": "setUnionClubPlugin",
@@ -367,6 +631,16 @@ export const clubNftAbi = [{
   "stateMutability": "view",
   "type": "function",
 }, {
+  "inputs": [],
+  "name": "tokenBase",
+  "outputs": [{ "internalType": "string", "name": "name", "type": "string" }, {
+    "internalType": "string",
+    "name": "description",
+    "type": "string",
+  }, { "internalType": "string", "name": "image", "type": "string" }],
+  "stateMutability": "view",
+  "type": "function",
+}, {
   "inputs": [{ "internalType": "uint256", "name": "index", "type": "uint256" }],
   "name": "tokenByIndex",
   "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
@@ -383,7 +657,7 @@ export const clubNftAbi = [{
   "stateMutability": "view",
   "type": "function",
 }, {
-  "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+  "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
   "name": "tokenURI",
   "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
   "stateMutability": "view",
@@ -417,9 +691,19 @@ export const clubNftAbi = [{
   "stateMutability": "view",
   "type": "function",
 }, {
-  "inputs": [],
-  "name": "contractURI",
-  "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
-  "stateMutability": "view",
+  "inputs": [{
+    "internalType": "address",
+    "name": "newImplementation",
+    "type": "address",
+  }, { "internalType": "bytes", "name": "data", "type": "bytes" }],
+  "name": "upgradeToAndCall",
+  "outputs": [],
+  "stateMutability": "payable",
+  "type": "function",
+}, {
+  "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
+  "name": "useInviteCount",
+  "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+  "stateMutability": "nonpayable",
   "type": "function",
 }] as const;

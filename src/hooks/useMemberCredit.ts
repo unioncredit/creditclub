@@ -15,8 +15,6 @@ export const useMemberCredit = () => {
     totalSupply,
   } = creditClub;
 
-  console.log("called");
-
   const proRataStakedAmount = stakedBalance * PRO_RATA_DENOMINATOR;
   const proRataTotalSupply = totalSupply < PRO_RATA_MIN_MEMBER_NUM
     ? PRO_RATA_MIN_MEMBER_NUM

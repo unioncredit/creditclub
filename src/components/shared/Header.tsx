@@ -1,7 +1,7 @@
 import "./Header.scss";
 
 // @ts-ignore
-import { Button, ProfileIcon, WalletIcon, RepayIcon, UnionIcon } from "@unioncredit/ui";
+import { Button, VouchIcon, WalletIcon, RepayIcon, UnionIcon } from "@unioncredit/ui";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import CreditClubLogo from "@/assets/creditclub-logo.svg";
@@ -14,9 +14,10 @@ import { BORROW_MODAL } from "@/components/modals/BorrowModal.tsx";
 import { REPAY_MODAL } from "@/components/modals/RepayModal.tsx";
 import { WAD } from "@/constants.ts";
 import { FEELING_LUCKY_MODAL } from "@/components/modals/FeelingLuckyModal.tsx";
+import { INVITE_MODAL } from "@/components/modals/InviteModal.tsx";
 
 export const Header = () => {
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
   const { data: member } = useUnionMember();
   const { open: openModal } = useModals();
 
@@ -67,7 +68,7 @@ export const Header = () => {
             <Button
               size="small"
               icon={UnionIcon}
-              className="UnionButton mr-2 md:hidden lg:px-2"
+              className="UnionButton mr-2 lg:px-2"
               label={format(unionBalance, 0)}
               color="secondary"
               variant="light"
@@ -76,12 +77,12 @@ export const Header = () => {
 
             <Button
               size="small"
-              className="ProfileButton mr-2 lg:hidden"
-              label="Profile"
-              icon={ProfileIcon}
+              className="ProfileButton mr-2"
+              label="Invites"
+              icon={VouchIcon}
               color="secondary"
               variant="light"
-              onClick={() => open(`https://app.union.finance/profile/opt:${address}`)}
+              onClick={() => openModal(INVITE_MODAL)}
             />
           </>
         )}

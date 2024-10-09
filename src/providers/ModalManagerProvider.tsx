@@ -7,6 +7,7 @@ import { MINT_NFT_MODAL, MintNftModal } from "@/components/modals/MintNftModal.t
 import { FEELING_LUCKY_WINNER_MODAL, FeelingLuckyWinnerModal } from "@/components/modals/FeelingLuckyWinnerModal.tsx";
 import { BORROW_MODAL, BorrowModal } from "@/components/modals/BorrowModal.tsx";
 import { REPAY_MODAL, RepayModal } from "@/components/modals/RepayModal.tsx";
+import { INVITE_MODAL, InviteModal } from "@/components/modals/InviteModal.tsx";
 
 const ModalContext = createContext({} as IModalManagerContext);
 
@@ -17,6 +18,7 @@ const modals: Record<string, any> = {
   [BORROW_MODAL]: BorrowModal,
   [FEELING_LUCKY_MODAL]: FeelingLuckyModal,
   [FEELING_LUCKY_WINNER_MODAL]: FeelingLuckyWinnerModal,
+  [INVITE_MODAL]: InviteModal,
   [MINT_NFT_MODAL]: MintNftModal,
   [REPAY_MODAL]: RepayModal,
 };

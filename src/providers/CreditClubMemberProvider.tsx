@@ -5,16 +5,14 @@ import { ICreditClubMemberContext } from "@/providers/types";
 import {
   clubNftContract, clubPluginContract, userManagerContract,
 } from "@/contracts/optimism";
-import { zeroAddress } from "viem";
+import { Address, zeroAddress } from "viem";
 import { CREDITCLUB_SAFE_ADDRESS } from "@/constants.ts";
 
 const CreditClubMemberContext = createContext({} as ICreditClubMemberContext);
 
 export const useClubMember = () => useContext(CreditClubMemberContext);
 
-export const CreditClubMemberProvider = ({ children }: { children: React.ReactNode; }) => {
-  const { address = zeroAddress } = useAccount();
-
+export const useClubMemberData = ({ address }: { address: Address }) => {
   const resultOne = useReadContracts({
     contracts: [
       {
@@ -53,6 +51,12 @@ export const CreditClubMemberProvider = ({ children }: { children: React.ReactNo
         ...clubPluginContract,
         functionName: "percentVested",
         args: [tokenId],
+      },
+      {
+        ...clubNftContract,
+        functionName: "nftCreditStatus",
+        // @ts-ignore
+        args: [tokenId],
       }
     ],
     query: {
@@ -62,6 +66,7 @@ export const CreditClubMemberProvider = ({ children }: { children: React.ReactNo
 
   const [
     percentVested = undefined,
+    nftCreditStatus = undefined,
   ] = resultTwo.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -71,10 +76,45 @@ export const CreditClubMemberProvider = ({ children }: { children: React.ReactNo
     owed,
     vouch,
     percentVested,
+    baseTrust: nftCreditStatus?.[0] || 0n,
+    active: nftCreditStatus?.[1] || false,
+    badDebt: nftCreditStatus?.[2] || 0n,
+    tier: nftCreditStatus?.[3] || 0,
+    inviteCount: nftCreditStatus?.[4] || 0,
   };
 
+  const {
+    refetch: refetchOne,
+    isLoading: isLoadingOne,
+    isRefetching: isRefetchingOne,
+  } = resultOne;
+
+  const {
+    refetch: refetchTwo,
+    isLoading: isLoadingTwo,
+    isRefetching: isRefetchingTwo,
+  } = resultTwo;
+
+  const refetch = async () => {
+    await refetchOne();
+    await refetchTwo();
+  };
+
+  return {
+    ...resultTwo,
+    isLoading: isLoadingOne || isLoadingTwo || isRefetchingOne || isRefetchingTwo,
+    refetch,
+    data,
+  };
+};
+
+export const CreditClubMemberProvider = ({ children }: { children: React.ReactNode; }) => {
+  const { address = zeroAddress } = useAccount();
+
+  const data = useClubMemberData({ address });
+
   return (
-    <CreditClubMemberContext.Provider value={{ ...resultOne, data }}>
+    <CreditClubMemberContext.Provider value={data}>
       {children}
     </CreditClubMemberContext.Provider>
   )

@@ -7,6 +7,7 @@ import {
   WithdrawIcon,
   DepositIcon,
   IncreaseVouchIcon,
+  VouchIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
 
@@ -22,7 +23,15 @@ const texts = {
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500">Joined the club!</span>
+        <span className="text-gray-500"> Joined the club!</span>
+      </a>
+    </>
+  ),
+  [TransactionTypes.INVITATION_EVENT]: (x: any) => (
+    <>
+      <AddressLink address={x.address} /> ·
+      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+        <span className="text-gray-500"> Invited to club!</span>
       </a>
     </>
   ),
@@ -30,7 +39,7 @@ const texts = {
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500">Borrowed</span> {format(x.amount, 0)} DAI
+        <span className="text-gray-500"> Borrowed</span> {format(x.amount, 0)} DAI
       </a>
     </>
   ),
@@ -38,7 +47,7 @@ const texts = {
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500">Repaid</span> {format(x.amount, 0)} DAI
+        <span className="text-gray-500"> Repaid</span> {format(x.amount, 0)} DAI
       </a>
     </>
   ),
@@ -46,7 +55,7 @@ const texts = {
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500">Updated trust</span> {format(x.amount, 0)} DAI
+        <span className="text-gray-500"> Updated trust</span> {format(x.amount, 0)} DAI
       </a>
     </>
   ),
@@ -54,7 +63,7 @@ const texts = {
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500">Won</span> {format(x.amount, 0)} UNION
+        <span className="text-gray-500"> Won</span> {format(x.amount, 0)} UNION
       </a>
     </>
   ),
@@ -77,6 +86,7 @@ const ActivityRow = ({
     [TransactionTypes.REPAID]: DepositIcon,
     [TransactionTypes.UPDATED_TRUST]: IncreaseVouchIcon,
     [TransactionTypes.ROUND_WON]: ConfettiIcon,
+    [TransactionTypes.INVITATION_EVENT]: VouchIcon,
   };
 
   const Icon = icons[type];

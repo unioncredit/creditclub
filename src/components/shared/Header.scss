@@ -19,8 +19,13 @@
   }
 
   .UnionButton {
-    @media all and (max-width: 900px) {
-      display: none;
+    @media all and (max-width: 600px) {
+      font-size: 0;
+      padding: 12px 10px;
+
+      svg {
+        margin: 0 !important;
+      }
     }
   }
   .ProfileButton {
