@@ -4,6 +4,7 @@ import {
   ModalOverlay,
   Text,
   VouchIcon,
+  Skeleton,
   // @ts-ignore
 } from "@unioncredit/ui";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
@@ -24,8 +25,8 @@ export const InviteModal = () => {
 
   const { close } = useModals();
   const { address: connectedAddress } = useAccount();
-  const { data: member, refetch: refetchMember } = useClubMember();
-  const { data: sentInvitations, refetch: refetchSentInvitations } = useSentInvitations({
+  const { data: member, refetch: refetchMember, isLoading: memberLoading } = useClubMember();
+  const { data: sentInvitations, addInvite, } = useSentInvitations({
     sender: connectedAddress,
   });
 
@@ -37,9 +38,8 @@ export const InviteModal = () => {
     args: [address],
     disabled: !address,
     onComplete: async () => {
+      addInvite(address);
       await refetchMember();
-      await refetchSentInvitations();
-      close();
     },
   });
 
@@ -54,7 +54,11 @@ export const InviteModal = () => {
         <Modal.Body>
           <AddressInput
             label="Address or ENS of recipient"
-            rightLabel={`${inviteCount === 1 ? "1 invite" : `${inviteCount} invites`} remaining`}
+            rightLabel={memberLoading ? (
+              <Skeleton width={125} height={25} shimmer />
+            ) : (
+              <>{inviteCount === 1 ? "1 invite" : `${inviteCount} invites`} remaining</>
+            )}
             onChange={(addr) => setAddress(addr)}
           />
 

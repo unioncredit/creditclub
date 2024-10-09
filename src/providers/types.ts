@@ -68,7 +68,8 @@ export type ICreditClubContactsProviderReturnType = Omit<UseReadContractsReturnT
   data: IContact[]
 };
 
-export type ICreditClubMemberContext = Omit<UseReadContractsReturnType, "data"> & {
+export type ICreditClubMemberContext = Omit<UseReadContractsReturnType, "data"|"refetch"> & {
+  refetch: () => Promise<void>;
   data: {
     isMember: boolean;
     tokenBalance: bigint;

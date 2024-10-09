@@ -83,7 +83,29 @@ export const useClubMemberData = ({ address }: { address: Address }) => {
     inviteCount: nftCreditStatus?.[4] || 0,
   };
 
-  return { ...resultOne, data };
+  const {
+    refetch: refetchOne,
+    isLoading: isLoadingOne,
+    isRefetching: isRefetchingOne,
+  } = resultOne;
+
+  const {
+    refetch: refetchTwo,
+    isLoading: isLoadingTwo,
+    isRefetching: isRefetchingTwo,
+  } = resultTwo;
+
+  const refetch = async () => {
+    await refetchOne();
+    await refetchTwo();
+  };
+
+  return {
+    ...resultTwo,
+    isLoading: isLoadingOne || isLoadingTwo || isRefetchingOne || isRefetchingTwo,
+    refetch,
+    data,
+  };
 };
 
 export const CreditClubMemberProvider = ({ children }: { children: React.ReactNode; }) => {

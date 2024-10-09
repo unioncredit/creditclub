@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { Address } from "viem";
+import { Address, zeroAddress } from "viem";
 import { fetchInvitations, IInvitation } from "@/fetchers/fetchInvitations.ts";
 import { useCache } from "@/providers/CacheProvider.tsx";
 
@@ -23,6 +23,22 @@ export const useSentInvitations = ({ sender }: { sender?: Address; }) => {
     setLoading(false);
   }, [cacheKey, sender]);
 
+  const addInvite = (receiver: Address | null) => {
+    if (!receiver) return;
+
+    const invite: IInvitation = {
+      id: "",
+      sender: zeroAddress,
+      receiver,
+      timestamp: Date.now() / 1000,
+      block: 0n,
+    }
+
+    const newData = [invite, ...data];
+    set(cacheKey, newData);
+    setData(newData);
+  }
+
   useEffect(() => {
     if (get(cacheKey)) {
       setData(get(cacheKey));
@@ -33,5 +49,5 @@ export const useSentInvitations = ({ sender }: { sender?: Address; }) => {
     loadData();
   }, [cacheKey, sender, loadData]);
 
-  return { data, loading, refetch: loadData };
+  return { data, loading, refetch: loadData, addInvite };
 }
