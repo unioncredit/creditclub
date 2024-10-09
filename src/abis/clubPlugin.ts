@@ -129,6 +129,16 @@ export const clubPluginAbi = [{
   "type": "event",
 }, {
   "anonymous": false,
+  "inputs": [{ "indexed": false, "internalType": "address", "name": "member", "type": "address" }, {
+    "indexed": false,
+    "internalType": "address",
+    "name": "invited",
+    "type": "address",
+  }],
+  "name": "InvitationSent",
+  "type": "event",
+}, {
+  "anonymous": false,
   "inputs": [{ "indexed": false, "internalType": "uint96", "name": "oldTrust", "type": "uint96" }, {
     "indexed": false,
     "internalType": "uint96",
@@ -219,6 +229,16 @@ export const clubPluginAbi = [{
   "type": "event",
 }, {
   "anonymous": false,
+  "inputs": [{ "indexed": false, "internalType": "bool", "name": "oldTierEnabled", "type": "bool" }, {
+    "indexed": false,
+    "internalType": "bool",
+    "name": "newTierEnabled",
+    "type": "bool",
+  }],
+  "name": "TierEnabledUpdated",
+  "type": "event",
+}, {
+  "anonymous": false,
   "inputs": [{ "indexed": true, "internalType": "address", "name": "implementation", "type": "address" }],
   "name": "Upgraded",
   "type": "event",
@@ -273,6 +293,12 @@ export const clubPluginAbi = [{
   "stateMutability": "view",
   "type": "function",
 }, {
+  "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }, {
+    "internalType": "uint8",
+    "name": "count",
+    "type": "uint8",
+  }], "name": "addInvite", "outputs": [], "stateMutability": "nonpayable", "type": "function",
+}, {
   "inputs": [],
   "name": "assetToken",
   "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
@@ -283,6 +309,20 @@ export const clubPluginAbi = [{
   "name": "auth",
   "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
   "stateMutability": "view",
+  "type": "function",
+}, {
+  "inputs": [{ "internalType": "address", "name": "recipient", "type": "address" }, {
+    "internalType": "uint256",
+    "name": "base",
+    "type": "uint256",
+  }, { "internalType": "enum ClubTiers.Tier", "name": "tier", "type": "uint8" }, {
+    "internalType": "bool",
+    "name": "active",
+    "type": "bool",
+  }],
+  "name": "authMint",
+  "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+  "stateMutability": "nonpayable",
   "type": "function",
 }, {
   "inputs": [],
@@ -321,6 +361,12 @@ export const clubPluginAbi = [{
     "type": "address",
   }], "name": "claim", "outputs": [], "stateMutability": "nonpayable", "type": "function",
 }, {
+  "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
+  "name": "clearBadDebt",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
   "inputs": [],
   "name": "clubMemberNFT",
   "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
@@ -351,6 +397,18 @@ export const clubPluginAbi = [{
   "stateMutability": "view",
   "type": "function",
 }, {
+  "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }, {
+    "internalType": "uint8",
+    "name": "count",
+    "type": "uint8",
+  }], "name": "decInvite", "outputs": [], "stateMutability": "nonpayable", "type": "function",
+}, {
+  "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }],
+  "name": "deleteMembership",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
   "inputs": [],
   "name": "feelingLucky",
   "outputs": [],
@@ -369,23 +427,54 @@ export const clubPluginAbi = [{
   "stateMutability": "view",
   "type": "function",
 }, {
-  "inputs": [{ "internalType": "address", "name": "_safe", "type": "address" }, {
-    "internalType": "address",
-    "name": "_userManager",
-    "type": "address",
-  }, { "internalType": "address", "name": "_uToken", "type": "address" }, {
-    "internalType": "address",
-    "name": "_union",
-    "type": "address",
-  }, { "internalType": "address", "name": "_auth", "type": "address" }, {
-    "internalType": "address",
-    "name": "_assetToken",
-    "type": "address",
-  }, { "internalType": "uint96", "name": "_maxAuthTrust", "type": "uint96" }, {
-    "internalType": "uint32",
-    "name": "_cooldown",
-    "type": "uint32",
+  "inputs": [{
+    "components": [{
+      "internalType": "address",
+      "name": "safe",
+      "type": "address",
+    }, { "internalType": "address", "name": "userManager", "type": "address" }, {
+      "internalType": "address",
+      "name": "uToken",
+      "type": "address",
+    }, { "internalType": "address", "name": "unionToken", "type": "address" }, {
+      "internalType": "address",
+      "name": "auth",
+      "type": "address",
+    }, { "internalType": "address", "name": "assetToken", "type": "address" }, {
+      "internalType": "uint96",
+      "name": "maxAuthTrust",
+      "type": "uint96",
+    }, { "internalType": "uint32", "name": "cooldown", "type": "uint32" }, {
+      "internalType": "uint256",
+      "name": "memberBidPrice",
+      "type": "uint256",
+    }, { "internalType": "uint256", "name": "publicBidPrice", "type": "uint256" }, {
+      "internalType": "uint256",
+      "name": "costToMint",
+      "type": "uint256",
+    }, { "internalType": "bool", "name": "tierEnabled", "type": "bool" }],
+    "internalType": "struct UnionClubPluginV3.InitParams",
+    "name": "params",
+    "type": "tuple",
   }], "name": "initialize", "outputs": [], "stateMutability": "nonpayable", "type": "function",
+}, {
+  "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
+  "name": "invite",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
+  "inputs": [{ "internalType": "address[]", "name": "accounts", "type": "address[]" }],
+  "name": "inviteList",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
+  "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+  "name": "invited",
+  "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+  "stateMutability": "view",
+  "type": "function",
 }, {
   "inputs": [],
   "name": "maxAuthTrust",
@@ -405,7 +494,17 @@ export const clubPluginAbi = [{
   "stateMutability": "view",
   "type": "function",
 }, {
-  "inputs": [{ "internalType": "bytes32[]", "name": "proof", "type": "bytes32[]" }],
+  "inputs": [{ "internalType": "address", "name": "recipient", "type": "address" }],
+  "name": "mintMemberNFT",
+  "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
+  "inputs": [{ "internalType": "address", "name": "recipient", "type": "address" }, {
+    "internalType": "bytes32[]",
+    "name": "proof",
+    "type": "bytes32[]",
+  }],
   "name": "mintMemberNFT",
   "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
   "stateMutability": "nonpayable",
@@ -453,11 +552,23 @@ export const clubPluginAbi = [{
   "stateMutability": "view",
   "type": "function",
 }, {
+  "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }, {
+    "internalType": "bool",
+    "name": "active",
+    "type": "bool",
+  }], "name": "setActive", "outputs": [], "stateMutability": "nonpayable", "type": "function",
+}, {
   "inputs": [{ "internalType": "address", "name": "newAuth", "type": "address" }],
   "name": "setAuth",
   "outputs": [],
   "stateMutability": "nonpayable",
   "type": "function",
+}, {
+  "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }, {
+    "internalType": "uint256",
+    "name": "baseTrust",
+    "type": "uint256",
+  }], "name": "setBaseTrust", "outputs": [], "stateMutability": "nonpayable", "type": "function",
 }, {
   "inputs": [{ "internalType": "uint16", "name": "newPercent", "type": "uint16" }],
   "name": "setBidBucketPercent",
@@ -531,6 +642,20 @@ export const clubPluginAbi = [{
   "stateMutability": "nonpayable",
   "type": "function",
 }, {
+  "inputs": [{ "internalType": "address", "name": "account", "type": "address" }, {
+    "internalType": "uint256",
+    "name": "baseTrust",
+    "type": "uint256",
+  }, { "internalType": "bool", "name": "active", "type": "bool" }, {
+    "internalType": "enum ClubTiers.Tier",
+    "name": "tier",
+    "type": "uint8",
+  }, { "internalType": "uint8", "name": "invites", "type": "uint8" }],
+  "name": "setNftCreditStatus",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
   "inputs": [{ "internalType": "uint16", "name": "newPercent", "type": "uint16" }],
   "name": "setPercentageFull",
   "outputs": [],
@@ -545,6 +670,22 @@ export const clubPluginAbi = [{
 }, {
   "inputs": [{ "internalType": "uint256", "name": "newPercent", "type": "uint256" }],
   "name": "setStartingPercentTrust",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
+  "inputs": [{
+    "internalType": "uint256",
+    "name": "tokenId",
+    "type": "uint256",
+  }, { "internalType": "enum ClubTiers.Tier", "name": "tier", "type": "uint8" }],
+  "name": "setTier",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function",
+}, {
+  "inputs": [{ "internalType": "bool", "name": "newTierEnabled", "type": "bool" }],
+  "name": "setTierEnabled",
   "outputs": [],
   "stateMutability": "nonpayable",
   "type": "function",
@@ -574,6 +715,12 @@ export const clubPluginAbi = [{
   "inputs": [],
   "name": "startingPercentTrust",
   "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+  "stateMutability": "view",
+  "type": "function",
+}, {
+  "inputs": [],
+  "name": "tierEnabled",
+  "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
   "stateMutability": "view",
   "type": "function",
 }, {

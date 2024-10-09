@@ -76,6 +76,11 @@ export type ICreditClubMemberContext = Omit<UseReadContractsReturnType, "data"> 
     owed: bigint;
     vouch: bigint;
     percentVested: bigint | undefined;
+    baseTrust: bigint;
+    active: boolean;
+    badDebt: bigint;
+    tier: number;
+    inviteCount: number;
   },
 }
 
