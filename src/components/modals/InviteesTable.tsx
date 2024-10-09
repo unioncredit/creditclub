@@ -12,7 +12,7 @@ export const InviteesTable = ({
 }: {
   sentInvitations: IInvitation[];
 }) => {
-  const { data, maxPages, activePage, onChange } = usePagination(sentInvitations, 5);
+  const { data, maxPages, activePage, onChange } = usePagination(sentInvitations, 4);
 
   return (
     <Modal.Container className="InviteesTable" direction="vertical">
