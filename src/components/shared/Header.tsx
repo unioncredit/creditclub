@@ -17,7 +17,7 @@ import { FEELING_LUCKY_MODAL } from "@/components/modals/FeelingLuckyModal.tsx";
 import { INVITE_MODAL } from "@/components/modals/InviteModal.tsx";
 
 export const Header = () => {
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
   const { data: member } = useUnionMember();
   const { open: openModal } = useModals();
 
