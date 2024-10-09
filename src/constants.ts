@@ -52,6 +52,7 @@ export const TransactionTypes = {
   BORROWED: "BORROWED",
   REPAID: "REPAID",
   ROUND_WON: "ROUND_WON",
+  INVITATION_EVENT: "INVITATION_EVENT",
 };
 
 export const WagmiErrors: Record<string, { title: string; content: string; }> = {

@@ -7,6 +7,7 @@ import {
   WithdrawIcon,
   DepositIcon,
   IncreaseVouchIcon,
+  VouchIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
 
@@ -19,6 +20,14 @@ import { format } from "@/utils/format.ts";
 // prettier-ignore
 const texts = {
   [TransactionTypes.JOINED_CLUB]: (x: any) => (
+    <>
+      <AddressLink address={x.address} /> ·
+      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+        <span className="text-gray-500">was invited!</span>
+      </a>
+    </>
+  ),
+  [TransactionTypes.INVITATION_EVENT]: (x: any) => (
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
@@ -77,6 +86,7 @@ const ActivityRow = ({
     [TransactionTypes.REPAID]: DepositIcon,
     [TransactionTypes.UPDATED_TRUST]: IncreaseVouchIcon,
     [TransactionTypes.ROUND_WON]: ConfettiIcon,
+    [TransactionTypes.INVITATION_EVENT]: VouchIcon,
   };
 
   const Icon = icons[type];
