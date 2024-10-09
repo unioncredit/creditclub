@@ -32,6 +32,7 @@ export const AddressInput = ({
   const address = isAddress(value) ? value : addressFromEns;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handleChange");
     const value = event.target.value;
 
     if (value.endsWith(".eth") || isAddress(value)) {

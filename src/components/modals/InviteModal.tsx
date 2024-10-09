@@ -10,7 +10,7 @@ import {
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { useWrite } from "@/hooks/useWrite.ts";
 import { clubPluginContract } from "@/contracts/optimism.ts";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Address } from "viem";
 import { AddressInput } from "@/components/shared/AddressInput.tsx";
 import { InviteesTable } from "@/components/modals/InviteesTable.tsx";
@@ -21,7 +21,10 @@ import { useAccount } from "wagmi";
 export const INVITE_MODAL = "invite-modal";
 
 export const InviteModal = () => {
+  const [key, setKey] = useState(0);
   const [address, setAddress] = useState<Address | null>(null);
+
+  const addressInputRef = useRef<HTMLInputElement>(null);
 
   const { close } = useModals();
   const { address: connectedAddress } = useAccount();
@@ -32,12 +35,20 @@ export const InviteModal = () => {
 
   const { inviteCount } = member;
 
+  const clearAddressInput = () => {
+    if (addressInputRef.current) {
+      addressInputRef.current.value = "";
+      setKey(k => k + 1);
+    }
+  };
+
   const inviteUserButtonProps = useWrite({
     ...clubPluginContract,
     functionName: "invite",
     args: [address],
     disabled: !address,
     onComplete: async () => {
+      clearAddressInput();
       addInvite(address);
       await refetchMember();
     },
@@ -53,13 +64,15 @@ export const InviteModal = () => {
         <Modal.Header title="Invite Club Members" onClose={close} />
         <Modal.Body>
           <AddressInput
+            key={key}
             label="Address or ENS of recipient"
+            onChange={(addr) => setAddress(addr)}
+            inputProps={{ ref: addressInputRef }}
             rightLabel={memberLoading ? (
               <Skeleton width={125} height={25} shimmer />
             ) : (
               <>{inviteCount === 1 ? "1 invite" : `${inviteCount} invites`} remaining</>
             )}
-            onChange={(addr) => setAddress(addr)}
           />
 
           <Button
