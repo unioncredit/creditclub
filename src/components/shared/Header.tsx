@@ -68,7 +68,7 @@ export const Header = () => {
             <Button
               size="small"
               icon={UnionIcon}
-              className="UnionButton mr-2 md:hidden lg:px-2"
+              className="UnionButton mr-2 lg:px-2"
               label={format(unionBalance, 0)}
               color="secondary"
               variant="light"
@@ -77,7 +77,7 @@ export const Header = () => {
 
             <Button
               size="small"
-              className="ProfileButton mr-2 lg:hidden"
+              className="ProfileButton mr-2"
               label="Invites"
               icon={VouchIcon}
               color="secondary"
