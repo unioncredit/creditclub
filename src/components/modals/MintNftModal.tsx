@@ -87,8 +87,7 @@ export const MintNftModal = () => {
               functionName: "mintMemberNFT",
               label: "Mint Member NFT",
               icon: DelegateIcon,
-              args: [proof],
-              disabled: !proof,
+              args: proof.length > 0 ? [address, proof] : [address],
               onComplete: async () => {
                 await refetchCreditClub();
                 await refetchMember();
