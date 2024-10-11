@@ -109,7 +109,7 @@ export const ClubActivity = () => {
   return (
     <div className="ClubActivity mt-6 text-left p-6 justify-self-end sm:p-4">
       <header className="ClubActivity__header">
-        <h2 className="text-xl font-bold">Latest Club Activity</h2>
+        <h2 className="text-xl font-medium">Latest Club Activity</h2>
       </header>
 
       <div className="ClubActivity__rows sm:mt-6">
