@@ -1,4 +1,5 @@
 import './App.css'
+import '@decent.xyz/the-box/index.css';
 
 import { Homepage } from "@/pages/Homepage.tsx";
 import { Web3Provider } from "@/providers/Web3Provider";
