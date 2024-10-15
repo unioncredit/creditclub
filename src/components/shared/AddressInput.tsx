@@ -5,6 +5,7 @@ import { useEnsAddress, useEnsName } from "wagmi";
 // @ts-ignore
 import { Box, EnsIcon, Input, LoadingSpinner, Text } from "@unioncredit/ui";
 import { Avatar } from "@/components/shared/Avatar.tsx";
+import { normalize } from "viem/ens";
 
 export const AddressInput = ({
   onChange,
@@ -25,7 +26,7 @@ export const AddressInput = ({
   });
 
   const { data: addressFromEns, isLoading: isLoadingAddress } = useEnsAddress({
-    name: value?.endsWith(".eth") ? value : undefined,
+    name: value?.endsWith(".eth") ? normalize(value) : undefined,
     chainId: 1,
   });
 
