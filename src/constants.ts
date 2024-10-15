@@ -1,4 +1,4 @@
-import { Chain, optimism } from "viem/chains";
+import { arbitrum, Chain, optimism } from "viem/chains";
 import { Address } from "viem";
 import { mainnet } from "wagmi/chains";
 import { IToastStatus } from "@/providers/types.ts";
@@ -6,11 +6,12 @@ import { format } from "@/utils/format.ts";
 
 export const supportedChains: readonly [Chain, ...Chain[]] = [optimism];
 
-export const rpcChains: readonly [Chain, ...Chain[]] = [optimism, mainnet];
+export const rpcChains: readonly [Chain, ...Chain[]] = [optimism, mainnet, arbitrum];
 
 const RPCS: Record<number, string> = {
   [optimism.id]: "https://opt-mainnet.g.alchemy.com/v2",
   [mainnet.id]: "https://eth-mainnet.g.alchemy.com/v2",
+  [arbitrum.id]: "https://arb-mainnet.g.alchemy.com/v2"
 };
 
 export const RPC_URL = (chainId: number) =>

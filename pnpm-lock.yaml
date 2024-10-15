@@ -8,6 +8,12 @@ dependencies:
   '@airstack/airstack-react':
     specifier: ^0.6.4
     version: 0.6.4(react-dom@18.3.1)(react@18.3.1)
+  '@decent.xyz/box-common':
+    specifier: ^3.3.8
+    version: 3.3.8(@wagmi/core@2.10.4)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4)
+  '@decent.xyz/the-box':
+    specifier: ^3.3.8
+    version: 3.3.8(@wagmi/core@2.10.4)(react-dom@18.3.1)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4)
   '@openzeppelin/merkle-tree':
     specifier: ^1.0.6
     version: 1.0.6
@@ -1535,6 +1541,86 @@ packages:
       keccak: 3.0.4
       preact: 10.22.0
       sha.js: 2.4.11
+    dev: false
+
+  /@decent.xyz/box-common@3.3.8(@wagmi/core@2.10.4)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4):
+    resolution: {integrity: sha512-iMLFxAO5QxC8Rz4jxRpAOHrQcdgaLNbvn+zNfI8lcJcoC7V00fLT7vmggfLplmsMNvBbjjBaFpby214sGP3L2g==}
+    peerDependencies:
+      '@wagmi/core': 2.x
+      react: ^18.0.0
+      viem: 2.x
+      wagmi: 2.x
+    dependencies:
+      '@wagmi/core': 2.10.4(@types/react@18.3.2)(react@18.3.1)(typescript@5.4.5)(viem@2.11.0)
+      react: 18.3.1
+      viem: 2.11.0(typescript@5.4.5)
+      wagmi: 2.9.4(@tanstack/react-query@5.37.1)(@types/react@18.3.2)(react-dom@18.3.1)(react-i18next@13.5.0)(react-native@0.74.1)(react@18.3.1)(rollup@2.79.1)(typescript@5.4.5)(viem@2.11.0)
+    dev: false
+
+  /@decent.xyz/box-evm@3.3.8(@wagmi/core@2.10.4)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4):
+    resolution: {integrity: sha512-zvpgbyjw2H4qS/chJ8DbagneNBjBsUz1fKpPMtEFHFqfpzhBG9tbDE0ektb0xWFKcBZ8ggE8Erje7nsIuX4zpw==}
+    peerDependencies:
+      '@wagmi/core': 2.x
+      react: ^18.0.0
+      viem: 2.x
+      wagmi: 2.x
+    dependencies:
+      '@decent.xyz/box-common': 3.3.8(@wagmi/core@2.10.4)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4)
+      '@decent.xyz/box-hooks': 3.3.8(@wagmi/core@2.10.4)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4)
+      '@wagmi/core': 2.10.4(@types/react@18.3.2)(react@18.3.1)(typescript@5.4.5)(viem@2.11.0)
+      react: 18.3.1
+      viem: 2.11.0(typescript@5.4.5)
+      wagmi: 2.9.4(@tanstack/react-query@5.37.1)(@types/react@18.3.2)(react-dom@18.3.1)(react-i18next@13.5.0)(react-native@0.74.1)(react@18.3.1)(rollup@2.79.1)(typescript@5.4.5)(viem@2.11.0)
+    dev: false
+
+  /@decent.xyz/box-hooks@3.3.8(@wagmi/core@2.10.4)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4):
+    resolution: {integrity: sha512-HHa70SzOVmjliEwZLTGafppF4MozqijrhWqQoYPsOMixNA2sW+8JOAcw95zlkcg1wBf4pCah5qm96grsAX50+g==}
+    peerDependencies:
+      '@wagmi/core': 2.x
+      react: ^18.0.0
+    dependencies:
+      '@decent.xyz/box-common': 3.3.8(@wagmi/core@2.10.4)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4)
+      '@wagmi/core': 2.10.4(@types/react@18.3.2)(react@18.3.1)(typescript@5.4.5)(viem@2.11.0)
+      react: 18.3.1
+      swr: 2.2.5(react@18.3.1)
+    transitivePeerDependencies:
+      - viem
+      - wagmi
+    dev: false
+
+  /@decent.xyz/box-ui@3.3.8(@wagmi/core@2.10.4)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4):
+    resolution: {integrity: sha512-v7RGRIjComP+J3K6Tmwrp/+t3+H9Mow0OvqVjTADX+QZiYGZD4gsNbBKVRZeXHXCj3nUGz4gO1SGq45Wr6kTVA==}
+    peerDependencies:
+      react: ^18.0.0
+    dependencies:
+      '@decent.xyz/box-common': 3.3.8(@wagmi/core@2.10.4)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4)
+      '@decent.xyz/box-hooks': 3.3.8(@wagmi/core@2.10.4)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4)
+      react: 18.3.1
+    transitivePeerDependencies:
+      - '@wagmi/core'
+      - viem
+      - wagmi
+    dev: false
+
+  /@decent.xyz/the-box@3.3.8(@wagmi/core@2.10.4)(react-dom@18.3.1)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4):
+    resolution: {integrity: sha512-B1gKGw/IVm9DvWociZk4yOppkkkFi2gTlOcZnKqrSY/NnjnqeEf8hnFJ9xDgijj3SJ0k1p4HCm0JdkWo/tfwyQ==}
+    peerDependencies:
+      '@wagmi/core': 2.x
+      react: '>=18'
+      react-dom: '>=18'
+      viem: 2.x
+      wagmi: 2.x
+    dependencies:
+      '@decent.xyz/box-common': 3.3.8(@wagmi/core@2.10.4)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4)
+      '@decent.xyz/box-evm': 3.3.8(@wagmi/core@2.10.4)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4)
+      '@decent.xyz/box-hooks': 3.3.8(@wagmi/core@2.10.4)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4)
+      '@decent.xyz/box-ui': 3.3.8(@wagmi/core@2.10.4)(react@18.3.1)(viem@2.11.0)(wagmi@2.9.4)
+      '@wagmi/core': 2.10.4(@types/react@18.3.2)(react@18.3.1)(typescript@5.4.5)(viem@2.11.0)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      swr: 2.2.5(react@18.3.1)
+      viem: 2.11.0(typescript@5.4.5)
+      wagmi: 2.9.4(@tanstack/react-query@5.37.1)(@types/react@18.3.2)(react-dom@18.3.1)(react-i18next@13.5.0)(react-native@0.74.1)(react@18.3.1)(rollup@2.79.1)(typescript@5.4.5)(viem@2.11.0)
     dev: false
 
   /@dprint/darwin-arm64@0.45.1:
@@ -5180,6 +5266,10 @@ packages:
     resolution: {integrity: sha512-FxqpkPPwu1HjuN93Omfm4h8uIanXofW0RxVEW3k5RKx+mJJYSthzNhp32Kzxxy3YAEZ/Dc/EWN1vZRY0+kOhbw==}
     engines: {node: '>= 10'}
     dev: true
+
+  /client-only@0.0.1:
+    resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
+    dev: false
 
   /clipboardy@4.0.0:
     resolution: {integrity: sha512-5mOlNS0mhX0707P2I0aZ2V/cmHUEO/fL7VFLqszkhUsxt7RwnmrInf/eEQKlf5GzvYeHIjT+Ov1HRfNmymlG0w==}
@@ -10168,6 +10258,16 @@ packages:
   /svg-parser@2.0.4:
     resolution: {integrity: sha512-e4hG1hRwoOdRb37cIMSgzNsxyzKfayW6VOflrwvR+/bzrkyxY/31WkbgnQpgtrNp1SdpJvpUAGTa/ZoiPNDuRQ==}
     dev: true
+
+  /swr@2.2.5(react@18.3.1):
+    resolution: {integrity: sha512-QtxqyclFeAsxEUeZIYmsaQ0UjimSq1RZ9Un7I68/0ClKK/U3LoyQunwkQfJZr2fc22DfIXLNDc2wFyTEikCUpg==}
+    peerDependencies:
+      react: ^16.11.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      client-only: 0.0.1
+      react: 18.3.1
+      use-sync-external-store: 1.2.0(react@18.3.1)
+    dev: false
 
   /system-architecture@0.1.0:
     resolution: {integrity: sha512-ulAk51I9UVUyJgxlv9M6lFot2WP3e7t8Kz9+IS6D4rVba1tR9kON+Ey69f+1R4Q8cd45Lod6a4IcJIxnzGc/zA==}
