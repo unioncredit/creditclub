@@ -6,7 +6,7 @@ import { format } from "@/utils/format.ts";
 
 export const supportedChains: readonly [Chain, ...Chain[]] = [optimism];
 
-export const rpcChains: readonly [Chain, ...Chain[]] = [optimism, mainnet, arbitrum];
+export const rpcChains: readonly [Chain, ...Chain[]] = [optimism, mainnet];
 
 const RPCS: Record<number, string> = {
   [optimism.id]: "https://opt-mainnet.g.alchemy.com/v2",

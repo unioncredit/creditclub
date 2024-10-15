@@ -33,13 +33,17 @@
     & > div:not(:last-of-type) {
       margin-bottom: 4px;
     }
+    .box-token-group-option > button {
+      outline: none !important;
+    }
     .box-token-group-collapse {
       & > div {
         padding-left: 24px;
       }
       button {
-        margin-top: 4px;
-        padding: 6px 16px;
+        border-radius: 0;
+        padding: 12px 16px;
+        border: 0;
 
         & > div > img:first-of-type {
           width: 30px;
@@ -47,7 +51,7 @@
         }
 
         &::before, &::after {
-          display: none;
+          left: 0;
         }
       }
     }
