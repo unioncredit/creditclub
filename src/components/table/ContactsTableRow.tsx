@@ -3,11 +3,12 @@ import "./ContactsTableRow.scss";
 import { Box, TableCell, TableRow, Text, LinkOutIcon, UnionIcon } from "@unioncredit/ui";
 import { DimmableTableCell } from "@/components/table/DimmableTableCell.tsx";
 import { Avatar } from "@/components/shared/Avatar.tsx";
-import { format, truncateAddress, truncateEns } from "@/utils/format.ts";
+import { format } from "@/utils/format.ts";
 import { COLUMNS } from "@/components/table/ContactsTable.tsx";
 import { IContact } from "@/providers/types.ts";
 import { useLastRepay } from "@/hooks/useLastRepay.ts";
 import { StatusBadge } from "@/components/table/StatusBadge.tsx";
+import { usePrimaryLabel } from "@/hooks/usePrimaryLabel.ts";
 
 export const ContactsTableRow = ({
   contact,
@@ -16,13 +17,16 @@ export const ContactsTableRow = ({
 }) => {
   const {
     address,
-    ens,
     vouch,
     locking,
     lastRepay,
     unionWon,
     unionEarned,
   } = contact;
+
+  const { data: primaryLabel } = usePrimaryLabel({
+    address,
+  });
 
   const { formatted: lastRepayFormatted, paymentDue } = useLastRepay(lastRepay);
 
@@ -117,7 +121,7 @@ export const ContactsTableRow = ({
         <Box direction="vertical">
           <Box align="center">
             <Text grey={800} m="0 2px 0 0" size="medium" weight="medium">
-              {ens ? truncateEns(ens) : truncateAddress(address)}
+              {primaryLabel}
             </Text>
 
             <a target="_blank" rel="noreferrer" href={`https://app.union.finance/profile/opt:${address}`}>
