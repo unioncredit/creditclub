@@ -1,5 +1,6 @@
 import { Address } from "viem";
 import { UseReadContractsReturnType } from "wagmi";
+import { IClubEvent } from "@/fetchers/fetchClubEvents.ts";
 
 export type IUnionDataProviderContext = Omit<UseReadContractsReturnType, "data"> & {
   data: {
@@ -109,6 +110,12 @@ export interface IToastsContext {
 export interface ICacheContext {
   get: (key: string) => any;
   set: (key: string, value: any) => void;
+}
+
+export interface IClubActivityContext {
+  data: IClubEvent[];
+  loading: boolean;
+  refetch: (delay?: number) => void;
 }
 
 export interface ISettingsContext {

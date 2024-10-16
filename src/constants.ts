@@ -46,7 +46,8 @@ export const MultiStep = {
   COMPLETE: "complete",
 };
 
-export const TransactionTypes = {
+export const ActivityTypes = {
+  LOADING: "LOADING",
   JOINED_CLUB: "JOINED_CLUB",
   UPDATED_TRUST: "UPDATED_TRUST",
   BORROWED: "BORROWED",

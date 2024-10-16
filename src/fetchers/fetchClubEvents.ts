@@ -1,6 +1,16 @@
 import { request, gql } from "graphql-request";
 
-import { CREDITCLUB_GRAPH_URL } from "@/constants";
+import { ActivityTypes, CREDITCLUB_GRAPH_URL } from "@/constants";
+import { Address, Hash } from "viem";
+
+export type IClubEventType = keyof typeof ActivityTypes;
+
+export interface IClubEvent {
+  type: IClubEventType;
+  amount: bigint;
+  address: Address;
+  hash: Hash;
+}
 
 export const fetchClubEvents = async () =>{
   const query = gql`
@@ -23,8 +33,7 @@ export const fetchClubEvents = async () =>{
 
   const resp: any = await request(CREDITCLUB_GRAPH_URL, query, variables);
 
-  // @ts-ignore
-  const flattened: any[] = resp.clubEvents.map(item => ({
+  const flattened: IClubEvent[] = resp.clubEvents.map((item: any) => ({
     type: item.type,
     amount: item.amount,
     address: item.account.id,
