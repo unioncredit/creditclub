@@ -12,6 +12,7 @@ import { CacheProvider } from '@/providers/CacheProvider';
 import { SettingsProvider } from "@/providers/SettingsProvider.tsx";
 import { UnionDataProvider } from "@/providers/UnionDataProvider.tsx";
 import { UnionMemberProvider } from "@/providers/UnionMemberProvider.tsx";
+import { ClubActivityProvider } from "@/providers/ClubActivityProvider.tsx";
 
 function App() {
   return (
@@ -21,17 +22,19 @@ function App() {
           <CreditClubMemberProvider>
             <UnionDataProvider>
               <UnionMemberProvider>
-                <CacheProvider>
-                  <ToastsProvider>
-                    <ModalManagerProvider>
-                      <SettingsProvider>
-                        <Layout>
-                          <Homepage />
-                        </Layout>
-                      </SettingsProvider>
-                    </ModalManagerProvider>
-                  </ToastsProvider>
-                </CacheProvider>
+                <ClubActivityProvider>
+                  <CacheProvider>
+                    <ToastsProvider>
+                      <ModalManagerProvider>
+                        <SettingsProvider>
+                          <Layout>
+                            <Homepage />
+                          </Layout>
+                        </SettingsProvider>
+                      </ModalManagerProvider>
+                    </ToastsProvider>
+                  </CacheProvider>
+                </ClubActivityProvider>
               </UnionMemberProvider>
             </UnionDataProvider>
           </CreditClubMemberProvider>

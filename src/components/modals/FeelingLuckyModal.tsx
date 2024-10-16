@@ -20,6 +20,7 @@ import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
 import { format } from "@/utils/format.ts";
 import { useFeelingLuckyCountdown } from "@/hooks/useFeelingLuckyCountdown.ts";
 import { FEELING_LUCKY_WINNER_MODAL } from "@/components/modals/FeelingLuckyWinnerModal.tsx";
+import { useClubActivity } from "@/providers/ClubActivityProvider.tsx";
 
 export const FEELING_LUCKY_MODAL = "feeling-lucky-modal";
 
@@ -28,6 +29,7 @@ export const FeelingLuckyModal = () => {
   const { complete, hours, minutes, seconds } = useFeelingLuckyCountdown();
   const { data: creditClub, refetch: refetchCreditClubData } = useClubData();
   const { costToCall } = creditClub;
+  const { refetch: refetchClubActivity } = useClubActivity();
 
   const {
     bidBucketBalance,
@@ -47,7 +49,8 @@ export const FeelingLuckyModal = () => {
       const winner = winnerBalance;
       const bidBucket = bidBucketBalance;
       const caller = callerBalance;
-      await refetchCreditClubData();
+      refetchCreditClubData();
+      refetchClubActivity(5000);
 
       open(FEELING_LUCKY_WINNER_MODAL, {
         hash,

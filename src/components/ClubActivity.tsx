@@ -8,18 +8,23 @@ import {
   DepositIcon,
   IncreaseVouchIcon,
   VouchIcon,
+  Skeleton,
   // @ts-ignore
 } from "@unioncredit/ui";
 
-import { useClubActivity } from "@/hooks/useClubActivity.ts";
-import { CREDITCLUB_SAFE_ADDRESS, TransactionTypes } from "@/constants.ts";
+import { ActivityTypes } from "@/constants.ts";
 import { AddressLink } from "@/components/shared/AddressLink.tsx";
 import { Address, Hash } from "viem";
 import { format } from "@/utils/format.ts";
+import { useClubActivity } from "@/providers/ClubActivityProvider.tsx";
+import { IClubEvent, IClubEventType } from "@/fetchers/fetchClubEvents.ts";
 
 // prettier-ignore
 const texts = {
-  [TransactionTypes.JOINED_CLUB]: (x: any) => (
+  [ActivityTypes.LOADING]: () => (
+    <Skeleton width={320} height={28} shimmer />
+  ),
+  [ActivityTypes.JOINED_CLUB]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
@@ -27,7 +32,7 @@ const texts = {
       </a>
     </>
   ),
-  [TransactionTypes.INVITATION_EVENT]: (x: any) => (
+  [ActivityTypes.INVITATION_EVENT]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
@@ -35,7 +40,7 @@ const texts = {
       </a>
     </>
   ),
-  [TransactionTypes.BORROWED]: (x: any) => (
+  [ActivityTypes.BORROWED]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
@@ -43,7 +48,7 @@ const texts = {
       </a>
     </>
   ),
-  [TransactionTypes.REPAID]: (x: any) => (
+  [ActivityTypes.REPAID]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
@@ -51,7 +56,7 @@ const texts = {
       </a>
     </>
   ),
-  [TransactionTypes.UPDATED_TRUST]: (x: any) => (
+  [ActivityTypes.UPDATED_TRUST]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
@@ -59,7 +64,7 @@ const texts = {
       </a>
     </>
   ),
-  [TransactionTypes.ROUND_WON]: (x: any) => (
+  [ActivityTypes.ROUND_WON]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
@@ -75,18 +80,19 @@ const ActivityRow = ({
   address,
   hash,
 }: {
-  type: "trust";
+  type: IClubEventType;
   amount: bigint;
   address: Address;
   hash: Hash;
 }) => {
   const icons = {
-    [TransactionTypes.JOINED_CLUB]: ConfettiIcon,
-    [TransactionTypes.BORROWED]: WithdrawIcon,
-    [TransactionTypes.REPAID]: DepositIcon,
-    [TransactionTypes.UPDATED_TRUST]: IncreaseVouchIcon,
-    [TransactionTypes.ROUND_WON]: ConfettiIcon,
-    [TransactionTypes.INVITATION_EVENT]: VouchIcon,
+    [ActivityTypes.LOADING]: null,
+    [ActivityTypes.JOINED_CLUB]: ConfettiIcon,
+    [ActivityTypes.BORROWED]: WithdrawIcon,
+    [ActivityTypes.REPAID]: DepositIcon,
+    [ActivityTypes.UPDATED_TRUST]: IncreaseVouchIcon,
+    [ActivityTypes.ROUND_WON]: ConfettiIcon,
+    [ActivityTypes.INVITATION_EVENT]: VouchIcon,
   };
 
   const Icon = icons[type];
@@ -94,7 +100,7 @@ const ActivityRow = ({
 
   return (
     <div className="ActivityRow">
-      <Icon />
+      {Icon && <Icon />}
       <p className="text-lg font-medium text-gray-800">
         {/* @ts-ignore */}
         {text}
@@ -104,7 +110,7 @@ const ActivityRow = ({
 };
 
 export const ClubActivity = () => {
-  const { data: activity } = useClubActivity({ staker: CREDITCLUB_SAFE_ADDRESS });
+  const { data: activity } = useClubActivity();
 
   return (
     <div className="ClubActivity mt-6 text-left p-6 justify-self-end sm:p-4">
