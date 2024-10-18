@@ -13,11 +13,13 @@ import { ToastStatus } from "@/constants.ts";
 import { useToasts } from "@/providers/ToastsProvider.tsx";
 import { useState } from "react";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
+import { POST_MINT_NFT_MODAL } from "@/components/modals/PostMintNftModal.tsx";
+import { TransactionReceipt } from "viem";
 
 export const MintMemberNftMultichain = () => {
   const [toastId, setToastId] = useState<string | null>(null);
 
-  const { close } = useModals();
+  const { open: openModal } = useModals();
   const { addToast, closeToast } = useToasts();
   const { address } = useAccount();
   const { openConnectModal } = useConnectModal();
@@ -52,14 +54,17 @@ export const MintMemberNftMultichain = () => {
       onTxPending={() => {
         setToastId(addToast(createToast(ToastStatus.PENDING), false))
       }}
-      onTxReceipt={async () => {
+      // @ts-ignore
+      onTxReceipt={(r: TransactionReceipt) => {
         if (toastId) {
           closeToast(toastId);
         }
         setToastId(addToast(createToast(ToastStatus.SUCCESS), false));
-        await refetchCreditClub();
-        await refetchMember();
-        close();
+        refetchCreditClub();
+        refetchMember();
+        openModal(POST_MINT_NFT_MODAL, {
+          hash: r.transactionHash,
+        });
       }}
       onTxError={() => {
         if (toastId) {

@@ -13,11 +13,11 @@ import { BidBucketRow } from "@/components/member/BidBucketRow.tsx";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { MINT_NFT_MODAL } from "@/components/modals/MintNftModal.tsx";
 import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
-import { clubNftContract } from "@/contracts/optimism.ts";
 import cn from "classnames";
 import { useNftInfo } from "@/hooks/useNftInfo.ts";
 import { useVesting } from "@/hooks/useVesting.ts";
 import { RainbowBar } from "@/components/shared/RainbowBar.tsx";
+import { generateCreditClubLink } from "@/utils/links.ts";
 
 export const ActionsPanel = () => {
   const { open: openModal } = useModals();
@@ -41,7 +41,7 @@ export const ActionsPanel = () => {
           size="large"
           color="secondary"
           variant="light"
-          onClick={() => tokenId ? open(`https://opensea.io/assets/optimism/${clubNftContract.address}/${tokenId}`) : openModal(MINT_NFT_MODAL)}
+          onClick={() => tokenId ? open(generateCreditClubLink(tokenId)) : openModal(MINT_NFT_MODAL)}
           className={cn("MintButton mt-4", {
             "token": tokenId,
           })}

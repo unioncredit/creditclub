@@ -8,6 +8,8 @@ import { FEELING_LUCKY_WINNER_MODAL, FeelingLuckyWinnerModal } from "@/component
 import { BORROW_MODAL, BorrowModal } from "@/components/modals/BorrowModal.tsx";
 import { REPAY_MODAL, RepayModal } from "@/components/modals/RepayModal.tsx";
 import { INVITE_MODAL, InviteModal } from "@/components/modals/InviteModal.tsx";
+import { POST_MINT_NFT_MODAL, PostMintNftModal } from "@/components/modals/PostMintNftModal.tsx";
+import { SHARE_LINK_MODAL, ShareLinkModal } from "@/components/modals/ShareLinkModal.tsx";
 
 const ModalContext = createContext({} as IModalManagerContext);
 
@@ -20,7 +22,9 @@ const modals: Record<string, any> = {
   [FEELING_LUCKY_WINNER_MODAL]: FeelingLuckyWinnerModal,
   [INVITE_MODAL]: InviteModal,
   [MINT_NFT_MODAL]: MintNftModal,
+  [POST_MINT_NFT_MODAL]: PostMintNftModal,
   [REPAY_MODAL]: RepayModal,
+  [SHARE_LINK_MODAL]: ShareLinkModal,
 };
 
 export const ModalManagerProvider = ({ children }: { children: React.ReactNode; }) => {
