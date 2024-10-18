@@ -1,3 +1,5 @@
+import "./InvitationRequirements.scss";
+
 import {
   Box,
   Text,
@@ -19,19 +21,19 @@ export const InvitationRequirements = () => {
     address: invitation?.sender,
   });
 
-  return loading ? (
+  return connectedAddress && loading ? (
     <Box m="24px 0" justify="center" align="center">
       <Skeleton width={300} height={28} grey={200} shimmer />
     </Box>
   ) : invitation ? (
       <Box m="24px 0" justify="center" align="center">
         <CheckIcon />
-        <Text m={0} ml="2px" weight="medium" color="indigo500">Invited by {name || invitation.sender}</Text>
+        <Text m={0} ml="2px" weight="medium" color="blue600">Invited by {name || invitation.sender}</Text>
       </Box>
     ) : (
       <>
-        <Text color="indigo500" size="medium">Who can mint a membership?</Text>
-        <Box align="center">
+        <Text color="blue600" size="medium">Who can mint a membership?</Text>
+        <Box className="InvitationRequirements__list" align="center">
           <CheckIcon />
           <Text m={0} ml="2px" weight="medium">Invited by member</Text>
         </Box>

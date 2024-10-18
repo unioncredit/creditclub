@@ -27,6 +27,7 @@ export const useReceivedInvitation = ({ receiver }: { receiver?: Address; }) => 
 
   useEffect(() => {
     if (get(cacheKey)) {
+      console.log("using cached data");
       setData(get(cacheKey));
       setLoading(false);
       return;

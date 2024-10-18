@@ -42,9 +42,9 @@ export const MembershipPerks = ({
         <Text weight="bold">{subtitle}:</Text>
 
         <ul>
-          <li>Initial Credit: ${(formattedNumber(creditPerMember) * startingPercentage).toFixed(0)}</li>
+          <li>Starting Credit: ${(formattedNumber(creditPerMember) * startingPercentage).toFixed(0)}</li>
           <li>Vesting: {duration} days</li>
-          <li>Credit after vest: ${format(creditPerMember, 0)}</li>
+          <li>Credit after Vest: ${format(creditPerMember, 0)}</li>
 
           {additionalPerks.map(perk => (
             <li>{perk}</li>
