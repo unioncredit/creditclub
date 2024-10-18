@@ -1,0 +1,28 @@
+@import "@unioncredit/ui/src/variables";
+@import "./MintButton";
+
+.MintPanel {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(213, 215, 225, 0.14);
+
+  .divider {
+    border-color: $grey200;
+  }
+
+  &__header {
+    border-bottom: 1px solid $grey100;
+  }
+  .MembershipPerks {
+    margin: 12px 0;
+    padding: 48px 12px;
+    border-radius: 16px;
+    background: #ECEEF4;
+
+    @media all and (max-width: 1024px) {
+      padding: 28px 12px;
+    }
+    @media all and (max-width: 480px) {
+      flex-direction: column;
+    }
+  }
+}

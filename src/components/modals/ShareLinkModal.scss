@@ -1,0 +1,25 @@
+@import "@unioncredit/ui/src/variables";
+
+.ShareLinkModal {
+  &__social {
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &__rewards {
+    margin-top: 16px;
+    padding: 8px !important;
+
+    svg {
+      width: 48px;
+      height: 48px;
+      margin-right: 8px;
+
+      path {
+        fill: $purple700;
+      }
+    }
+  }
+}

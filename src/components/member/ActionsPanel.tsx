@@ -5,21 +5,19 @@ import {
   // @ts-ignore
 } from "@unioncredit/ui";
 
-import BlackGlasses from "@/assets/glasses-black.svg";
 import PinkGlasses from "@/assets/glasses-pink.svg";
 
-import { IconCube } from "@/components/shared/IconCube.tsx";
 import { ClubCreditRow } from "@/components/member/ClubCreditRow.tsx";
 import { ClubDebtRow } from "@/components/member/ClubDebtRow.tsx";
 import { BidBucketRow } from "@/components/member/BidBucketRow.tsx";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { MINT_NFT_MODAL } from "@/components/modals/MintNftModal.tsx";
 import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
-import { clubNftContract } from "@/contracts/optimism.ts";
 import cn from "classnames";
 import { useNftInfo } from "@/hooks/useNftInfo.ts";
 import { useVesting } from "@/hooks/useVesting.ts";
 import { RainbowBar } from "@/components/shared/RainbowBar.tsx";
+import { generateCreditClubLink } from "@/utils/links.ts";
 
 export const ActionsPanel = () => {
   const { open: openModal } = useModals();
@@ -40,10 +38,13 @@ export const ActionsPanel = () => {
         <h2 className="font-medium text-xl text-gray-600">Club Member Actions</h2>
 
         <Button
+          size="large"
+          color="secondary"
+          variant="light"
+          onClick={() => tokenId ? open(generateCreditClubLink(tokenId)) : openModal(MINT_NFT_MODAL)}
           className={cn("MintButton mt-4", {
             "token": tokenId,
           })}
-          size="large"
           label={
             tokenId ? (
               <span className="inline-flex items-center">
@@ -53,17 +54,9 @@ export const ActionsPanel = () => {
                 </p>
               </span>
             ) : (
-              <span>
-              <IconCube color="#FFDFE8" icon={BlackGlasses} width={32} height={32} />
-              <p className="mt-1 text-sm"
-                 style={{ color: "#FF638D" }}>Mint to Join {name && `"${name}"`}</p>
-            </span>
+              <p className="text-sm" style={{ color: "#FF638D" }}>Mint{name && ` ${name}`} Membership</p>
             )
-
           }
-          color="secondary"
-          variant="light"
-          onClick={() => tokenId ? open(`https://opensea.io/assets/optimism/${clubNftContract.address}/${tokenId}`) : openModal(MINT_NFT_MODAL)}
         />
 
         {isMember && (

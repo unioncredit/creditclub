@@ -12,18 +12,18 @@ import {
 import { RPC_URL, rpcChains } from "@/constants";
 import { optimism } from "viem/chains";
 
+export const wagmiConfig = getDefaultConfig({
+  chains: rpcChains,
+  appName: "CreditClub",
+  projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
+  transports: rpcChains.reduce((acc, network) => ({
+    ...acc,
+    [network.id]: http(RPC_URL(network.id)),
+  }), {}),
+});
+
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient();
-
-  const config = getDefaultConfig({
-    chains: rpcChains,
-    appName: "CreditClub",
-    projectId: import.meta.env.VITE_WALLETCONNECT_PROJECT_ID,
-    transports: rpcChains.reduce((acc, network) => ({
-      ...acc,
-      [network.id]: http(RPC_URL(network.id)),
-    }), {}),
-  });
 
   const theme = merge(
     darkTheme({
@@ -39,7 +39,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   );
 
   return (
-    <WagmiProvider config={config}>
+    <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
           theme={theme}

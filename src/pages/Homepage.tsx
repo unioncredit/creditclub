@@ -8,12 +8,15 @@ import { useNftInfo } from "@/hooks/useNftInfo.ts";
 import cn from "classnames";
 import { useIsSupportedNetwork } from "@/hooks/useIsSupportedNetwork.ts";
 import { useAccount } from "wagmi";
+import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
+import { MintPanel } from "@/components/member/MintPanel.tsx";
 
 export const Homepage = () => {
   const { isConnected } = useAccount();
   const isSupported = useIsSupportedNetwork();
   const { name, description } = useNftInfo();
-
+  const { data: member } = useClubMember();
+  const { isMember } = member;
 
   return (
     <div className={cn("mt-8 p-6 flex flex-col items-center bg-white rounded-2xl outline outline-1 outline-gray-100 sm:p-4", {
@@ -34,7 +37,11 @@ export const Homepage = () => {
         </div>
 
         <div className="flex-1 pl-6 lg:pl-0 lg:mt-6">
-          <ActionsPanel />
+          {isMember ? (
+            <ActionsPanel />
+          ) : (
+            <MintPanel />
+          )}
           <ClubActivity />
         </div>
       </div>
