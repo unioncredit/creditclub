@@ -18,6 +18,7 @@ import { useNftInfo } from "@/hooks/useNftInfo.ts";
 import { useVesting } from "@/hooks/useVesting.ts";
 import { RainbowBar } from "@/components/shared/RainbowBar.tsx";
 import { generateCreditClubLink } from "@/utils/links.ts";
+import { getClubSymbol } from "@/utils/format.ts";
 
 export const ActionsPanel = () => {
   const { open: openModal } = useModals();
@@ -50,7 +51,7 @@ export const ActionsPanel = () => {
               <span className="inline-flex items-center">
                 <PinkGlasses />
                 <p className="ml-2 text-md" style={{ color: "#FF638D" }}>
-                  BCC: ID#{tokenId.toString(10)} : {vestingStatus}
+                  {getClubSymbol(name)}: ID#{tokenId.toString(10)} : {vestingStatus}
                 </p>
               </span>
             ) : (

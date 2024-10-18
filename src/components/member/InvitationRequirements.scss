@@ -1,0 +1,12 @@
+@import "@unioncredit/ui/src/variables";
+
+.InvitationRequirements {
+  &__list {
+    p {
+      color: $grey600;
+    }
+    svg path {
+      fill: $grey600;
+    }
+  }
+}
