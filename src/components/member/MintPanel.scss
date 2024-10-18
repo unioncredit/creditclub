@@ -1,0 +1,80 @@
+@import "@unioncredit/ui/src/variables";
+@import "./MintButton";
+
+.MintPanel {
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(213, 215, 225, 0.14);
+
+  .divider {
+    border-color: $grey200;
+  }
+
+  &__header {
+    border-bottom: 1px solid $grey100;
+  }
+  &__container {
+    display: flex;
+    margin: 12px 0;
+    padding: 48px 12px;
+    border-radius: 16px;
+    background: #ECEEF4;
+
+    @media all and (max-width: 1024px) {
+      padding: 28px 12px;
+    }
+    @media all and (max-width: 480px) {
+      flex-direction: column;
+    }
+  }
+  &__image {
+    @media all and (max-width: 480px) {
+      display: flex;
+      justify-content: center;
+    }
+
+    svg {
+      width: 150px;
+      height: 150px;
+
+      @media all and (min-width: 1024px) and (max-width: 1100px) {
+        width: 120px;
+        height: 130px;
+      }
+      @media all and (max-width: 480px) {
+        width: 120px;
+        height: 120px;
+      }
+    }
+  }
+  &__content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 6px 0 18px;
+
+    h3 {
+      width: 100%;
+      border-bottom: 1px solid $grey700;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+      text-align: center;
+
+      @media all and (max-width: 1024px) {
+        text-align: left;
+      }
+    }
+    .text {
+      margin-bottom: 6px;
+    }
+    ul {
+
+      li {
+        list-style: disc;
+        margin-left: 18px;
+        margin-bottom: 4px;
+        font-size: 15px;
+      }
+    }
+  }
+}

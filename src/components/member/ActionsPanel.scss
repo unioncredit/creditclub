@@ -1,4 +1,5 @@
 @import "@unioncredit/ui/src/variables";
+@import "./MintButton";
 
 .ActionsPanel {
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -7,47 +8,5 @@
   &__header {
     border-bottom: 1px solid $grey100;
     padding-bottom: 24px;
-  }
-
-  .MintButton {
-    opacity: 1 !important;
-    width: 100%;
-    border: 1px solid rgba(0, 0, 0, 0.05) !important;
-    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.09);
-    background: #FFF1F5 !important;
-    padding: 8px 24px;
-    height: 72px;
-
-    & > span {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-    }
-
-    .IconCube {
-      margin-right: 12px;
-      padding: 0.25rem;
-    }
-
-    &.token {
-      height: 48px !important;
-      margin: 1rem auto 0;
-    }
-
-    &:disabled {
-      pointer-events: none;
-    }
-
-    &:hover {
-      background: #fceaee !important;
-    }
-
-    p {
-      font-size: 16px;
-
-      @media screen and (max-width: 450px) {
-        font-size: 14px;
-      }
-    }
   }
 }
