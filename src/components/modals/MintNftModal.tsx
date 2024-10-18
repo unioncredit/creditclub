@@ -5,29 +5,20 @@ import {
   Modal,
   ModalOverlay,
   InfoBanner,
-  Dai,
-  ArrowRightIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
-import { StatRow } from "@/components/modals/StatRow.tsx";
-import { format, formattedNumber } from "@/utils/format.ts";
 import { useAccount } from "wagmi";
-import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
-import { useVesting } from "@/hooks/useVesting.ts";
 import { useNftInfo } from "@/hooks/useNftInfo.ts";
 import { MintMemberNftMultichain } from "@/components/shared/MintMemberNftMultichain.tsx";
+import { MembershipPerks } from "@/components/member/MembershipPerks.tsx";
 
 export const MINT_NFT_MODAL = "mint-nft-modal";
 
 export const MintNftModal = () => {
   const { close } = useModals();
   const { isConnected } = useAccount();
-  const { new: creditPerMember } = useMemberCredit();
   const { name } = useNftInfo();
-
-  const { data: vestingData } = useVesting();
-  const { startingPercentage, duration } = vestingData;
 
   return (
     <ModalOverlay onClick={close}>
@@ -37,28 +28,11 @@ export const MintNftModal = () => {
         <InfoBanner
           align="left"
           variant="warning"
-          label="Your entry fee is added to the club stake to back yours and fellow members Credit."
+          label={<><span>Beta Note:</span> Membership Fees are pooled as Club Stake and grow the amount of capital the club can lend to it’s members.</>}
         />
 
         <Modal.Body>
-          <div>
-            <StatRow
-              title="Starting Credit Limit"
-              content={`You start at ${startingPercentage * 100}% vested`}
-              amount={(formattedNumber(creditPerMember) * startingPercentage).toFixed(2)}
-              token={<Dai />}
-            />
-
-            <StatRow
-              title="Full Membership"
-              content={`Credit limit after ${duration} days`}
-              amount={format(creditPerMember)}
-              token={<Dai />}
-            />
-
-            <ArrowRightIcon className="ArrowRightIcon" />
-          </div>
-
+          <MembershipPerks />
           <MintMemberNftMultichain />
 
           {!isConnected && (
