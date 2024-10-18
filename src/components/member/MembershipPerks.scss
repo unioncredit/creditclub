@@ -14,9 +14,11 @@
     @media all and (max-width: 480px) {
       display: flex;
       justify-content: center;
+      margin-bottom: 24px;
     }
 
-    svg {
+    img, .skeleton {
+      border-radius: 16px;
       width: 150px;
       height: 150px;
 
