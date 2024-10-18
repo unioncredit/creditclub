@@ -99,3 +99,10 @@ export const toPercent = (number: string | bigint, digits = 0) =>
     maximumFractionDigits: digits,
     minimumFractionDigits: digits,
   });
+
+export const getClubSymbol = (name: string): string => {
+  if (!name) return "";
+  const words = name.split(' ');
+  const symbol = words.map(word => word.charAt(0).toUpperCase()).join('');
+  return symbol;
+}

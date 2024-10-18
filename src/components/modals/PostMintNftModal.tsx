@@ -20,6 +20,7 @@ import { SHARE_LINK_MODAL } from "@/components/modals/ShareLinkModal.tsx";
 import { useNftInfo } from "@/hooks/useNftInfo.ts";
 import { generateCreditClubLink } from "@/utils/links.ts";
 import { Hash } from "viem";
+import { getClubSymbol } from "@/utils/format.ts";
 
 export const POST_MINT_NFT_MODAL = "post-mint-nft-modal";
 
@@ -50,7 +51,7 @@ export const PostMintNftModal = ({
           <MembershipPerks
             title={(
               <Box justify="center">
-                BCC Membership
+                {getClubSymbol(name)} Member
 
                 {isLoading || !tokenId ? (
                   <Skeleton ml="8px" width={50} height={28} grey={200} shimmer />

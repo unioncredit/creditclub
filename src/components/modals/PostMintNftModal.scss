@@ -38,7 +38,10 @@
     padding: 16px;
     margin-bottom: 16px;
     border-radius: 16px;
-    background: #ECEEF4;
+
+    img {
+      margin-bottom: 24px;
+    }
 
     h3 {
       text-align: center;
