@@ -34,7 +34,7 @@ export const MintMemberNftMultichain = () => {
       actionType={ActionType.EvmFunction}
       paymentButtonText="Mint Member NFT"
       disableLoadingModals={true}
-      chains={[ChainId.ETHEREUM, ChainId.OPTIMISM]}
+      chains={[ChainId.OPTIMISM]}
       disableGuard={async () => {
         return { disable: isMember, message: "Already a member" }
       }}
