@@ -28,7 +28,7 @@ export const MintNftModal = () => {
         <InfoBanner
           align="left"
           variant="warning"
-          label={<><span>Beta Note:</span> Membership Fees are pooled as Club Stake and grow the amount of capital the club can lend to it’s members.</>}
+          label={<><span>Note:</span> Membership Fees are pooled as Club Stake and grow the amount of capital the club can lend to members.</>}
         />
 
         <Modal.Body>
