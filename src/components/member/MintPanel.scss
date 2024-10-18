@@ -14,12 +14,12 @@
   }
   .MembershipPerks {
     margin: 12px 0;
-    padding: 48px 12px;
+    padding: 48px 16px 48px 24px;
     border-radius: 16px;
     background: #ECEEF4;
 
     @media all and (max-width: 1024px) {
-      padding: 28px 12px;
+      padding: 24px;
     }
     @media all and (max-width: 480px) {
       flex-direction: column;
