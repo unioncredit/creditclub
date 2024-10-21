@@ -149,7 +149,7 @@ export const RepayModal = () => {
                 items={[
                   {
                     label: "Wallet balance",
-                    value: `${format(daiBalance)} DAI`,
+                    value: `${format(daiBalance, 2, false)} DAI`,
                     error: errors.amount === FormErrors.INSUFFICIENT_BALANCE,
                     tooltip: {
                       content: "How much DAI you have in your connected wallet",
