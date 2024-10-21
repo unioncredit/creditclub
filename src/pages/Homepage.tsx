@@ -1,13 +1,15 @@
+import cn from "classnames";
+import { useAccount } from "wagmi";
+
+import BlackGlasses from "@/assets/glasses-black.svg";
+
 import { ClubStats } from "@/components/ClubStats.tsx";
 import { IconCube } from "@/components/shared/IconCube.tsx";
-import BlackGlasses from "@/assets/glasses-black.svg";
 import { ActionsPanel } from "@/components/member/ActionsPanel.tsx";
 import { ClubActivity } from "@/components/ClubActivity.tsx";
 import { ContactsTable } from "@/components/table/ContactsTable.tsx";
 import { useNftInfo } from "@/hooks/useNftInfo.ts";
-import cn from "classnames";
 import { useIsSupportedNetwork } from "@/hooks/useIsSupportedNetwork.ts";
-import { useAccount } from "wagmi";
 import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { MintPanel } from "@/components/member/MintPanel.tsx";
 
