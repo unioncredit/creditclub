@@ -20,6 +20,7 @@ import { ApprovalButton } from "@/components/shared/ApprovalButton.tsx";
 import { useAccount } from "wagmi";
 import { clubPluginContract, daiContract } from "@/contracts/optimism.ts";
 import { MIN_REQUIRED_BID_BUCKET_BALANCE } from "@/constants.ts";
+import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
 
 export const BID_BUCKET_MODAL = "bid-bucket-modal";
 
@@ -28,12 +29,15 @@ export const BidBucketModal = () => {
   const { address } = useAccount();
   const { data: creditClub, refetch } = useClubData();
   const { data: member } = useClubMember();
+  const { data: unionMember } = useUnionMember();
 
   const { publicBidPrice, memberBidPrice, bidBucketBalance } = creditClub;
   const { isMember } = member;
+  const { daiBalance } = unionMember;
 
   const bidPrice = isMember ? memberBidPrice : publicBidPrice;
-  const canBid = bidBucketBalance > MIN_REQUIRED_BID_BUCKET_BALANCE;
+  const isMinimumRequired = bidBucketBalance > MIN_REQUIRED_BID_BUCKET_BALANCE;
+  const canBid = daiBalance > bidPrice;
 
   return (
     <ModalOverlay onClick={close}>
@@ -69,14 +73,15 @@ export const BidBucketModal = () => {
           <ApprovalButton
             owner={address}
             amount={bidPrice}
+            disabled={daiBalance < bidPrice}
             spender={clubPluginContract.address}
             tokenContract={daiContract}
             actionProps={{
               ...clubPluginContract,
               functionName: "fixedBid",
-              label: "Place Bid",
-              icon: CheckIcon,
-              disabled: !canBid,
+              label: canBid ? "Place Bid" : "Insufficient funds",
+              icon: canBid && CheckIcon,
+              disabled: !isMinimumRequired || !canBid,
               onComplete: async () => {
                 close();
                 await refetch();
@@ -84,7 +89,7 @@ export const BidBucketModal = () => {
             }}
           />
 
-          {!canBid && (
+          {!isMinimumRequired && (
             <Text color="red500" m="8px 0 0" weight="light">
               The bid bucket balance must be greater than {format(MIN_REQUIRED_BID_BUCKET_BALANCE, 0)} to bid.
             </Text>
