@@ -90,7 +90,7 @@ export const RepayModal = () => {
     },
     {
       token: "dai",
-      value: format(maxRepay),
+      value: format(maxRepay, 2, false),
       amount: maxRepay,
       paymentType: PaymentType.BALANCE,
       title: "Wallet balance",
