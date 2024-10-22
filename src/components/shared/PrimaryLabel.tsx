@@ -1,7 +1,6 @@
-import { truncateAddress, truncateEns } from "@/utils/format";
-import { useEns } from "@/hooks/useEns.ts";
 import { Address } from "viem";
-import { useFarcasterData } from "@/hooks/useFarcasterData.ts";
+
+import { usePrimaryLabel } from "@/hooks/usePrimaryLabel.ts";
 
 export function PrimaryLabel({
   address,
@@ -12,13 +11,11 @@ export function PrimaryLabel({
   shouldTruncate?: boolean;
   defaultValue?: string;
 }) {
-  const { name: ens } = useEns(address);
-  const { data: farcasterData } = useFarcasterData(address)
-  const { name: fname } = farcasterData;
+  const { data: name } = usePrimaryLabel({
+    address,
+    shouldTruncate,
+    defaultValue,
+  });
 
-  return (
-    fname ||
-    (ens && (shouldTruncate ? truncateEns(ens) : ens)) || defaultValue ||
-    (shouldTruncate ? truncateAddress(address) : address)
-  );
+  return name;
 }
