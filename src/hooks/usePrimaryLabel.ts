@@ -16,8 +16,8 @@ export const usePrimaryLabel = ({
   const { data: farcasterData } = useFarcasterData(address || zeroAddress);
   const { name: fname } = farcasterData;
 
-  return {
-    data: fname || (address ? (ens && (shouldTruncate ? truncateEns(ens) : ens)) || defaultValue ||
-      (shouldTruncate ? truncateAddress(address) : address) : defaultValue)
-  };
+  const formattedEns = ens && shouldTruncate ? truncateEns(ens) : ens;
+  const formattedAddress = address && shouldTruncate ? truncateAddress(address) : address;
+
+  return { data: formattedEns || fname || formattedAddress || defaultValue };
 }
