@@ -56,6 +56,7 @@ export type IRewardsManagerDataProviderContext = Omit<UseReadContractsReturnType
     allowance: bigint;
     unionPer: bigint;
     invitePrice: bigint;
+    contractDaiBalance: bigint;
   },
 };
 

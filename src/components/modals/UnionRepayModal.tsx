@@ -10,6 +10,7 @@ import {
   Union,
   Dai,
   Text,
+  RepayIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
@@ -26,6 +27,7 @@ import { clubPluginContract, rewardsManagerContract } from "@/contracts/optimism
 import { useAccount } from "wagmi";
 import { POST_TX_MODAL } from "@/components/modals/PostTxModal.tsx";
 import { useClubActivity } from "@/providers/ClubActivityProvider.tsx";
+import { REPAY_MODAL } from "@/components/modals/RepayModal.tsx";
 
 export const UNION_REPAY_MODAL = "union-repay-modal";
 
@@ -38,13 +40,17 @@ export const UnionRepayModal = () => {
   const { refetch: refetchClubActivity } = useClubActivity();
 
   const { unionBalance, owed } = member;
-  const { unionPer } = rewards;
+  const { unionPer, contractDaiBalance } = rewards;
 
   const validate = (inputs: IFormValues) => {
     const amount = inputs.amount as IFormField;
 
     if (amount.raw > unionBalance) {
       return `${format(unionBalance)} UNION Available`;
+    }
+    const credit = amount.raw * unionPer / WAD;
+    if (credit > contractDaiBalance) {
+      return `Only ${format(contractDaiBalance, 0)} DAI redeemable at this time`;
     }
   };
 
@@ -67,7 +73,7 @@ export const UnionRepayModal = () => {
     ...rewardsManagerContract,
     functionName: "claimStatementCredit",
     args: [amountRaw, connectedAddress, clubPluginContract.address],
-    disabled: !connectedAddress || amountRaw > unionBalance || amountRaw === 0n,
+    disabled: !connectedAddress || amountRaw === 0n || !!errors.amount,
     onComplete: async (hash) => {
       refetchMember();
       refetchClubActivity(5000);
@@ -79,6 +85,11 @@ export const UnionRepayModal = () => {
             You successfully redeemed {formattedAmount} UNION for ${creditFormatted} in repay credit. Your new balance is ${format(owed - creditRaw)}.
           </Text>
         ),
+        action: {
+          icon: RepayIcon,
+          label: "Repay with DAI",
+          onClick: () => open(REPAY_MODAL)
+        },
         hash,
       });
     },

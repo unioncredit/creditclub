@@ -1,6 +1,6 @@
 import { useAccount, useReadContracts } from "wagmi";
 import React, { createContext, useContext } from "react";
-import { rewardsManagerContract, unionContract } from "@/contracts/optimism";
+import { daiContract, rewardsManagerContract, unionContract } from "@/contracts/optimism";
 import { IRewardsManagerDataProviderContext } from "@/providers/types";
 import { zeroAddress } from "viem";
 
@@ -25,7 +25,12 @@ export const RewardsManagerProvider = ({ children }: { children: React.ReactNode
       {
         ...rewardsManagerContract,
         functionName: "invitePrice",
-      }
+      },
+      {
+        ...daiContract,
+        functionName: 'balanceOf',
+        args: [rewardsManagerContract.address],
+      },
     ],
     query: {
       enabled: address !== zeroAddress,
@@ -36,12 +41,14 @@ export const RewardsManagerProvider = ({ children }: { children: React.ReactNode
     allowance = 0n,
     unionPer = 0n,
     invitePrice = 0n,
+    contractDaiBalance = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
     allowance,
     unionPer,
     invitePrice,
+    contractDaiBalance,
   };
 
   return (

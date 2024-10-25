@@ -24,6 +24,7 @@ import { useAccount } from "wagmi";
 import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { POST_TX_MODAL } from "@/components/modals/PostTxModal.tsx";
 import { INVITE_MODAL } from "@/components/modals/InviteModal.tsx";
+import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
 
 export const BUY_INVITES_MODAL = "buy-invites-modal";
 
@@ -33,9 +34,11 @@ export const BuyInvitesModal = () => {
   const { open, close } = useModals();
   const { address: connectedAddress } = useAccount();
   const { data: rewards } = useRewardsManager();
+  const { data: member } = useUnionMember();
   const { refetch: refetchMember } = useClubMember();
 
   const { invitePrice } = rewards;
+  const { unionBalance } = member;
 
   const totalCost = invitePrice * BigInt(numInvites);
 
@@ -43,7 +46,7 @@ export const BuyInvitesModal = () => {
     ...rewardsManagerContract,
     functionName: "claimRewardInvite",
     args: [totalCost, connectedAddress, clubPluginContract.address],
-    disabled: !connectedAddress || totalCost < invitePrice,
+    disabled: !connectedAddress || totalCost < invitePrice || totalCost > unionBalance,
     onComplete: async (hash: string) => {
       refetchMember();
       open(POST_TX_MODAL, {
@@ -77,7 +80,7 @@ export const BuyInvitesModal = () => {
             </Text>
           </Box>
 
-          <Box className="BuyInvitesModal__Boxes" mt="32px" align="center">
+          <Box className="BuyInvitesModal__Boxes" m="32px 0 48px" align="center">
             <Box className="BuyInvitesModal__Box" direction="vertical" align="center" fluid>
               <Text size="medium" weight="medium" grey={500}>
                 What you send
@@ -120,9 +123,14 @@ export const BuyInvitesModal = () => {
             </Box>
           </Box>
 
+          {totalCost > unionBalance && (
+            <Text color="red600">
+              Insufficient UNION balance
+            </Text>
+          )}
+
           <Button
             fluid
-            mt="48px"
             size="large"
             label={`Redeem ${format(totalCost, 0)} UNION`}
             {...buyInvitesButtonProps}

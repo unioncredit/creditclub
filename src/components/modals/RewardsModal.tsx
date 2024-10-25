@@ -47,14 +47,14 @@ export const RewardsModal = () => {
     },
     {
       title: "Club Merch",
-      subtitle: "Points for Repay",
+      subtitle: "Coming soon",
       icon: ClaimIcon,
       onClick: () => console.log("repay"),
       disabled: true,
     },
     {
       title: "Cash Back",
-      subtitle: "Points for Repay",
+      subtitle: "Coming soon",
       icon: ClaimIcon,
       onClick: () => console.log("repay"),
       disabled: true,
