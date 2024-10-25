@@ -1,13 +1,16 @@
 import { ToastStatus } from "@/constants";
 import { IToast, IToastStatus } from "@/providers/types.ts";
 import { useCallback } from "react";
+import { Address } from "viem";
+import { unionContract } from "@/contracts/optimism.ts";
 
-export const useToastProps = (functionName: string) => {
+export const useToastProps = (functionName: string, contract: Address, args: any) => {
   return useCallback((status: IToastStatus, txHash?: string | undefined): IToast => {
     const props = {
       link: txHash ? `https://optimistic.etherscan.io/tx/${txHash}` : null,
       variant: status,
       id: `${status}__${functionName}__${Date.now()}`,
+      args,
     };
 
     if (status === ToastStatus.PENDING) {
@@ -18,7 +21,9 @@ export const useToastProps = (functionName: string) => {
         case "approve":
           return {
             ...props,
-            title: "Approving DAI",
+            title: `Approving ${contract === unionContract.address
+              ? "UNION"
+              : "DAI"}`,
             content: "Transaction pending",
           };
         case "feelingLucky":
@@ -55,7 +60,9 @@ export const useToastProps = (functionName: string) => {
         case "approve":
           return {
             ...props,
-            title: "Approved DAI",
+            title: `Approved ${contract === unionContract.address
+              ? "UNION"
+              : "DAI"}`,
             content: "Transaction successful",
           };
         case "feelingLucky":
@@ -92,7 +99,9 @@ export const useToastProps = (functionName: string) => {
         case "approve":
           return {
             ...props,
-            title: "Approving DAI",
+            title: `Approving ${contract === unionContract.address
+              ? "UNION"
+              : "DAI"}`,
             content: "Transaction failed",
           };
         case "feelingLucky":

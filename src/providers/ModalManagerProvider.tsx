@@ -10,6 +10,13 @@ import { REPAY_MODAL, RepayModal } from "@/components/modals/RepayModal.tsx";
 import { INVITE_MODAL, InviteModal } from "@/components/modals/InviteModal.tsx";
 import { POST_MINT_NFT_MODAL, PostMintNftModal } from "@/components/modals/PostMintNftModal.tsx";
 import { SHARE_LINK_MODAL, ShareLinkModal } from "@/components/modals/ShareLinkModal.tsx";
+import { REWARDS_MODAL, RewardsModal } from "@/components/modals/RewardsModal.tsx";
+import { BUY_INVITES_MODAL, BuyInvitesModal } from "@/components/modals/BuyInvitesModal.tsx";
+import { UNION_REPAY_MODAL, UnionRepayModal } from "@/components/modals/UnionRepayModal.tsx";
+import { POST_TX_MODAL, PostTxModal } from "@/components/modals/PostTxModal.tsx";
+
+// @ts-ignore
+import { VouchIcon, Text} from "@unioncredit/ui";
 
 const ModalContext = createContext({} as IModalManagerContext);
 
@@ -18,13 +25,17 @@ export const useModals = () => useContext(ModalContext);
 const modals: Record<string, any> = {
   [BID_BUCKET_MODAL]: BidBucketModal,
   [BORROW_MODAL]: BorrowModal,
+  [BUY_INVITES_MODAL]: BuyInvitesModal,
   [FEELING_LUCKY_MODAL]: FeelingLuckyModal,
   [FEELING_LUCKY_WINNER_MODAL]: FeelingLuckyWinnerModal,
   [INVITE_MODAL]: InviteModal,
   [MINT_NFT_MODAL]: MintNftModal,
   [POST_MINT_NFT_MODAL]: PostMintNftModal,
+  [POST_TX_MODAL]: PostTxModal,
   [REPAY_MODAL]: RepayModal,
+  [REWARDS_MODAL]: RewardsModal,
   [SHARE_LINK_MODAL]: ShareLinkModal,
+  [UNION_REPAY_MODAL]: UnionRepayModal,
 };
 
 export const ModalManagerProvider = ({ children }: { children: React.ReactNode; }) => {

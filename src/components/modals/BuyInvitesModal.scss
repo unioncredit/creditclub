@@ -1,0 +1,23 @@
+@import "@unioncredit/ui/src/variables";
+
+.BuyInvitesModal {
+  &__Boxes {
+    & > svg {
+      margin: 0 6px;
+    }
+  }
+  &__Box {
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid $grey200;
+  }
+  &__InviteSelection {
+    .button {
+      width: 28px;
+      height: 28px;
+    }
+    .text {
+      margin: 0 6px !important;
+    }
+  }
+}

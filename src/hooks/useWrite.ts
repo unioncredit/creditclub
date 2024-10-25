@@ -23,8 +23,9 @@ export const useWrite = ({
   icon?: string;
   [_: string]: any;
 }) => {
+  const { address: contract } = props;
   const config = useConfig();
-  const createToast = useToastProps(functionName);
+  const createToast = useToastProps(functionName, contract, args);
 
   const { isConnected } = useAccount();
   const { addToast, closeToast } = useToasts();
