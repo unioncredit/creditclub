@@ -13,8 +13,8 @@ import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { BORROW_MODAL } from "@/components/modals/BorrowModal.tsx";
 import { REPAY_MODAL } from "@/components/modals/RepayModal.tsx";
 import { WAD } from "@/constants.ts";
-import { FEELING_LUCKY_MODAL } from "@/components/modals/FeelingLuckyModal.tsx";
 import { INVITE_MODAL } from "@/components/modals/InviteModal.tsx";
+import { REWARDS_MODAL } from "@/components/modals/RewardsModal.tsx";
 
 export const Header = () => {
   const { isConnected } = useAccount();
@@ -72,7 +72,7 @@ export const Header = () => {
               label={format(unionBalance, 0)}
               color="secondary"
               variant="light"
-              onClick={() => openModal(FEELING_LUCKY_MODAL)}
+              onClick={() => openModal(REWARDS_MODAL)}
             />
 
             <Button

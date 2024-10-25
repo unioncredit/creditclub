@@ -14,6 +14,7 @@ import { SettingsProvider } from "@/providers/SettingsProvider.tsx";
 import { UnionDataProvider } from "@/providers/UnionDataProvider.tsx";
 import { UnionMemberProvider } from "@/providers/UnionMemberProvider.tsx";
 import { ClubActivityProvider } from "@/providers/ClubActivityProvider.tsx";
+import { RewardsManagerProvider } from "@/providers/RewardsManagerDataProvider.tsx";
 
 function App() {
   return (
@@ -23,19 +24,21 @@ function App() {
           <CreditClubMemberProvider>
             <UnionDataProvider>
               <UnionMemberProvider>
-                <ClubActivityProvider>
-                  <CacheProvider>
-                    <ToastsProvider>
-                      <ModalManagerProvider>
-                        <SettingsProvider>
-                          <Layout>
-                            <Homepage />
-                          </Layout>
-                        </SettingsProvider>
-                      </ModalManagerProvider>
-                    </ToastsProvider>
-                  </CacheProvider>
-                </ClubActivityProvider>
+                <RewardsManagerProvider>
+                  <ClubActivityProvider>
+                    <CacheProvider>
+                      <ToastsProvider>
+                        <ModalManagerProvider>
+                          <SettingsProvider>
+                            <Layout>
+                              <Homepage />
+                            </Layout>
+                          </SettingsProvider>
+                        </ModalManagerProvider>
+                      </ToastsProvider>
+                    </CacheProvider>
+                  </ClubActivityProvider>
+                </RewardsManagerProvider>
               </UnionMemberProvider>
             </UnionDataProvider>
           </CreditClubMemberProvider>

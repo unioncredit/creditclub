@@ -28,7 +28,7 @@ export const MintMemberNftMultichain = () => {
 
   const { isMember } = member;
   const { costToMint } = creditClub;
-  const createToast = useToastProps("mintMemberNFT");
+  const createToast = useToastProps("mintMemberNFT", clubPluginContract.address, [address]);
 
   return (
     <TheBox

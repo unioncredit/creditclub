@@ -51,6 +51,14 @@ export type ICreditClubDataProviderContext = Omit<UseReadContractsReturnType, "d
   },
 };
 
+export type IRewardsManagerDataProviderContext = Omit<UseReadContractsReturnType, "data"> & {
+  data: {
+    allowance: bigint;
+    unionPer: bigint;
+    invitePrice: bigint;
+  },
+};
+
 export interface IContact {
   ens?: string;
   address: Address;
