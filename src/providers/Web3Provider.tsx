@@ -11,6 +11,7 @@ import {
 
 import { RPC_URL, rpcChains } from "@/constants";
 import { optimism } from "viem/chains";
+import { PrivyClientConfig, PrivyProvider } from "@privy-io/react-auth";
 
 export const wagmiConfig = getDefaultConfig({
   chains: rpcChains,
@@ -21,6 +22,19 @@ export const wagmiConfig = getDefaultConfig({
     [network.id]: http(RPC_URL(network.id)),
   }), {}),
 });
+
+const privyConfig: PrivyClientConfig = {
+  // Customize Privy's appearance in your app
+  appearance: {
+    theme: "light",
+    accentColor: "#676FFF",
+    logo: "https://beta.creditclub.cc/glasses.png",
+  },
+  // Create embedded wallets for users who don't have a wallet
+  embeddedWallets: {
+    createOnLogin: "users-without-wallets",
+  },
+};
 
 export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient();
@@ -39,16 +53,18 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
   );
 
   return (
-    <WagmiProvider config={wagmiConfig}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider
-          theme={theme}
-          modalSize="compact"
-          initialChain={optimism}
-        >
-          {children}
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <PrivyProvider appId={import.meta.env.VITE_PRIVY_APP_ID} config={privyConfig}>
+      <WagmiProvider config={wagmiConfig}>
+        <QueryClientProvider client={queryClient}>
+          <RainbowKitProvider
+            theme={theme}
+            modalSize="compact"
+            initialChain={optimism}
+          >
+            {children}
+          </RainbowKitProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </PrivyProvider>
   );
 };
