@@ -24,13 +24,10 @@ export const wagmiConfig = getDefaultConfig({
 });
 
 const privyConfig: PrivyClientConfig = {
-  // Customize Privy's appearance in your app
   appearance: {
     theme: "light",
     accentColor: "#676FFF",
-    logo: "https://beta.creditclub.cc/glasses.png",
   },
-  // Create embedded wallets for users who don't have a wallet
   embeddedWallets: {
     createOnLogin: "users-without-wallets",
   },
