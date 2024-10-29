@@ -2,6 +2,7 @@ import "./Header.scss";
 
 // @ts-ignore
 import { Button, VouchIcon, WalletIcon, RepayIcon, UnionIcon } from "@unioncredit/ui";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import CreditClubLogo from "@/assets/creditclub-logo.svg";
 import { format } from "@/utils/format.ts";
@@ -14,14 +15,11 @@ import { REPAY_MODAL } from "@/components/modals/RepayModal.tsx";
 import { WAD } from "@/constants.ts";
 import { INVITE_MODAL } from "@/components/modals/InviteModal.tsx";
 import { REWARDS_MODAL } from "@/components/modals/RewardsModal.tsx";
-import { usePrivy } from "@privy-io/react-auth";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export const Header = () => {
   const { isConnected } = useAccount();
   const { data: member } = useUnionMember();
   const { open: openModal } = useModals();
-  const { connectWallet } = usePrivy();
 
   const { creditLimit, owed, unionBalance } = member;
 
@@ -92,25 +90,14 @@ export const Header = () => {
         <div className={cn("ConnectButton", {
           "disconnected": !isConnected,
         })}>
-          {isConnected ? (
-            <ConnectButton
-              showBalance={false}
-              chainStatus="none"
-              accountStatus={{
-                largeScreen: "full",
-                smallScreen: "avatar",
-              }}
-            />
-          ) : (
-            <Button
-              label="Connect Wallet"
-              className="PrivyConnectButton"
-              icon={WalletIcon}
-              color="secondary"
-              variant="light"
-              onClick={connectWallet}
-            />
-          )}
+          <ConnectButton
+            showBalance={false}
+            chainStatus="none"
+            accountStatus={{
+              largeScreen: "full",
+              smallScreen: "avatar",
+            }}
+          />
         </div>
       </div>
     </header>
