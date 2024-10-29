@@ -15,9 +15,6 @@ import { BUY_INVITES_MODAL, BuyInvitesModal } from "@/components/modals/BuyInvit
 import { UNION_REPAY_MODAL, UnionRepayModal } from "@/components/modals/UnionRepayModal.tsx";
 import { POST_TX_MODAL, PostTxModal } from "@/components/modals/PostTxModal.tsx";
 
-// @ts-ignore
-import { VouchIcon, Text} from "@unioncredit/ui";
-
 const ModalContext = createContext({} as IModalManagerContext);
 
 export const useModals = () => useContext(ModalContext);

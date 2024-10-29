@@ -93,6 +93,7 @@ export const FeelingLuckyWinnerModal = ({
   const amountWon = event?.args.amountToWinner || 0n;
 
   const {
+    winnerPercentage,
     bidBucketPercentage,
     callerPercentage,
   } = useRewards();
@@ -134,7 +135,7 @@ export const FeelingLuckyWinnerModal = ({
             <Text m="48px 0 12px" size="medium" weight="medium">With the remainder being sent to:</Text>
 
             <StatRow
-              percentage={`${bidBucketPercentage}%`}
+              percentage={amountWon <= 0 ? `${bidBucketPercentage + winnerPercentage}%` : `${bidBucketPercentage}%`}
               title="Bid Bucket"
               content="Helps to grow club stake"
               amount={bidBucketBalance.toFixed(2)}
