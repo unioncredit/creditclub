@@ -50,7 +50,7 @@ export const UnionRepayModal = () => {
     }
     const credit = amount.raw * unionPer / WAD;
     if (credit > contractDaiBalance) {
-      return `Only ${format(contractDaiBalance, 0)} DAI redeemable at this time`;
+      return `Only ${format(contractDaiBalance, 0)} DAI available at this time`;
     }
   };
 
@@ -68,6 +68,9 @@ export const UnionRepayModal = () => {
 
   const creditRaw = amount.raw * unionPer / WAD;
   const creditFormatted = format(creditRaw, 2, false);
+
+  const maxAmountFromBalance = unionBalance * unionPer / WAD;
+  const maxAvailable = maxAmountFromBalance <= contractDaiBalance ? maxAmountFromBalance : contractDaiBalance;
 
   const repayCreditButtonProps = useWrite({
     ...rewardsManagerContract,
@@ -108,11 +111,11 @@ export const UnionRepayModal = () => {
             type="number"
             m="12px 0 32px"
             maxw="300px"
-            label="Amount to redeem"
-            caption={`${format(unionBalance)} UNION Available`}
+            label="Amount"
+            caption={`${format(maxAvailable, 0)} DAI available to redeem`}
             placeholder="0.0"
             suffix={<Union />}
-            rightLabel={`Max`}
+            rightLabel={`Max. ${format(unionBalance, 0, false)} UNION`}
             rightLabelAction={() => setRawValue("amount", unionBalance, false)}
             error={errors.amount}
             value={amount.formatted}

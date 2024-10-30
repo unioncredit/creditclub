@@ -31,6 +31,13 @@
 
     button {
       pointer-events: none;
+
+      @media screen and (max-width: 420px) {
+        width: 32px !important;
+        height: 32px !important;
+        padding: 4px !important;
+        border-radius: 6px;
+      }
     }
   }
 }
