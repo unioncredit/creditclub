@@ -1,5 +1,6 @@
 import "./RewardsModal.scss";
 
+import cn from "classnames";
 import {
   Box,
   Button,
@@ -8,13 +9,15 @@ import {
   Text,
   NumericalBlock,
   ClaimIcon,
+  RepayIcon,
+  ProfileIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
+
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
 import { format } from "@/utils/format.ts";
 import { BUY_INVITES_MODAL } from "@/components/modals/BuyInvitesModal.tsx";
-import cn from "classnames";
 import { UNION_REPAY_MODAL } from "@/components/modals/UnionRepayModal.tsx";
 import { ActivateRewardsToggle } from "@/components/rewards/ActivateRewardsToggle.tsx";
 import { useRewardsManager } from "@/providers/RewardsManagerDataProvider.tsx";
@@ -34,14 +37,14 @@ export const RewardsModal = () => {
     {
       title: "Repay credit",
       subtitle: "Points for Repay",
-      icon: ClaimIcon,
+      icon: RepayIcon,
       onClick: () => open(UNION_REPAY_MODAL),
       disabled: allowance <= 0n,
     },
     {
       title: "Buy an Invite",
       subtitle: "10k UNION",
-      icon: ClaimIcon,
+      icon: ProfileIcon,
       onClick: () => open(BUY_INVITES_MODAL),
       disabled: allowance <= 0n,
     },
