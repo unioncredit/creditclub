@@ -50,7 +50,7 @@ export const FeelingLuckyModal = () => {
       const bidBucket = bidBucketBalance;
       const caller = callerBalance;
       refetchCreditClubData();
-      refetchClubActivity(5000);
+      refetchClubActivity(10000);
 
       open(FEELING_LUCKY_WINNER_MODAL, {
         hash,

@@ -79,7 +79,7 @@ export const UnionRepayModal = () => {
     disabled: !connectedAddress || amountRaw === 0n || !!errors.amount,
     onComplete: async (hash) => {
       refetchMember();
-      refetchClubActivity(5000);
+      refetchClubActivity(10000);
       open(POST_TX_MODAL, {
         header: "Your redeem was successful",
         title: "Credit Repaid",
