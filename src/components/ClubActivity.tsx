@@ -9,6 +9,7 @@ import {
   IncreaseVouchIcon,
   VouchIcon,
   Skeleton,
+  WalletIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
 
@@ -72,6 +73,14 @@ const texts = {
       </a>
     </>
   ),
+  [ActivityTypes.BID_PLACED]: (x: IClubEvent) => (
+    <>
+      <AddressLink address={x.address} /> ·
+      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+        <span className="text-gray-500"> Bucket Won</span> {format(x.amount, 0)} UNION
+      </a>
+    </>
+  ),
 };
 
 const ActivityRow = ({
@@ -93,6 +102,7 @@ const ActivityRow = ({
     [ActivityTypes.UPDATED_TRUST]: IncreaseVouchIcon,
     [ActivityTypes.ROUND_WON]: ConfettiIcon,
     [ActivityTypes.INVITATION_EVENT]: VouchIcon,
+    [ActivityTypes.BID_PLACED]: WalletIcon,
   };
 
   const Icon = icons[type];
@@ -113,7 +123,7 @@ export const ClubActivity = () => {
   const { data: activity } = useClubActivity();
 
   return (
-    <div className="ClubActivity mt-6 text-left p-6 justify-self-end sm:p-4">
+    <div className="ClubActivity mt-6 text-left p-6 sm:p-4">
       <header className="ClubActivity__header">
         <h2 className="text-xl font-medium">Latest Club Activity</h2>
       </header>
