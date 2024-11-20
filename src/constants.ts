@@ -55,6 +55,7 @@ export const ActivityTypes = {
   REPAID: "REPAID",
   ROUND_WON: "ROUND_WON",
   INVITATION_EVENT: "INVITATION_EVENT",
+  BID_PLACED: "BID_PLACED",
 };
 
 export const WagmiErrors: Record<string, { title: string; content: string; }> = {
