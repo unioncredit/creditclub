@@ -15,6 +15,7 @@ import { useState } from "react";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { POST_MINT_NFT_MODAL } from "@/components/modals/PostMintNftModal.tsx";
 import { TransactionReceipt } from "viem";
+import { useReceivedInvitation } from "@/hooks/useReceivedInvitation.ts";
 
 export const MintMemberNftMultichain = () => {
   const [toastId, setToastId] = useState<string | null>(null);
@@ -25,6 +26,9 @@ export const MintMemberNftMultichain = () => {
   const { openConnectModal } = useConnectModal();
   const { data: member, refetch: refetchMember } = useClubMember();
   const { data: creditClub, refetch: refetchCreditClub } = useClubData();
+  const { data: invitation } = useReceivedInvitation({
+    receiver: address,
+  })
 
   const { isMember } = member;
   const { costToMint } = creditClub;
@@ -38,7 +42,13 @@ export const MintMemberNftMultichain = () => {
       disableLoadingModals={true}
       chains={[ChainId.OPTIMISM]}
       disableGuard={async () => {
-        return { disable: isMember, message: "Already a member" }
+        if (isMember) {
+          return { disable: true, message: "Already a member" }
+        }
+        if (!invitation) {
+          return { disable: true, message: "You are not invited" }
+        }
+        return { disable: false, message: "" }
       }}
       actionConfig={{
         chainId: ChainId.OPTIMISM,
