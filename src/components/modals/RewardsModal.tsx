@@ -8,9 +8,8 @@ import {
   ModalOverlay,
   Text,
   NumericalBlock,
-  ClaimIcon,
   RepayIcon,
-  ProfileIcon,
+  IncreaseVouchIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
 
@@ -44,21 +43,21 @@ export const RewardsModal = () => {
     {
       title: "Buy an Invite",
       subtitle: "10k UNION",
-      icon: ProfileIcon,
+      icon: IncreaseVouchIcon,
       onClick: () => open(BUY_INVITES_MODAL),
       disabled: allowance <= 0n,
     },
     {
       title: "Club Merch",
       subtitle: "Coming soon",
-      icon: ClaimIcon,
+      icon: IncreaseVouchIcon,
       onClick: () => console.log("repay"),
       disabled: true,
     },
     {
       title: "Cash Back",
       subtitle: "Coming soon",
-      icon: ClaimIcon,
+      icon: IncreaseVouchIcon,
       onClick: () => console.log("repay"),
       disabled: true,
     }
