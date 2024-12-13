@@ -2,9 +2,11 @@ import { ToastStatus } from "@/constants";
 import { IToast, IToastStatus } from "@/providers/types.ts";
 import { useCallback } from "react";
 import { Address } from "viem";
-import { unionContract } from "@/contracts/optimism.ts";
+import { useContract } from "@/hooks/useContract.ts";
 
 export const useToastProps = (functionName: string, contract: Address, args: any) => {
+  const unionContract = useContract("union");
+
   return useCallback((status: IToastStatus, txHash?: string | undefined): IToast => {
     const props = {
       link: txHash ? `https://optimistic.etherscan.io/tx/${txHash}` : null,

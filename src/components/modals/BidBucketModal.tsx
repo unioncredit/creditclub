@@ -18,9 +18,9 @@ import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { format } from "@/utils/format.ts";
 import { ApprovalButton } from "@/components/shared/ApprovalButton.tsx";
 import { useAccount } from "wagmi";
-import { clubPluginContract, daiContract } from "@/contracts/optimism.ts";
 import { MIN_REQUIRED_BID_BUCKET_BALANCE } from "@/constants.ts";
 import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
+import { useContract } from "@/hooks/useContract.ts";
 
 export const BID_BUCKET_MODAL = "bid-bucket-modal";
 
@@ -30,6 +30,9 @@ export const BidBucketModal = () => {
   const { data: creditClub, refetch } = useClubData();
   const { data: member } = useClubMember();
   const { data: unionMember } = useUnionMember();
+
+  const clubPluginContract = useContract("clubPlugin");
+  const tokenContract = useContract("token");
 
   const { publicBidPrice, memberBidPrice, bidBucketBalance } = creditClub;
   const { isMember } = member;
@@ -75,7 +78,7 @@ export const BidBucketModal = () => {
             amount={bidPrice}
             disabled={daiBalance < bidPrice}
             spender={clubPluginContract.address}
-            tokenContract={daiContract}
+            tokenContract={tokenContract}
             actionProps={{
               ...clubPluginContract,
               functionName: "fixedBid",

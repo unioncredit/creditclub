@@ -22,7 +22,7 @@ import { useForm } from "@/hooks/useForm.ts";
 import { IFormField, IFormValues } from "@/hooks/useForm.types.ts";
 import { useFirstPaymentDueDate } from "@/hooks/useFirstPaymentDueDate.ts";
 import { calculateExpectedMinimumPayment, calculateInterestRate, calculateMaxBorrow } from "@/utils/numbers.ts";
-import { uTokenContract } from "@/contracts/optimism.ts";
+import { useContract } from "@/hooks/useContract.ts";
 
 export const BORROW_MODAL = "borrow-modal";
 
@@ -32,6 +32,8 @@ export const BorrowModal = () => {
   const { data: member, refetch: refetchMember } = useUnionMember();
   const { data: protocol } = useUnionData();
   const firstPaymentDueDate = useFirstPaymentDueDate();
+
+  const uTokenContract = useContract("uToken");
 
   const {
     owed,

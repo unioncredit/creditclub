@@ -6,7 +6,6 @@ import { wagmiConfig } from "@/providers/Web3Provider.tsx";
 import { useAccount } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
-import { clubPluginContract, daiContract } from "@/contracts/optimism.ts";
 import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
 import { useToastProps } from "@/hooks/useToastProps.ts";
 import { ToastStatus } from "@/constants.ts";
@@ -16,6 +15,7 @@ import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { POST_MINT_NFT_MODAL } from "@/components/modals/PostMintNftModal.tsx";
 import { TransactionReceipt } from "viem";
 import { useReceivedInvitation } from "@/hooks/useReceivedInvitation.ts";
+import { useContract } from "@/hooks/useContract.ts";
 
 export const MintMemberNftMultichain = () => {
   const [toastId, setToastId] = useState<string | null>(null);
@@ -29,6 +29,9 @@ export const MintMemberNftMultichain = () => {
   const { data: invitation } = useReceivedInvitation({
     receiver: address,
   })
+
+  const clubPluginContract = useContract("clubPlugin");
+  const tokenContract = useContract("token");
 
   const { isMember } = member;
   const { costToMint } = creditClub;
@@ -56,7 +59,7 @@ export const MintMemberNftMultichain = () => {
         cost: {
           amount: costToMint,
           isNative: false,
-          tokenAddress: daiContract.address,
+          tokenAddress: tokenContract.address,
         },
         signature: 'function mintMemberNFT(address recipient)',
         args: [address],

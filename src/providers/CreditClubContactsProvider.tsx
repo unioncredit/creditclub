@@ -5,10 +5,10 @@ import React, { createContext, useContext } from "react";
 import { CREDITCLUB_SAFE_ADDRESS, DEFAULT_CHAIN } from "@/constants";
 import { ICreditClubContactsProviderReturnType } from "@/providers/types";
 import useRelatedAddresses from "@/hooks/useRelatedAddresses";
-import { daiContract, unionLensContract, userManagerContract, uTokenContract } from "@/contracts/optimism";
 import { usePopulateEns } from "@/hooks/usePopulateEns.ts";
 import { usePopulateFnames } from "@/hooks/usePopulateFnames.ts";
 import { useSubgraphAccounts } from "@/hooks/useSubgraphAccounts.ts";
+import { useContract } from "@/hooks/useContract.ts";
 
 const CreditClubContactsContext = createContext({} as ICreditClubContactsProviderReturnType);
 
@@ -19,6 +19,10 @@ export const CreditClubContactsProvider = ({ children }: { children: React.React
 
   const chainId = connectedChain.id;
   const safeAddress = CREDITCLUB_SAFE_ADDRESS[chainId];
+  const unionLensContract = useContract("unionLens");
+  const userManagerContract = useContract("userManager");
+  const uTokenContract = useContract("uToken");
+  const tokenContract = useContract("token");
 
   const {
     borrowerAddresses,
@@ -30,7 +34,7 @@ export const CreditClubContactsProvider = ({ children }: { children: React.React
     {
       ...unionLensContract,
       functionName: "getRelatedInfo",
-      args: [daiContract.address, safeAddress, borrower],
+      args: [tokenContract.address, safeAddress, borrower],
     },
     {
       ...userManagerContract,

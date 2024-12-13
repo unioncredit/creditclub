@@ -1,17 +1,18 @@
 import { useReadContracts } from "wagmi";
 import React, { createContext, useContext } from "react";
 
-import {
-  assetManagerContract, daiContract,
-  uTokenContract,
-} from "@/contracts/optimism";
 import { IUnionDataProviderContext } from "@/providers/types";
+import { useContract } from "@/hooks/useContract.ts";
 
 const UnionDataContext = createContext({} as IUnionDataProviderContext);
 
 export const useUnionData = () => useContext(UnionDataContext);
 
 export const UnionDataProvider = ({ children }: { children: React.ReactNode; }) => {
+  const uTokenContract = useContract("uToken");
+  const assetManagerContract = useContract("assetManager");
+  const tokenContract = useContract("token");
+
   const result = useReadContracts({
     contracts: [
       {
@@ -33,7 +34,7 @@ export const UnionDataProvider = ({ children }: { children: React.ReactNode; }) 
       {
         ...assetManagerContract,
         functionName: "getLoanableAmount",
-        args: [daiContract.address]
+        args: [tokenContract.address]
       }
     ],
   });

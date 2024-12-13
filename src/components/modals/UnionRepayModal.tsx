@@ -23,11 +23,11 @@ import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
 import { format } from "@/utils/format.ts";
 import { useRewardsManager } from "@/providers/RewardsManagerDataProvider.tsx";
 import { useWrite } from "@/hooks/useWrite.ts";
-import { clubPluginContract, rewardsManagerContract } from "@/contracts/optimism.ts";
 import { useAccount } from "wagmi";
 import { POST_TX_MODAL } from "@/components/modals/PostTxModal.tsx";
 import { useClubActivity } from "@/providers/ClubActivityProvider.tsx";
 import { REPAY_MODAL } from "@/components/modals/RepayModal.tsx";
+import { useContract } from "@/hooks/useContract.ts";
 
 export const UNION_REPAY_MODAL = "union-repay-modal";
 
@@ -41,6 +41,9 @@ export const UnionRepayModal = () => {
 
   const { unionBalance, owed } = member;
   const { unionPer, contractDaiBalance } = rewards;
+
+  const clubPluginContract = useContract("clubPlugin");
+  const rewardsManagerContract = useContract("rewardsManager");
 
   const validate = (inputs: IFormValues) => {
     const amount = inputs.amount as IFormField;

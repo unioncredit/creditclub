@@ -19,12 +19,12 @@ import { useState } from "react";
 import { REWARDS_MODAL } from "@/components/modals/RewardsModal.tsx";
 import { useRewardsManager } from "@/providers/RewardsManagerDataProvider.tsx";
 import { useWrite } from "@/hooks/useWrite.ts";
-import { clubPluginContract, rewardsManagerContract } from "@/contracts/optimism.ts";
 import { useAccount } from "wagmi";
 import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { POST_TX_MODAL } from "@/components/modals/PostTxModal.tsx";
 import { INVITE_MODAL } from "@/components/modals/InviteModal.tsx";
 import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
+import { useContract } from "@/hooks/useContract.ts";
 
 export const BUY_INVITES_MODAL = "buy-invites-modal";
 
@@ -39,6 +39,9 @@ export const BuyInvitesModal = () => {
 
   const { invitePrice } = rewards;
   const { unionBalance } = member;
+
+  const rewardsManagerContract = useContract("rewardsManager");
+  const clubPluginContract = useContract("clubPlugin");
 
   const totalCost = invitePrice * BigInt(numInvites);
 

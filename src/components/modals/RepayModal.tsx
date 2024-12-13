@@ -22,8 +22,8 @@ import { useForm } from "@/hooks/useForm.ts";
 import { IFormField, IFormValues } from "@/hooks/useForm.types.ts";
 import { IRepayOption, IRepayType } from "@/components/modals/RepayModal.types.ts";
 import { ApprovalButton } from "@/components/shared/ApprovalButton.tsx";
-import { daiContract, uTokenContract } from "@/contracts/optimism.ts";
 import { useFirstPaymentDueDate } from "@/hooks/useFirstPaymentDueDate.ts";
+import { useContract } from "@/hooks/useContract.ts";
 
 export const REPAY_MODAL = "repay-modal";
 
@@ -41,6 +41,9 @@ export const RepayModal = () => {
   const { address } = useAccount();
   const { data: member, refetch: refetchMember } = useUnionMember();
   const firstPaymentDueDate = useFirstPaymentDueDate();
+
+  const uTokenContract = useContract("uToken");
+  const tokenContract = useContract("token");
 
   const { owed, daiBalance, minPayment } = member;
 
@@ -181,7 +184,7 @@ export const RepayModal = () => {
                 owner={address}
                 amount={amount.raw}
                 spender={uTokenContract.address}
-                tokenContract={daiContract}
+                tokenContract={tokenContract}
                 actionProps={{
                   ...uTokenContract,
                   size: "large",
