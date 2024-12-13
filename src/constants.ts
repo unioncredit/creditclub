@@ -18,7 +18,12 @@ const RPCS: Record<number, string> = {
 export const RPC_URL = (chainId: number) =>
   `${RPCS[chainId]}/${import.meta.env.VITE_ALCHEMY_API_KEY}`;
 
-export const CREDITCLUB_SAFE_ADDRESS: Address = "0x87349040756ed552f3ba7e2fcc3d11ec66475156";
+export const DEFAULT_CHAIN = optimism;
+
+export const CREDITCLUB_SAFE_ADDRESS: Record<number, Address> = {
+  [base.id]: "0x09760178c77Ee967DC1F36d29A6D17C481ecA728",
+  [optimism.id]: "0x87349040756ed552f3ba7e2fcc3d11ec66475156",
+};
 export const CREDITCLUB_GRAPH_URL: Record<number, string> = {
   [base.id]: "https://api.studio.thegraph.com/query/78581/credit-club/version/latest", // todo: use base url
   [optimism.id]: "https://api.studio.thegraph.com/query/78581/credit-club/version/latest",

@@ -1,8 +1,8 @@
 import { chunk } from "lodash";
-import { useReadContracts } from "wagmi";
+import { useAccount, useReadContracts } from "wagmi";
 import React, { createContext, useContext } from "react";
 
-import { CREDITCLUB_SAFE_ADDRESS } from "@/constants";
+import { CREDITCLUB_SAFE_ADDRESS, DEFAULT_CHAIN } from "@/constants";
 import { ICreditClubContactsProviderReturnType } from "@/providers/types";
 import useRelatedAddresses from "@/hooks/useRelatedAddresses";
 import { daiContract, unionLensContract, userManagerContract, uTokenContract } from "@/contracts/optimism";
@@ -15,17 +15,22 @@ const CreditClubContactsContext = createContext({} as ICreditClubContactsProvide
 export const useContacts = () => useContext(CreditClubContactsContext);
 
 export const CreditClubContactsProvider = ({ children }: { children: React.ReactNode; }) => {
+  const { chain: connectedChain = DEFAULT_CHAIN } = useAccount();
+
+  const chainId = connectedChain.id;
+  const safeAddress = CREDITCLUB_SAFE_ADDRESS[chainId];
+
   const {
     borrowerAddresses,
     refetch: refetchAddresses,
-  } = useRelatedAddresses(CREDITCLUB_SAFE_ADDRESS);
+  } = useRelatedAddresses(safeAddress);
 
   const contracts = borrowerAddresses.reduce((curr, borrower) => ([
     ...curr,
     {
       ...unionLensContract,
       functionName: "getRelatedInfo",
-      args: [daiContract.address, CREDITCLUB_SAFE_ADDRESS, borrower],
+      args: [daiContract.address, safeAddress, borrower],
     },
     {
       ...userManagerContract,
