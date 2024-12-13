@@ -5,6 +5,7 @@ import { Button, VouchIcon, WalletIcon, RepayIcon, UnionIcon } from "@unioncredi
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import CreditClubLogo from "@/assets/creditclub-logo.svg";
+import MobileCreditClubLogo from "@/assets/creditclub-mobile-logo.svg";
 import { format } from "@/utils/format.ts";
 import { useAccount } from "wagmi";
 import cn from "classnames";
@@ -25,9 +26,14 @@ export const Header = () => {
 
   return (
     <header className="Header w-full items-center flex justify-between">
-      <div className="Header__logo">
+      <div className="Header__logo Header__logo--desktop">
         <a href="/">
           <CreditClubLogo />
+        </a>
+      </div>
+      <div className="Header__logo Header__logo--mobile">
+        <a href="/">
+          <MobileCreditClubLogo />
         </a>
       </div>
 
@@ -40,7 +46,7 @@ export const Header = () => {
               className="CreditButton mr-2 md:hidden lg:px-2"
               label={
                 <p className="inline-flex items-center">
-                  Available · <span className="ml-1 text-black">${format(creditLimit, creditLimit < WAD ? 2 : 0)}</span>
+                  Borrow · <span className="ml-1 text-black">${format(creditLimit, creditLimit < WAD ? 2 : 0)}</span>
                 </p>
               }
               color="secondary"
@@ -55,7 +61,7 @@ export const Header = () => {
               label={
                 <p className="inline-flex items-center">
                   <>
-                    Balance ·
+                    Repay ·
                     <span className="text-black ml-1">${format(owed, owed < WAD ? 2 : 0)} </span>
                   </>
                 </p>
@@ -93,10 +99,7 @@ export const Header = () => {
           <ConnectButton
             showBalance={false}
             chainStatus="icon"
-            accountStatus={{
-              largeScreen: "full",
-              smallScreen: "avatar",
-            }}
+            accountStatus="avatar"
           />
         </div>
       </div>
