@@ -1,14 +1,15 @@
-import { arbitrum, Chain, optimism } from "viem/chains";
+import { arbitrum, base, Chain, optimism } from "viem/chains";
 import { Address } from "viem";
 import { mainnet } from "wagmi/chains";
 import { IToastStatus } from "@/providers/types.ts";
 import { format } from "@/utils/format.ts";
 
-export const supportedChains: readonly [Chain, ...Chain[]] = [optimism];
+export const supportedChains: readonly [Chain, ...Chain[]] = [optimism, base];
 
-export const rpcChains: readonly [Chain, ...Chain[]] = [optimism, mainnet];
+export const rpcChains: readonly [Chain, ...Chain[]] = [optimism, base, mainnet];
 
 const RPCS: Record<number, string> = {
+  [base.id]: "https://base-mainnet.g.alchemy.com/v2",
   [optimism.id]: "https://opt-mainnet.g.alchemy.com/v2",
   [mainnet.id]: "https://eth-mainnet.g.alchemy.com/v2",
   [arbitrum.id]: "https://arb-mainnet.g.alchemy.com/v2"

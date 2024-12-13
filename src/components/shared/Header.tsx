@@ -92,7 +92,7 @@ export const Header = () => {
         })}>
           <ConnectButton
             showBalance={false}
-            chainStatus="none"
+            chainStatus="icon"
             accountStatus={{
               largeScreen: "full",
               smallScreen: "avatar",
