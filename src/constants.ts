@@ -25,7 +25,7 @@ export const CREDITCLUB_SAFE_ADDRESS: Record<number, Address> = {
   [optimism.id]: "0x87349040756ed552f3ba7e2fcc3d11ec66475156",
 };
 export const CREDITCLUB_GRAPH_URL: Record<number, string> = {
-  [base.id]: "https://api.studio.thegraph.com/query/78581/credit-club/version/latest", // todo: use base url
+  [base.id]: "https://subgraph.satsuma-prod.com/acb7db829580/union--11085/creditclub-base/api",
   [optimism.id]: "https://api.studio.thegraph.com/query/78581/credit-club/version/latest",
 };
 
