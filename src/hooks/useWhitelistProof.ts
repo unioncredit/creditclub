@@ -40,5 +40,5 @@ export const useWhitelistProof = () => {
     }
   }, [address, tree]);
 
-  return { proof };
+  return { proof, isWhitelisted: proof.length > 0 };
 };

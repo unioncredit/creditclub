@@ -9,6 +9,7 @@ import { IContact } from "@/providers/types.ts";
 import { useLastRepay } from "@/hooks/useLastRepay.ts";
 import { StatusBadge } from "@/components/table/StatusBadge.tsx";
 import { usePrimaryLabel } from "@/hooks/usePrimaryLabel.ts";
+import { useToken } from "@/hooks/useToken.ts";
 
 export const ContactsTableRow = ({
   contact,
@@ -24,6 +25,7 @@ export const ContactsTableRow = ({
     unionEarned,
   } = contact;
 
+  const { token } = useToken();
   const { data: primaryLabel } = usePrimaryLabel({
     address,
   });
@@ -37,7 +39,7 @@ export const ContactsTableRow = ({
         <DimmableTableCell
           key={COLUMNS.CLUB_CREDIT.id}
           dimmed={vouch <= 0n}
-          value={`$${format(vouch)}`}
+          value={`$${format(vouch, token)}`}
         />
       ),
     },
@@ -47,7 +49,7 @@ export const ContactsTableRow = ({
         <DimmableTableCell
           key={COLUMNS.CLUB_DEBT.id}
           dimmed={locking <= 0n}
-          value={`$${format(locking)}`}
+          value={`$${format(locking, token)}`}
         />
       ),
     },
@@ -59,8 +61,8 @@ export const ContactsTableRow = ({
           dimmed={unionWon <= 0n}
           value={
             unionWon > 0n
-              ? <Box>{`${format(unionWon, 0)}`} <UnionIcon /></Box>
-              : `${format(unionWon, 0)}`
+              ? <Box>{`${format(unionWon, token, 0)}`} <UnionIcon /></Box>
+              : `${format(unionWon, token, 0)}`
           }
         />
       ),
@@ -73,8 +75,8 @@ export const ContactsTableRow = ({
           dimmed={unionEarned <= 0n}
           value={
             unionEarned > 0n
-              ? <Box>{`${format(unionEarned, 0)}`} <UnionIcon /></Box>
-              : `${format(unionEarned, 0)}`
+              ? <Box>{`${format(unionEarned, token, 0)}`} <UnionIcon /></Box>
+              : `${format(unionEarned, token, 0)}`
           }
         />
       ),

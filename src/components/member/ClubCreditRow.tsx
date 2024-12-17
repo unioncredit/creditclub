@@ -13,8 +13,10 @@ import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
 import cn from "classnames";
 import { useContract } from "@/hooks/useContract.ts";
+import { useToken } from "@/hooks/useToken.ts";
 
 export const ClubCreditRow = () => {
+  const { token } = useToken();
   const { data: member } = useClubMember();
   const { current: currentCredit, difference: changeInCredit } = useMemberCredit();
 
@@ -26,7 +28,7 @@ export const ClubCreditRow = () => {
     ...clubPluginContract,
     functionName: "setMemberTrust",
     args: [tokenId],
-    disabled: !tokenId,
+    disabled: !isMember,
   });
 
   return (
@@ -37,7 +39,7 @@ export const ClubCreditRow = () => {
         <p className="text-gray-500 font-medium">Club Credit</p>
 
         <div>
-          <p className="ClubCreditStat__stat">${format(currentCredit)}</p>
+          <p className="ClubCreditStat__stat">${format(currentCredit, token)}</p>
           <p className="ClubCreditStat__highlight mt-1">{changeInCredit}</p>
         </div>
       </div>

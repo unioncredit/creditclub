@@ -13,14 +13,15 @@ import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { BORROW_MODAL } from "@/components/modals/BorrowModal.tsx";
 import { REPAY_MODAL } from "@/components/modals/RepayModal.tsx";
-import { WAD } from "@/constants.ts";
 import { INVITE_MODAL } from "@/components/modals/InviteModal.tsx";
 import { REWARDS_MODAL } from "@/components/modals/RewardsModal.tsx";
+import { useToken } from "@/hooks/useToken.ts";
 
 export const Header = () => {
   const { isConnected } = useAccount();
   const { data: member } = useUnionMember();
   const { open: openModal } = useModals();
+  const { token, wad } = useToken();
 
   const { creditLimit, owed, unionBalance } = member;
 
@@ -46,7 +47,7 @@ export const Header = () => {
               className="CreditButton mr-2 md:hidden lg:px-2"
               label={
                 <p className="inline-flex items-center">
-                  Borrow · <span className="ml-1 text-black">${format(creditLimit, creditLimit < WAD ? 2 : 0)}</span>
+                  Borrow · <span className="ml-1 text-black">${format(creditLimit, token, creditLimit < wad ? 2 : 0)}</span>
                 </p>
               }
               color="secondary"
@@ -62,7 +63,7 @@ export const Header = () => {
                 <p className="inline-flex items-center">
                   <>
                     Repay ·
-                    <span className="text-black ml-1">${format(owed, owed < WAD ? 2 : 0)} </span>
+                    <span className="text-black ml-1">${format(owed, token, owed < wad ? 2 : 0)} </span>
                   </>
                 </p>
               }
@@ -75,7 +76,7 @@ export const Header = () => {
               size="small"
               icon={UnionIcon}
               className="UnionButton mr-2 lg:px-2"
-              label={format(unionBalance, 0)}
+              label={format(unionBalance, token, 0)}
               color="secondary"
               variant="light"
               onClick={() => openModal(REWARDS_MODAL)}

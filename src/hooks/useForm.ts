@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { format } from "@/utils/format.ts";
-import { formatEther, parseUnits } from "viem";
+import { formatUnits, parseUnits } from "viem";
 import { IFormErrors, IFormValues, ISetNumberFunc } from "@/hooks/useForm.types.ts";
+import { useToken } from "@/hooks/useToken.ts";
 
 export const useForm = ({
   validate,
@@ -11,6 +12,8 @@ export const useForm = ({
   const [values, setValues] = useState<IFormValues>({});
   const [errors, setErrors] = useState<IFormErrors>({});
 
+  const { token, unit } = useToken();
+
   const empty = {
     raw: 0n,
     display: "",
@@ -18,7 +21,7 @@ export const useForm = ({
   };
 
   const formatValue = (value: bigint, rounded: boolean) =>
-    format(value, 2, rounded).replace(/,/g, "");
+    format(value, token, 2, rounded).replace(/,/g, "");
 
   const setNumber: ISetNumberFunc = (
     name: string,
@@ -39,14 +42,14 @@ export const useForm = ({
       const parsed =
         type === "display"
           ? {
-            raw: parseUnits(value as string, 18),
+            raw: parseUnits(value as string, unit),
             display: value as string,
             formatted: value as string,
           }
           : {
             raw: value as bigint,
             display: formatValue(value as bigint, rounded),
-            formatted: formatEther(value as bigint),
+            formatted: formatUnits(value as bigint, unit),
           };
 
       newValues = { ...values, [name]: parsed };

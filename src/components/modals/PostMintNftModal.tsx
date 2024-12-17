@@ -34,7 +34,7 @@ export const PostMintNftModal = ({
 
   const { data: member, isLoading } = useClubMember();
 
-  const { tokenId } = member;
+  const { tokenId, isMember } = member;
 
   return (
     <ModalOverlay onClick={close}>
@@ -53,7 +53,7 @@ export const PostMintNftModal = ({
               <Box justify="center">
                 {getClubSymbol(name)} Member
 
-                {isLoading || !tokenId ? (
+                {isLoading || !isMember ? (
                   <Skeleton ml="8px" width={50} height={28} grey={200} shimmer />
                 ) : ` #${tokenId}`}
               </Box>

@@ -21,6 +21,7 @@ import { useFeelingLuckyCountdown } from "@/hooks/useFeelingLuckyCountdown.ts";
 import { FEELING_LUCKY_WINNER_MODAL } from "@/components/modals/FeelingLuckyWinnerModal.tsx";
 import { useClubActivity } from "@/providers/ClubActivityProvider.tsx";
 import { useContract } from "@/hooks/useContract.ts";
+import { TOKENS } from "@/constants.ts";
 
 export const FEELING_LUCKY_MODAL = "feeling-lucky-modal";
 
@@ -105,7 +106,7 @@ export const FeelingLuckyModal = () => {
             mt="12px"
             label={
               complete
-                ? `Trigger the Raffle (${format(costToCall, 5, false, false, false)} ETH)`
+                ? `Trigger the Raffle (${format(costToCall, TOKENS.UNION, 5, false, false, false)} ETH)`
                 : `Callable in ${hours}h:${minutes}m:${seconds}s`
             }
             color="primary"

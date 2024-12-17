@@ -25,12 +25,14 @@ import { POST_TX_MODAL } from "@/components/modals/PostTxModal.tsx";
 import { INVITE_MODAL } from "@/components/modals/InviteModal.tsx";
 import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
 import { useContract } from "@/hooks/useContract.ts";
+import { useToken } from "@/hooks/useToken.ts";
 
 export const BUY_INVITES_MODAL = "buy-invites-modal";
 
 export const BuyInvitesModal = () => {
   const [numInvites, setNumInvites] = useState(1);
 
+  const { token } = useToken();
   const { open, close } = useModals();
   const { address: connectedAddress } = useAccount();
   const { data: rewards } = useRewardsManager();
@@ -57,7 +59,7 @@ export const BuyInvitesModal = () => {
         title: numInvites > 1 ? "Invites Received" : "Invite Received",
         content: (
           <Text maxw="320px" grey={500} size="medium" weight="medium">
-            You successfully redeemed {format(totalCost, 0)} UNION for {numInvites} club {numInvites > 1 ? "invites" : "invite"}!
+            You successfully redeemed {format(totalCost, token, 0)} UNION for {numInvites} club {numInvites > 1 ? "invites" : "invite"}!
           </Text>
         ),
         action: {
@@ -89,7 +91,7 @@ export const BuyInvitesModal = () => {
                 What you send
               </Text>
               <Text m={0} grey={900} size="large" weight="medium">
-                {format(totalCost, 0)}
+                {format(totalCost, token, 0)}
                 <Union />
               </Text>
             </Box>
@@ -135,7 +137,7 @@ export const BuyInvitesModal = () => {
           <Button
             fluid
             size="large"
-            label={`Redeem ${format(totalCost, 0)} UNION`}
+            label={`Redeem ${format(totalCost, token, 0)} UNION`}
             {...buyInvitesButtonProps}
           />
         </Modal.Body>

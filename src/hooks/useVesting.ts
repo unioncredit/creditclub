@@ -1,8 +1,11 @@
 import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
-import { SECONDS_PER_DAY, WAD } from "@/constants.ts";
+import { SECONDS_PER_DAY, TOKENS, WAD } from "@/constants.ts";
 import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
+import { useToken } from "@/hooks/useToken.ts";
 
 export const useVesting = () => {
+  const { wad } = useToken();
+
   const { data: creditClub } = useClubData();
   const { vestingDuration, startingPercentTrust } = creditClub;
 
@@ -11,8 +14,8 @@ export const useVesting = () => {
 
   const data = {
     duration: Math.round(Number(vestingDuration) / SECONDS_PER_DAY),
-    startingPercentage: Number(startingPercentTrust) / Number(WAD),
-    vestedPercentage: percentVested ? Number(percentVested) / Number(WAD) : 0,
+    startingPercentage: Number(startingPercentTrust) / Number(WAD[TOKENS.DAI]),
+    vestedPercentage: percentVested ? Number(percentVested) / Number(WAD[TOKENS.DAI]) : 0,
   }
 
   return { data };

@@ -42,16 +42,16 @@ export const ActionsPanel = () => {
           size="large"
           color="secondary"
           variant="light"
-          onClick={() => tokenId ? open(generateCreditClubLink(tokenId)) : openModal(MINT_NFT_MODAL)}
+          onClick={() => isMember ? open(generateCreditClubLink(tokenId)) : openModal(MINT_NFT_MODAL)}
           className={cn("MintButton mt-4", {
-            "token": tokenId,
+            "token": isMember,
           })}
           label={
-            tokenId ? (
+            isMember ? (
               <span className="inline-flex items-center">
                 <PinkGlasses />
                 <p className="ml-2 text-md" style={{ color: "#FF638D" }}>
-                  {getClubSymbol(name)}: ID#{tokenId.toString(10)} : {vestingStatus}
+                  {getClubSymbol(name)}: ID#{tokenId!.toString(10)} : {vestingStatus}
                 </p>
               </span>
             ) : (
