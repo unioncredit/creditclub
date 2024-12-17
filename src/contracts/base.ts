@@ -56,6 +56,6 @@ export const unionContract = {
 }
 
 export const rewardsManagerContract = {
-  address: "" as Address,
+  address: "0x0bea69fac75fc8c4a5b648421b916d1ba3a11894" as Address,
   abi: rewardsManagerAbi,
 };
