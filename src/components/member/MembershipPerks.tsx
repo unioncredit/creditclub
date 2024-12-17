@@ -13,6 +13,7 @@ import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
 import { useVesting } from "@/hooks/useVesting.ts";
 import { useNftInfo } from "@/hooks/useNftInfo.ts";
 import { generateIpfsLink } from "@/utils/links.ts";
+import { useToken } from "@/hooks/useToken.ts";
 
 export const MembershipPerks = ({
   title = "BCC Membership",
@@ -23,6 +24,7 @@ export const MembershipPerks = ({
   subtitle?: string;
   additionalPerks?: string[]
 }) => {
+  const { token } = useToken();
   const { name, image } = useNftInfo();
   const { new: creditPerMember } = useMemberCredit();
   const { data: vestingData } = useVesting();
@@ -42,9 +44,9 @@ export const MembershipPerks = ({
         <Text weight="bold">{subtitle}:</Text>
 
         <ul>
-          <li>Starting Credit: ${(formattedNumber(creditPerMember) * startingPercentage).toFixed(0)}</li>
+          <li>Starting Credit: ${(formattedNumber(creditPerMember, token) * startingPercentage).toFixed(0)}</li>
           <li>Vesting: {duration} days</li>
-          <li>Credit after Vest: ${format(creditPerMember, 0)}</li>
+          <li>Credit after Vest: ${format(creditPerMember, token, 0)}</li>
 
           {additionalPerks.map(perk => (
             <li>{perk}</li>

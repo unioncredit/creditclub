@@ -22,8 +22,9 @@ import { useForm } from "@/hooks/useForm.ts";
 import { IFormField, IFormValues } from "@/hooks/useForm.types.ts";
 import { IRepayOption, IRepayType } from "@/components/modals/RepayModal.types.ts";
 import { ApprovalButton } from "@/components/shared/ApprovalButton.tsx";
-import { daiContract, uTokenContract } from "@/contracts/optimism.ts";
 import { useFirstPaymentDueDate } from "@/hooks/useFirstPaymentDueDate.ts";
+import { useContract } from "@/hooks/useContract.ts";
+import { useToken } from "@/hooks/useToken.ts";
 
 export const REPAY_MODAL = "repay-modal";
 
@@ -37,10 +38,14 @@ const PaymentType: Record<string, IRepayType> = {
 export const RepayModal = () => {
   const [paymentType, setPaymentType] = useState<IRepayType>(PaymentType.MAX);
 
+  const { token, wad } = useToken();
   const { close } = useModals();
   const { address } = useAccount();
   const { data: member, refetch: refetchMember } = useUnionMember();
   const firstPaymentDueDate = useFirstPaymentDueDate();
+
+  const uTokenContract = useContract("uToken");
+  const tokenContract = useContract("token");
 
   const { owed, daiBalance, minPayment } = member;
 
@@ -72,17 +77,17 @@ export const RepayModal = () => {
   // Factor in a 0.005% margin for the max repay as we can no longer use MaxUint256.
   // If 0.005% of the balance owed is less than 0.01 we default to 0.01
   const margin = owed / 50000n;
-  const minMargin = BigInt("10000000000000000");
+  const minMargin = wad / 100n;
   const owedBalanceWithMargin = owed + (margin < minMargin ? minMargin : margin);
 
-  // The maximum amount the user can repay, either their total DAI balance
+  // The maximum amount the user can repay, either their total DAI/USDC balance
   // or their balance owed + 0.005% margin
   const maxRepay = daiBalance >= owedBalanceWithMargin ? owedBalanceWithMargin : daiBalance;
 
   const options: IRepayOption[] = [
     {
       token: "dai",
-      value: format(owed),
+      value: format(owed, token),
       amount: owedBalanceWithMargin,
       paymentType: PaymentType.MAX,
       title: "Full balance",
@@ -90,14 +95,14 @@ export const RepayModal = () => {
     },
     {
       token: "dai",
-      value: format(maxRepay, 2, false),
+      value: format(maxRepay, token, 2, false),
       amount: maxRepay,
       paymentType: PaymentType.BALANCE,
       title: "Wallet balance",
       content: paymentType === PaymentType.BALANCE && "The maximum amount available in your wallet",
     },
     {
-      value: format(minPayment),
+      value: format(minPayment, token),
       amount: minPayment,
       token: "dai",
       paymentType: PaymentType.MIN,
@@ -150,21 +155,21 @@ export const RepayModal = () => {
                 items={[
                   {
                     label: "Wallet balance",
-                    value: `${format(daiBalance, 2, false)} DAI`,
+                    value: `${format(daiBalance, token, 2, false)} ${token}`,
                     error: errors.amount === FormErrors.INSUFFICIENT_BALANCE,
                     tooltip: {
-                      content: "How much DAI you have in your connected wallet",
+                      content: `How much ${token} you have in your connected wallet`,
                     },
                   },
                   {
                     label: "Next payment due",
                     value: amount.raw <= 0n && owed <= 0n
                       ? "N/A"
-                      : `${format(minPayment)} DAI · ${firstPaymentDueDate}`,
+                      : `${format(minPayment, token)} ${token} · ${firstPaymentDueDate}`,
                   },
                   {
                     label: "New balance owed",
-                    value: `${format(newOwed < 0n ? 0n : newOwed)} DAI`,
+                    value: `${format(newOwed < 0n ? 0n : newOwed, token)} ${token}`,
                     tooltip: {
                       content:
                         "The total amount you will owe if this payment transaction is successful",
@@ -181,7 +186,7 @@ export const RepayModal = () => {
                 owner={address}
                 amount={amount.raw}
                 spender={uTokenContract.address}
-                tokenContract={daiContract}
+                tokenContract={tokenContract}
                 actionProps={{
                   ...uTokenContract,
                   size: "large",
@@ -191,7 +196,7 @@ export const RepayModal = () => {
                   functionName: "repayBorrow",
                   label: amount.raw > daiBalance
                     ? "Not enough wallet balance"
-                    : `Repay ${amount.display} DAI`,
+                    : `Repay ${amount.display} ${token}`,
                   icon: amount.raw > daiBalance
                     ? false
                     : RepayIcon,
