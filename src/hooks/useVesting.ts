@@ -1,11 +1,8 @@
 import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
 import { SECONDS_PER_DAY, TOKENS, WAD } from "@/constants.ts";
 import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
-import { useToken } from "@/hooks/useToken.ts";
 
 export const useVesting = () => {
-  const { wad } = useToken();
-
   const { data: creditClub } = useClubData();
   const { vestingDuration, startingPercentTrust } = creditClub;
 
