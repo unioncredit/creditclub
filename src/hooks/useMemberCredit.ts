@@ -27,8 +27,6 @@ export const useMemberCredit = () => {
   const maxVestedAmount = (proRataAmount * (percentVested || 0n)) / WAD[TOKENS.DAI];
   const difference = maxVestedAmount - vouch;
 
-  console.log({ newMemberProRataAmount });
-
   return {
     new: newMemberProRataAmount, // the pro rata amount for a new member
     max: maxVestedAmount, // the maximum vouch this user can receive based on the vesting percentage
