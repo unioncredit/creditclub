@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from "react";
 
 import { fetchInvitations, IInvitation } from "@/fetchers/fetchInvitations.ts";
 import { useCache } from "@/providers/CacheProvider.tsx";
-import { useAccount } from "wagmi";
 
 export const useReceivedInvitation = ({ receiver }: { receiver?: Address; }) => {
   const cacheKey = `useReceivedInvitation__${receiver}`;
@@ -11,13 +10,11 @@ export const useReceivedInvitation = ({ receiver }: { receiver?: Address; }) => 
   const [data, setData] = useState<IInvitation | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const { chain: connectedChain } = useAccount();
-
   const loadData = useCallback(async () => {
-    if (!receiver || !connectedChain?.id) return;
+    if (!receiver) return;
     setLoading(true);
     setData(null);
-    const invitations = await fetchInvitations(connectedChain.id, {
+    const invitations = await fetchInvitations({
       receiver: receiver.toLowerCase(),
     });
 
@@ -26,7 +23,7 @@ export const useReceivedInvitation = ({ receiver }: { receiver?: Address; }) => 
     set(cacheKey, result);
     setData(result);
     setLoading(false);
-  }, [cacheKey, receiver, connectedChain?.id]);
+  }, [cacheKey, receiver]);
 
   useEffect(() => {
     if (get(cacheKey)) {

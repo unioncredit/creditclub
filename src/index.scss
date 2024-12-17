@@ -74,8 +74,3 @@ button:focus-visible {
   position: fixed;
   width: 100%;
 }
-
-// Hide ethereum in rainbowkit selector
-button[data-testid="rk-chain-option-1"] {
-  display: none !important;
-}

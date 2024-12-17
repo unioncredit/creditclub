@@ -7,7 +7,6 @@ import { MultiStepButton } from "@unioncredit/ui";
 
 import { useWrite } from "@/hooks/useWrite";
 import { MultiStep } from "@/constants";
-import { useToken } from "@/hooks/useToken.ts";
 
 const initialItems = [{ number: 1, status: MultiStep.SELECTED }, { number: 2 }];
 const initialButtonProps = { label: "Enter an amount", disabled: true, loading: false };
@@ -32,8 +31,6 @@ export const ApprovalButton = ({
   const [items, setItems] = useState(initialItems);
   const [action, setAction] = useState(initialButtonProps);
   const [showSteps, setShowSteps] = useState(false);
-
-  const { token } = useToken();
 
   /*--------------------------------------------------------------
     Contract Functions
@@ -71,7 +68,7 @@ export const ApprovalButton = ({
         // need to prompt the user to approve this contract
         setAction({
           ...transactionApproveProps,
-          label: transactionApproveProps.loading ? `Approving ${token}...` : `Approve ${token}`,
+          label: transactionApproveProps.loading ? "Approving DAI..." : "Approve DAI",
           loading: false,
           disabled: transactionApproveProps.loading || disabled,
         });

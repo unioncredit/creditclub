@@ -1,10 +1,9 @@
 import { Address } from "viem";
 import { useReadContracts } from "wagmi";
-import { useContract } from "@/hooks/useContract.ts";
+
+import { userManagerContract } from "@/contracts/optimism.ts";
 
 export const useContactCounts = (address: Address) => {
-  const userManagerContract = useContract("userManager");
-
   const result = useReadContracts({
     contracts: [
       {

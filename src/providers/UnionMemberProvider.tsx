@@ -2,10 +2,12 @@ import { useAccount, useReadContracts } from "wagmi";
 import React, { createContext, useContext } from "react";
 
 import { IUnionMemberContext } from "@/providers/types";
+import {
+  daiContract, unionContract,
+  userManagerContract, uTokenContract,
+} from "@/contracts/optimism";
 import { zeroAddress } from "viem";
 import { calculateMinPayment } from "@/utils/numbers.ts";
-import { useContract } from "@/hooks/useContract.ts";
-import { useToken } from "@/hooks/useToken.ts";
 
 const UnionMemberContext = createContext({} as IUnionMemberContext);
 
@@ -13,12 +15,6 @@ export const useUnionMember = () => useContext(UnionMemberContext);
 
 export const UnionMemberProvider = ({ children }: { children: React.ReactNode; }) => {
   const { address = zeroAddress } = useAccount();
-  const { token } = useToken();
-
-  const uTokenContract = useContract("uToken");
-  const userManagerContract = useContract("userManager");
-  const tokenContract = useContract("token");
-  const unionContract = useContract("union");
 
   const result = useReadContracts({
     contracts: [
@@ -38,7 +34,7 @@ export const UnionMemberProvider = ({ children }: { children: React.ReactNode; }
         args: [address],
       },
       {
-        ...tokenContract,
+        ...daiContract,
         functionName: "balanceOf",
         args: [address],
       },
@@ -71,7 +67,7 @@ export const UnionMemberProvider = ({ children }: { children: React.ReactNode; }
     daiBalance,
     interest,
     unionBalance,
-    minPayment: owed > 0 ? calculateMinPayment(interest, token) : 0n,
+    minPayment: owed > 0 ? calculateMinPayment(interest) : 0n,
   };
 
   return (

@@ -2,14 +2,9 @@ import { ToastStatus } from "@/constants";
 import { IToast, IToastStatus } from "@/providers/types.ts";
 import { useCallback } from "react";
 import { Address } from "viem";
-import { useContract } from "@/hooks/useContract.ts";
-import { useToken } from "@/hooks/useToken.ts";
+import { unionContract } from "@/contracts/optimism.ts";
 
 export const useToastProps = (functionName: string, contract: Address, args: any) => {
-  const { token } = useToken();
-
-  const unionContract = useContract("union");
-
   return useCallback((status: IToastStatus, txHash?: string | undefined): IToast => {
     const props = {
       link: txHash ? `https://optimistic.etherscan.io/tx/${txHash}` : null,
@@ -28,7 +23,7 @@ export const useToastProps = (functionName: string, contract: Address, args: any
             ...props,
             title: `Approving ${contract === unionContract.address
               ? "UNION"
-              : token}`,
+              : "DAI"}`,
             content: "Transaction pending",
           };
         case "feelingLucky":
@@ -40,7 +35,7 @@ export const useToastProps = (functionName: string, contract: Address, args: any
         case "fixedBid":
           return {
             ...props,
-            title: `Bidding ${token}`,
+            title: "Bidding DAI",
             content: "Transaction pending",
           };
         case "mintMemberNFT":
@@ -67,7 +62,7 @@ export const useToastProps = (functionName: string, contract: Address, args: any
             ...props,
             title: `Approved ${contract === unionContract.address
               ? "UNION"
-              : token}`,
+              : "DAI"}`,
             content: "Transaction successful",
           };
         case "feelingLucky":
@@ -79,7 +74,7 @@ export const useToastProps = (functionName: string, contract: Address, args: any
         case "fixedBid":
           return {
             ...props,
-            title: `Bidding ${token}`,
+            title: "Bidding DAI",
             content: "Transaction successful",
           };
         case "mintMemberNFT":
@@ -106,7 +101,7 @@ export const useToastProps = (functionName: string, contract: Address, args: any
             ...props,
             title: `Approving ${contract === unionContract.address
               ? "UNION"
-              : token}`,
+              : "DAI"}`,
             content: "Transaction failed",
           };
         case "feelingLucky":
@@ -118,7 +113,7 @@ export const useToastProps = (functionName: string, contract: Address, args: any
         case "fixedBid":
           return {
             ...props,
-            title: `Bidding ${token}`,
+            title: "Bidding DAI",
             content: "Transaction failed",
           };
         case "mintMemberNFT":

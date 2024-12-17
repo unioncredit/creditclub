@@ -17,24 +17,23 @@ import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { REWARDS_MODAL } from "@/components/modals/RewardsModal.tsx";
 import { StatRow } from "@/components/modals/StatRow.tsx";
 import { IFormField, IFormValues } from "@/hooks/useForm.types.ts";
+import { WAD } from "@/constants.ts";
 import { useForm } from "@/hooks/useForm.ts";
 import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
 import { format } from "@/utils/format.ts";
 import { useRewardsManager } from "@/providers/RewardsManagerDataProvider.tsx";
 import { useWrite } from "@/hooks/useWrite.ts";
+import { clubPluginContract, rewardsManagerContract } from "@/contracts/optimism.ts";
 import { useAccount } from "wagmi";
 import { POST_TX_MODAL } from "@/components/modals/PostTxModal.tsx";
 import { useClubActivity } from "@/providers/ClubActivityProvider.tsx";
 import { REPAY_MODAL } from "@/components/modals/RepayModal.tsx";
-import { useContract } from "@/hooks/useContract.ts";
-import { useToken } from "@/hooks/useToken.ts";
 
 export const UNION_REPAY_MODAL = "union-repay-modal";
 
 export const UnionRepayModal = () => {
   const { open, close } = useModals();
 
-  const { token, wad } = useToken();
   const { address: connectedAddress } = useAccount();
   const { data: member, refetch: refetchMember } = useUnionMember();
   const { data: rewards } = useRewardsManager();
@@ -43,18 +42,15 @@ export const UnionRepayModal = () => {
   const { unionBalance, owed } = member;
   const { unionPer, contractDaiBalance } = rewards;
 
-  const clubPluginContract = useContract("clubPlugin");
-  const rewardsManagerContract = useContract("rewardsManager");
-
   const validate = (inputs: IFormValues) => {
     const amount = inputs.amount as IFormField;
 
     if (amount.raw > unionBalance) {
-      return `${format(unionBalance, token)} UNION Available`;
+      return `${format(unionBalance)} UNION Available`;
     }
-    const credit = amount.raw * unionPer / wad;
+    const credit = amount.raw * unionPer / WAD;
     if (credit > contractDaiBalance) {
-      return `Only ${format(contractDaiBalance, token, 0)} ${token} available at this time`;
+      return `Only ${format(contractDaiBalance, 0)} DAI available at this time`;
     }
   };
 
@@ -68,12 +64,12 @@ export const UnionRepayModal = () => {
 
   const amount = values.amount as IFormField || empty;
   const amountRaw = amount.raw || 0n;
-  const formattedAmount = format(amountRaw, token, 2, false);
+  const formattedAmount = format(amountRaw, 2, false);
 
-  const creditRaw = amount.raw * unionPer / wad;
-  const creditFormatted = format(creditRaw, token, 2, false);
+  const creditRaw = amount.raw * unionPer / WAD;
+  const creditFormatted = format(creditRaw, 2, false);
 
-  const maxAmountFromBalance = unionBalance * unionPer / wad;
+  const maxAmountFromBalance = unionBalance * unionPer / WAD;
   const maxAvailable = maxAmountFromBalance <= contractDaiBalance ? maxAmountFromBalance : contractDaiBalance;
 
   const repayCreditButtonProps = useWrite({
@@ -89,12 +85,12 @@ export const UnionRepayModal = () => {
         title: "Credit Repaid",
         content: (
           <Text grey={500} size="medium" weight="medium">
-            You successfully redeemed {formattedAmount} UNION for ${creditFormatted} in repay credit. Your new balance is ${format(owed - creditRaw, token)}.
+            You successfully redeemed {formattedAmount} UNION for ${creditFormatted} in repay credit. Your new balance is ${format(owed - creditRaw)}.
           </Text>
         ),
         action: {
           icon: RepayIcon,
-          label: `Repay with ${token}`,
+          label: "Repay with DAI",
           onClick: () => open(REPAY_MODAL)
         },
         hash,
@@ -116,10 +112,10 @@ export const UnionRepayModal = () => {
             m="12px 0 32px"
             maxw="300px"
             label="Amount"
-            caption={`${format(maxAvailable, token, 0)} ${token} available to redeem`}
+            caption={`${format(maxAvailable, 0)} DAI available to redeem`}
             placeholder="0.0"
             suffix={<Union />}
-            rightLabel={`Max. ${format(unionBalance, token, 0, false)} UNION`}
+            rightLabel={`Max. ${format(unionBalance, 0, false)} UNION`}
             rightLabelAction={() => setRawValue("amount", unionBalance, false)}
             error={errors.amount}
             value={amount.formatted}

@@ -15,13 +15,12 @@ import { useModals } from "@/providers/ModalManagerProvider";
 import { StatRow } from "@/components/modals/StatRow";
 import { useRewards } from "@/hooks/useRewards";
 import { useWrite } from "@/hooks/useWrite.ts";
+import { clubPluginContract } from "@/contracts/optimism.ts";
 import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
 import { format } from "@/utils/format.ts";
 import { useFeelingLuckyCountdown } from "@/hooks/useFeelingLuckyCountdown.ts";
 import { FEELING_LUCKY_WINNER_MODAL } from "@/components/modals/FeelingLuckyWinnerModal.tsx";
 import { useClubActivity } from "@/providers/ClubActivityProvider.tsx";
-import { useContract } from "@/hooks/useContract.ts";
-import { TOKENS } from "@/constants.ts";
 
 export const FEELING_LUCKY_MODAL = "feeling-lucky-modal";
 
@@ -31,8 +30,6 @@ export const FeelingLuckyModal = () => {
   const { data: creditClub, refetch: refetchCreditClubData } = useClubData();
   const { costToCall } = creditClub;
   const { refetch: refetchClubActivity } = useClubActivity();
-
-  const clubPluginContract = useContract("clubPlugin");
 
   const {
     bidBucketBalance,
@@ -106,7 +103,7 @@ export const FeelingLuckyModal = () => {
             mt="12px"
             label={
               complete
-                ? `Trigger the Raffle (${format(costToCall, TOKENS.UNION, 5, false, false, false)} ETH)`
+                ? `Trigger the Raffle (${format(costToCall, 5, false, false, false)} ETH)`
                 : `Callable in ${hours}h:${minutes}m:${seconds}s`
             }
             color="primary"
