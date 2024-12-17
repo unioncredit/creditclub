@@ -1,11 +1,11 @@
 .Header {
+  @media screen and (max-width: 580px) {
+    margin-bottom: 16px;
+  }
+
   button {
     padding: 12px;
     height: 48px !important;
-  }
-
-  @media all and (max-width: 600px) {
-    padding: 2rem 1.25rem 0 !important;
   }
 
   &__logo {
@@ -14,6 +14,28 @@
 
       @media screen and (max-width: 420px) {
         width: 150px;
+      }
+    }
+
+    &--desktop {
+      @media screen and (max-width: 580px) {
+        display: none;
+      }
+    }
+
+    &--mobile {
+      @media screen and (min-width: 580px) {
+        display: none;
+      }
+
+      svg {
+        height: 40px;
+        max-width: 120px;
+        margin-left: -50px;
+
+        @media screen and (max-width: 540px) {
+          margin-left: -45px;
+        }
       }
     }
   }

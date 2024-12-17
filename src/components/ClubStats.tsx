@@ -26,6 +26,7 @@ import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { useMemberCredit } from "@/hooks/useMemberCredit.ts";
 import { useFeelingLuckyCountdown } from "@/hooks/useFeelingLuckyCountdown.ts";
 import { UNION_TOKEN_PRICE_USD } from "@/constants.ts";
+import { useToken } from "@/hooks/useToken.ts";
 
 export const ClubStats = () => {
   const { open } = useModals();
@@ -35,6 +36,7 @@ export const ClubStats = () => {
   const { data: member } = useClubMember();
   const { active: creditPerMember } = useMemberCredit();
   const { complete, hours, minutes, seconds } = useFeelingLuckyCountdown();
+  const { token } = useToken();
 
   const { stakedBalance, totalLockedStake } = stats;
   const { isMember } = member;
@@ -57,7 +59,7 @@ export const ClubStats = () => {
             token="dai"
             align="left"
             title="Total Club Stake"
-            value={format(stakedBalance)}
+            value={format(stakedBalance, token)}
             smallDecimals
           />
 
@@ -78,15 +80,15 @@ export const ClubStats = () => {
           m="24px 0"
           items={[
             {
-              value: formattedNumber(availableAmount),
+              value: formattedNumber(availableAmount, token),
               color: "blue500",
             },
             {
-              value: formattedNumber(totalLockedStake),
+              value: formattedNumber(totalLockedStake, token),
               color: "violet500",
             },
             {
-              value: formattedNumber(defaultedAmount),
+              value: formattedNumber(defaultedAmount, token),
               color: "red500",
             },
           ]}
@@ -100,11 +102,11 @@ export const ClubStats = () => {
               size="medium"
               title="Available"
               dotColor="blue500"
-              value={format(availableAmount)}
+              value={format(availableAmount, token)}
               smallDecimals
             />
 
-            <p className="ClubStats__pill">~${format(creditPerMember, 0)} per Member</p>
+            <p className="ClubStats__pill">~${format(creditPerMember, token, 0)} per Member</p>
           </Box>
 
           <Box fluid className="ClubStats__item" pr="8px">
@@ -115,7 +117,7 @@ export const ClubStats = () => {
               size="medium"
               title="Utilized"
               dotColor="violet500"
-              value={format(totalLockedStake)}
+              value={format(totalLockedStake, token)}
               smallDecimals
             />
 
@@ -135,7 +137,7 @@ export const ClubStats = () => {
               size="medium"
               title="Defaulting"
               dotColor="red500"
-              value={format(defaultedAmount)}
+              value={format(defaultedAmount, token)}
               smallDecimals
             />
 

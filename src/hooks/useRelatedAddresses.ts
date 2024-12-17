@@ -1,10 +1,11 @@
 import { Address } from "viem";
 import { useReadContracts } from "wagmi";
 
-import { userManagerContract } from "@/contracts/optimism.ts";
 import { useContactCounts } from "@/hooks/useContactCounts.ts";
+import { useContract } from "@/hooks/useContract.ts";
 
 export default function useRelatedAddresses(address: Address) {
+  const userManagerContract = useContract("userManager");
   const { voucherCount, voucheeCount, refetch: refetchCounts } = useContactCounts(address);
 
   const { data: voucherData, refetch: refetchVouchers } = useReadContracts({
