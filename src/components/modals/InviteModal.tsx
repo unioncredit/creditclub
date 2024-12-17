@@ -9,6 +9,7 @@ import {
 } from "@unioncredit/ui";
 import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { useWrite } from "@/hooks/useWrite.ts";
+import { clubPluginContract } from "@/contracts/optimism.ts";
 import { useRef, useState } from "react";
 import { Address } from "viem";
 import { AddressInput } from "@/components/shared/AddressInput.tsx";
@@ -16,7 +17,6 @@ import { InviteesTable } from "@/components/modals/InviteesTable.tsx";
 import { useSentInvitations } from "@/hooks/useSentInvitations.ts";
 import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { useAccount } from "wagmi";
-import { useContract } from "@/hooks/useContract.ts";
 
 export const INVITE_MODAL = "invite-modal";
 
@@ -32,8 +32,6 @@ export const InviteModal = () => {
   const { data: sentInvitations, addInvite, } = useSentInvitations({
     sender: connectedAddress,
   });
-
-  const clubPluginContract = useContract("clubPlugin");
 
   const { inviteCount } = member;
 

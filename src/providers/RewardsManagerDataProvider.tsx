@@ -1,8 +1,8 @@
 import { useAccount, useReadContracts } from "wagmi";
 import React, { createContext, useContext } from "react";
+import { daiContract, rewardsManagerContract, unionContract } from "@/contracts/optimism";
 import { IRewardsManagerDataProviderContext } from "@/providers/types";
 import { zeroAddress } from "viem";
-import { useContract } from "@/hooks/useContract.ts";
 
 const RewardsManagerDataContext = createContext({} as IRewardsManagerDataProviderContext);
 
@@ -10,10 +10,6 @@ export const useRewardsManager = () => useContext(RewardsManagerDataContext);
 
 export const RewardsManagerProvider = ({ children }: { children: React.ReactNode; }) => {
   const { address = zeroAddress } = useAccount();
-
-  const unionContract = useContract("union");
-  const rewardsManagerContract = useContract("rewardsManager");
-  const tokenContract = useContract("token");
 
   const result = useReadContracts({
     contracts: [
@@ -31,7 +27,7 @@ export const RewardsManagerProvider = ({ children }: { children: React.ReactNode
         functionName: "invitePrice",
       },
       {
-        ...tokenContract,
+        ...daiContract,
         functionName: 'balanceOf',
         args: [rewardsManagerContract.address],
       },

@@ -20,14 +20,12 @@ import { BUY_INVITES_MODAL } from "@/components/modals/BuyInvitesModal.tsx";
 import { UNION_REPAY_MODAL } from "@/components/modals/UnionRepayModal.tsx";
 import { ActivateRewardsToggle } from "@/components/rewards/ActivateRewardsToggle.tsx";
 import { useRewardsManager } from "@/providers/RewardsManagerDataProvider.tsx";
-import { useToken } from "@/hooks/useToken.ts";
 
 export const REWARDS_MODAL = "rewards-modal";
 
 export const RewardsModal = () => {
   const { open, close } = useModals();
 
-  const { token } = useToken();
   const { data: member } = useUnionMember();
   const { data: rewards } = useRewardsManager();
 
@@ -74,7 +72,7 @@ export const RewardsModal = () => {
             token="union"
             align="left"
             title="Current Balance"
-            value={format(unionBalance, token)}
+            value={format(unionBalance)}
             smallDecimals
           />
 

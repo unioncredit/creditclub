@@ -3,17 +3,14 @@ import { Box, Toggle, Text, Skeleton } from "@unioncredit/ui";
 import { maxUint256 } from "viem";
 
 import { useWrite } from "@/hooks/useWrite.ts";
+import { rewardsManagerContract, unionContract } from "@/contracts/optimism.ts";
 import { useRewardsManager } from "@/providers/RewardsManagerDataProvider.tsx";
-import { useContract } from "@/hooks/useContract.ts";
 
 
 export const ActivateRewardsToggle = () => {
   const { data: rewards, refetch, isLoading } = useRewardsManager();
 
   const { allowance } = rewards;
-
-  const unionContract = useContract("union");
-  const rewardsManagerContract = useContract("rewardsManager");
 
   const transactionApproveProps = useWrite({
     ...unionContract,

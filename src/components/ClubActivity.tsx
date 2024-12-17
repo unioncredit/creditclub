@@ -13,13 +13,12 @@ import {
   // @ts-ignore
 } from "@unioncredit/ui";
 
-import { ActivityTypes, IToken, TOKENS } from "@/constants.ts";
+import { ActivityTypes } from "@/constants.ts";
 import { AddressLink } from "@/components/shared/AddressLink.tsx";
 import { Address, Hash } from "viem";
 import { format } from "@/utils/format.ts";
 import { useClubActivity } from "@/providers/ClubActivityProvider.tsx";
 import { IClubEvent, IClubEventType } from "@/fetchers/fetchClubEvents.ts";
-import { useToken } from "@/hooks/useToken.ts";
 
 // prettier-ignore
 const texts = {
@@ -42,27 +41,27 @@ const texts = {
       </a>
     </>
   ),
-  [ActivityTypes.BORROWED]: (x: IClubEvent, token: IToken) => (
+  [ActivityTypes.BORROWED]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500"> Borrowed</span> {format(x.amount, token, 0)} {token}
+        <span className="text-gray-500"> Borrowed</span> {format(x.amount, 0)} DAI
       </a>
     </>
   ),
-  [ActivityTypes.REPAID]: (x: IClubEvent, token: IToken) => (
+  [ActivityTypes.REPAID]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500"> Repaid</span> {format(x.amount, token, 0)} {token}
+        <span className="text-gray-500"> Repaid</span> {format(x.amount, 0)} DAI
       </a>
     </>
   ),
-  [ActivityTypes.UPDATED_TRUST]: (x: IClubEvent, token: IToken) => (
+  [ActivityTypes.UPDATED_TRUST]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500"> Updated trust</span> {format(x.amount, token, 0)} {token}
+        <span className="text-gray-500"> Updated trust</span> {format(x.amount, 0)} DAI
       </a>
     </>
   ),
@@ -70,7 +69,7 @@ const texts = {
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500"> Won</span> {format(x.amount, TOKENS.UNION, 0)} UNION
+        <span className="text-gray-500"> Won</span> {format(x.amount, 0)} UNION
       </a>
     </>
   ),
@@ -78,20 +77,18 @@ const texts = {
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500"> Bucket Won</span> {format(x.amount, TOKENS.UNION, 0)} UNION
+        <span className="text-gray-500"> Bucket Won</span> {format(x.amount, 0)} UNION
       </a>
     </>
   ),
 };
 
 const ActivityRow = ({
-  token,
   amount,
   type,
   address,
   hash,
 }: {
-  token: IToken;
   type: IClubEventType;
   amount: bigint;
   address: Address;
@@ -109,7 +106,7 @@ const ActivityRow = ({
   };
 
   const Icon = icons[type];
-  const text = texts[type]({ type, amount, address, hash }, token);
+  const text = texts[type]({ type, amount, address, hash });
 
   return (
     <div className="ActivityRow">
@@ -123,7 +120,6 @@ const ActivityRow = ({
 };
 
 export const ClubActivity = () => {
-  const { token } = useToken();
   const { data: activity } = useClubActivity();
 
   return (
@@ -139,7 +135,7 @@ export const ClubActivity = () => {
           </Card.Body>
         ) : (
           activity.slice(0, 4).map((tx: any) => (
-            <ActivityRow token={token} {...tx} />
+            <ActivityRow {...tx} />
           ))
         )}
       </div>

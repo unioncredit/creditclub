@@ -2,7 +2,6 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 
 import { IClubActivityContext } from "@/providers/types.ts";
 import { fetchClubEvents, IClubEvent } from "@/fetchers/fetchClubEvents.ts";
-import { useAccount } from "wagmi";
 
 const ClubActivityContext = createContext({} as IClubActivityContext);
 
@@ -12,17 +11,13 @@ export const ClubActivityProvider = ({ children }: { children: React.ReactNode }
   const [data, setData] = useState<IClubEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const { chain: connectedChain } = useAccount();
-
   const fetch = useCallback(async () => {
-    if (connectedChain) {
-      setLoading(true);
-      const clubEvents = await fetchClubEvents(connectedChain.id);
+    setLoading(true);
+    const clubEvents = await fetchClubEvents();
 
-      setData(clubEvents);
-      setLoading(false);
-    }
-  }, [connectedChain]);
+    setData(clubEvents);
+    setLoading(false);
+  }, []);
 
   const refetch = (delay = 0) => {
     if (delay > 0) {

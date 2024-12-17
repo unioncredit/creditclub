@@ -1,41 +1,33 @@
-import { useAccount, useReadContracts } from "wagmi";
+import { useReadContracts } from "wagmi";
 import React, { createContext, useContext } from "react";
 
-import { CREDITCLUB_SAFE_ADDRESS, DEFAULT_CHAIN } from "@/constants";
+import { CREDITCLUB_SAFE_ADDRESS } from "@/constants";
+import {
+  clubNftContract,
+  clubPluginContract,
+  comptrollerContract,
+  daiContract,
+  userManagerContract,
+  uTokenContract,
+} from "@/contracts/optimism";
 import { ICreditClubDataProviderContext } from "@/providers/types";
-import { useContract } from "@/hooks/useContract.ts";
 
 const CreditClubDataContext = createContext({} as ICreditClubDataProviderContext);
 
 export const useClubData = () => useContext(CreditClubDataContext);
 
 export const CreditClubDataProvider = ({ children }: { children: React.ReactNode; }) => {
-  const { chain: connectedChain = DEFAULT_CHAIN } = useAccount();
-
-  const chainId = connectedChain.id;
-  const safeAddress = CREDITCLUB_SAFE_ADDRESS[chainId];
-
-  const userManagerContract = useContract("userManager");
-  const clubPluginContract = useContract("clubPlugin");
-  const uTokenContract = useContract("uToken");
-  const comptrollerContract = useContract("comptroller");
-  const tokenContract = useContract("token");
-  const clubNftContract = useContract("clubNft");
-
   const result = useReadContracts({
-    query: {
-      enabled: !!connectedChain,
-    },
     contracts: [
       {
         ...userManagerContract,
         functionName: "getTotalLockedStake",
-        args: [safeAddress],
+        args: [CREDITCLUB_SAFE_ADDRESS],
       },
       {
         ...userManagerContract,
         functionName: "getStakerBalance",
-        args: [safeAddress],
+        args: [CREDITCLUB_SAFE_ADDRESS],
       },
       {
         ...clubPluginContract,
@@ -84,7 +76,7 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
       {
         ...comptrollerContract,
         functionName: "calculateRewards",
-        args: [safeAddress, tokenContract.address],
+        args: [CREDITCLUB_SAFE_ADDRESS, daiContract.address],
       },
       {
         ...clubNftContract,

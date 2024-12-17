@@ -18,23 +18,18 @@ import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { format } from "@/utils/format.ts";
 import { ApprovalButton } from "@/components/shared/ApprovalButton.tsx";
 import { useAccount } from "wagmi";
-import { MIN_REQUIRED_BID_BUCKET_BALANCE, TOKENS } from "@/constants.ts";
+import { clubPluginContract, daiContract } from "@/contracts/optimism.ts";
+import { MIN_REQUIRED_BID_BUCKET_BALANCE } from "@/constants.ts";
 import { useUnionMember } from "@/providers/UnionMemberProvider.tsx";
-import { useContract } from "@/hooks/useContract.ts";
-import { useToken } from "@/hooks/useToken.ts";
 
 export const BID_BUCKET_MODAL = "bid-bucket-modal";
 
 export const BidBucketModal = () => {
   const { close } = useModals();
-  const { token } = useToken();
   const { address } = useAccount();
   const { data: creditClub, refetch } = useClubData();
   const { data: member } = useClubMember();
   const { data: unionMember } = useUnionMember();
-
-  const clubPluginContract = useContract("clubPlugin");
-  const tokenContract = useContract("token");
 
   const { publicBidPrice, memberBidPrice, bidBucketBalance } = creditClub;
   const { isMember } = member;
@@ -54,14 +49,14 @@ export const BidBucketModal = () => {
             mb="12px"
             align="left"
             variant="warning"
-            label={`The Bid Bucket is UNION tokens set aside that anyone can bid on in exchange for adding ${token} to the clubs total stake. Members can bid 100 ${token} and the public can bid 200 ${token}`}
+            label="The Bid Bucket is UNION tokens set aside that anyone can bid on in exchange for adding DAI to the clubs total stake. Members can bid 100 DAI and the public can bid 200 DAI"
           />
 
           <div className="mb-4">
             <StatRow
               title="Your Bid"
               content="What you send"
-              amount={format(bidPrice, token, 0)}
+              amount={format(bidPrice, 0)}
               token={<Dai />}
             />
 
@@ -70,7 +65,7 @@ export const BidBucketModal = () => {
             <StatRow
               title="Bid Bucket"
               content="What you receive"
-              amount={format(bidBucketBalance, token)}
+              amount={format(bidBucketBalance)}
               token={<Union />}
             />
           </div>
@@ -80,7 +75,7 @@ export const BidBucketModal = () => {
             amount={bidPrice}
             disabled={daiBalance < bidPrice}
             spender={clubPluginContract.address}
-            tokenContract={tokenContract}
+            tokenContract={daiContract}
             actionProps={{
               ...clubPluginContract,
               functionName: "fixedBid",
@@ -96,7 +91,7 @@ export const BidBucketModal = () => {
 
           {!isMinimumRequired && (
             <Text color="red500" m="8px 0 0" weight="light">
-              The bid bucket balance must be greater than {format(MIN_REQUIRED_BID_BUCKET_BALANCE, TOKENS.UNION, 0)} to bid.
+              The bid bucket balance must be greater than {format(MIN_REQUIRED_BID_BUCKET_BALANCE, 0)} to bid.
             </Text>
           )}
         </Modal.Body>

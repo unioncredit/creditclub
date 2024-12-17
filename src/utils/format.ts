@@ -1,21 +1,20 @@
-import { DUST_THRESHOLD, IToken, UNIT } from "@/constants";
+import { DUST_THRESHOLD } from "@/constants";
 import { formatUnits } from "viem";
 
-export const formattedNumber = (value: bigint, token: IToken, digits = 2, rounded = true) => {
-  return parseFloat(format(value, token, digits, rounded, false, false).replace(",", ""));
+export const formattedNumber = (value: bigint, digits = 2, rounded = true) => {
+  return parseFloat(format(value, digits, rounded, false, false).replace(",", ""));
 };
 
 export const format = (
   value: bigint,
-  token: IToken,
   digits = 2,
   rounded = true,
   stripTrailingZeros = false,
   formatDust = true
 ) => {
   if (!value) value = 0n;
-  if (formatDust && value < DUST_THRESHOLD[token] && value > 0n) return "<0.01";
-  return commify(Number(formatUnits(value, UNIT[token])), digits, rounded, stripTrailingZeros);
+  if (formatDust && value < DUST_THRESHOLD && value > 0n) return "<0.01";
+  return commify(Number(formatUnits(value, 18)), digits, rounded, stripTrailingZeros);
 };
 
 export function commify(value: number, digits: number, rounded = true, stripTrailingZeros = false) {

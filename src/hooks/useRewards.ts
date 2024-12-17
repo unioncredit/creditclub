@@ -1,6 +1,5 @@
 import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
 import { formattedNumber } from "@/utils/format.ts";
-import { TOKENS } from "@/constants.ts";
 
 export const useRewards = () => {
   const { data: creditClub } = useClubData();
@@ -13,7 +12,7 @@ export const useRewards = () => {
     unclaimedRewards,
   } = creditClub;
 
-  const rewardsToDistribute = formattedNumber(unclaimedRewards, TOKENS.UNION, 8);
+  const rewardsToDistribute = formattedNumber(unclaimedRewards, 8);
   const bidBucketBalance = totalPercent > 0 ? (rewardsToDistribute * bidBucketPercent) / totalPercent : 0;
   const callerBalance = totalPercent > 0 ? (rewardsToDistribute * callerPercent) / totalPercent : 0;
   const winnerBalance = totalPercent > 0 ? (rewardsToDistribute * winnerPercent) / totalPercent : 0;

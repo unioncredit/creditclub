@@ -16,11 +16,9 @@ import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
 import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { format } from "@/utils/format.ts";
 import cn from "classnames";
-import { useToken } from "@/hooks/useToken.ts";
 
 export const BidBucketRow = () => {
   const { open } = useModals();
-  const { token } = useToken();
   const { data: creditClub } = useClubData();
   const { data: member } = useClubMember();
 
@@ -33,12 +31,12 @@ export const BidBucketRow = () => {
     })}>
       <div className="BidBucketStat flex flex-1 justify-center items-center mr-2 sm:mr-0 sm:mb-2">
         <div className="BidBucketStat__dai">
-          <p>Bid {format(memberBidPrice, token, 0)}</p>
+          <p>Bid {format(memberBidPrice, 0)}</p>
           <DaiIcon />
         </div>
         <ArrowRightIcon />
         <div className="BidBucketStat__union">
-          <p>{format(bidBucketBalance, token)}</p>
+          <p>{format(bidBucketBalance)}</p>
           <UnionIcon />
         </div>
       </div>
