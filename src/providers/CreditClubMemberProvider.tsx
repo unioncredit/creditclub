@@ -41,7 +41,7 @@ export const useClubMemberData = ({ address }: { address: Address }) => {
         functionName: 'getVouchingAmount',
         args: [safeAddress, address],
       },
-    ],
+    ].map(c => ({ ...c, chainId })),
   });
 
   const [
@@ -64,7 +64,7 @@ export const useClubMemberData = ({ address }: { address: Address }) => {
         // @ts-ignore
         args: [tokenId],
       }
-    ],
+    ].map(c => ({ ...c, chainId })),
     query: {
       enabled: tokenId !== undefined,
     }

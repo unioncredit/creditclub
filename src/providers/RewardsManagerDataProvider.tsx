@@ -3,14 +3,16 @@ import React, { createContext, useContext } from "react";
 import { IRewardsManagerDataProviderContext } from "@/providers/types";
 import { zeroAddress } from "viem";
 import { useContract } from "@/hooks/useContract.ts";
+import { DEFAULT_CHAIN } from "@/constants.ts";
 
 const RewardsManagerDataContext = createContext({} as IRewardsManagerDataProviderContext);
 
 export const useRewardsManager = () => useContext(RewardsManagerDataContext);
 
 export const RewardsManagerProvider = ({ children }: { children: React.ReactNode; }) => {
-  const { address = zeroAddress } = useAccount();
+  const { chain: connectedChain = DEFAULT_CHAIN, address = zeroAddress } = useAccount();
 
+  const chainId = connectedChain.id;
   const unionContract = useContract("union");
   const rewardsManagerContract = useContract("rewardsManager");
   const tokenContract = useContract("token");
@@ -35,7 +37,7 @@ export const RewardsManagerProvider = ({ children }: { children: React.ReactNode
         functionName: 'balanceOf',
         args: [rewardsManagerContract.address],
       },
-    ],
+    ].map(c => ({ ...c, chainId })),
     query: {
       enabled: address !== zeroAddress,
     }

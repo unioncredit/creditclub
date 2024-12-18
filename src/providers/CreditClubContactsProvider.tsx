@@ -54,7 +54,9 @@ export const CreditClubContactsProvider = ({ children }: { children: React.React
   ]), [] as any[]);
 
   const result = useReadContracts(({
-    contracts,
+    contracts: contracts.map(c => ({
+      ...c, chainId,
+    })),
   }));
 
   const results = result.data?.map(d => d.result) || [];

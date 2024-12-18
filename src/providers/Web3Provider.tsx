@@ -1,7 +1,6 @@
 import React from "react";
 import { http, WagmiProvider } from "wagmi";
 import { merge } from "lodash";
-import { base } from "viem/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   darkTheme,
@@ -10,7 +9,7 @@ import {
   Theme,
 } from "@rainbow-me/rainbowkit";
 
-import { RPC_URL, rpcChains } from "@/constants";
+import { DEFAULT_CHAIN, RPC_URL, rpcChains } from "@/constants";
 
 export const wagmiConfig = getDefaultConfig({
   chains: rpcChains,
@@ -44,7 +43,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
         <RainbowKitProvider
           theme={theme}
           modalSize="compact"
-          initialChain={base}
+          initialChain={DEFAULT_CHAIN}
         >
           {children}
         </RainbowKitProvider>

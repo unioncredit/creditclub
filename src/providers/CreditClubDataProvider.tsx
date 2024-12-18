@@ -22,99 +22,103 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
   const tokenContract = useContract("token");
   const clubNftContract = useContract("clubNft");
 
+  const contracts = [
+    {
+      ...userManagerContract,
+      functionName: "getTotalLockedStake",
+      args: [safeAddress],
+    },
+    {
+      ...userManagerContract,
+      functionName: "getStakerBalance",
+      args: [safeAddress],
+    },
+    {
+      ...clubPluginContract,
+      functionName: "costToCall"
+    },
+    {
+      ...clubPluginContract,
+      functionName: "costToMint"
+    },
+    {
+      ...clubPluginContract,
+      functionName: "proRataAmount"
+    },
+    {
+      ...clubPluginContract,
+      functionName: "memberBidPrice"
+    },
+    {
+      ...clubPluginContract,
+      functionName: "publicBidPrice"
+    },
+    {
+      ...clubPluginContract,
+      functionName: "bidBucketBalance"
+    },
+    {
+      ...clubPluginContract,
+      functionName: "bidBucketPercent",
+    },
+    {
+      ...clubPluginContract,
+      functionName: "callerPercent",
+    },
+    {
+      ...clubPluginContract,
+      functionName: "winnerPercent",
+    },
+    {
+      ...clubPluginContract,
+      functionName: "percentageFull",
+    },
+    {
+      ...uTokenContract,
+      functionName: "overdueTime",
+    },
+    {
+      ...comptrollerContract,
+      functionName: "calculateRewards",
+      args: [safeAddress, tokenContract.address],
+    },
+    {
+      ...clubNftContract,
+      functionName: "totalSupply",
+    },
+    {
+      ...clubPluginContract,
+      functionName: "checkpoint",
+    },
+    {
+      ...clubPluginContract,
+      functionName: "cooldown",
+    },
+    {
+      ...clubNftContract,
+      functionName: "contractURI",
+    },
+    {
+      ...uTokenContract,
+      functionName: "borrowRatePerSecond",
+    },
+    {
+      ...clubPluginContract,
+      functionName: "vestingDuration",
+    },
+    {
+      ...clubPluginContract,
+      functionName: "startingPercentTrust",
+    }
+  ];
+
   const result = useReadContracts({
     query: {
       enabled: !!connectedChain,
     },
-    contracts: [
-      {
-        ...userManagerContract,
-        functionName: "getTotalLockedStake",
-        args: [safeAddress],
-      },
-      {
-        ...userManagerContract,
-        functionName: "getStakerBalance",
-        args: [safeAddress],
-      },
-      {
-        ...clubPluginContract,
-        functionName: "costToCall"
-      },
-      {
-        ...clubPluginContract,
-        functionName: "costToMint"
-      },
-      {
-        ...clubPluginContract,
-        functionName: "proRataAmount"
-      },
-      {
-        ...clubPluginContract,
-        functionName: "memberBidPrice"
-      },
-      {
-        ...clubPluginContract,
-        functionName: "publicBidPrice"
-      },
-      {
-        ...clubPluginContract,
-        functionName: "bidBucketBalance"
-      },
-      {
-        ...clubPluginContract,
-        functionName: "bidBucketPercent",
-      },
-      {
-        ...clubPluginContract,
-        functionName: "callerPercent",
-      },
-      {
-        ...clubPluginContract,
-        functionName: "winnerPercent",
-      },
-      {
-        ...clubPluginContract,
-        functionName: "percentageFull",
-      },
-      {
-        ...uTokenContract,
-        functionName: "overdueTime",
-      },
-      {
-        ...comptrollerContract,
-        functionName: "calculateRewards",
-        args: [safeAddress, tokenContract.address],
-      },
-      {
-        ...clubNftContract,
-        functionName: "totalSupply",
-      },
-      {
-        ...clubPluginContract,
-        functionName: "checkpoint",
-      },
-      {
-        ...clubPluginContract,
-        functionName: "cooldown",
-      },
-      {
-        ...clubNftContract,
-        functionName: "contractURI"
-      },
-      {
-        ...uTokenContract,
-        functionName: "borrowRatePerSecond",
-      },
-      {
-        ...clubPluginContract,
-        functionName: "vestingDuration",
-      },
-      {
-        ...clubPluginContract,
-        functionName: "startingPercentTrust",
-      }
-    ],
+    contracts: contracts.map(c => ({
+      ...c, chainId,
+    })),
   });
 
   const [

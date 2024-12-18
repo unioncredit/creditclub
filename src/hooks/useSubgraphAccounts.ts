@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import { fetchSubgraphAccounts, SubgraphAccount } from "@/fetchers/fetchSubgraphAccounts.ts";
 import { Address } from "viem";
 import { useAccount } from "wagmi";
+import { DEFAULT_CHAIN } from "@/constants.ts";
 
 export const useSubgraphAccounts = (contacts: IContact[]) => {
   const [subgraphData, setSubgraphData] = useState<Record<Address, SubgraphAccount>>({});
 
-  const { chain: connectedChain } = useAccount();
+  const { chain: connectedChain = DEFAULT_CHAIN } = useAccount();
 
   useEffect(() => {
     if (connectedChain?.id) {
