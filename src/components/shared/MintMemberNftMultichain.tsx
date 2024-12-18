@@ -6,7 +6,6 @@ import { wagmiConfig } from "@/providers/Web3Provider.tsx";
 import { useAccount } from "wagmi";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
-import { clubPluginContract, daiContract } from "@/contracts/optimism.ts";
 import { useClubData } from "@/providers/CreditClubDataProvider.tsx";
 import { useToastProps } from "@/hooks/useToastProps.ts";
 import { ToastStatus } from "@/constants.ts";
@@ -16,19 +15,25 @@ import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { POST_MINT_NFT_MODAL } from "@/components/modals/PostMintNftModal.tsx";
 import { TransactionReceipt } from "viem";
 import { useReceivedInvitation } from "@/hooks/useReceivedInvitation.ts";
+import { useContract } from "@/hooks/useContract.ts";
+import { useWhitelistProof } from "@/hooks/useWhitelistProof.ts";
 
 export const MintMemberNftMultichain = () => {
   const [toastId, setToastId] = useState<string | null>(null);
 
   const { open: openModal } = useModals();
   const { addToast, closeToast } = useToasts();
-  const { address } = useAccount();
+  const { chain, address } = useAccount();
   const { openConnectModal } = useConnectModal();
   const { data: member, refetch: refetchMember } = useClubMember();
   const { data: creditClub, refetch: refetchCreditClub } = useClubData();
+  const { proof, isWhitelisted } = useWhitelistProof();
   const { data: invitation } = useReceivedInvitation({
     receiver: address,
   })
+
+  const clubPluginContract = useContract("clubPlugin");
+  const tokenContract = useContract("token");
 
   const { isMember } = member;
   const { costToMint } = creditClub;
@@ -40,8 +45,11 @@ export const MintMemberNftMultichain = () => {
       actionType={ActionType.EvmFunction}
       paymentButtonText="Mint Member NFT"
       disableLoadingModals={true}
-      chains={[ChainId.OPTIMISM]}
+      chains={[ChainId.OPTIMISM, ChainId.BASE]}
       disableGuard={async () => {
+        if (isWhitelisted) {
+          return { disable: false, message: "" }
+        }
         if (isMember) {
           return { disable: true, message: "Already a member" }
         }
@@ -51,15 +59,15 @@ export const MintMemberNftMultichain = () => {
         return { disable: false, message: "" }
       }}
       actionConfig={{
-        chainId: ChainId.OPTIMISM,
+        chainId: chain && [ChainId.OPTIMISM, ChainId.BASE].includes(chain.id) ? chain.id : ChainId.BASE,
         contractAddress: clubPluginContract.address,
         cost: {
           amount: costToMint,
           isNative: false,
-          tokenAddress: daiContract.address,
+          tokenAddress: tokenContract.address,
         },
-        signature: 'function mintMemberNFT(address recipient)',
-        args: [address],
+        signature: isWhitelisted ? 'function mintMemberNFT(address recipient, bytes32[] memory proof)' : 'function mintMemberNFT(address recipient)',
+        args: isWhitelisted ? [address, proof] : [address],
       }}
       onTxPending={() => {
         setToastId(addToast(createToast(ToastStatus.PENDING), false))

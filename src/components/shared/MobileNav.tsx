@@ -17,12 +17,13 @@ import { useModals } from "@/providers/ModalManagerProvider.tsx";
 import { BORROW_MODAL } from "@/components/modals/BorrowModal.tsx";
 import { REPAY_MODAL } from "@/components/modals/RepayModal.tsx";
 import { FEELING_LUCKY_MODAL } from "@/components/modals/FeelingLuckyModal.tsx";
-import { WAD } from "@/constants.ts";
+import { useToken } from "@/hooks/useToken.ts";
 
 export const MobileNav = () => {
   const { address, isConnected } = useAccount();
   const { data: member } = useUnionMember();
   const { open: openModal } = useModals();
+  const { token, wad } = useToken();
 
   const { creditLimit, owed, unionBalance } = member;
 
@@ -38,7 +39,7 @@ export const MobileNav = () => {
               Available ·
             </span>
             <span className="ml-1 text-black">
-              ${format(creditLimit, creditLimit < WAD ? 2 : 0)}
+              ${format(creditLimit, token, creditLimit < wad ? 2 : 0)}
             </span>
           </p>
         }
@@ -58,7 +59,7 @@ export const MobileNav = () => {
                 Balance ·
               </span>
               <span className="text-black ml-1">
-                ${format(owed, owed < WAD ? 2 : 0)}
+                ${format(owed, token, owed < wad ? 2 : 0)}
               </span>
             </>
           </p>
@@ -72,7 +73,7 @@ export const MobileNav = () => {
         size="small"
         icon={UnionIcon}
         className="UnionButton mr-2 md:hidden lg:px-2"
-        label={format(unionBalance, 0)}
+        label={format(unionBalance, token, 0)}
         color="secondary"
         variant="light"
         onClick={() => openModal(FEELING_LUCKY_MODAL)}

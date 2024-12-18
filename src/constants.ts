@@ -1,14 +1,14 @@
-import { arbitrum, Chain, optimism } from "viem/chains";
+import { arbitrum, base, Chain, optimism } from "viem/chains";
 import { Address } from "viem";
 import { mainnet } from "wagmi/chains";
 import { IToastStatus } from "@/providers/types.ts";
-import { format } from "@/utils/format.ts";
 
-export const supportedChains: readonly [Chain, ...Chain[]] = [optimism];
+export const supportedChains: readonly [Chain, ...Chain[]] = [base, optimism];
 
-export const rpcChains: readonly [Chain, ...Chain[]] = [optimism, mainnet];
+export const rpcChains: readonly [Chain, ...Chain[]] = [base, optimism, mainnet];
 
 const RPCS: Record<number, string> = {
+  [base.id]: "https://base-mainnet.g.alchemy.com/v2",
   [optimism.id]: "https://opt-mainnet.g.alchemy.com/v2",
   [mainnet.id]: "https://eth-mainnet.g.alchemy.com/v2",
   [arbitrum.id]: "https://arb-mainnet.g.alchemy.com/v2"
@@ -17,18 +17,50 @@ const RPCS: Record<number, string> = {
 export const RPC_URL = (chainId: number) =>
   `${RPCS[chainId]}/${import.meta.env.VITE_ALCHEMY_API_KEY}`;
 
-export const CREDITCLUB_SAFE_ADDRESS: Address = "0x87349040756ed552f3ba7e2fcc3d11ec66475156";
-export const CREDITCLUB_GRAPH_URL = "https://api.studio.thegraph.com/query/78581/credit-club/version/latest";
+export const DEFAULT_CHAIN = base;
 
-export const WAD = 1000000000000000000n;
-export const DUST_THRESHOLD = 10000000000000000n;
+export const CREDITCLUB_SAFE_ADDRESS: Record<number, Address> = {
+  [base.id]: "0x09760178c77Ee967DC1F36d29A6D17C481ecA728",
+  [optimism.id]: "0x87349040756ed552f3ba7e2fcc3d11ec66475156",
+};
+export const CREDITCLUB_GRAPH_URL: Record<number, string> = {
+  [base.id]: "https://subgraph.satsuma-prod.com/acb7db829580/union--11085/creditclub-base/api",
+  [optimism.id]: "https://api.studio.thegraph.com/query/78581/credit-club/version/latest",
+};
+
+export const DUST_THRESHOLD = {
+  DAI: 10000000000000000n,
+  USDC: 10000n,
+  UNION: 10000000000000000n,
+};
+
 export const MIN_REQUIRED_BID_BUCKET_BALANCE = 5000000000000000000000n;
 export const PRO_RATA_MIN_MEMBER_NUM = 10n;
 export const PRO_RATA_DENOMINATOR = 10000n;
 export const UNION_TOKEN_PRICE_USD = 0.015;
-export const BLOCKS_PER_YEAR = 31536000n;
+export const BLOCKS_PER_YEAR = 31540000n;
 export const SECONDS_PER_DAY = 86400;
 export const BLOCK_SPEED = 1e3;
+
+export type IToken = "DAI" | "USDC" | "UNION";
+
+export const TOKENS: Record<IToken, IToken> = {
+  DAI: "DAI",
+  USDC: "USDC",
+  UNION: "UNION",
+};
+
+export const WAD: Record<IToken, bigint> = {
+  DAI: 1000000000000000000n,
+  UNION: 1000000000000000000n,
+  USDC: 1000000n,
+};
+
+export const UNIT: Record<IToken, number> = {
+  DAI: 18,
+  UNION: 18,
+  USDC: 6,
+};
 
 export const SortOrder = {
   ASC: "asc",
@@ -73,6 +105,6 @@ export const FormErrors = {
   INSUFFICIENT_BALANCE: "Insufficient balance",
   INSUFFICIENT_CREDIT_LIMIT: "Insufficient credit limit",
   INSUFFICIENT_FUNDS: "Insufficient funds in protocol",
-  MIN_BORROW: (amount: bigint) => `Amount less than minimum borrow (${format(amount)})`,
+  MIN_BORROW: (amount: string) => `Amount less than minimum borrow (${amount})`,
   IS_OVERDUE: "You cannot borrow with an overdue balance",
 };

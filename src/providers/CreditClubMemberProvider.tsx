@@ -2,17 +2,23 @@ import { useAccount, useReadContracts } from "wagmi";
 import React, { createContext, useContext } from "react";
 
 import { ICreditClubMemberContext } from "@/providers/types";
-import {
-  clubNftContract, clubPluginContract, userManagerContract,
-} from "@/contracts/optimism";
 import { Address, zeroAddress } from "viem";
-import { CREDITCLUB_SAFE_ADDRESS } from "@/constants.ts";
+import { CREDITCLUB_SAFE_ADDRESS, DEFAULT_CHAIN } from "@/constants.ts";
+import { useContract } from "@/hooks/useContract.ts";
 
 const CreditClubMemberContext = createContext({} as ICreditClubMemberContext);
 
 export const useClubMember = () => useContext(CreditClubMemberContext);
 
 export const useClubMemberData = ({ address }: { address: Address }) => {
+  const { chain: connectedChain = DEFAULT_CHAIN } = useAccount();
+  const userManagerContract = useContract("userManager");
+  const clubPluginContract = useContract("clubPlugin");
+  const clubNftContract = useContract("clubNft");
+
+  const chainId = connectedChain.id;
+  const safeAddress = CREDITCLUB_SAFE_ADDRESS[chainId];
+
   const resultOne = useReadContracts({
     contracts: [
       {
@@ -28,14 +34,14 @@ export const useClubMemberData = ({ address }: { address: Address }) => {
       {
         ...userManagerContract,
         functionName: 'getLockedStake',
-        args: [CREDITCLUB_SAFE_ADDRESS, address],
+        args: [safeAddress, address],
       },
       {
         ...userManagerContract,
         functionName: 'getVouchingAmount',
-        args: [CREDITCLUB_SAFE_ADDRESS, address],
+        args: [safeAddress, address],
       },
-    ],
+    ].map(c => ({ ...c, chainId })),
   });
 
   const [
@@ -58,7 +64,7 @@ export const useClubMemberData = ({ address }: { address: Address }) => {
         // @ts-ignore
         args: [tokenId],
       }
-    ],
+    ].map(c => ({ ...c, chainId })),
     query: {
       enabled: tokenId !== undefined,
     }

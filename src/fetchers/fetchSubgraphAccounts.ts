@@ -16,7 +16,7 @@ export interface SubgraphAccount {
   unionEarned: bigint;
 }
 
-export const fetchSubgraphAccounts = async () =>{
+export const fetchSubgraphAccounts = async (chainId: number) =>{
   const first = 1000;
   let count = 0;
   let skip = 0;
@@ -24,7 +24,7 @@ export const fetchSubgraphAccounts = async () =>{
 
   do {
     const { accounts } = (await request<ISubgraphAccountsResponse>(
-        CREDITCLUB_GRAPH_URL,
+        CREDITCLUB_GRAPH_URL[chainId],
         gql`
             query ($first: Int!, $skip: Int!) {
                 accounts (first: $first, skip: $skip) {

@@ -22,7 +22,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
           align="center"
           variant="warning"
           icon={WarningIcon}
-          label="You are on an unsupported network, please connect to Optimism."
+          label="You are on an unsupported network, please connect to a Optimism/Base."
         />
       )}
 

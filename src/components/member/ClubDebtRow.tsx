@@ -11,8 +11,10 @@ import { IconCube } from "@/components/shared/IconCube.tsx";
 import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { format } from "@/utils/format.ts";
 import cn from "classnames";
+import { useToken } from "@/hooks/useToken.ts";
 
 export const ClubDebtRow = () => {
+  const { token } = useToken();
   const { data: member } = useClubMember();
 
   const { isMember, owed } = member;
@@ -23,7 +25,7 @@ export const ClubDebtRow = () => {
     })}>
       <div className="ClubDebtStat flex flex-1 justify-between items-center mr-2 sm:mr-0 sm:mb-2">
         <p className="text-gray-500 font-medium">Club Debt</p>
-        <p className="text-gray-800 font-medium">${format(owed)}</p>
+        <p className="text-gray-800 font-medium">${format(owed, token)}</p>
       </div>
 
       <Button

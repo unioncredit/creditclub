@@ -12,7 +12,10 @@ export interface IInvitation {
   block: bigint;
 }
 
-export const fetchInvitations = async (where: Record<string, string> = {}) => {
+export const fetchInvitations = async (
+  chainId: number,
+  where: Record<string, string> = {}
+) => {
   const whereQuery = objectToWhere(where);
   const query = gql`
       query ($first: Int!) {
@@ -39,7 +42,7 @@ export const fetchInvitations = async (where: Record<string, string> = {}) => {
     first: 50,
   };
 
-  const resp: any = await request(CREDITCLUB_GRAPH_URL, query, variables);
+  const resp: any = await request(CREDITCLUB_GRAPH_URL[chainId], query, variables);
 
   // @ts-ignore
   const flattened: IInvitation[] = resp.invitations.map(item => ({

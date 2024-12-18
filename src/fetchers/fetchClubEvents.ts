@@ -12,7 +12,7 @@ export interface IClubEvent {
   hash: Hash;
 }
 
-export const fetchClubEvents = async () =>{
+export const fetchClubEvents = async (chainId: number) =>{
   const query = gql`
       query ($first: Int!) {
           clubEvents (first: $first, orderBy:timestamp, orderDirection: desc) {
@@ -31,7 +31,7 @@ export const fetchClubEvents = async () =>{
     first: 4,
   };
 
-  const resp: any = await request(CREDITCLUB_GRAPH_URL, query, variables);
+  const resp: any = await request(CREDITCLUB_GRAPH_URL[chainId], query, variables);
 
   const flattened: IClubEvent[] = resp.clubEvents.map((item: any) => ({
     type: item.type,

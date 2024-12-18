@@ -9,8 +9,7 @@ import {
   Theme,
 } from "@rainbow-me/rainbowkit";
 
-import { RPC_URL, rpcChains } from "@/constants";
-import { optimism } from "viem/chains";
+import { DEFAULT_CHAIN, RPC_URL, rpcChains } from "@/constants";
 
 export const wagmiConfig = getDefaultConfig({
   chains: rpcChains,
@@ -44,7 +43,7 @@ export const Web3Provider = ({ children }: { children: React.ReactNode }) => {
         <RainbowKitProvider
           theme={theme}
           modalSize="compact"
-          initialChain={optimism}
+          initialChain={DEFAULT_CHAIN}
         >
           {children}
         </RainbowKitProvider>
