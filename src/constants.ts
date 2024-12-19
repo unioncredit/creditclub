@@ -18,6 +18,7 @@ export const RPC_URL = (chainId: number) =>
   `${RPCS[chainId]}/${import.meta.env.VITE_ALCHEMY_API_KEY}`;
 
 export const DEFAULT_CHAIN = base;
+export const DEFAULT_CHAIN_ID = DEFAULT_CHAIN.id;
 
 export const CREDITCLUB_SAFE_ADDRESS: Record<number, Address> = {
   [base.id]: "0x09760178c77Ee967DC1F36d29A6D17C481ecA728",

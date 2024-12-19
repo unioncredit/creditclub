@@ -1,9 +1,9 @@
-import { ToastStatus, WagmiErrors } from "@/constants";
+import { DEFAULT_CHAIN_ID, ToastStatus, WagmiErrors } from "@/constants";
 import { useCallback, useMemo, useState } from "react";
 import { useToasts } from "@/providers/ToastsProvider.tsx";
 import { useToastProps } from "@/hooks/useToastProps.ts";
 import { waitForTransactionReceipt, writeContract } from "@wagmi/core";
-import { useAccount, useConfig } from "wagmi";
+import { useAccount, useConfig, useSwitchChain } from "wagmi";
 import { WriteContractErrorType } from "viem";
 
 export const useWrite = ({
@@ -27,7 +27,8 @@ export const useWrite = ({
   const config = useConfig();
   const createToast = useToastProps(functionName, contract, args);
 
-  const { isConnected } = useAccount();
+  const { switchChainAsync } = useSwitchChain();
+  const { chain: connectedChain, isConnected } = useAccount();
   const { addToast, closeToast } = useToasts();
 
   const [loading, setLoading] = useState(false);
@@ -50,6 +51,13 @@ export const useWrite = ({
     let toastId = addToast(createToast(ToastStatus.PENDING), false);
 
     try {
+      if (connectedChain?.id !== DEFAULT_CHAIN_ID) {
+        const result = await switchChainAsync({ chainId: DEFAULT_CHAIN_ID });
+        if (result.id !== DEFAULT_CHAIN_ID) {
+          throw "Did not connect to valid network";
+        }
+      }
+
       const hash = await writeContract(config, {
         ...memoizedProps,
         functionName,

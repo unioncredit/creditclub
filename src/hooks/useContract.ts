@@ -1,5 +1,4 @@
-import { DEFAULT_CHAIN } from "@/constants.ts";
-import { useAccount } from "wagmi";
+import { DEFAULT_CHAIN_ID } from "@/constants.ts";
 import { base, optimism } from "viem/chains";
 import {
   assetManagerContract as BaseAssetManagerContract,
@@ -38,8 +37,6 @@ type ContractName ="userManager"
   | "rewardsManager"
 
 export const useContract = (contract: ContractName) => {
-  const { chain: connectedChain = DEFAULT_CHAIN } = useAccount();
-  
   const contracts: Record<number, any> = {
     [base.id]: {
       userManager: BaseUserManagerContract,
@@ -67,5 +64,5 @@ export const useContract = (contract: ContractName) => {
     }
   };
 
-  return contracts[connectedChain.id]?.[contract] || {};
+  return contracts[DEFAULT_CHAIN_ID]?.[contract] || {};
 };

@@ -1,7 +1,7 @@
-import { useAccount, useReadContracts } from "wagmi";
+import { useReadContracts } from "wagmi";
 import React, { createContext, useContext } from "react";
 
-import { CREDITCLUB_SAFE_ADDRESS, DEFAULT_CHAIN } from "@/constants";
+import { CREDITCLUB_SAFE_ADDRESS, DEFAULT_CHAIN_ID } from "@/constants";
 import { ICreditClubDataProviderContext } from "@/providers/types";
 import { useContract } from "@/hooks/useContract.ts";
 
@@ -10,9 +10,7 @@ const CreditClubDataContext = createContext({} as ICreditClubDataProviderContext
 export const useClubData = () => useContext(CreditClubDataContext);
 
 export const CreditClubDataProvider = ({ children }: { children: React.ReactNode; }) => {
-  const { chain: connectedChain = DEFAULT_CHAIN } = useAccount();
-
-  const chainId = connectedChain.id;
+  const chainId = DEFAULT_CHAIN_ID;
   const safeAddress = CREDITCLUB_SAFE_ADDRESS[chainId];
 
   const userManagerContract = useContract("userManager");
@@ -113,9 +111,6 @@ export const CreditClubDataProvider = ({ children }: { children: React.ReactNode
   ];
 
   const result = useReadContracts({
-    query: {
-      enabled: !!connectedChain,
-    },
     contracts: contracts.map(c => ({
       ...c, chainId,
     })),
