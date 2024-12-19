@@ -1,14 +1,12 @@
 import { Address } from "viem";
-import { useAccount, useReadContracts } from "wagmi";
+import { useReadContracts } from "wagmi";
 
 import { useContactCounts } from "@/hooks/useContactCounts.ts";
 import { useContract } from "@/hooks/useContract.ts";
-import { DEFAULT_CHAIN } from "@/constants.ts";
+import { DEFAULT_CHAIN_ID } from "@/constants.ts";
 
 export default function useRelatedAddresses(address: Address) {
-  const { chain: connectedChain = DEFAULT_CHAIN } = useAccount();
-
-  const chainId = connectedChain.id;
+  const chainId = DEFAULT_CHAIN_ID;
   const userManagerContract = useContract("userManager");
 
   const { voucherCount, voucheeCount, refetch: refetchCounts } = useContactCounts(address);

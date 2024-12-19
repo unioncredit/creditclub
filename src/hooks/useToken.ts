@@ -1,18 +1,15 @@
-import { useAccount } from "wagmi";
 import { base, optimism } from "viem/chains";
 
-import { DEFAULT_CHAIN, IToken, TOKENS, UNIT, WAD } from "@/constants.ts";
+import { DEFAULT_CHAIN_ID, IToken, TOKENS, UNIT, WAD } from "@/constants.ts";
 
 export const useToken = (chainId?: number) => {
-  const { chain: connectedChain = DEFAULT_CHAIN } = useAccount();
-
   const tokens: Record<number, IToken> = {
     [optimism.id]: TOKENS.DAI,
     [base.id]: TOKENS.USDC,
   };
 
-  const id = chainId || connectedChain?.id || base.id;
-  const token = tokens[id] || tokens[DEFAULT_CHAIN.id];
+  const id = chainId || DEFAULT_CHAIN_ID;
+  const token = tokens[id] || tokens[DEFAULT_CHAIN_ID];
 
   return {
     token,

@@ -6,17 +6,17 @@ import { zeroAddress } from "viem";
 import { calculateMinPayment } from "@/utils/numbers.ts";
 import { useContract } from "@/hooks/useContract.ts";
 import { useToken } from "@/hooks/useToken.ts";
-import { DEFAULT_CHAIN } from "@/constants.ts";
+import { DEFAULT_CHAIN_ID } from "@/constants.ts";
 
 const UnionMemberContext = createContext({} as IUnionMemberContext);
 
 export const useUnionMember = () => useContext(UnionMemberContext);
 
 export const UnionMemberProvider = ({ children }: { children: React.ReactNode; }) => {
-  const { chain: connectedChain = DEFAULT_CHAIN, address = zeroAddress } = useAccount();
+  const { address = zeroAddress } = useAccount();
   const { token } = useToken();
 
-  const chainId = connectedChain.id;
+  const chainId = DEFAULT_CHAIN_ID;
   const uTokenContract = useContract("uToken");
   const userManagerContract = useContract("userManager");
   const tokenContract = useContract("token");

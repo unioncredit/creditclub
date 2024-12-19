@@ -1,5 +1,5 @@
 import { chunk } from "lodash";
-import { useAccount, useReadContracts } from "wagmi";
+import { useReadContracts } from "wagmi";
 import React, { createContext, useContext } from "react";
 
 import { CREDITCLUB_SAFE_ADDRESS, DEFAULT_CHAIN } from "@/constants";
@@ -15,9 +15,7 @@ const CreditClubContactsContext = createContext({} as ICreditClubContactsProvide
 export const useContacts = () => useContext(CreditClubContactsContext);
 
 export const CreditClubContactsProvider = ({ children }: { children: React.ReactNode; }) => {
-  const { chain: connectedChain = DEFAULT_CHAIN } = useAccount();
-
-  const chainId = connectedChain.id;
+  const chainId = DEFAULT_CHAIN.id;
   const safeAddress = CREDITCLUB_SAFE_ADDRESS[chainId];
   const unionLensContract = useContract("unionLens");
   const userManagerContract = useContract("userManager");

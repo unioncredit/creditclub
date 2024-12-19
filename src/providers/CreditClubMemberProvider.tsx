@@ -3,7 +3,7 @@ import React, { createContext, useContext } from "react";
 
 import { ICreditClubMemberContext } from "@/providers/types";
 import { Address, zeroAddress } from "viem";
-import { CREDITCLUB_SAFE_ADDRESS, DEFAULT_CHAIN } from "@/constants.ts";
+import { CREDITCLUB_SAFE_ADDRESS, DEFAULT_CHAIN_ID } from "@/constants.ts";
 import { useContract } from "@/hooks/useContract.ts";
 
 const CreditClubMemberContext = createContext({} as ICreditClubMemberContext);
@@ -11,12 +11,11 @@ const CreditClubMemberContext = createContext({} as ICreditClubMemberContext);
 export const useClubMember = () => useContext(CreditClubMemberContext);
 
 export const useClubMemberData = ({ address }: { address: Address }) => {
-  const { chain: connectedChain = DEFAULT_CHAIN } = useAccount();
   const userManagerContract = useContract("userManager");
   const clubPluginContract = useContract("clubPlugin");
   const clubNftContract = useContract("clubNft");
 
-  const chainId = connectedChain.id;
+  const chainId = DEFAULT_CHAIN_ID;
   const safeAddress = CREDITCLUB_SAFE_ADDRESS[chainId];
 
   const resultOne = useReadContracts({
