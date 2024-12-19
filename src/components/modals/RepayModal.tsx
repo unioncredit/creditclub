@@ -86,7 +86,7 @@ export const RepayModal = () => {
 
   const options: IRepayOption[] = [
     {
-      token: "dai",
+      token: "usdc",
       value: format(owed, token),
       amount: owedBalanceWithMargin,
       paymentType: PaymentType.MAX,
@@ -94,7 +94,7 @@ export const RepayModal = () => {
       content: paymentType === PaymentType.MAX && "Pay-off your outstanding balance in its entirety",
     },
     {
-      token: "dai",
+      token: "usdc",
       value: format(maxRepay, token, 2, false),
       amount: maxRepay,
       paymentType: PaymentType.BALANCE,
@@ -104,14 +104,14 @@ export const RepayModal = () => {
     {
       value: format(minPayment, token),
       amount: minPayment,
-      token: "dai",
+      token: "usdc",
       paymentType: PaymentType.MIN,
       title: "Minimum due",
       content: paymentType === PaymentType.MIN && "Minimum required to cover the interest due on your loan",
     },
     {
       value: "",
-      token: "dai",
+      token: "usdc",
       paymentType: PaymentType.CUSTOM,
       title: "Custom amount",
       content: paymentType === PaymentType.CUSTOM && "Enter a custom amount you wish to repay",

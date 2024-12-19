@@ -8,7 +8,7 @@ import {
   ModalOverlay,
   Input,
   Union,
-  Dai,
+  Usdc,
   Text,
   RepayIcon,
   // @ts-ignore
@@ -141,7 +141,7 @@ export const UnionRepayModal = () => {
             content="What you receive"
             amount={creditFormatted}
             color="#F59E0B"
-            token={<Dai />}
+            token={<Usdc />}
           />
 
           <Button

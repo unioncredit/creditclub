@@ -6,7 +6,7 @@ import {
   ModalOverlay,
   InfoBanner,
   Union,
-  Dai,
+  Usdc,
   CheckIcon,
   ArrowRightIcon,
   // @ts-ignore
@@ -62,7 +62,7 @@ export const BidBucketModal = () => {
               title="Your Bid"
               content="What you send"
               amount={format(bidPrice, token, 0)}
-              token={<Dai />}
+              token={<Usdc />}
             />
 
             <ArrowRightIcon className="ArrowRightIcon" />

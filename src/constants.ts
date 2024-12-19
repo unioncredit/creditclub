@@ -3,9 +3,9 @@ import { Address } from "viem";
 import { mainnet } from "wagmi/chains";
 import { IToastStatus } from "@/providers/types.ts";
 
-export const supportedChains: readonly [Chain, ...Chain[]] = [base, optimism];
+export const supportedChains: readonly [Chain, ...Chain[]] = [base];
 
-export const rpcChains: readonly [Chain, ...Chain[]] = [base, optimism, mainnet];
+export const rpcChains: readonly [Chain, ...Chain[]] = [base, mainnet];
 
 const RPCS: Record<number, string> = {
   [base.id]: "https://base-mainnet.g.alchemy.com/v2",
