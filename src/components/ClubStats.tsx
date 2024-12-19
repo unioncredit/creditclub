@@ -56,7 +56,7 @@ export const ClubStats = () => {
       <Card.Body>
         <Box fluid align="center" justify="space-between" className="ClubStats__top">
           <NumericalBlock
-            token="dai"
+            token="usdc"
             align="left"
             title="Total Club Stake"
             value={format(stakedBalance, token)}
@@ -98,7 +98,7 @@ export const ClubStats = () => {
           <Box fluid className="ClubStats__item" pr="8px">
             <NumericalBlock
               align="left"
-              token="dai"
+              token="usdc"
               size="medium"
               title="Available"
               dotColor="blue500"
@@ -113,7 +113,7 @@ export const ClubStats = () => {
             <NumericalBlock
               fluid
               align="left"
-              token="dai"
+              token="usdc"
               size="medium"
               title="Utilized"
               dotColor="violet500"
@@ -133,7 +133,7 @@ export const ClubStats = () => {
             <NumericalBlock
               fluid
               align="left"
-              token="dai"
+              token="usdc"
               size="medium"
               title="Defaulting"
               dotColor="red500"

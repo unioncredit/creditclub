@@ -21,7 +21,7 @@ export const EnableNotificationsBanner = () => {
     && isMember;
 
   return shouldShowBanner && (
-    <Box mt="8px" className="EnableNotificationsBanner">
+    <Box mt="8px" mb="8px" className="EnableNotificationsBanner">
       <InfoBanner
         icon={CalendarIcon}
         variant="info"

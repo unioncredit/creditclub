@@ -2,7 +2,7 @@ import { useAccount } from "wagmi";
 import {
   Box,
   Button,
-  Dai,
+  Usdc,
   Grid,
   Input,
   Modal,
@@ -108,7 +108,7 @@ export const BorrowModal = () => {
             <Grid.Row>
               <Grid.Col>
                 <NumericalBlock
-                  token="dai"
+                  token="usdc"
                   size="regular"
                   title="Available to borrow"
                   value={format(creditLimit, token, 2, false)}
@@ -116,7 +116,7 @@ export const BorrowModal = () => {
               </Grid.Col>
               <Grid.Col>
                 <NumericalBlock
-                  token="dai"
+                  token="usdc"
                   size="regular"
                   title="Balance owed"
                   value={format(owed, token)}
@@ -134,7 +134,7 @@ export const BorrowModal = () => {
               label="Amount to borrow"
               rightLabel={`Max. ${format(maxBorrow, token)} ${token}`}
               rightLabelAction={() => setRawValue("amount", maxBorrow, false)}
-              suffix={<Dai />}
+              suffix={<Usdc />}
               placeholder="0.0"
               error={errors.amount}
               value={amount.formatted}

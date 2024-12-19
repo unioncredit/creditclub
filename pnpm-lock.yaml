@@ -24,8 +24,8 @@ dependencies:
     specifier: ^5.37.1
     version: 5.37.1(react@18.3.1)
   '@unioncredit/ui':
-    specifier: ^2.0.36
-    version: 2.0.36(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1)
+    specifier: ^2.0.44
+    version: 2.0.44(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1)
   '@wagmi/core':
     specifier: ^2.10.4
     version: 2.10.4(@types/react@18.3.2)(react@18.3.1)(typescript@5.4.5)(viem@2.11.0)
@@ -4117,8 +4117,8 @@ packages:
     resolution: {integrity: sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==}
     dev: true
 
-  /@unioncredit/ui@2.0.36(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-5eVF8OVjcAl7M8b1haVXdK9SrIOCmFphU/TVnTzNCZkXiVrN4y32bTLBrv8/uFY6EQHMqKFGCwnQZwT9tnfd0A==}
+  /@unioncredit/ui@2.0.44(@types/react@18.3.2)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-YRz6KvEEoLowTSPpa8fjeE6bGsaqNhY9esnl6U6b2vhvySnPK3TVgf98nulZyAVJaN2zKUDUpdsgT6aw1fo3SA==}
     peerDependencies:
       react: 18.2.0
       react-dom: 18.2.0
@@ -10225,6 +10225,7 @@ packages:
 
   /sudo-prompt@9.2.1:
     resolution: {integrity: sha512-Mu7R0g4ig9TUuGSxJavny5Rv0egCEtpZRNMrZaYS1vxkiIxGiGUwoezU3LazIQ+KE04hTrTfNPgxU5gzi7F5Pw==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     dev: false
 
   /superstruct@1.0.4:

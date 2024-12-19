@@ -1,4 +1,4 @@
-import { clubNftContract } from "@/contracts/optimism.ts";
+import { clubNftContract } from "@/contracts/base.ts";
 
 const SHARE_MESSAGE = `Please vouch for me on Union!`;
 
@@ -10,7 +10,7 @@ export const generateTwitterLink = (url: string, message = SHARE_MESSAGE) =>
 export const generateTelegramLink = (url: string, message = SHARE_MESSAGE) =>
   `https://telegram.me/share/url?text=${message}&url=${encodeURIComponent(url)}`;
 
-export const generateCreditClubLink = (tokenId: bigint | string | undefined) => `https://opensea.io/assets/optimism/${clubNftContract.address}/${tokenId}`;
+export const generateCreditClubLink = (tokenId: bigint | string | undefined) => `https://opensea.io/assets/base/${clubNftContract.address}/${tokenId}`;
 
 export const generateIpfsLink = (path: string ) => {
   // path = ipfs://abcd1234...
