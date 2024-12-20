@@ -29,7 +29,7 @@ const texts = {
   [ActivityTypes.JOINED_CLUB]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
-      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+      <a href={`https://basescan.org/tx/${x.hash}`} target="_blank" rel="noopener">
         <span className="text-gray-500"> Joined the club!</span>
       </a>
     </>
@@ -37,7 +37,7 @@ const texts = {
   [ActivityTypes.INVITATION_EVENT]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
-      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+      <a href={`https://basescan.org/tx/${x.hash}`} target="_blank" rel="noopener">
         <span className="text-gray-500"> Invited to club!</span>
       </a>
     </>
@@ -45,7 +45,7 @@ const texts = {
   [ActivityTypes.BORROWED]: (x: IClubEvent, token: IToken) => (
     <>
       <AddressLink address={x.address} /> ·
-      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+      <a href={`https://basescan.org/tx/${x.hash}`} target="_blank" rel="noopener">
         <span className="text-gray-500"> Borrowed</span> {format(x.amount, token, 0)} {token}
       </a>
     </>
@@ -53,7 +53,7 @@ const texts = {
   [ActivityTypes.REPAID]: (x: IClubEvent, token: IToken) => (
     <>
       <AddressLink address={x.address} /> ·
-      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+      <a href={`https://basescan.org/tx/${x.hash}`} target="_blank" rel="noopener">
         <span className="text-gray-500"> Repaid</span> {format(x.amount, token, 0)} {token}
       </a>
     </>
@@ -61,7 +61,7 @@ const texts = {
   [ActivityTypes.UPDATED_TRUST]: (x: IClubEvent, token: IToken) => (
     <>
       <AddressLink address={x.address} /> ·
-      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+      <a href={`https://basescan.org/tx/${x.hash}`} target="_blank" rel="noopener">
         <span className="text-gray-500"> Updated trust</span> {format(x.amount, token, 0)} {token}
       </a>
     </>
@@ -69,7 +69,7 @@ const texts = {
   [ActivityTypes.ROUND_WON]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
-      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+      <a href={`https://basescan.org/tx/${x.hash}`} target="_blank" rel="noopener">
         <span className="text-gray-500"> Won</span> {format(x.amount, TOKENS.UNION, 0)} UNION
       </a>
     </>
@@ -77,7 +77,7 @@ const texts = {
   [ActivityTypes.BID_PLACED]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
-      <a href={`https://optimistic.etherscan.io/tx/${x.hash}`} target="_blank" rel="noopener">
+      <a href={`https://basescan.org/tx/${x.hash}`} target="_blank" rel="noopener">
         <span className="text-gray-500"> Bucket Won</span> {format(x.amount, TOKENS.UNION, 0)} UNION
       </a>
     </>

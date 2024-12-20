@@ -12,7 +12,7 @@ export const useToastProps = (functionName: string, contract: Address, args: any
 
   return useCallback((status: IToastStatus, txHash?: string | undefined): IToast => {
     const props = {
-      link: txHash ? `https://optimistic.etherscan.io/tx/${txHash}` : null,
+      link: txHash ? `https://basescan.org/tx/${txHash}` : null,
       variant: status,
       id: `${status}__${functionName}__${Date.now()}`,
       args,

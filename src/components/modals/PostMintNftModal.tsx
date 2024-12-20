@@ -85,7 +85,7 @@ export const PostMintNftModal = ({
                 size="medium"
                 label="Etherscan"
                 icon={LinkOutIcon}
-                onClick={() => open(`https://optimistic.etherscan.io/tx/${hash}`)}
+                onClick={() => open(`https://basescan.org/tx/${hash}`)}
               />
             )}
           </ButtonRow>
