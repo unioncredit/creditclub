@@ -17,6 +17,7 @@ import { useClubMember } from "@/providers/CreditClubMemberProvider.tsx";
 import { format } from "@/utils/format.ts";
 import cn from "classnames";
 import { useToken } from "@/hooks/useToken.ts";
+import { TOKENS } from "@/constants.ts";
 
 export const BidBucketRow = () => {
   const { open } = useModals();
@@ -38,7 +39,7 @@ export const BidBucketRow = () => {
         </div>
         <ArrowRightIcon />
         <div className="BidBucketStat__union">
-          <p>{format(bidBucketBalance, token)}</p>
+          <p>{format(bidBucketBalance, TOKENS.UNION)}</p>
           <UnionIcon />
         </div>
       </div>

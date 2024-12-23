@@ -16,6 +16,7 @@ import { REPAY_MODAL } from "@/components/modals/RepayModal.tsx";
 import { INVITE_MODAL } from "@/components/modals/InviteModal.tsx";
 import { REWARDS_MODAL } from "@/components/modals/RewardsModal.tsx";
 import { useToken } from "@/hooks/useToken.ts";
+import { TOKENS } from "@/constants.ts";
 
 export const Header = () => {
   const { isConnected } = useAccount();
@@ -76,7 +77,7 @@ export const Header = () => {
               size="small"
               icon={UnionIcon}
               className="UnionButton mr-2 lg:px-2"
-              label={format(unionBalance, token, 0)}
+              label={format(unionBalance, TOKENS.UNION, 0)}
               color="secondary"
               variant="light"
               onClick={() => openModal(REWARDS_MODAL)}
