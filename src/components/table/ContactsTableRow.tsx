@@ -10,6 +10,7 @@ import { useLastRepay } from "@/hooks/useLastRepay.ts";
 import { StatusBadge } from "@/components/table/StatusBadge.tsx";
 import { usePrimaryLabel } from "@/hooks/usePrimaryLabel.ts";
 import { useToken } from "@/hooks/useToken.ts";
+import { TOKENS } from "@/constants.ts";
 
 export const ContactsTableRow = ({
   contact,
@@ -61,8 +62,8 @@ export const ContactsTableRow = ({
           dimmed={unionWon <= 0n}
           value={
             unionWon > 0n
-              ? <Box>{`${format(unionWon, token, 0)}`} <UnionIcon /></Box>
-              : `${format(unionWon, token, 0)}`
+              ? <Box>{`${format(unionWon, TOKENS.UNION, 0)}`} <UnionIcon /></Box>
+              : `${format(unionWon, TOKENS.UNION, 0)}`
           }
         />
       ),
@@ -75,8 +76,8 @@ export const ContactsTableRow = ({
           dimmed={unionEarned <= 0n}
           value={
             unionEarned > 0n
-              ? <Box>{`${format(unionEarned, token, 0)}`} <UnionIcon /></Box>
-              : `${format(unionEarned, token, 0)}`
+              ? <Box>{`${format(unionEarned, TOKENS.UNION, 0)}`} <UnionIcon /></Box>
+              : `${format(unionEarned, TOKENS.UNION, 0)}`
           }
         />
       ),
