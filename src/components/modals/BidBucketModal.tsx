@@ -70,7 +70,7 @@ export const BidBucketModal = () => {
             <StatRow
               title="Bid Bucket"
               content="What you receive"
-              amount={format(bidBucketBalance, token)}
+              amount={format(bidBucketBalance, TOKENS.UNION)}
               token={<Union />}
             />
           </div>
