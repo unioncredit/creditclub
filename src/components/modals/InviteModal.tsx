@@ -21,6 +21,8 @@ import { useContract } from "@/hooks/useContract.ts";
 export const INVITE_MODAL = "invite-modal";
 
 export const InviteModal = () => {
+  console.log("Opened InviteModal!");
+
   const [key, setKey] = useState(0);
   const [address, setAddress] = useState<Address | null>(null);
 
