@@ -1,0 +1,170 @@
+@import "@unioncredit/ui/src/variables";
+
+$gutter: 8px;
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 2px;
+  box-sizing: border-box;
+
+  &__inner {
+    display: flex;
+    width: 100%;
+  }
+}
+
+.input {
+  $fontSize: 16px;
+  flex: 1 1 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  &__maxButton.button {
+    padding: 0 8px !important;
+    min-height: 20px !important;
+  }
+
+  .input-row & {
+    margin: 0 10px 0 0;
+    width: 100%;
+  }
+
+  &__warning path {
+    fill: $red600;
+  }
+
+  &__suffix {
+    position: absolute;
+    right: 0;
+    padding: 0 16px 0 12px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+
+    svg {
+      width: 20px;
+      height: 20px;
+
+      &:not(:last-of-type) {
+        margin-right: 8px;
+      }
+    }
+
+    .dai,
+    .usdc {
+      margin: 0;
+      top: 0;
+    }
+  }
+
+  &__prefix {
+    position: absolute;
+    left: 0;
+    padding: 0 4px 0 12px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &--has-prefix {
+    input {
+      padding-left: 40px !important;
+    }
+  }
+
+  &--disabled ::-webkit-input-placeholder {
+    color: $grey200 !important;
+  }
+
+  &--disabled input {
+    border-color: $grey100 !important;
+  }
+
+  input {
+    color: $grey800;
+    width: 100%;
+    font-size: $fontSize;
+    padding: 0 12px;
+    border: 1px solid #eae9e8;
+    border-radius: 12px;
+    outline: none;
+    height: 48px;
+    background: white;
+    box-sizing: border-box;
+
+    .Card.Card--blue & {
+      background: white;
+    }
+
+    &::-webkit-input-placeholder {
+      color: $grey500;
+    }
+
+    &:hover {
+      border: 1px solid $grey300;
+    }
+
+    &:focus ~ .input__suffix {
+      height: 36px;
+    }
+
+    &:focus {
+      border: 1px solid $blue600;
+      box-shadow: 0 0 0 2px $blue200;
+    }
+
+    /* Chrome, Safari, Edge, Opera */
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    &[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    .input-wrapper--error & {
+      border: 1px solid $red600;
+      background-color: $red50;
+
+      &:focus {
+        box-shadow: 0 0 0 2px $red200;
+      }
+    }
+  }
+}
+
+.input-label,
+.input-caption {
+  color: $grey800;
+  display: block;
+
+  &--right {
+    color: $grey600;
+
+    &--has-action:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  }
+}
+
+.input-label {
+  margin-bottom: 4px !important;
+}
+
+.input-caption {
+  .input-wrapper--error & {
+    color: $red600;
+  }
+}
