@@ -6,6 +6,8 @@
 @import "union-ui/Box";
 @import "union-ui/Button";
 @import "union-ui/Card";
+@import "union-ui/DistributionBar";
+@import "union-ui/Dot";
 @import "union-ui/Input";
 @import "union-ui/Modals";
 @import "union-ui/SegmentedControl";
@@ -50,7 +52,7 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
+    --primary: #2A2736;
     --primary-foreground: 0 0% 98%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
@@ -82,7 +84,11 @@
 }
 
 body {
-  font-family: "Berkeley Mono", monospace;
+  font-family: "Inter", monospace;
   line-height: 1.5;
   font-weight: 400;
+}
+
+svg.fill path {
+  fill: currentColor;
 }

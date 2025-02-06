@@ -6,8 +6,11 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import { Web3Provider } from "../providers/Web3Provider";
 import { TestProvider } from "../providers/TestProvider";
 import { ModalManagerProvider } from "@/providers/ModalManagerProvider";
+import { init } from "@airstack/airstack-react";
 
 const queryClient = new QueryClient();
+
+init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

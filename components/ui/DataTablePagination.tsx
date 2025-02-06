@@ -1,5 +1,5 @@
 import { Table } from "@tanstack/react-table";
-import { Button } from "@/components/ui/Button";
+import { ShadowButton } from "@/components/ui/ShadowButton";
 import { cn } from "@/lib/utils";
 
 interface DataTablePaginationProps<TData> {
@@ -21,18 +21,18 @@ export function DataTablePagination<TData>({
 
   return (
     <div className="flex items-center justify-between space-x-1 py-2">
-      <Button
+      <ShadowButton
         variant="text"
         size="small"
         onClick={() => table.previousPage()}
         disabled={!table.getCanPreviousPage()}
       >
         {'<-'}
-      </Button>
+      </ShadowButton>
 
       <div>
         {numbers.map((n, i) => (
-          <Button
+          <ShadowButton
             key={i}
             variant="text"
             onClick={() => {
@@ -46,18 +46,18 @@ export function DataTablePagination<TData>({
             })}
           >
             {n}
-          </Button>
+          </ShadowButton>
         ))}
       </div>
 
-      <Button
+      <ShadowButton
         variant="text"
         size="small"
         onClick={() => table.nextPage()}
         disabled={!table.getCanNextPage()}
       >
         {'->'}
-      </Button>
+      </ShadowButton>
     </div>
   )
 }

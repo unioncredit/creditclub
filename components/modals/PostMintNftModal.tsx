@@ -11,7 +11,7 @@ import {
 import Image from "next/image";
 
 import { useModals } from "@/providers/ModalManagerProvider";
-import { Button as FlatButton } from "@/components/ui/Button";
+import { ShadowButton as FlatButton } from "@/components/ui/ShadowButton";
 import { StatGrid, StatGridRow } from "@/components/shared/StatGrid";
 
 export const POST_MINT_NFT_MODAL = "post-mint-nft-modal";

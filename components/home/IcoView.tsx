@@ -1,7 +1,7 @@
 import { ProgressBar } from "@/components/shared/ProgressBar";
 import { IcoFundOverview } from "@/components/home/IcoFundOverview";
 import { IcoCreditTrustees } from "@/components/home/IcoCreditTrustees";
-import { Button } from "@/components/ui/Button";
+import { ShadowButton } from "@/components/ui/ShadowButton";
 
 export const IcoView = ({
   className,
@@ -30,12 +30,12 @@ export const IcoView = ({
           <IcoCreditTrustees />
 
           <div className="flex flex-col gap-2 mt-2">
-            <Button variant="highlight">
+            <ShadowButton variant="highlight">
               [More Details]
-            </Button>
-            <Button variant="highlight">
+            </ShadowButton>
+            <ShadowButton variant="highlight">
               Fund Builder Credit
-            </Button>
+            </ShadowButton>
           </div>
         </div>
       </div>

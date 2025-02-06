@@ -1,24 +1,65 @@
-import Link from "next/link";
+// import "./Header.scss";
 
+// @ts-ignore
+import { ArrowIcon, ProfileIcon } from "@unioncredit/ui";
+import { useAccount } from "wagmi";
+import cn from "classnames";
+
+import CreditClubLogo from "@/assets/creditclub-logo.svg";
+import MobileCreditClubLogo from "@/assets/creditclub-mobile-logo.svg";
 import { ConnectButton } from "@/components/shared/ConnectButton";
+import { RoundedButton } from "@/components/ui/RoundedButton";
 
 export const Header = () => {
+  const { isConnected } = useAccount();
+
   return (
-    <header className="px-5 py-2 border-b border-black flex justify-between items-center">
-      <Link href="/">
-        <div className="flex flex-col items-center gap-1">
-          <p className="text-xl">CC:// Funds</p>
-          <p className="text-sm">The Onchain Credit Company</p>
+    <header className="w-full items-center flex justify-between">
+      <div>
+        <a href="/">
+          <CreditClubLogo className="w-[200px]" />
+        </a>
+      </div>
+      <div className="hidden">
+        <a href="/">
+          <MobileCreditClubLogo />
+        </a>
+      </div>
+
+      <div className="flex">
+        {isConnected && (
+          <>
+            <RoundedButton
+              className="mr-2"
+              icon={<ArrowIcon width={24} className="rotate-90" />}
+              onClick={() => alert(0)}
+            >
+              Current Rate - X%
+            </RoundedButton>
+
+            <RoundedButton
+              className="mr-2"
+              onClick={() => alert(0)}
+            >
+              Treasury · $XXX,XXX.XX
+            </RoundedButton>
+
+            <RoundedButton
+              className="mr-2"
+              icon={<ProfileIcon width={24} />}
+              onClick={() => alert(0)}
+            >
+              Your CC
+            </RoundedButton>
+          </>
+        )}
+
+        <div className={cn("ConnectButton", {
+          "disconnected": !isConnected,
+        })}>
+          <ConnectButton/>
         </div>
-      </Link>
-
-      <div className="flex items-center gap-6">
-        <Link href="/funds/builders-credit" className="text-lg hover:font-medium">
-          {'{BC Fund}'}
-        </Link>
-
-        <ConnectButton />
       </div>
     </header>
-  )
+  );
 };

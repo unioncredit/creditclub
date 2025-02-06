@@ -1,6 +1,9 @@
+// @ts-ignore
+import { WalletIcon } from "@unioncredit/ui";
 import { usePrivy } from "@privy-io/react-auth";
 import { useAccount, useDisconnect } from "wagmi";
-import { Button } from "@/components/ui/Button";
+
+import { RoundedButton } from "@/components/ui/RoundedButton";
 
 export const ConnectButton = () => {
   const { isConnected } = useAccount();
@@ -12,11 +15,12 @@ export const ConnectButton = () => {
   };
 
   return (
-    <Button
-      variant="shadow"
+    <RoundedButton
+      variant="dark"
       onClick={isConnected ? disconnectWallet : connectOrCreateWallet}
+      icon={!isConnected && <WalletIcon width={24} className="fill fill-white" />}
     >
       {isConnected ? "Disconnect" : "Connect wallet"}
-    </Button>
+    </RoundedButton>
   )
 };

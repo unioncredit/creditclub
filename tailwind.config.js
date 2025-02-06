@@ -34,7 +34,7 @@ module.exports = {
           foreground: 'hsl(var(--popover-foreground))'
         },
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
+          DEFAULT: 'var(--primary)',
           foreground: 'hsl(var(--primary-foreground))'
         },
         secondary: {
@@ -71,7 +71,14 @@ module.exports = {
       },
       boxShadow: {
         flat: '4px 5px 0px rgba(0, 0, 0, 0.2)'
-      }
+      },
+      screens: {
+        'sm': {'max': '639px'}, // => @media (max-width: 639px) { ... }
+        'md': {'max': '767px'}, // => @media (max-width: 767px) { ... }
+        'lg': {'max': '1023px'}, // => @media (max-width: 1023px) { ... }
+        'xl': {'max': '1279px'}, // => @media (max-width: 1279px) { ... }
+        '2xl': {'max': '1535px'}, // => @media (max-width: 1535px) { ... }
+      },
     }
   },
   plugins: [require('@tailwindcss/forms'), require("tailwindcss-animate")],

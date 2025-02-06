@@ -12,6 +12,7 @@
     "lint": "next lint && npx prettier --check \"{__tests__,components,pages,styles}/**/*.{ts,tsx,js,jsx}\" && npx tsc --noEmit"
   },
   "dependencies": {
+    "@airstack/airstack-react": "^0.6.4",
     "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^2.0.12",
     "@privy-io/react-auth": "^2.0.2",
@@ -31,9 +32,11 @@
     "react-dom": "18.2.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
+    "viem": "^2.22.22",
     "wagmi": "^2.14.8"
   },
   "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
     "@tsconfig/next": "^2.0.0",
     "@tsconfig/node18": "^18.2.0",
     "@tsconfig/strictest": "^2.0.1",

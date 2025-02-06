@@ -1,3 +1,7 @@
+import { base } from "viem/chains";
+
+export const DEFAULT_CHAIN_ID = base.id;
+
 export type IToken = "DAI" | "USDC" | "UNION";
 
 export const TOKENS: Record<IToken, IToken> = {
@@ -22,4 +26,15 @@ export const DUST_THRESHOLD = {
   DAI: 10000000000000000n,
   USDC: 10000n,
   UNION: 10000000000000000n,
+};
+
+export const ActivityTypes = {
+  LOADING: "LOADING",
+  JOINED_CLUB: "JOINED_CLUB",
+  UPDATED_TRUST: "UPDATED_TRUST",
+  BORROWED: "BORROWED",
+  REPAID: "REPAID",
+  ROUND_WON: "ROUND_WON",
+  INVITATION_EVENT: "INVITATION_EVENT",
+  BID_PLACED: "BID_PLACED",
 };

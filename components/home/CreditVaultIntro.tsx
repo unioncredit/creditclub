@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { Heading } from "@/components/ui/Heading";
-import { Button } from "@/components/ui/Button";
+import { ShadowButton } from "@/components/ui/ShadowButton";
 
 export const CreditVaultIntro = () => (
   <section>
@@ -42,12 +42,12 @@ export const CreditVaultIntro = () => (
     </ul>
 
     <div className="w-full flex justify-center mt-8">
-      <Button
+      <ShadowButton
         size="large"
         variant="highlight"
       >
         Check if you qualify
-      </Button>
+      </ShadowButton>
     </div>
   </section>
 )
