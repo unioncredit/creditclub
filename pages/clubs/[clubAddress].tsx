@@ -12,6 +12,7 @@ import { ClubStats } from "@/components/funds/ClubStats";
 import { FundTables } from "@/components/funds/FundTables";
 import { ClubActivity } from "@/components/funds/ClubActivity";
 import { MembershipClaim } from "@/components/funds/MembershipClaim";
+import { useIsQualified } from "@/hooks/useIsQualified";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   return {
@@ -26,6 +27,8 @@ export default function FundSinglePage({
 }: {
   clubAddress: Address;
 }) {
+  const { data: isQualified } = useIsQualified(clubAddress);
+
   return (
     <>
       <Head>
@@ -35,7 +38,8 @@ export default function FundSinglePage({
       <main>
         <Columned width={1020} className="py-8">
           <Header />
-          <BannerCta className="mt-4" />
+          {isQualified && <BannerCta clubAddress={clubAddress} className="mt-4" />}
+
           <Container className="mt-4">
             <div className="flex w-full">
               <section className="flex flex-col justify-between flex-1 text-left">

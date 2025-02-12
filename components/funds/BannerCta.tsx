@@ -2,10 +2,13 @@ import { ShadowButton } from "@/components/ui/ShadowButton";
 import { cn } from "@/lib/utils";
 import { useModals } from "@/providers/ModalManagerProvider";
 import { MINT_NFT_MODAL } from "@/components/modals/MintNftModal";
+import { Address } from "viem";
 
 export const BannerCta = ({
+  clubAddress,
   className,
 }: {
+  clubAddress: Address;
   className?: string;
 }) => {
   const { open } = useModals();
@@ -16,7 +19,7 @@ export const BannerCta = ({
       <ShadowButton
         size="large"
         variant="light"
-        onClick={() => open(MINT_NFT_MODAL)}
+        onClick={() => open(MINT_NFT_MODAL, { clubAddress })}
       >
         Claim Creditline From BC
       </ShadowButton>
