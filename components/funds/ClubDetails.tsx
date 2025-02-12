@@ -79,8 +79,8 @@ export const ClubDetails = ({
           <h1 className="font-sans text-2xl font-medium">{name} ({symbol})</h1>
 
           <ul className="flex gap-1">
-            {clubBadges.map(({ label, url }) => (
-              <li key={label}>
+            {clubBadges.map(({ label, url }, index) => (
+              <li key={index}>
                 <Badge
                   onClick={() => open(url)}
                   className="whitespace-nowrap"

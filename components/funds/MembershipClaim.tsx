@@ -12,12 +12,14 @@ import { useClubData } from "@/hooks/useClubData";
 import { useGatingToken } from "@/hooks/useGatingToken";
 import { useInvites } from "@/hooks/useInvites";
 import { useClubContacts } from "@/hooks/useClubContacts";
+import { useAccount } from "wagmi";
 
 export const MembershipClaim = ({
   clubAddress,
 }: {
   clubAddress: Address;
 }) => {
+  const { isConnected} = useAccount();
   const { open: openModal } = useModals();
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress);
@@ -66,20 +68,22 @@ export const MembershipClaim = ({
         </div>
       </header>
 
-      <div className={cn("mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-stone-100 rounded-2xl border", {
-        "border-green-600": isQualfified,
-      })}>
-        <BlackBearIcon width={48} height={48} className={cn({
-          "opacity-10": !isQualfified,
-          "text-green-600 fill": isQualfified,
-        })} />
-        <p className="text-lg">You are {!isQualfified && "not"} qualified</p>
-      </div>
+      {isConnected && (
+        <div className={cn("mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-stone-100 rounded-2xl border", {
+          "border-green-600": isQualfified,
+        })}>
+          <BlackBearIcon width={48} height={48} className={cn({
+            "opacity-10": !isQualfified,
+            "text-green-600 fill": isQualfified,
+          })} />
+          <p className="text-lg">You are {!isQualfified && "not"} qualified</p>
+        </div>
+      )}
 
       <h3 className="mt-4 font-light text-blue-600">Who can mint a membership?</h3>
       <ul className="mt-1.5">
-        {requirementRows.map(({ label, completed }) => (
-          <li key={label} className={cn("flex gap-1 items-center text-xs mt-1", {
+        {requirementRows.map(({ label, completed }, index) => (
+          <li key={index} className={cn("flex gap-1 items-center text-xs mt-1", {
             "font-medium": completed,
           })}>
             <CheckIcon width={24} height={24} className={cn("fill text-stone-400", {

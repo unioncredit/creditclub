@@ -1,5 +1,4 @@
 import {
-  Button,
   Modal,
   ModalOverlay,
   // @ts-ignore
@@ -9,15 +8,18 @@ import { useModals } from "@/providers/ModalManagerProvider";
 import Image from "next/image";
 import { StatGrid, StatGridRow } from "@/components/shared/StatGrid";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
-import { Address } from "viem";
-import { useWrite } from "@/hooks/useWrite";
+import { Address, erc20Abi } from "viem";
 import { useClubData } from "@/hooks/useClubData";
 import { useAccount } from "wagmi";
 import { useNewMemberData } from "@/hooks/useNewMemberData";
-import { format } from "@/lib/format";
+import { format, formatDecimals } from "@/lib/format";
 import { useToken } from "@/hooks/useToken";
 import { formatDuration } from "@/lib/utils";
 import { POST_MINT_NFT_MODAL } from "@/components/modals/PostMintNftModal";
+import { useErc20Token } from "@/hooks/useErc20Token";
+import { ApprovalButton } from "@/components/shared/ApprovalButton";
+import { useClubMember } from "@/hooks/useClubMember";
+import { useClubContacts } from "@/hooks/useClubContacts";
 
 export const MINT_NFT_MODAL = "mint-nft-modal";
 
@@ -29,10 +31,27 @@ export const MintNftModal = ({
   const { open: openModal, close } = useModals();
   const { address } = useAccount();
   const { token } = useToken();
+  const { refetch: refetchClubContacts } = useClubContacts(clubAddress);
   const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress);
+  const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
   const { data: newMemberData } = useNewMemberData(address, clubAddress);
+  const { data: assetToken } = useErc20Token(clubData.assetAddress);
 
-  const { name, costToCall } = clubData;
+  const {
+    assetBalance
+  } = clubMember;
+
+  const {
+    symbol: assetTokenSymbol,
+    decimals: assetTokenDecimals
+  } = assetToken;
+
+  const {
+    name,
+    costToMint,
+    assetAddress,
+  } = clubData;
+
   const {
     initialTrustAmount,
     totalTrustAmount,
@@ -42,24 +61,11 @@ export const MintNftModal = ({
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
-  const mintNftButtonProps = useWrite({
-    ...creditVaultContract,
-    functionName: "mintMemberNFT",
-    value: costToCall,
-    args: [address],
-    onCompleted: async () => {
-      refetchClubData();
-
-      openModal(POST_MINT_NFT_MODAL, {
-        clubName: name,
-        tokenId,
-        rows,
-        startingCredit: initialTrustAmount,
-      });
-    }
-  });
-
   const rows: StatGridRow[] = [
+    {
+      name: "Cost to join",
+      value: `${formatDecimals(costToMint, assetTokenDecimals, 0)} ${assetTokenSymbol}`
+    },
     {
       name: "Starting credit",
       value: `$${format(initialTrustAmount, token)}`
@@ -100,13 +106,34 @@ export const MintNftModal = ({
             rows={rows}
           />
 
-          <Button
-            fluid
-            className="mt-4"
-            label="Join Club"
-            color="primary"
-            size="large"
-            {...mintNftButtonProps}
+          <ApprovalButton
+            owner={address}
+            amount={costToMint}
+            disabled={assetBalance < costToMint}
+            spender={clubAddress}
+            tokenContract={{
+              abi: erc20Abi,
+              address: assetAddress,
+            }}
+            actionProps={{
+              ...creditVaultContract,
+              label: "Join Club",
+              disabled: assetBalance < costToMint,
+              functionName: "mintMemberNFT",
+              args: [address],
+              onComplete: async () => {
+                refetchClubData();
+                refetchClubMember();
+                refetchClubContacts();
+
+                openModal(POST_MINT_NFT_MODAL, {
+                  clubName: name,
+                  tokenId,
+                  rows,
+                  startingCredit: initialTrustAmount,
+                });
+              }
+            }}
           />
         </Modal.Body>
       </Modal>

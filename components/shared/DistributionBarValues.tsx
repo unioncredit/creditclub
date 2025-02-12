@@ -20,8 +20,8 @@ export const DistributionBarValues = ({
     />
 
     <ul className="flex items-center justify-between gap-2">
-      {items.map(({ label, title, color }) => (
-        <li key={label}>
+      {items.map(({ label, title, color }, index) => (
+        <li key={index}>
           <p className="text-lg font-medium font-mono">{label}</p>
           <p className="flex gap-1 items-center text-xs text-stone-400">
             <Dot color={color} size={6} />

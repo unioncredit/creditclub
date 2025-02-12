@@ -10,9 +10,12 @@ import { BannerCta } from "@/components/funds/BannerCta";
 import { ClubDetails } from "@/components/funds/ClubDetails";
 import { ClubStats } from "@/components/funds/ClubStats";
 import { FundTables } from "@/components/funds/FundTables";
-import { ClubActivity } from "@/components/funds/ClubActivity";
 import { MembershipClaim } from "@/components/funds/MembershipClaim";
 import { useIsQualified } from "@/hooks/useIsQualified";
+import { RaisingStats } from "@/components/funds/RaisingStats";
+import { useAccount } from "wagmi";
+import { useClubMember } from "@/hooks/useClubMember";
+import { ClubActivity } from "@/components/funds/ClubActivity";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   return {
@@ -27,7 +30,11 @@ export default function FundSinglePage({
 }: {
   clubAddress: Address;
 }) {
+  const { address } = useAccount();
+  const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
+
+  const { isMember } = clubMember;
 
   return (
     <>
@@ -38,7 +45,7 @@ export default function FundSinglePage({
       <main>
         <Columned width={1020} className="py-8">
           <Header />
-          {isQualified && <BannerCta clubAddress={clubAddress} className="mt-4" />}
+          {isQualified && !isMember && <BannerCta clubAddress={clubAddress} className="mt-4" />}
 
           <Container className="mt-4">
             <div className="flex w-full">
@@ -47,8 +54,12 @@ export default function FundSinglePage({
                 <ClubStats clubAddress={clubAddress} />
               </section>
               <section className="flex-1 pl-6 flex flex-col justify-between">
-                <MembershipClaim clubAddress={clubAddress} />
-                <ClubActivity />
+                <RaisingStats clubAddress={clubAddress} />
+                {!isMember ? (
+                  <MembershipClaim clubAddress={clubAddress} />
+                ) : (
+                  <ClubActivity />
+                )}
               </section>
             </div>
 

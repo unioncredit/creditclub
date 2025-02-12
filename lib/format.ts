@@ -18,6 +18,20 @@ export const format = (
   return commify(Number(formatUnits(value, UNIT[token])), digits, rounded, stripTrailingZeros);
 };
 
+export const formatDecimals = (
+  value: bigint,
+  decimals: number,
+  digits = 2,
+  rounded = true,
+  stripTrailingZeros = false,
+  formatDust = true
+) => {
+  if (!value) value = 0n;
+  const dustThreshold = 10n ^ BigInt(decimals - 2)
+  if (formatDust && value < dustThreshold && value > 0n) return "<0.01";
+  return commify(Number(formatUnits(value, decimals)), digits, rounded, stripTrailingZeros);
+};
+
 export function commify(value: number, digits: number, rounded = true, stripTrailingZeros = false) {
   value = Number(value);
   value = value <= 0 ? 0 : value;

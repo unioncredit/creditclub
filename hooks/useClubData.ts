@@ -7,8 +7,6 @@ import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 import { uTokenContract } from "@/contracts/baseSepolia";
 
 export const useClubData = (clubAddress: Address) => {
-  const chainId = DEFAULT_CHAIN_ID;
-
   const tokenContract = useContract("token");
   const userManagerContract = useContract("userManager");
   const comptrollerContract = useContract("comptroller");
@@ -86,12 +84,37 @@ export const useClubData = (clubAddress: Address) => {
     {
       ...creditVaultContract,
       functionName: "memberMax"
+    },
+    {
+      ...creditVaultContract,
+      functionName: "vaultTokenEnabled"
+    },
+    {
+      ...creditVaultContract,
+      functionName: "totalAssets"
+    },
+    {
+      ...creditVaultContract,
+      functionName: "initialRaise"
+    },
+    {
+      ...creditVaultContract,
+      functionName: "decimals"
+    },
+    {
+      ...creditVaultContract,
+      functionName: "lockupPeriod"
+    },
+    {
+      ...creditVaultContract,
+      functionName: "asset",
     }
   ];
 
   const result = useReadContracts({
     contracts: contracts.map(c => ({
-      ...c, chainId,
+      ...c,
+      chainId: DEFAULT_CHAIN_ID,
     })),
     query: {
       enabled: !!clubAddress,
@@ -116,6 +139,12 @@ export const useClubData = (clubAddress: Address) => {
     gatingTokenAddress = zeroAddress,
     gatingTokenType = 0,
     memberMax = 0n,
+    vaultTokenEnabled = false,
+    totalAssets = 0n,
+    initialRaise = 0n,
+    decimals = 0,
+    lockupPeriod = 0n,
+    assetAddress = zeroAddress,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -137,6 +166,12 @@ export const useClubData = (clubAddress: Address) => {
     gatingTokenAddress,
     gatingTokenType,
     memberMax,
+    vaultTokenEnabled,
+    totalAssets,
+    initialRaise,
+    decimals,
+    lockupPeriod,
+    assetAddress,
   };
 
   return { ...result, data };
