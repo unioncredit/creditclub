@@ -26,7 +26,7 @@ export const ClubStats = ({
   const { isConnected } = useAccount();
   const { token } = useToken();
 
-  const { stakedBalance, totalLockedStake, unionBalance } = clubData;
+  const { stakedBalance, totalLockedStake, unclaimedRewards } = clubData;
 
   const defaultedContacts = clubContacts.filter((v) => v.isOverdue);
   const defaultedAmount = defaultedContacts.reduce((acc, c) => acc + c.locking, 0n);
@@ -75,7 +75,7 @@ export const ClubStats = ({
         <div>
           <h3 className="font-medium text-sm text-stone-500">Rewards to Distribute</h3>
           <FormattedValue
-            value={format(unionBalance, TOKENS.UNION, 4)}
+            value={format(unclaimedRewards, TOKENS.UNION, 4)}
             className="text-3xl font-medium"
             smallDecimals={true}
           />
