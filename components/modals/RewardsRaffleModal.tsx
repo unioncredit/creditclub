@@ -7,14 +7,48 @@ import {
   PlayIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
+import { Address } from "viem";
 
 import { useModals } from "@/providers/ModalManagerProvider";
 import { StatRow } from "@/components/shared/StatRow";
+import { useRewards } from "@/hooks/useRewards";
+import { useWrite } from "@/hooks/useWrite";
+import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
+import { useClubData } from "@/hooks/useClubData";
+import { useRaffleCooldown } from "@/hooks/useRaffleCooldown";
+import { format } from "@/lib/format";
+import { TOKENS } from "@/constants";
 
 export const REWARDS_RAFFLE_MODAL = "feeling-lucky-modal";
 
-export const RewardsRaffleModal = () => {
+export const RewardsRaffleModal = ({
+  clubAddress
+}: {
+  clubAddress: Address;
+}) => {
   const { close } = useModals();
+  const { data: clubData } = useClubData(clubAddress);
+  const { complete, hours, minutes, seconds } = useRaffleCooldown(clubAddress);
+  const {
+    bidBucketBalance,
+    bidBucketPercentage,
+    callerBalance,
+    callerPercentage,
+    winnerBalance,
+    winnerPercentage,
+  } = useRewards(clubAddress);
+
+  const { costToCall } = clubData;
+
+  const creditVaultContract = useCreditVaultContract(clubAddress);
+
+  const triggerRaffleButtonProps = useWrite({
+    ...creditVaultContract,
+    functionName: "feelingLucky",
+    value: costToCall,
+    disabled: !complete,
+    icon: PlayIcon,
+  });
 
   return (
     <ModalOverlay onClick={close}>
@@ -25,44 +59,48 @@ export const RewardsRaffleModal = () => {
             align="left"
             variant="warning"
             label="Calling feeling lucky distributes unclaimed UNION in the below ratios & moves LP fees into the vault."
-            className="text-xs p-3 bg-blue-50 text-blue-600 absolute top-[80px] left-0 right-0"
+            className="font-mono text-xs p-3 bg-blue-50 text-blue-600 absolute top-[80px] left-0 right-0"
           />
 
           <StatRow
-            percentage="50%"
+            percentage={`${winnerPercentage}%`}
             title="Random Trustee"
             content="Registered & Not Overdue"
-            amount="1,000"
+            amount={winnerBalance.toFixed(2)}
             color="#F4F4F6"
             token={<Union />}
             className="mt-12"
           />
           <StatRow
-            percentage="50%"
-            title="Random Trustee"
-            content="Registered & Not Overdue"
-            amount="1,000"
+            percentage={`${bidBucketPercentage}%`}
+            title="Credit Vault"
+            content="Saved for a rainy day"
+            amount={bidBucketBalance.toFixed(2)}
             color="#F4F4F6"
             token={<Union />}
             className="mt-2"
           />
           <StatRow
-            percentage="50%"
-            title="Random Trustee"
-            content="Registered & Not Overdue"
-            amount="1,000"
+            percentage={`${callerPercentage}%`}
+            title="Caller Reward"
+            content="This goes to you"
+            amount={callerBalance.toFixed(2)}
             color="#F4F4F6"
             token={<Union />}
             className="mt-2"
           />
 
           <Button
+            label={
+              complete
+                ? `Trigger the Raffle (${format(costToCall, TOKENS.UNION, 5, false, false, false)} ETH)`
+                : `Callable in ${hours}h:${minutes}m:${seconds}s`
+            }
             fluid
             className="mt-4"
-            label="Trigger the raffle"
             color="primary"
             size="large"
-            icon={PlayIcon}
+            {...triggerRaffleButtonProps}
           />
 
           {/*{!complete && (*/}

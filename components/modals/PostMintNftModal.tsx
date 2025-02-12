@@ -13,45 +13,39 @@ import Image from "next/image";
 import { useModals } from "@/providers/ModalManagerProvider";
 import { ShadowButton as FlatButton } from "@/components/ui/ShadowButton";
 import { StatGrid, StatGridRow } from "@/components/shared/StatGrid";
+import { format } from "@/lib/format";
+import { useToken } from "@/hooks/useToken";
 
 export const POST_MINT_NFT_MODAL = "post-mint-nft-modal";
 
-export const PostMintNftModal = () => {
+export const PostMintNftModal = ({
+  clubName,
+  tokenId,
+  rows,
+  startingCredit,
+}: {
+  clubName: string;
+  tokenId: bigint;
+  rows: StatGridRow[];
+  startingCredit: bigint;
+}) => {
   const { close } = useModals();
-
-  const rows: StatGridRow[] = [
-    {
-      name: "Starting credit",
-      value: "$100"
-    },
-    {
-      name: "Vesting Period",
-      value: "No vesting"
-    },
-    {
-      name: "ProRata",
-      value: "$100"
-    },
-    {
-      name: "Referred by",
-      value: "club.eth"
-    },
-  ];
+  const { token } = useToken();
 
   return (
     <ModalOverlay onClick={close}>
       <Modal>
         <Modal.Header
           onClose={close}
-          title="Welcome Member #226"
+          title={`Congrats Member #${tokenId}`}
           className="bg-blue-600 text-white"
         />
         <Modal.Body>
           <InfoBanner
             align="left"
             variant="warning"
-            label="Welcome! You are now an official member of the {club name}. You now have $354 in credit from {Club Name} and $5,000 in total credit on the Union credit network."
-            className="text-xs p-3 bg-stone-100 text-black absolute top-[80px] left-0 right-0"
+            label={`Welcome Member #${tokenId}! You are now an official member of ${clubName}. You now have $${format(startingCredit, token)} in credit from ${clubName} on the Union credit network.`}
+            className="font-mono border-b border-black text-xs p-3 bg-stone-100 text-black absolute top-[80px] left-0 right-0"
           />
 
           <div className="mt-16 flex justify-center w-full">
@@ -65,7 +59,7 @@ export const PostMintNftModal = () => {
           </div>
 
           <StatGrid
-            title="Builder Credit Member #123"
+            title={`${clubName} Member #${tokenId}`}
             className="my-4"
             size="small"
             rows={rows}
@@ -73,7 +67,7 @@ export const PostMintNftModal = () => {
 
           <FlatButton
             size="large"
-            variant="shadow"
+            variant="light"
             className="w-full"
             onClick={() => open("https://app.union.finance/")}
           >
@@ -86,6 +80,7 @@ export const PostMintNftModal = () => {
               label="Share"
               color="primary"
               icon={TwitterIcon}
+              className="!border-black border"
             />
             <Button
               fluid

@@ -1,11 +1,10 @@
-import { base, optimism } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 
 import { DEFAULT_CHAIN_ID, IToken, TOKENS, UNIT, WAD } from "@/constants";
 
 export const useToken = (chainId?: number) => {
   const tokens: Record<number, IToken> = {
-    [optimism.id]: TOKENS.DAI,
-    [base.id]: TOKENS.USDC,
+    [baseSepolia.id]: TOKENS.USDC,
   };
 
   const id = chainId || DEFAULT_CHAIN_ID;

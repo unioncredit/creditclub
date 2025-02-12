@@ -34,7 +34,7 @@ export const Header = () => {
               icon={<ArrowIcon width={24} className="rotate-90" />}
               onClick={() => alert(0)}
             >
-              Current Rate - X%
+              Borrow Rate - X%
             </RoundedButton>
 
             <RoundedButton

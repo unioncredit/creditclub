@@ -4,24 +4,50 @@ import { ConfettiIcon, UnionIcon } from "@unioncredit/ui";
 import { RoundedButton } from "@/components/ui/RoundedButton";
 import { DistributionBarItem, DistributionBarValues } from "@/components/shared/DistributionBarValues";
 import { FormattedValue } from "@/components/shared/FormattedValue";
+import { Address } from "viem";
+import { useClubData } from "@/hooks/useClubData";
+import { useToken } from "@/hooks/useToken";
+import { format, formattedNumber } from "@/lib/format";
+import { useModals } from "@/providers/ModalManagerProvider";
+import { FIXED_BID_MODAL } from "@/components/modals/FixedBidModal";
+import { useAccount } from "wagmi";
+import { REWARDS_RAFFLE_MODAL } from "@/components/modals/RewardsRaffleModal";
+import { TOKENS } from "@/constants";
+import { useClubContacts } from "@/hooks/useClubContacts";
 
-export const ClubStats = () => {
+export const ClubStats = ({
+  clubAddress,
+}: {
+  clubAddress: Address;
+}) => {
+  const { data: clubData } = useClubData(clubAddress);
+  const { data: clubContacts } = useClubContacts(clubAddress);
+  const { open: openModal } = useModals();
+  const { isConnected } = useAccount();
+  const { token } = useToken();
+
+  const { stakedBalance, totalLockedStake, unionBalance } = clubData;
+
+  const defaultedContacts = clubContacts.filter((v) => v.isOverdue);
+  const defaultedAmount = defaultedContacts.reduce((acc, c) => acc + c.locking, 0n);
+  const availableAmount = stakedBalance - totalLockedStake;
+
   const barValues: DistributionBarItem[] = [
     {
-      value: 10,
-      label: "$1,000.00",
+      value: formattedNumber(availableAmount, token),
+      label: `$${format(availableAmount, token)}`,
       color: "blue900",
       title: "Available",
     },
     {
-      value: 50,
-      label: "$5,000.00",
+      value: formattedNumber(totalLockedStake, token),
+      label: `$${format(totalLockedStake, token)}`,
       color: "blue500",
       title: "Utilized",
     },
     {
-      value: 40,
-      label: "$4,000.00",
+      value: 0,
+      label: `$${format(defaultedAmount, token)}`,
       color: "amber500",
       title: "Defaulting",
     }
@@ -32,13 +58,15 @@ export const ClubStats = () => {
       <header className="flex items-center justify-between">
         <div>
           <h3 className="font-medium text-sm text-stone-500">Club Stake</h3>
-          <p className="text-3xl font-mono">$50,000.00</p>
+          <p className="text-3xl font-mono">${format(stakedBalance, token)}</p>
         </div>
 
-        <RoundedButton size="small">
-          <UnionIcon width={24}/>
-          Fixed BID
-        </RoundedButton>
+        {isConnected && (
+          <RoundedButton size="small" onClick={() => openModal(FIXED_BID_MODAL, { clubAddress: clubAddress })}>
+            <UnionIcon width={24}/>
+            Fixed BID
+          </RoundedButton>
+        )}
       </header>
 
       <DistributionBarValues items={barValues}/>
@@ -47,7 +75,7 @@ export const ClubStats = () => {
         <div>
           <h3 className="font-medium text-sm text-stone-500">Rewards to Distribute</h3>
           <FormattedValue
-            value="12,453.4487"
+            value={format(unionBalance, TOKENS.UNION, 4)}
             className="text-3xl font-medium"
             smallDecimals={true}
           />
@@ -58,6 +86,7 @@ export const ClubStats = () => {
           variant="rainbow"
           icon={<ConfettiIcon width={24} height={24} />}
           className="w-[200px]"
+          onClick={() => openModal(REWARDS_RAFFLE_MODAL, { clubAddress: clubAddress })}
         >
           Daily Distribution
         </RoundedButton>

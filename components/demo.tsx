@@ -1,5 +1,5 @@
 import { useAccount, useBalance } from "wagmi";
-import { useTestData } from "../providers/TestProvider";
+import { useConnectedMember } from "../providers/ConnectedMemberProvider";
 
 export const Demo = () => {
   const { address } = useAccount();
@@ -7,7 +7,7 @@ export const Demo = () => {
     address,
   });
 
-  const { data } = useTestData();
+  const { data } = useConnectedMember();
 
   const { totalLockedStake, stakedBalance } = data;
 

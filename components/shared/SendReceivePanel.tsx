@@ -35,7 +35,7 @@ export const SendReceivePanel = ({
 
       <div className="bg-white p-4 rounded-lg flex flex-col items-center  border border-stone-300">
         <p className="text-stone-600">{rightTitle}</p>
-        <p className="font-medium">
+        <p className="font-medium flex items-center gap-1">
           {rightValue}
           {rightIcon && rightIcon}
         </p>

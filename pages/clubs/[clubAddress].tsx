@@ -1,4 +1,6 @@
 import Head from "next/head";
+import { Address } from "viem";
+import { GetServerSideProps } from "next";
 
 import { Columned } from "@/components/shared/Columned";
 import { Header } from "@/components/shared/Header";
@@ -9,9 +11,21 @@ import { ClubDetails } from "@/components/funds/ClubDetails";
 import { ClubStats } from "@/components/funds/ClubStats";
 import { FundTables } from "@/components/funds/FundTables";
 import { ClubActivity } from "@/components/funds/ClubActivity";
-import { ClubActions } from "@/components/funds/ClubActions";
+import { MembershipClaim } from "@/components/funds/MembershipClaim";
 
-export default function FundSinglePage() {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  return {
+    props: {
+      clubAddress: params?.clubAddress,
+    },
+  };
+};
+
+export default function FundSinglePage({
+  clubAddress,
+}: {
+  clubAddress: Address;
+}) {
   return (
     <>
       <Head>
@@ -25,18 +39,18 @@ export default function FundSinglePage() {
           <Container className="mt-4">
             <div className="flex w-full">
               <section className="flex flex-col justify-between flex-1 text-left">
-                <ClubDetails/>
-                <ClubStats/>
+                <ClubDetails clubAddress={clubAddress} />
+                <ClubStats clubAddress={clubAddress} />
               </section>
               <section className="flex-1 pl-6 flex flex-col justify-between">
-                <ClubActions />
+                <MembershipClaim clubAddress={clubAddress} />
                 <ClubActivity />
               </section>
             </div>
 
             <FundTables className="mt-8" />
           </Container>
-          <Footer/>
+          <Footer />
         </Columned>
       </main>
     </>
