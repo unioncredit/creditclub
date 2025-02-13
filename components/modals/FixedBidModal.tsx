@@ -25,18 +25,18 @@ import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 export const FIXED_BID_MODAL = "fixed-bid-modal";
 
 export const FixedBidModal = ({
-  fundAddress,
+  clubAddress,
 }: {
-  fundAddress: Address;
+  clubAddress: Address;
 }) => {
-  const { data: clubData, refetch: refetchClubData } = useClubData(fundAddress);
+  const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress);
   const { data: connectedMember, refetch: refetchConnectedMember } = useConnectedMember();
   const { address } = useAccount();
   const { close } = useModals();
   const { token } = useToken();
 
   const tokenContract = useContract("token");
-  const creditVaultContract = useCreditVaultContract(fundAddress);
+  const creditVaultContract = useCreditVaultContract(clubAddress);
 
   const { fixedBidPrice, unionBalance } = clubData;
   const { tokenBalance } = connectedMember;

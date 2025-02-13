@@ -8,6 +8,7 @@ import { ConnectedMemberProvider } from "../providers/ConnectedMemberProvider";
 import { ModalManagerProvider } from "@/providers/ModalManagerProvider";
 import { init } from "@airstack/airstack-react";
 import { ToastsProvider } from "@/providers/ToastsProvider";
+import { UnionMemberProvider } from "@/providers/UnionMemberProvider";
 
 const queryClient = new QueryClient();
 
@@ -49,11 +50,13 @@ function MyApp({ Component, pageProps }: AppProps) {
         <QueryClientProvider client={queryClient}>
           <Web3Provider>
             <ToastsProvider>
-              <ConnectedMemberProvider>
-                <ModalManagerProvider>
-                  <Component {...pageProps} />
-                </ModalManagerProvider>
-              </ConnectedMemberProvider>
+              <UnionMemberProvider>
+                <ConnectedMemberProvider>
+                  <ModalManagerProvider>
+                    <Component {...pageProps} />
+                  </ModalManagerProvider>
+                </ConnectedMemberProvider>
+              </UnionMemberProvider>
             </ToastsProvider>
           </Web3Provider>
         </QueryClientProvider>

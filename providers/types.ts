@@ -7,6 +7,18 @@ export type IConnectedMemberContext = Omit<UseReadContractsReturnType, "data"> &
   }
 }
 
+export type IUnionMemberContext = Omit<UseReadContractsReturnType, "data"> & {
+  data: {
+    isOverdue: boolean;
+    creditLimit: bigint;
+    owed: bigint;
+    daiBalance: bigint;
+    interest: bigint;
+    minPayment: bigint;
+    unionBalance: bigint;
+  },
+}
+
 export type IToastStatus = "error" | "success" | "pending";
 
 export interface IToast {
