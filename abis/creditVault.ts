@@ -1261,4 +1261,4 @@ export const creditVaultAbi = [{ "inputs": [], "stateMutability": "nonpayable", 
   "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
   "stateMutability": "nonpayable",
   "type": "function"
-}, { "stateMutability": "payable", "type": "receive" }];
+}, { "stateMutability": "payable", "type": "receive" }] as const;

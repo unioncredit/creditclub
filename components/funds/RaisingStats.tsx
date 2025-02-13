@@ -89,7 +89,10 @@ export const RaisingStats = ({
         size="large"
         variant="dark"
         className="w-full mt-4"
-        onClick={() => openModal(MINT_REDEEM_MODAL)}
+        onClick={() => openModal(MINT_REDEEM_MODAL, {
+          activeTab: "mint",
+          clubAddress,
+        })}
       >
         Mint {symbol} Token
       </RoundedButton>

@@ -108,6 +108,10 @@ export const useClubData = (clubAddress: Address) => {
     {
       ...creditVaultContract,
       functionName: "asset",
+    },
+    {
+      ...creditVaultContract,
+      functionName: "openRaise",
     }
   ];
 
@@ -145,6 +149,7 @@ export const useClubData = (clubAddress: Address) => {
     decimals = 0,
     lockupPeriod = 0n,
     assetAddress = zeroAddress,
+    openRaise = false,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -172,6 +177,7 @@ export const useClubData = (clubAddress: Address) => {
     decimals,
     lockupPeriod,
     assetAddress,
+    openRaise,
   };
 
   return { ...result, data };
