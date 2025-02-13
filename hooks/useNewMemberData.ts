@@ -9,7 +9,11 @@ import { useMemberNftContract } from "@/hooks/useMemberNftContract";
 export const useNewMemberData = (userAddress: Address | undefined, clubAddress: Address) => {
   const { data: clubData } = useClubData(clubAddress);
 
-  const { memberNftAddress } = clubData;
+  const {
+    memberNftAddress,
+    vestingDurationInSeconds,
+    startingPercentTrust,
+  } = clubData;
 
   const memberNftContract = useMemberNftContract(memberNftAddress);
   const creditVaultContract = useCreditVaultContract(clubAddress);
@@ -19,14 +23,6 @@ export const useNewMemberData = (userAddress: Address | undefined, clubAddress: 
       ...creditVaultContract,
       functionName: "previewCreditClaim",
       args: [userAddress],
-    },
-    {
-      ...creditVaultContract,
-      functionName: "vestingDuration",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "startingPercentTrust"
     },
     {
       ...memberNftContract,
@@ -47,8 +43,6 @@ export const useNewMemberData = (userAddress: Address | undefined, clubAddress: 
 
   const [
     totalTrustAmount = 0n,
-    vestingDurationInSeconds = 0n,
-    startingPercentTrust = 0n,
     tokenId = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 

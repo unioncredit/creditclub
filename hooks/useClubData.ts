@@ -112,7 +112,15 @@ export const useClubData = (clubAddress: Address) => {
     {
       ...creditVaultContract,
       functionName: "openRaise",
-    }
+    },
+    {
+      ...creditVaultContract,
+      functionName: "vestingDuration",
+    },
+    {
+      ...creditVaultContract,
+      functionName: "startingPercentTrust"
+    },
   ];
 
   const result = useReadContracts({
@@ -150,6 +158,8 @@ export const useClubData = (clubAddress: Address) => {
     lockupPeriod = 0n,
     assetAddress = zeroAddress,
     openRaise = false,
+    vestingDurationInSeconds = 0n,
+    startingPercentTrust = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -178,6 +188,8 @@ export const useClubData = (clubAddress: Address) => {
     lockupPeriod,
     assetAddress,
     openRaise,
+    vestingDurationInSeconds,
+    startingPercentTrust
   };
 
   return { ...result, data };

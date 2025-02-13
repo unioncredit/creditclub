@@ -17,6 +17,7 @@ import { useAccount } from "wagmi";
 import { useClubMember } from "@/hooks/useClubMember";
 import { ClubActivity } from "@/components/funds/ClubActivity";
 import { useClubData } from "@/hooks/useClubData";
+import { ClubActions } from "@/components/funds/ClubActions";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   return {
@@ -58,11 +59,12 @@ export default function FundSinglePage({
               </section>
               <section className="flex-1 pl-6 flex flex-col justify-between">
                 {openRaise && <RaisingStats clubAddress={clubAddress} />}
-                {!isMember ? (
-                  <MembershipClaim clubAddress={clubAddress} />
+                {isMember ? (
+                  <ClubActions clubAddress={clubAddress} />
                 ) : (
-                  <ClubActivity />
+                  <MembershipClaim clubAddress={clubAddress} />
                 )}
+                <ClubActivity />
               </section>
             </div>
 

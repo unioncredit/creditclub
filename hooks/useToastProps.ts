@@ -50,6 +50,12 @@ export const useToastProps = (functionName: string, contract: Address, args: any
             title: "Minting Member NFT",
             content: "Transaction pending",
           };
+        case "claimCredit":
+          return {
+            ...props,
+            title: "Claiming Credit",
+            content: "Transaction pending",
+          };
         default:
           return {
             ...props,
@@ -86,7 +92,13 @@ export const useToastProps = (functionName: string, contract: Address, args: any
         case "mintMemberNFT":
           return {
             ...props,
-            title: "Minting Member NFT",
+            title: "Minted Member NFT",
+            content: "Transaction successful",
+          };
+        case "claimCredit":
+          return {
+            ...props,
+            title: "Claimed Credit",
             content: "Transaction successful",
           };
         default:
@@ -126,6 +138,12 @@ export const useToastProps = (functionName: string, contract: Address, args: any
           return {
             ...props,
             title: "Minting Member NFT",
+            content: "Transaction failed",
+          };
+        case "claimCredit":
+          return {
+            ...props,
+            title: "Claiming Credit",
             content: "Transaction failed",
           };
         default:

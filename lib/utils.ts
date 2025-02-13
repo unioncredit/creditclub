@@ -51,3 +51,10 @@ export const calculateExpectedMinimumPayment = (
 export const calculateInterestRate = (borrowRatePerSecond: bigint, token: IToken): bigint => {
   return borrowRatePerSecond * BLOCKS_PER_YEAR / BigInt(10 ** (18 - UNIT[token]));
 };
+
+export function getInitials(text: string): string {
+  return text
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase())
+    .join("");
+}
