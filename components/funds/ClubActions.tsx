@@ -30,13 +30,13 @@ export const ClubActions = ({
   const { token } = useToken();
   const { address } = useAccount();
   const { data: clubData } = useClubData(clubAddress);
-  const { data: clubMember } = useClubMember(address, clubAddress);
+  const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
   const { data: vestingData } = useVesting(clubAddress);
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
   const { name } = clubData;
-  const { owed, vouch, tokenId } = clubMember;
+  const { owed, vouch, tokenId, previewCreditClaim } = clubMember;
   const {
     enabled: vestingEnabled,
     duration: vestingDuration,
@@ -47,6 +47,7 @@ export const ClubActions = ({
     ...creditVaultContract,
     functionName: "claimCredit",
     args: [address],
+    onComplete: refetchClubMember,
   });
 
   return (
@@ -81,7 +82,7 @@ export const ClubActions = ({
 
             <div className="text-right">
               <p className="text-sm font-medium">${format(vouch, token)}</p>
-              <p className="text-xs text-stone-400">+$TODO</p>
+              <p className="text-xs text-stone-400">+${format(previewCreditClaim - vouch, token)}</p>
             </div>
           </div>
 

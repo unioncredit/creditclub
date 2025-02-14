@@ -38,19 +38,24 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     },
     {
       ...userManagerContract,
-      functionName: 'getLockedStake',
+      functionName: "getLockedStake",
       args: [clubAddress, memberAddress],
     },
     {
       ...userManagerContract,
-      functionName: 'getVouchingAmount',
+      functionName: "getVouchingAmount",
       args: [clubAddress, memberAddress],
     },
     {
       ...memberNftContract,
-      functionName: 'tokenOfOwnerByIndex',
+      functionName: "tokenOfOwnerByIndex",
       args: [memberAddress, 0n],
     },
+    {
+      ...creditVaultContract,
+      functionName: "previewCreditClaim",
+      args: [memberAddress],
+    }
   ];
 
   const resultOne = useReadContracts({
@@ -71,6 +76,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     owed = 0n,
     vouch = 0n,
     tokenId = 0n,
+    previewCreditClaim = 0n,
   ] = resultOne.data?.map(d => d.result as never) || [];
 
   const resultTwo = useReadContracts({
@@ -107,6 +113,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     owed,
     vouch,
     tokenId,
+    previewCreditClaim,
     percentVested,
     baseTrust: nftCreditStatus?.[0] || 0n,
     active: nftCreditStatus?.[1] || false,
