@@ -1,8 +1,8 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs";
 import { cn } from "@/lib/utils";
-import { FundStatsTable } from "@/components/funds/tables/FundStatsTable";
-import { FundHoldersTable } from "@/components/funds/tables/FundHoldersTable";
-import { FundTrusteesTable } from "@/components/funds/tables/FundTrusteesTable";
+import { FundStatsPanel } from "@/components/funds/tabs/FundStatsPanel";
+import { FundHoldersTable } from "@/components/funds/tabs/FundHoldersTable";
+import { FundTrusteesTable } from "@/components/funds/tabs/FundTrusteesTable";
 
 export const FundTables = ({
   className,
@@ -17,7 +17,7 @@ export const FundTables = ({
         <TabsTrigger value="trustees">Fund Trustees</TabsTrigger>
       </TabsList>
       <TabsContent value="stats">
-        <FundStatsTable />
+        <FundStatsPanel />
       </TabsContent>
       <TabsContent value="holders">
         <FundHoldersTable />

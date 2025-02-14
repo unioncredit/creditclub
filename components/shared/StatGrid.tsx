@@ -23,7 +23,7 @@ export const StatGrid = ({
 
   return (
     <div className={cn("border border-black flex flex-col", fontSize, className)}>
-      <Heading type="h2" className="bg-heading border-b border-black px-2 py-1">{title}</Heading>
+      <Heading type="h2" className="font-medium bg-heading border-b border-black px-2 py-1">{title}</Heading>
 
       <table className="border-collapse w-full flex-1">
         <tbody>
