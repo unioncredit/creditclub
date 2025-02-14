@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { parseUnits } from "viem";
+import { Address, keccak256, parseUnits } from "viem";
 
 import { BLOCKS_PER_YEAR, IToken, TOKENS, UNIT, WAD } from "@/constants";
 
@@ -58,3 +58,15 @@ export function getInitials(text: string): string {
     .map(word => word.charAt(0).toUpperCase())
     .join("");
 }
+
+// Function to generate a deterministic random number between 1-10 using the address as a seed
+export const generateNumberFromAddress = (address: Address, max = 10): number => {
+  // Hash the address using keccak256 to create deterministic output
+  const hash = keccak256(address);
+
+  // Extract a numeric value from the hash
+  const numericValue = parseInt(hash.slice(0, 8), 16); // Take the first 4 bytes (8 chars) of the hash
+
+  // Create a random number between 1-max (using modulo operation + 1)
+  return (numericValue % max) + 1;
+};

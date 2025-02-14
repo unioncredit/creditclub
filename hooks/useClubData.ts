@@ -121,6 +121,10 @@ export const useClubData = (clubAddress: Address) => {
       ...creditVaultContract,
       functionName: "startingPercentTrust"
     },
+    {
+      ...creditVaultContract,
+      functionName: "totalSupply",
+    }
   ];
 
   const result = useReadContracts({
@@ -160,6 +164,7 @@ export const useClubData = (clubAddress: Address) => {
     openRaise = false,
     vestingDurationInSeconds = 0n,
     startingPercentTrust = 0n,
+    totalSupply = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -189,7 +194,8 @@ export const useClubData = (clubAddress: Address) => {
     assetAddress,
     openRaise,
     vestingDurationInSeconds,
-    startingPercentTrust
+    startingPercentTrust,
+    totalSupply,
   };
 
   return { ...result, data };

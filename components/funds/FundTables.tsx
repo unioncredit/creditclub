@@ -3,10 +3,13 @@ import { cn } from "@/lib/utils";
 import { FundStatsPanel } from "@/components/funds/tabs/FundStatsPanel";
 import { FundHoldersTable } from "@/components/funds/tabs/FundHoldersTable";
 import { FundTrusteesTable } from "@/components/funds/tabs/FundTrusteesTable";
+import { Address } from "viem";
 
 export const FundTables = ({
+  clubAddress,
   className,
 }: {
+  clubAddress: Address;
   className?: string;
 }) => {
   return (
@@ -17,13 +20,13 @@ export const FundTables = ({
         <TabsTrigger value="trustees">Fund Trustees</TabsTrigger>
       </TabsList>
       <TabsContent value="stats">
-        <FundStatsPanel />
+        <FundStatsPanel clubAddress={clubAddress} />
       </TabsContent>
       <TabsContent value="holders">
-        <FundHoldersTable />
+        <FundHoldersTable clubAddress={clubAddress} />
       </TabsContent>
       <TabsContent value="trustees">
-        <FundTrusteesTable />
+        <FundTrusteesTable clubAddress={clubAddress} />
       </TabsContent>
     </Tabs>
   )

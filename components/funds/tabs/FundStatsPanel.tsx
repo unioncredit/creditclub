@@ -1,74 +1,101 @@
 import { StatGrid, StatGridRow } from "@/components/shared/StatGrid";
+import { Address } from "viem";
+import { useClubData } from "@/hooks/useClubData";
+import { format, formatDecimals } from "@/lib/format";
+import { useToken } from "@/hooks/useToken";
+import { useClubContacts } from "@/hooks/useClubContacts";
 
-export const FundStatsPanel = () => {
+export const FundStatsPanel = ({
+  clubAddress,
+}: {
+  clubAddress: Address;
+}) => {
+  const { token } = useToken();
+  const { data: clubData } = useClubData(clubAddress);
+  const { data: clubContacts } = useClubContacts(clubAddress);
+
+  const defaultedContacts = clubContacts.filter((v) => v.isOverdue);
+  const defaultedAmount = defaultedContacts.reduce((acc, c) => acc + c.locking, 0n);
+
+  const {
+    decimals,
+    initialRaise,
+    totalAssets,
+    stakedBalance,
+    totalSupply,
+    totalLockedStake
+  } = clubData;
+
   const fundStatsRows: StatGridRow[] = [
     {
       name: "Initial Raise",
-      value: "X"
+      value: `$${formatDecimals(initialRaise, decimals)}`
     },
   ];
 
   const assetRows: StatGridRow[] = [
     {
-      name: "Total Assets",
-      value: "X"
-    },
-    {
       name: "Staked USDC",
-      value: "X"
+      value: `$${format(stakedBalance, token)}`
     },
     {
-      name: "uToken USDC",
-      value: "X"
+      name: "Total Assets",
+      value: `${formatDecimals(totalAssets, decimals)}`
+    },
+    {
+      name: "Total Supply",
+      value: `${formatDecimals(totalSupply, decimals)}`
     },
   ];
 
   const debtRows: StatGridRow[] = [
     {
       name: "Utilized Stake",
-      value: "X"
+      value: `$${format(totalLockedStake, token)}`
     },
     {
       name: "Overdue Stake",
-      value: "X"
+      value: `$${format(defaultedAmount, token)}`
     },
     {
       name: "Write-offs",
-      value: "X"
+      value: "0"
     },
   ];
+
+  console.log({ clubContacts });
 
   const trusteeStatsRows: StatGridRow[] = [
     {
       name: "# of Trustees",
-      value: "X"
+      value: clubContacts.length,
     },
     {
       name: "# of Borrowers",
-      value: "X"
+      value: clubContacts.filter(c => c.locking > 0n).length,
     },
     {
-      name: "Humans",
-      value: "X"
+      name: "# of Shares",
+      value: clubContacts.reduce((acc, curr) => acc + curr.numShares, 0n).toString(),
     },
     {
-      name: "uToken USDC",
-      value: "X"
+      name: "# of Defaulted",
+      value: defaultedContacts.length,
     },
   ];
 
   const earningsStatsRows: StatGridRow[] = [
     {
       name: "Interest",
-      value: "X"
+      value: "0%",
     },
     {
       name: "Change in assets",
-      value: "X"
+      value: "0",
     },
     {
       name: "Est. APY",
-      value: "X"
+      value: "0%"
     },
   ];
 

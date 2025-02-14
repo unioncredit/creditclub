@@ -172,8 +172,8 @@ export const ClubActivity = () => {
             <EmptyState label="No activity to show" />
           </Card.Body>
         ) : (
-          activity.slice(0, 4).map((tx: any) => (
-            <ActivityRow token={TOKENS.DAI} {...tx} />
+          activity.slice(0, 4).map((tx: any, index) => (
+            <ActivityRow key={index} token={TOKENS.DAI} {...tx} />
           ))
         )}
       </div>

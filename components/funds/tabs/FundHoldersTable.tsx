@@ -2,8 +2,13 @@ import {
   ColumnDef
 } from "@tanstack/react-table"
 import { DataTable } from "@/components/ui/DataTable";
-import { format } from "@/lib/format";
+import { format, truncateAddress } from "@/lib/format";
 import { TOKENS } from "@/constants";
+import { Address } from "viem";
+import { useClubContacts } from "@/hooks/useClubContacts";
+import { PrimaryLabel } from "@/components/shared/PrimaryLabel";
+import { useTokenPrice } from "@/hooks/useTokenPrice";
+import { BlockHeaderAvatar } from "@/components/shared/BlockHeaderAvatar";
 
 interface FundHolderRow {
   id: number;
@@ -11,60 +16,38 @@ interface FundHolderRow {
   marketValue: string;
 }
 
-const rows: FundHolderRow[] = [
-  {
-    id: 1,
-    shares: 0n,
-    marketValue: "$1,000",
-  },
-  {
-    id: 2,
-    shares: 0n,
-    marketValue: "$1,000",
-  },
-  {
-    id: 3,
-    shares: 0n,
-    marketValue: "$1,000",
-  },
-  {
-    id: 4,
-    shares: 0n,
-    marketValue: "$1,000",
-  },
-  {
-    id: 5,
-    shares: 0n,
-    marketValue: "$1,000",
-  },
-]
-
 const columns: ColumnDef<FundHolderRow>[] = [
-  {
-    accessorKey: "id",
-    header: "#",
-  },
+  // {
+  //   accessorKey: "id",
+  //   header: "#",
+  // },
   {
     id: "avatar",
+    accessorKey: "address",
     header: "",
-    cell: ({ row }) => (
-      <p>{row.id}</p>
+    cell: ({ getValue }) => (
+      <BlockHeaderAvatar address={getValue() as Address} className="mx-auto" />
     )
   },
   {
+    accessorKey: "address",
     header: "Fund Holder",
-    cell: () => (
-      <div>
-        <p>geraldhost.eth</p>
-        <p className="text-stone-400">0x34Ea...b66e</p>
-      </div>
-    )
+    cell: ({ getValue }) => {
+      const address = getValue() as Address;
+
+      return (
+        <div>
+          <p><PrimaryLabel address={address} /></p>
+          <p className="text-stone-400">{truncateAddress(address)}</p>
+        </div>
+      )
+    }
   },
   {
     accessorKey: "shares",
     header: () => <div className="text-right">Shares</div>,
     cell: ({ getValue }) => (
-      <div className="text-right">${format(getValue() as bigint, TOKENS.UNION, 0)}</div>
+      <div className="text-right">{format(getValue() as bigint, TOKENS.UNION, 0)}</div>
     ),
   },
   {
@@ -76,6 +59,20 @@ const columns: ColumnDef<FundHolderRow>[] = [
   },
 ]
 
-export const FundHoldersTable = () => {
+export const FundHoldersTable = ({
+  clubAddress,
+}: {
+  clubAddress: Address;
+}) => {
+  const { data: clubContacts } = useClubContacts(clubAddress);
+  const { data: tokenPrice }  = useTokenPrice(clubAddress);
+
+  const rows: FundHolderRow[] = clubContacts.map(({ address, numShares }, index) => ({
+    id: index,
+    address,
+    shares: numShares,
+    marketValue: `$${Number(numShares) * tokenPrice}`,
+  }));
+
   return <DataTable columns={columns} data={rows} />
 };

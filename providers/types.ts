@@ -19,6 +19,12 @@ export type IUnionMemberContext = Omit<UseReadContractsReturnType, "data"> & {
   },
 }
 
+export type IUnionDataContext = Omit<UseReadContractsReturnType, "data"> & {
+  data: {
+    overdueTime: bigint;
+  },
+}
+
 export type IToastStatus = "error" | "success" | "pending";
 
 export interface IToast {
@@ -44,4 +50,5 @@ export interface IContact {
   isMember: boolean;
   isOverdue: boolean;
   lastRepay: bigint;
+  numShares: bigint;
 }

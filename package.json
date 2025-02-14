@@ -26,6 +26,7 @@
     "@unioncredit/ui": "^2.0.44",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
     "lodash": "^4.17.21",
     "lucide-react": "^0.473.0",
     "next": "latest",

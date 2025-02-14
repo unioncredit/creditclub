@@ -68,7 +68,10 @@ export default function FundSinglePage({
               </section>
             </div>
 
-            <FundTables className="mt-8" />
+            <FundTables
+              clubAddress={clubAddress}
+              className="mt-8"
+            />
           </Container>
           <Footer />
         </Columned>
