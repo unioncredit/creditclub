@@ -1,0 +1,16 @@
+.notification-stack {
+  background: radial-gradient(
+                  100% 90.15% at 100% 100%,
+                  rgba(30, 28, 34, 0.16) 0%,
+                  rgba(30, 28, 34, 0) 100%
+  );
+  padding: 0px 24px 12px 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 999999;
+}
