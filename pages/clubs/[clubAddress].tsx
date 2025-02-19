@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { Address } from "viem";
 import { GetServerSideProps } from "next";
+import { useAccount } from "wagmi";
 
 import { Columned } from "@/components/shared/Columned";
 import { Header } from "@/components/shared/Header";
@@ -13,9 +14,7 @@ import { FundTables } from "@/components/funds/FundTables";
 import { MembershipClaim } from "@/components/funds/MembershipClaim";
 import { useIsQualified } from "@/hooks/useIsQualified";
 import { RaisingStats } from "@/components/funds/RaisingStats";
-import { useAccount } from "wagmi";
 import { useClubMember } from "@/hooks/useClubMember";
-import { ClubActivity } from "@/components/funds/ClubActivity";
 import { useClubData } from "@/hooks/useClubData";
 import { ClubActions } from "@/components/funds/ClubActions";
 import { BuyRedeemPanel } from "@/components/funds/BuyRedeemPanel";
@@ -59,14 +58,13 @@ export default function FundSinglePage({
                 <ClubStats clubAddress={clubAddress} />
               </section>
               <section className="flex-1 pl-6 flex flex-col justify-between">
-                {/*{openRaise && !raiseOver && <RaisingStats clubAddress={clubAddress} />}*/}
-                {!raiseOver && <BuyRedeemPanel clubAddress={clubAddress} />}
+                {openRaise && !raiseOver && <RaisingStats clubAddress={clubAddress} />}
+                {raiseOver && <BuyRedeemPanel clubAddress={clubAddress} />}
                 {isMember ? (
                   <ClubActions clubAddress={clubAddress} />
                 ) : (
                   <MembershipClaim clubAddress={clubAddress} />
                 )}
-                <ClubActivity />
               </section>
             </div>
 
