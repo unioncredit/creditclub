@@ -4,11 +4,21 @@ module.exports = {
   sassOptions: {
     silenceDeprecations: ['legacy-js-api'],
   },
+  transpilePackages: [
+    '@uniswap/conedison',
+    '@uniswap/widgets',
+  ],
   webpack(config) {
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find((rule) =>
       rule.test?.test?.('.svg'),
     )
+
+    config.resolve.fallback = {
+      fs: false,
+      path: false,
+      Browser: false,
+    };
 
     config.module.rules.push(
       // Reapply the existing rule, but only for svg imports ending in ?url

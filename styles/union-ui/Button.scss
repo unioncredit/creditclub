@@ -3,7 +3,7 @@
 $iconGutter: 4px;
 $disabledOpacity: 0.5;
 
-.button {
+.button--rounded {
   position: relative;
   font-size: 16px;
   font-weight: 500;
@@ -18,9 +18,10 @@ $disabledOpacity: 0.5;
   box-sizing: border-box;
   white-space: nowrap;
   padding: 12px 24px;
+  border-radius: 12px;
 
   &--rounded {
-    border-radius: 12px;
+
   }
 
   &--noLabel {

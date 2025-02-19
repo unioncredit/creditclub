@@ -196,6 +196,7 @@ export const useClubData = (clubAddress: Address) => {
     vestingDurationInSeconds,
     startingPercentTrust,
     totalSupply,
+    raiseOver: totalAssets >= initialRaise,
   };
 
   return { ...result, data };

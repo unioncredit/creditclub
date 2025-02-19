@@ -18,6 +18,7 @@ import { useClubMember } from "@/hooks/useClubMember";
 import { ClubActivity } from "@/components/funds/ClubActivity";
 import { useClubData } from "@/hooks/useClubData";
 import { ClubActions } from "@/components/funds/ClubActions";
+import { BuyRedeemPanel } from "@/components/funds/BuyRedeemPanel";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   return {
@@ -37,7 +38,7 @@ export default function FundSinglePage({
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
 
-  const { openRaise } = clubData;
+  const { openRaise, raiseOver } = clubData;
   const { isMember } = clubMember;
 
   return (
@@ -58,7 +59,8 @@ export default function FundSinglePage({
                 <ClubStats clubAddress={clubAddress} />
               </section>
               <section className="flex-1 pl-6 flex flex-col justify-between">
-                {openRaise && <RaisingStats clubAddress={clubAddress} />}
+                {/*{openRaise && !raiseOver && <RaisingStats clubAddress={clubAddress} />}*/}
+                {!raiseOver && <BuyRedeemPanel clubAddress={clubAddress} />}
                 {isMember ? (
                   <ClubActions clubAddress={clubAddress} />
                 ) : (

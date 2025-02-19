@@ -5,6 +5,7 @@ import { FIXED_BID_MODAL, FixedBidModal } from "@/components/modals/FixedBidModa
 import { MINT_NFT_MODAL, MintNftModal } from "@/components/modals/MintNftModal";
 import { MINT_REDEEM_MODAL, MintRedeemModal } from "@/components/modals/MintRedeemModal";
 import { POST_MINT_NFT_MODAL, PostMintNftModal } from "@/components/modals/PostMintNftModal";
+import { UNISWAP_SWAP_MODAL, UniswapSwapModal } from "@/components/modals/UniswapSwapModal";
 
 interface IModalManagerContext {
   open: (key: string, props?: any) => void;
@@ -21,6 +22,7 @@ const modals: Record<string, any> = {
   [MINT_REDEEM_MODAL]: MintRedeemModal,
   [POST_MINT_NFT_MODAL]: PostMintNftModal,
   [REWARDS_RAFFLE_MODAL]: RewardsRaffleModal,
+  [UNISWAP_SWAP_MODAL]: UniswapSwapModal,
 };
 
 export const ModalManagerProvider = ({ children }: { children: React.ReactNode; }) => {
