@@ -18,6 +18,9 @@ import { useClubMember } from "@/hooks/useClubMember";
 import { useClubData } from "@/hooks/useClubData";
 import { ClubActions } from "@/components/funds/ClubActions";
 import { BuyRedeemPanel } from "@/components/funds/BuyRedeemPanel";
+import { WrongNetworkBanner } from "@/components/shared/WrongNetworkBanner";
+import { useSupportedNetwork } from "@/hooks/useSupportedNetwork";
+import { cn } from "@/lib/utils";
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   return {
@@ -36,6 +39,7 @@ export default function FundSinglePage({
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
+  const { data: isSupported } = useSupportedNetwork();
 
   const { openRaise, raiseOver } = clubData;
   const { isMember } = clubMember;
@@ -49,6 +53,7 @@ export default function FundSinglePage({
       <main>
         <Columned width={1020} className="py-8">
           <Header />
+          {!isSupported && <WrongNetworkBanner />}
           {isQualified && !isMember && <BannerCta clubAddress={clubAddress} className="mt-4" />}
 
           <Container className="mt-4">
@@ -57,7 +62,9 @@ export default function FundSinglePage({
                 <ClubDetails clubAddress={clubAddress} />
                 <ClubStats clubAddress={clubAddress} />
               </section>
-              <section className="flex-1 pl-6 flex flex-col justify-between">
+              <section className={cn("flex-1 pl-6 flex flex-col justify-between", {
+                "unsupported": !isSupported,
+              })}>
                 {openRaise && !raiseOver && <RaisingStats clubAddress={clubAddress} />}
                 {raiseOver && <BuyRedeemPanel clubAddress={clubAddress} />}
                 {isMember ? (

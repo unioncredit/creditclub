@@ -14,6 +14,8 @@ import { useAccount } from "wagmi";
 import { REWARDS_RAFFLE_MODAL } from "@/components/modals/RewardsRaffleModal";
 import { TOKENS } from "@/constants";
 import { useClubContacts } from "@/hooks/useClubContacts";
+import { cn } from "@/lib/utils";
+import { useSupportedNetwork } from "@/hooks/useSupportedNetwork";
 
 export const ClubStats = ({
   clubAddress,
@@ -22,6 +24,7 @@ export const ClubStats = ({
 }) => {
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress);
+  const { data: isSupported } = useSupportedNetwork();
   const { open: openModal } = useModals();
   const { isConnected } = useAccount();
   const { token } = useToken();
@@ -54,7 +57,9 @@ export const ClubStats = ({
   ];
 
   return (
-    <div className="mt-8 p-4 border rounded-2xl">
+    <div className={cn("mt-8 p-4 border rounded-2xl", {
+      "unsupported": !isSupported,
+    })}>
       <header className="flex items-center justify-between">
         <div>
           <h3 className="font-medium text-sm text-stone-500">Club Stake</h3>
