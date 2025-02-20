@@ -124,6 +124,10 @@ export const useClubData = (clubAddress: Address) => {
     {
       ...creditVaultContract,
       functionName: "totalSupply",
+    },
+    {
+      ...creditVaultContract,
+      functionName: "creator",
     }
   ];
 
@@ -136,6 +140,8 @@ export const useClubData = (clubAddress: Address) => {
       enabled: !!clubAddress,
     }
   });
+
+  console.log({ data: result.data });
 
   const [
     totalLockedStake = 0n,
@@ -165,6 +171,7 @@ export const useClubData = (clubAddress: Address) => {
     vestingDurationInSeconds = 0n,
     startingPercentTrust = 0n,
     totalSupply = 0n,
+    creatorAddress = zeroAddress,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -197,6 +204,7 @@ export const useClubData = (clubAddress: Address) => {
     startingPercentTrust,
     totalSupply,
     raiseOver: totalAssets >= initialRaise,
+    creatorAddress,
   };
 
   return { ...result, data };

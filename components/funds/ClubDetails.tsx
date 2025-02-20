@@ -15,7 +15,6 @@ import { IconCube } from "@/components/shared/IconCube";
 import { Badge } from "@/components/ui/Badge";
 import { truncateAddress } from "@/lib/format";
 import { getEtherscanAddressLink } from "@/lib/links";
-import { useContractDeployer } from "@/hooks/useContractDeployer";
 import { usePrimaryLabel } from "@/hooks/usePrimaryLabel";
 import { useTalentSocials } from "@/hooks/useTalentSocials";
 import React from "react";
@@ -37,14 +36,13 @@ export const ClubDetails = ({
 }) => {
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress)
-  const { data: deployerAddress } = useContractDeployer(clubAddress);
-  const { data: socials } = useTalentSocials(deployerAddress);
+  const { data: socials } = useTalentSocials(clubData.creatorAddress);
   const { data: deployerName } = usePrimaryLabel({
-    address: deployerAddress,
+    address: clubData.creatorAddress,
     shouldTruncate: true,
   });
 
-  const { name, symbol } = clubData;
+  const { name, symbol, creatorAddress } = clubData;
 
   const clubBadges = [
     {
@@ -53,7 +51,7 @@ export const ClubDetails = ({
     },
     {
       label: `BY:${deployerName}`,
-      url: getEtherscanAddressLink(deployerAddress),
+      url: getEtherscanAddressLink(creatorAddress),
     }
   ];
 

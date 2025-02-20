@@ -6,7 +6,7 @@ import { cookieStorage, createStorage } from "wagmi";
 
 export const config = createConfig({
   ssr: true,
-  chains: [base, baseSepolia], // Pass your required chains as an array
+  chains: [baseSepolia], // Pass your required chains as an array
   transports: {
     [base.id]: http(),
     [baseSepolia.id]: http(),
