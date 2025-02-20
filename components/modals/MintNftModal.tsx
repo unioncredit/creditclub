@@ -20,6 +20,8 @@ import { useErc20Token } from "@/hooks/useErc20Token";
 import { ApprovalButton } from "@/components/shared/ApprovalButton";
 import { useClubMember } from "@/hooks/useClubMember";
 import { useClubContacts } from "@/hooks/useClubContacts";
+import { useClubMemberNft } from "@/hooks/useClubMemberNft";
+import { createIpfsImageUrl } from "@/lib/links";
 
 export const MINT_NFT_MODAL = "mint-nft-modal";
 
@@ -34,12 +36,17 @@ export const MintNftModal = ({
   const { refetch: refetchClubContacts } = useClubContacts(clubAddress);
   const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress);
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
+  const { data: clubMemberNftData } = useClubMemberNft(clubAddress);
   const { data: newMemberData } = useNewMemberData(address, clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
 
   const {
     assetBalance
   } = clubMember;
+
+  const {
+    image: ipfsImageLink,
+  } = clubMemberNftData;
 
   const {
     symbol: assetTokenSymbol,
@@ -93,7 +100,7 @@ export const MintNftModal = ({
             <Image
               width={150}
               height={150}
-              src="/images/avatar.png"
+              src={createIpfsImageUrl(ipfsImageLink)}
               alt="Fund Image"
               className="rounded-xl border border-stone-200"
             />
@@ -131,6 +138,7 @@ export const MintNftModal = ({
                   tokenId,
                   rows,
                   startingCredit: initialTrustAmount,
+                  nftImageUrl: ipfsImageLink,
                 });
               }
             }}

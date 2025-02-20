@@ -141,8 +141,6 @@ export const useClubData = (clubAddress: Address) => {
     }
   });
 
-  console.log({ data: result.data });
-
   const [
     totalLockedStake = 0n,
     stakedBalance = 0n,

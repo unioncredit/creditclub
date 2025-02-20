@@ -20,6 +20,7 @@ import { useTalentSocials } from "@/hooks/useTalentSocials";
 import React from "react";
 import { useClubData } from "@/hooks/useClubData";
 import { useClubContacts } from "@/hooks/useClubContacts";
+import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 
 const DISPLAYED_SOCIALS = ["farcaster", "github", "lens"];
 
@@ -36,6 +37,7 @@ export const ClubDetails = ({
 }) => {
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress)
+  const { data: clubMemberNftData } = useClubMemberNft(clubAddress);
   const { data: socials } = useTalentSocials(clubData.creatorAddress);
   const { data: deployerName } = usePrimaryLabel({
     address: clubData.creatorAddress,
@@ -43,6 +45,7 @@ export const ClubDetails = ({
   });
 
   const { name, symbol, creatorAddress } = clubData;
+  const { description } = clubMemberNftData;
 
   const clubBadges = [
     {
@@ -111,8 +114,7 @@ export const ClubDetails = ({
       </div>
 
       <p className="text-stone-500 font-light mt-6">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
+        {description}
       </p>
     </div>
   )

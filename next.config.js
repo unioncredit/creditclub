@@ -4,6 +4,14 @@ module.exports = {
   sassOptions: {
     silenceDeprecations: ['legacy-js-api'],
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "ipfs.io",
+      }
+    ],
+  },
   transpilePackages: [
     '@uniswap/conedison',
     '@uniswap/widgets',

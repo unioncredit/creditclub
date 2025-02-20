@@ -1,5 +1,4 @@
 import {
-  Button,
   Modal,
   ModalOverlay,
   InfoBanner,
@@ -15,6 +14,7 @@ import { ShadowButton as FlatButton } from "@/components/ui/ShadowButton";
 import { StatGrid, StatGridRow } from "@/components/shared/StatGrid";
 import { format } from "@/lib/format";
 import { useToken } from "@/hooks/useToken";
+import { RoundedButton } from "@/components/ui/RoundedButton";
 
 export const POST_MINT_NFT_MODAL = "post-mint-nft-modal";
 
@@ -23,11 +23,13 @@ export const PostMintNftModal = ({
   tokenId,
   rows,
   startingCredit,
+  nftImageUrl,
 }: {
   clubName: string;
   tokenId: bigint;
   rows: StatGridRow[];
   startingCredit: bigint;
+  nftImageUrl: string;
 }) => {
   const { close } = useModals();
   const { token } = useToken();
@@ -52,7 +54,7 @@ export const PostMintNftModal = ({
             <Image
               width={150}
               height={150}
-              src="/images/avatar.png"
+              src={nftImageUrl}
               alt="Fund Image"
               className="rounded-xl border border-stone-200"
             />
@@ -74,22 +76,23 @@ export const PostMintNftModal = ({
             {'Use credit on Union ->'}
           </FlatButton>
 
-          <ButtonRow className="mt-4 gap-2">
-            <Button
-              fluid
-              label="Share"
-              color="primary"
+          <ButtonRow className="mt-4 gap-2 w-full flex justify-between">
+            <RoundedButton
+              variant="blue"
               icon={TwitterIcon}
-              className="!border-black border"
-            />
-            <Button
-              fluid
-              label="Etherscan"
-              color="secondary"
+              className="!border-black border flex-1"
+            >
+              <TwitterIcon width={24} className="fill text-white" />
+              Share
+            </RoundedButton>
+            <RoundedButton
               variant="light"
-              className="!border-black"
-              icon={LinkOutIcon}
-            />
+              icon={TwitterIcon}
+              className="!border-black border flex-1"
+            >
+              Etherscan
+              <LinkOutIcon width={24} />
+            </RoundedButton>
           </ButtonRow>
         </Modal.Body>
       </Modal>
