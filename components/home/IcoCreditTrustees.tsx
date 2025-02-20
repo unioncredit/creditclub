@@ -1,10 +1,31 @@
+import { Address } from "viem";
+import { useAccount } from "wagmi";
+
 import { StatGrid, type StatGridRow } from "@/components/shared/StatGrid";
+import { useClubData } from "@/hooks/useClubData";
+import { useClubContacts } from "@/hooks/useClubContacts";
+import { useNewMemberData } from "@/hooks/useNewMemberData";
+import { useToken } from "@/hooks/useToken";
+import { format } from "@/lib/format";
+import { useIsQualified } from "@/hooks/useIsQualified";
 
 export const IcoCreditTrustees = ({
+  clubAddress,
   className,
 }: {
+  clubAddress: Address;
   className?: string;
 }) => {
+  const { token } = useToken();
+  const { address, isConnected } = useAccount();
+  const { data: clubData } = useClubData(clubAddress);
+  const { data: clubContacts } = useClubContacts(clubAddress);
+  const { data: newMemberData } = useNewMemberData(address, clubAddress);
+  const { data: isQualified } = useIsQualified(clubAddress);
+
+  const { memberMax, costToMint } = clubData;
+  const { initialTrustAmount } = newMemberData;
+
   const rows: StatGridRow[] = [
     {
       name: "Who can mint?",
@@ -12,19 +33,21 @@ export const IcoCreditTrustees = ({
     },
     {
       name: "Trustees",
-      value: "0 claimed of 150 available"
-    },
-    {
-      name: "Starting credit",
-      value: "$100"
+      value: `${clubContacts.length} claimed of ${memberMax} available`
     },
     {
       name: "Cost to mint",
-      value: "$0"
+      value: `$${format(costToMint, token)}`
+    },
+    {
+      name: "Starting credit",
+      value: isConnected ? `$${format(initialTrustAmount, token)}` : "Connect Wallet"
     },
     {
       name: "Do you qualify?",
-      value: "Yes / No"
+      value: isConnected
+        ? isQualified ? "Yes" : "No"
+        : "Connect Wallet"
     },
   ];
 

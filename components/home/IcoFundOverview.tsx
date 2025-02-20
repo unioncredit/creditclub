@@ -1,35 +1,51 @@
 import { StatGrid, type StatGridRow } from "@/components/shared/StatGrid";
-import Link from "next/link";
+import { Address } from "viem";
+import { useClubData } from "@/hooks/useClubData";
+import { useClubMemberNft } from "@/hooks/useClubMemberNft";
+import { useIcoStats } from "@/hooks/useIcoStats";
+import { formatDuration } from "@/lib/utils";
+import { useClubContacts } from "@/hooks/useClubContacts";
 
 export const IcoFundOverview = ({
+  clubAddress,
   className,
 }: {
+  clubAddress: Address;
   className?: string;
 }) => {
+  const { data: clubData } = useClubData(clubAddress);
+  const { data: clubMemberNftData } = useClubMemberNft(clubAddress);
+  const { data: icoStats } = useIcoStats(clubAddress);
+  const { data: clubContacts } = useClubContacts(clubAddress);
+
+  const { name, symbol, lockupPeriod, memberMax } = clubData;
+  const { description } = clubMemberNftData;
+  const { current, goal } = icoStats;
+
   const rows: StatGridRow[] = [
     {
       name: "Name",
-      value: "FUNDT (Fund Name)"
+      value: `${symbol} (${name})`
     },
     {
       name: "Description",
-      value: <p className="text-xs">OG Credit Club Beta Testers. This is additional text to fill in the space to see what it will look like. This is addition to oaigueaoiugeoiaigue.</p>
+      value: description
     },
-    {
-      name: "Qualified",
-      value: <Link href="#" className="underline">Invited_List.csv</Link>
-    },
+    // {
+    //   name: "Qualified",
+    //   value: <Link href="#" className="underline">Invited_List.csv</Link>
+    // },
     {
       name: "Trustees",
-      value: "0 claimed / 1000 available"
+      value: `${clubContacts.length} claimed / ${memberMax} available`
     },
     {
       name: "Initial Raise",
-      value: "$3,000 of $5,000"
+      value: `$${current} of $${goal}`
     },
     {
-      name: "Locked Until",
-      value: "Jan 25, 2025"
+      name: "Lockup Period",
+      value: formatDuration(Number(lockupPeriod))
     },
   ];
 

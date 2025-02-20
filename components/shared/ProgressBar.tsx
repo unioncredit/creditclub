@@ -51,15 +51,17 @@ export const ProgressBar = ({
 
   const totalCharacters = Math.max(Math.floor(width / getCharacterPixelSize()) - 2, 2);
 
-  const numBars = Math.round(totalCharacters * (value / 100));
+  const numBars = value > 0
+    ? Math.max(Math.round(totalCharacters * (value / 100)), 1)
+    : Math.round(totalCharacters * (value / 100));
   const numEmpty = totalCharacters - numBars;
 
   const barString = Array(numBars).fill("|").join("");
   const emptyString = Array(numEmpty).fill(".").join("");
 
   return (
-    <div ref={ref} className={cn("overflow-hidden", className)}>
-      <p className="w-auto">
+    <div ref={ref} className={cn("overflow-hidden font-mono", className)}>
+      <p className="w-auto font-mono">
         [{barString}{emptyString}]
       </p>
     </div>

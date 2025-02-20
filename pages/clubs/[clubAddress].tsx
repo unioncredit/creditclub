@@ -4,7 +4,7 @@ import { GetServerSideProps } from "next";
 import { useAccount } from "wagmi";
 
 import { Columned } from "@/components/shared/Columned";
-import { Header } from "@/components/shared/Header";
+import { ClubHeader } from "@/components/shared/ClubHeader";
 import { Footer } from "@/components/shared/Footer";
 import { Container } from "@/components/shared/Container";
 import { BannerCta } from "@/components/funds/BannerCta";
@@ -52,7 +52,7 @@ export default function FundSinglePage({
 
       <main>
         <Columned width={1020} className="py-8">
-          <Header />
+          <ClubHeader />
           {!isSupported && <WrongNetworkBanner />}
           {isQualified && !isMember && <BannerCta clubAddress={clubAddress} className="mt-4" />}
 
