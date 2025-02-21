@@ -15,6 +15,11 @@ module.exports = {
       }
     ],
   },
+  modularizeImports: {
+    "viem": {
+      transform: "viem/{{member}}",
+    },
+  },
   transpilePackages: [
     '@uniswap/conedison',
     '@uniswap/widgets',
