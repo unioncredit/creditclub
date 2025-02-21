@@ -1,0 +1,91 @@
+@import "@unioncredit/ui/src/variables";
+
+.Notification {
+  width: 288px;
+  display: flex;
+  border: 1px solid $grey100;
+  box-shadow: 0 1px 1px rgba(58, 56, 66, 0.2),
+  0 4px 8px rgba(58, 56, 66, 0.25);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: white;
+  align-items: center;
+
+  .label {
+    margin-bottom: 0;
+  }
+
+  &__icon {
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin-right: 12px;
+    width: 24px;
+    height: 24px;
+  }
+
+  &__content {
+    flex-grow: 1;
+    color: $grey500;
+    text-align: left;
+
+    .text {
+      margin-bottom: 4px;
+      line-height: 20px;
+
+      &:first-of-type {
+        color: black;
+      }
+      &:last-of-type {
+        font-size: 85%;
+      }
+    }
+  }
+
+  &__link {
+    font-size: 0;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    padding-left: 13px;
+    align-items: center;
+
+    & > *:not(:last-child) {
+      margin-bottom: 4px;
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+
+      path {
+        fill: $grey500;
+      }
+    }
+
+    .Notification__close {
+      width: 24px;
+      height: 24px;
+      border: 1px solid #e7e5e4;
+      border-radius: 50%;
+      box-sizing: border-box;
+      background: white;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        width: 10px;
+        height: 10px;
+      }
+
+      &:hover {
+        background: $grey100;
+      }
+    }
+  }
+}

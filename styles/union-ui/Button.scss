@@ -1,0 +1,339 @@
+@import "@unioncredit/ui/src/variables";
+
+$iconGutter: 4px;
+$disabledOpacity: 0.5;
+
+.button--rounded {
+  position: relative;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  cursor: pointer;
+  transition: all 100ms;
+  text-decoration: none;
+  box-sizing: border-box;
+  white-space: nowrap;
+  padding: 12px 24px;
+  border-radius: 12px;
+}
+
+.button {
+
+  &--noLabel {
+    padding: 12px !important;
+
+    svg {
+      margin: 0 !important;
+    }
+  }
+
+  &--withIcon:not(.button--noLabel) {
+    svg:not(.loading-spinner) {
+      width: 24px;
+      height: 24px;
+    }
+    &.button--icon-pos-start svg:not(.loading-spinner) {
+      margin-right: $iconGutter;
+    }
+    &.button--icon-pos-end {
+      svg:not(.loading-spinner) {
+        margin-left: $iconGutter;
+      }
+    }
+  }
+
+  .loading-spinner-wrapper {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+
+  &--loading {
+    opacity: 1 !important;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      bottom: 5px;
+      left: 5px;
+      background-color: inherit;
+    }
+  }
+
+  &--inline {
+    display: inline-flex;
+  }
+
+  &--fluid {
+    width: 100%;
+    flex: 1 1 0;
+  }
+
+  &[disabled="true"],
+  &[disabled],
+  &[disabled]:hover,
+  &[disabled="true"]:hover {
+    opacity: $disabledOpacity;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+.button--color {
+  &-primary {
+    color: white;
+    background-color: $blue600;
+
+    svg:not(.Share_svg__Icon) path {
+      fill: white;
+    }
+    svg.Share_svg__Icon path {
+      stroke: white;
+    }
+
+    &.button--variant {
+      &-light {
+        background-color: $blue500;
+
+        &:hover:enabled {
+          background-color: $blue400;
+        }
+      }
+      &-dark {
+        background-color: $blue700;
+
+        &:hover:enabled {
+          background-color: $blue600;
+        }
+      }
+    }
+
+    .loading-spinner {
+      path {
+        fill: none;
+        stroke: #d1e2ff;
+      }
+      circle {
+        stroke: #2143d5;
+      }
+    }
+
+    &:hover:enabled {
+      background-color: $blue500;
+    }
+    &:active:enabled {
+      background-color: $blue800;
+    }
+  }
+
+  &-secondary,
+  &-pill {
+    color: $grey700;
+    background-color: $grey200;
+
+    &.button--variant {
+      &-light {
+        background-color: white;
+        border: 1px solid $grey200;
+      }
+      &-dark {
+        background-color: $grey300;
+
+        &:hover:enabled {
+          background-color: $grey200;
+        }
+      }
+    }
+
+    &:hover:enabled {
+      background-color: $grey100;
+    }
+    &:active:enabled {
+      background-color: $grey300;
+    }
+  }
+
+  &-secondary {
+    &[disabled="true"],
+    &[disabled],
+    &[disabled]:hover,
+    &[disabled="true"]:hover {
+      color: $grey300;
+      svg:not(.Share_svg__Icon) path {
+        fill: $grey300;
+      }
+      svg.Share_svg__Icon path {
+        stroke: $grey300;
+      }
+
+      &.button--loading {
+        background: white;
+        border: 1px solid $grey200;
+      }
+    }
+  }
+
+  &-red {
+    color: $red600;
+    background-color: $red200;
+
+    svg:not(.Share_svg__Icon) path {
+      fill: $red600;
+    }
+    svg.Share_svg__Icon path {
+      stroke: $red600;
+    }
+
+    &.button--variant {
+      &-light {
+        background-color: $red100;
+
+        &:hover:enabled {
+          background-color: $red50;
+        }
+      }
+      &-dark {
+        background-color: $red300;
+
+        &:hover:enabled {
+          background-color: $red200;
+        }
+      }
+    }
+
+    .loading-spinner {
+      path {
+        fill: none;
+        stroke: $red600;
+      }
+      circle {
+        stroke: $red300;
+      }
+    }
+
+    &:hover:enabled {
+      background-color: $red100;
+    }
+    &:active:enabled {
+      background-color: $red400;
+    }
+  }
+
+  &-blue {
+    color: $blue600;
+    background: $blue200;
+
+    svg:not(.Share_svg__Icon) path {
+      fill: $blue600;
+    }
+    svg.Share_svg__Icon path {
+      stroke: $blue600;
+    }
+
+    &.button--variant {
+      &-light {
+        background-color: $blue100;
+
+        &:hover:enabled {
+          background-color: $blue50;
+        }
+      }
+      &-dark {
+        background-color: $blue300;
+
+        &:hover:enabled {
+          background-color: $blue200;
+        }
+      }
+    }
+
+    .loading-spinner {
+      path {
+        fill: none;
+        stroke: $blue600;
+      }
+      circle {
+        stroke: $blue300;
+      }
+    }
+
+    &:hover:enabled {
+      background-color: $blue100;
+    }
+    &:active:enabled {
+      background-color: $blue400;
+    }
+  }
+}
+
+.button--size {
+  &-pill {
+    height: 28px;
+    padding: 0 12px !important;
+    font-size: 14px;
+
+    svg:not(.loading-spinner) {
+      width: 20px !important;
+      height: 20px !important;
+    }
+
+    &.button--noLabel {
+      width: 28px;
+    }
+
+    &.button--rounded {
+      border-radius: 16px;
+    }
+
+    .loading-spinner-wrapper {
+      width: 15px;
+      height: 15px;
+    }
+  }
+  &-small {
+    height: 40px;
+    font-size: 14px;
+
+    &.button--rounded {
+      border-radius: 10px;
+    }
+    &.button--noLabel {
+      width: 40px;
+    }
+  }
+  &-regular {
+    height: 48px;
+
+    &.button--noLabel {
+      width: 48px;
+    }
+  }
+  &-large {
+    height: 64px;
+    font-size: 18px;
+
+    @media screen and (max-width: $breakpoint-mobile) {
+      height: 48px;
+      font-size: 16px;
+    }
+
+    &.button--noLabel {
+      width: 64px;
+
+      @media screen and (max-width: $breakpoint-mobile) {
+        width: 48px;
+      }
+    }
+  }
+}

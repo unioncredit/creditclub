@@ -1,0 +1,140 @@
+@import "@unioncredit/ui/src/variables";
+
+.multiStepButton {
+  background-color: $blue100;
+  width: 100%;
+  border-radius: 16px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: padding 200ms;
+  box-sizing: border-box;
+
+  .toggle {
+    background: $blue200;
+
+    &.toggle--active {
+      background: $blue600;
+    }
+  }
+
+  .label {
+    padding-right: 4px;
+  }
+
+  &--showSteps {
+    padding: 8px;
+  }
+
+  &__action {
+    width: 100%;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  &__progressList {
+    display: flex;
+    align-items: center;
+
+    &__number {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      width: 24px;
+      height: 24px;
+      border-radius: 100%;
+      background-color: $blue200;
+      color: $blue900;
+      margin: 0 4px;
+
+      &:after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: calc(100%);
+        width: 8px;
+        height: 2px;
+        background-color: $blue200;
+      }
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+
+      &:first-of-type {
+        margin-left: 0;
+      }
+
+      &:last-of-type:after {
+        display: none;
+      }
+
+      &--complete {
+        background-color: $blue200;
+        color: $blue900;
+        font-size: 0;
+      }
+
+      &--complete:before {
+        background-color: $blue200;
+        color: $blue900;
+        display: block;
+        position: absolute;
+        height: 6px;
+        width: 8px;
+        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6' fill='none'%3E%3Cpath d='M7.97539 0.991311C7.97766 1.25351 7.87687 1.50611 7.69471 1.69471L3.69471 5.69471C3.50718 5.88218 3.25288 5.9875 2.98771 5.9875C2.72255 5.9875 2.46824 5.88218 2.28071 5.69471L0.280712 3.69471C0.0985542 3.50611 -0.00224062 3.25351 3.78025e-05 2.99131C0.00231622 2.72911 0.107485 2.4783 0.292894 2.29289C0.478302 2.10749 0.729114 2.00232 0.991311 2.00004C1.25351 1.99776 1.50611 2.09855 1.69471 2.28071L2.98771 3.57371L6.28071 0.280712C6.46931 0.0985542 6.72192 -0.00224062 6.98411 3.78025e-05C7.24631 0.00231622 7.49712 0.107485 7.68253 0.292894C7.86794 0.478302 7.97311 0.729114 7.97539 0.991311Z' fill='%231E3A8A'/%3E%3C/svg%3E");
+      }
+
+      &--pending {
+        background-color: $blue600;
+        color: white;
+        font-size: 0;
+      }
+
+      &--pending::before {
+        display: block;
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        content: url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg' style='height: 20px; width: 20px;'%3E%3Ccircle cx='10' cy='10' r='8' stroke='%2360A5FA' stroke-width='2'%3E%3C/circle%3E%3Cpath d='M18 10C18 5.58172 14.4183 2 10 2' stroke='%23fff' stroke-width='2' stroke-linecap='round'%3E%3C/path%3E%3C/svg%3E");
+        animation: loadingspin 2s infinite ease;
+      }
+
+      &--selected {
+        background-color: $blue600;
+        color: white;
+      }
+    }
+  }
+
+  &__secondaryInfo {
+    padding-right: 4px;
+    font-size: 12px;
+    line-height: 16px;
+    color: $blue600;
+  }
+
+  @keyframes loadingspin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .loading-spinner {
+    width: 100%;
+    height: 100%;
+    animation: loadingspin 2s infinite ease;
+  }
+}

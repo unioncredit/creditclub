@@ -1,0 +1,35 @@
+@import "@unioncredit/ui/src/variables";
+
+.DistributionBar {
+  width: 100%;
+  height: 32px;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+
+  &.empty {
+    background: #e4e4e7;
+  }
+
+  &__item {
+    position: absolute;
+    height: 100%;
+
+    &-color {
+      @include colors(background);
+    }
+
+    //&--separated + &--separated {
+    //  &::before {
+    //    content: ' ';
+    //    display: block;
+    //    height: 100%;
+    //    width: 2px;
+    //    left: -1px;
+    //    background: white;
+    //    position: absolute;
+    //    z-index: 1;
+    //  }
+    //}
+  }
+}
