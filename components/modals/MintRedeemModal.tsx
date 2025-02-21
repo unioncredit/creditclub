@@ -138,12 +138,12 @@ export const MintRedeemModal = ({
             className="my-4"
             leftPanel={{
               title: "What you send",
-              value: formatDecimals(sharesRaw, sendTokenDecimals, 0),
+              value: formatDecimals(sharesRaw, sendTokenDecimals, 2),
               icon: ` ${sendTokenSymbol}`,
             }}
             rightPanel={{
               title: "What you receive",
-              value: formatDecimals(amountReceived, sendTokenDecimals, 2),
+              value: formatDecimals(amountReceived, receiveTokenDecimals, 2, false),
               icon: ` ${receiveTokenSymbol}`
             }}
           />
@@ -160,7 +160,7 @@ export const MintRedeemModal = ({
             actionProps={{
               ...creditVaultContract,
               ...(tab === "mint" ? {
-                functionName: "mint",
+                functionName: "deposit",
                 args: [sharesRaw, address],
               } : {
                 functionName: "redeem",

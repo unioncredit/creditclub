@@ -16,7 +16,7 @@ export const useMintRedeemPreview = ({
 
   const result = useReadContract({
     ...creditVaultContract,
-    functionName: action == "mint" ? "previewMint" : "previewRedeem",
+    functionName: action == "mint" ? "previewDeposit" : "previewRedeem",
     args: [shares],
   })
 
