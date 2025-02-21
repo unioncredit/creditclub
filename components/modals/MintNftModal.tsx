@@ -138,7 +138,7 @@ export const MintNftModal = ({
                   tokenId,
                   rows,
                   startingCredit: initialTrustAmount,
-                  nftImageUrl: ipfsImageLink,
+                  nftImageUrl: createIpfsImageUrl(ipfsImageLink),
                 });
               }
             }}
