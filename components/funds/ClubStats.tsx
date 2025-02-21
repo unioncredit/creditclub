@@ -76,7 +76,7 @@ export const ClubStats = ({
 
       <DistributionBarValues items={barValues}/>
 
-      <footer className="mt-4 pt-4 border-t flex items-center gap-4 justify-between">
+      <footer className="mt-4 pt-4 border-t flex items-center gap-4 justify-between sm:flex-col">
         <div>
           <h3 className="font-medium text-sm text-stone-500">Rewards to Distribute</h3>
           <FormattedValue
@@ -90,7 +90,7 @@ export const ClubStats = ({
           size="large"
           variant="rainbow"
           icon={<ConfettiIcon width={24} height={24} />}
-          className="w-[200px]"
+          className="w-[200px] sm:w-full"
           onClick={() => openModal(REWARDS_RAFFLE_MODAL, { clubAddress: clubAddress })}
         >
           Daily Distribution

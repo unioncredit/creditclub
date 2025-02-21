@@ -24,7 +24,7 @@ export const SendReceivePanel = ({
   return (
     <div className={cn("p-6 bg-stone-100 rounded-lg flex justify-between", className)}>
       <div className="bg-white p-4 rounded-lg flex flex-col items-center border border-stone-300">
-        <p className="text-stone-600">{leftTitle}</p>
+        <p className="text-stone-600 text-center">{leftTitle}</p>
         <p className="font-medium flex items-center gap-1">
           {leftValue}
           {leftIcon && leftIcon}
@@ -34,7 +34,7 @@ export const SendReceivePanel = ({
       <ArrowRightIcon width={32}/>
 
       <div className="bg-white p-4 rounded-lg flex flex-col items-center  border border-stone-300">
-        <p className="text-stone-600">{rightTitle}</p>
+        <p className="text-stone-600 text-center">{rightTitle}</p>
         <p className="font-medium flex items-center gap-1">
           {rightValue}
           {rightIcon && rightIcon}

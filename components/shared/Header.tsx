@@ -12,14 +12,14 @@ export const Header = () => {
 
   return (
     <header className="w-full items-center flex justify-between">
-      <div>
+      <div className="sm:hidden">
         <a href="/">
           <CreditClubLogo className="w-[200px]" />
         </a>
       </div>
-      <div className="hidden">
+      <div className="hidden sm:block">
         <a href="/">
-          <MobileCreditClubLogo />
+          <MobileCreditClubLogo className="h-[50px] max-w-[115px] -ml-4 scale-90" />
         </a>
       </div>
 

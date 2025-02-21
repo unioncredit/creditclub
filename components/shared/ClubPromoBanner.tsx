@@ -20,7 +20,7 @@ export const ClubPromoBanner = ({
   const { current, goal, percentage } = icoStats;
 
   return (
-    <div className="mt-4 bg-blue-50 p-4 rounded-xl flex items-center justify-between">
+    <div className="mt-4 bg-blue-50 p-4 rounded-xl flex items-center justify-between sm:flex-col">
       <div className="flex-1">
         <h2 className="font-mono">Initial Credit Offering: {name}</h2>
         <div className="flex">
@@ -29,7 +29,10 @@ export const ClubPromoBanner = ({
         </div>
       </div>
 
-      <ShadowButton onClick={() => router.push(createClubUrl(clubAddress))}>
+      <ShadowButton
+        className="sm:mt-4"
+        onClick={() => router.push(createClubUrl(clubAddress))}
+      >
         Check eligibility
       </ShadowButton>
     </div>

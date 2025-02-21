@@ -57,12 +57,12 @@ export default function FundSinglePage({
           {isQualified && !isMember && <BannerCta clubAddress={clubAddress} className="mt-4" />}
 
           <Container className="mt-4">
-            <div className="flex w-full">
+            <div className="flex w-full md:flex-col">
               <section className="flex flex-col justify-between flex-1 text-left">
                 <ClubDetails clubAddress={clubAddress} />
                 <ClubStats clubAddress={clubAddress} />
               </section>
-              <section className={cn("flex-1 pl-6 flex flex-col justify-between", {
+              <section className={cn("flex-1 pl-6 flex flex-col justify-between md:pl-0 md:mt-4", {
                 "unsupported": !isSupported,
               })}>
                 {openRaise && !raiseOver && <RaisingStats clubAddress={clubAddress} />}

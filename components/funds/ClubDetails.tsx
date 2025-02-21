@@ -73,13 +73,13 @@ export const ClubDetails = ({
 
   return (
     <div>
-      <div className="flex items-between pb-4 border-b border-gray-200">
+      <div className="flex items-between pb-4 border-b border-gray-200 sm:items-start">
         <IconCube width={42} height={42} icon={BlackBear} color="#F4F4F6" />
 
         <div className="pl-3">
           <h1 className="font-sans text-2xl font-medium">{name} ({symbol})</h1>
 
-          <ul className="flex gap-1">
+          <ul className="flex gap-1 flex-wrap">
             {clubBadges.map(({ label, url }, index) => (
               <li key={index}>
                 <Badge

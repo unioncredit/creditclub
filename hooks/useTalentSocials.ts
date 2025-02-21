@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { Address } from "viem";
+import { Address, zeroAddress } from "viem";
 import { TalentPassportSocial } from "@/pages/api/[address]/socials";
 
 export const useTalentSocials = (address: Address) => {
   return useQuery<TalentPassportSocial[]>({
-    enabled: !!address,
+    enabled: !!address && address !== zeroAddress,
     staleTime: 120_000,
     queryKey: ["useTalentSocials", address],
     queryFn: async () => {

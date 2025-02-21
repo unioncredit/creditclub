@@ -22,14 +22,14 @@ export const ClubHeader = () => {
 
   return (
     <header className="w-full items-center flex justify-between">
-      <div>
+      <div className="sm:hidden">
         <a href="/">
           <CreditClubLogo className="w-[200px]" />
         </a>
       </div>
-      <div className="hidden">
+      <div className="hidden sm:block">
         <a href="/">
-          <MobileCreditClubLogo />
+          <MobileCreditClubLogo className="h-[50px] max-w-[115px] -ml-4 scale-90" />
         </a>
       </div>
 
@@ -37,19 +37,19 @@ export const ClubHeader = () => {
         {isSupported && (
           <>
             <RoundedButton
-              className="mr-2"
+              className="mr-2 sm:text-[0px] sm:pl-[12px] sm:pr-[8px]"
               icon={<WalletIcon width={24} />}
               onClick={() => open("https://app.union.finance/")}
             >
-              Borrow · ${format(creditLimit, token, creditLimit < wad ? 2 : 0)}
+              <span className="md:hidden">Borrow · </span>${format(creditLimit, token, creditLimit < wad ? 2 : 0)}
             </RoundedButton>
 
             <RoundedButton
-              className="mr-2"
+              className="mr-2 sm:text-[0px] sm:pl-[12px] sm:pr-[8px]"
               icon={<RepayIcon width={24} />}
               onClick={() => open("https://app.union.finance/")}
             >
-              Repay · ${format(owed, token, owed < wad ? 2 : 0)}
+              <span className="md:hidden">Repay · </span>${format(owed, token, owed < wad ? 2 : 0)}
             </RoundedButton>
           </>
         )}

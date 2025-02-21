@@ -69,7 +69,7 @@ export const RewardsRaffleModal = ({
             amount={winnerBalance.toFixed(2)}
             color="#F4F4F6"
             token={<Union />}
-            className="mt-12"
+            className="mt-12 sm:mt-16"
           />
           <StatRow
             percentage={`${bidBucketPercentage}%`}

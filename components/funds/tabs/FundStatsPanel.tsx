@@ -63,8 +63,6 @@ export const FundStatsPanel = ({
     },
   ];
 
-  console.log({ clubContacts });
-
   const trusteeStatsRows: StatGridRow[] = [
     {
       name: "# of Trustees",
@@ -100,7 +98,7 @@ export const FundStatsPanel = ({
   ];
 
   return (
-    <div className="grid grid-cols-2">
+    <div className="grid grid-cols-2 sm:grid-cols-1">
       <div>
         <StatGrid title="Fund Stats" rows={fundStatsRows} className="border-l-0 border-b-0" />
         <StatGrid title="Assets" rows={assetRows} className="border-l-0 border-b-0" />

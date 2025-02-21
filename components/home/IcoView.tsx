@@ -26,9 +26,9 @@ export const IcoView = ({
   return (
     <section className={className}>
       <header className="flex items-center border-b border-black pb-3">
-        <p className="text-xl py-1 px-2 border border-black">ICO-{getInitials(name)}</p>
+        <p className="text-xl py-1 px-2 border border-black sm:hidden">ICO-{getInitials(name)}</p>
 
-        <div className="pl-4 flex-1">
+        <div className="pl-4 flex-1 sm:pl-0">
           <h2 className="font-medium text-lg">Initial Credit Offering: {name}</h2>
 
           <div className="flex">
@@ -38,7 +38,7 @@ export const IcoView = ({
         </div>
       </header>
 
-      <div className="grid grid-cols-2 gap-4 mt-4">
+      <div className="grid grid-cols-2 gap-4 mt-4 md:grid-cols-1">
         <IcoFundOverview clubAddress={clubAddress} />
 
         <div>
