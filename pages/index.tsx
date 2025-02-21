@@ -15,7 +15,7 @@ export default function HomePage() {
   return (
     <>
       <Head>
-        <title>Fund · Homepage</title>
+        <title>CreditClub - Introducing Credit Vaults</title>
       </Head>
 
       <main>

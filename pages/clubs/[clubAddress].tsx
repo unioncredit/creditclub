@@ -41,13 +41,13 @@ export default function FundSinglePage({
   const { data: isQualified } = useIsQualified(clubAddress);
   const { data: isSupported } = useSupportedNetwork();
 
-  const { openRaise, raiseOver } = clubData;
+  const { name, openRaise, raiseOver } = clubData;
   const { isMember } = clubMember;
 
   return (
     <>
       <Head>
-        <title>Fund Single Page</title>
+        <title>Credit Vault - {name}</title>
       </Head>
 
       <main>

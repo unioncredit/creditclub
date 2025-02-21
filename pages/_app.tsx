@@ -32,13 +32,12 @@ function MyApp({ Component, pageProps }: AppProps) {
           crossOrigin=""
         />
 
-        <link rel="icon" href="/favicons/favicon.ico" sizes="any" />
-        <link rel="icon" href="/favicons/icon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png" />
+        <link rel="icon" type="image/svg+xml" href="/favicons/glasses-black.svg" />
+        <link rel="apple-touch-icon" href="/favicons/glasses-black.svg" />
         <link rel="manifest" href="/favicons/manifest.json" />
 
-        <title>Privy Auth Starter</title>
-        <meta name="description" content="Privy Auth Starter" />
+        <title>CreditClub</title>
+        <meta name="description" content="Credit Vaults are tokenized perpetual credit funds." />
       </Head>
       <PrivyProvider
         appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
