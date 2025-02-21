@@ -4,6 +4,9 @@ module.exports = {
   sassOptions: {
     silenceDeprecations: ['legacy-js-api'],
   },
+  experimental: {
+    optimizePackageImports: ["lodash", "viem"]
+  },
   images: {
     remotePatterns: [
       {
