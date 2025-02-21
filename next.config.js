@@ -5,7 +5,7 @@ module.exports = {
     silenceDeprecations: ['legacy-js-api'],
   },
   experimental: {
-    optimizePackageImports: ["lodash", "viem"]
+    optimizePackageImports: ["lodash", "viem", "wagmi"]
   },
   images: {
     remotePatterns: [
@@ -18,6 +18,9 @@ module.exports = {
   modularizeImports: {
     "viem": {
       transform: "viem/{{member}}",
+    },
+    "wagmi": {
+      transform: "wagmi/{{member}}",
     },
   },
   transpilePackages: [
