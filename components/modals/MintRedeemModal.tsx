@@ -143,7 +143,7 @@ export const MintRedeemModal = ({
             }}
             rightPanel={{
               title: "What you receive",
-              value: formatDecimals(amountReceived, sendTokenDecimals, 0),
+              value: formatDecimals(amountReceived, sendTokenDecimals, 2),
               icon: ` ${receiveTokenSymbol}`
             }}
           />

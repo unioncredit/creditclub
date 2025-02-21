@@ -1,8 +1,8 @@
-import { baseSepolia } from "viem/chains";
+import { base } from "viem/chains";
 
 import { IToastStatus } from "@/providers/types";
 
-export const DEFAULT_CHAIN = baseSepolia;
+export const DEFAULT_CHAIN = base;
 export const DEFAULT_CHAIN_ID = DEFAULT_CHAIN.id;
 export const BLOCKS_PER_YEAR = 31540000n;
 export const SECONDS_PER_DAY = 86400;

@@ -35,6 +35,7 @@ export const useInvites = (clubAddress: Address) => {
   const [
     inviteEnabled = false,
     invited = false,
+    // @ts-ignore
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
