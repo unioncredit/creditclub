@@ -1,4 +1,4 @@
-import { chunk } from "lodash";
+import chunk from "lodash/chunk";
 import { Address } from "viem";
 import { useReadContracts } from "wagmi";
 
