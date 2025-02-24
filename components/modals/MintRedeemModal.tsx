@@ -188,11 +188,13 @@ export const MintRedeemModal = ({
               }}
               actionProps={{
                 ...creditVaultContract,
+                functionName: "deposit",
+                args: [sharesRaw, address],
                 label: sharesRaw <= 0n
                   ? "Enter an amount"
                   : sharesRaw > assetBalance
                     ? "Insufficient balance"
-                    : `${action} ${formatDecimals(amountReceived, receiveTokenDecimals, 0)} ${receiveTokenSymbol}`,
+                    : `${action} ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`,
                 disabled: !!errors.shares || sharesRaw < 0n || assetBalance < sharesRaw,
                 onComplete: async () => {
                   close();
@@ -211,7 +213,7 @@ export const MintRedeemModal = ({
                 ? "Enter an amount"
                 : sharesRaw > clubTokenBalance
                   ? "Insufficient balance"
-                  : `${action} ${formatDecimals(amountReceived, receiveTokenDecimals, 0)} ${receiveTokenSymbol}`}
+                  : `${action} ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`}
               {...redeemButtonProps}
             />
           )}
