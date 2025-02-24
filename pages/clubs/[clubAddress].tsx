@@ -30,7 +30,7 @@ export default function FundSinglePage({
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
 
-  const { name, openRaise, raiseOver } = clubData;
+  const { openRaise, raiseOver } = clubData;
   const { isMember } = clubMember;
 
   // Use the router.query.clubAddress if clubAddress prop is not provided
@@ -39,7 +39,7 @@ export default function FundSinglePage({
   return (
     <>
       <Head>
-        <title>Credit Vault - {name}</title>
+        <title>Credit Vault - Builders Credit</title>
       </Head>
 
       <main>
