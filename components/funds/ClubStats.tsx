@@ -1,21 +1,19 @@
 // @ts-ignore
 import { ConfettiIcon, UnionIcon } from "@unioncredit/ui";
+import { Address } from "viem";
+import { useAccount } from "wagmi";
 
 import { RoundedButton } from "@/components/ui/RoundedButton";
 import { DistributionBarItem, DistributionBarValues } from "@/components/shared/DistributionBarValues";
 import { FormattedValue } from "@/components/shared/FormattedValue";
-import { Address } from "viem";
 import { useClubData } from "@/hooks/useClubData";
 import { useToken } from "@/hooks/useToken";
 import { format, formattedNumber } from "@/lib/format";
 import { useModals } from "@/providers/ModalManagerProvider";
 import { FIXED_BID_MODAL } from "@/components/modals/FixedBidModal";
-import { useAccount } from "wagmi";
 import { REWARDS_RAFFLE_MODAL } from "@/components/modals/RewardsRaffleModal";
 import { TOKENS } from "@/constants";
 import { useClubContacts } from "@/hooks/useClubContacts";
-import { cn } from "@/lib/utils";
-import { useSupportedNetwork } from "@/hooks/useSupportedNetwork";
 
 export const ClubStats = ({
   clubAddress,
@@ -24,7 +22,6 @@ export const ClubStats = ({
 }) => {
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress);
-  const { data: isSupported } = useSupportedNetwork();
   const { open: openModal } = useModals();
   const { isConnected } = useAccount();
   const { token } = useToken();
@@ -57,9 +54,7 @@ export const ClubStats = ({
   ];
 
   return (
-    <div className={cn("mt-8 p-4 border rounded-2xl", {
-      "unsupported": !isSupported,
-    })}>
+    <div className="mt-8 p-4 border rounded-2xl">
       <header className="flex items-center justify-between">
         <div>
           <h3 className="font-medium text-sm text-stone-500">Club Stake</h3>

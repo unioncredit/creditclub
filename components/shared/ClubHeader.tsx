@@ -10,13 +10,11 @@ import { RoundedButton } from "@/components/ui/RoundedButton";
 import { useUnionMember } from "@/providers/UnionMemberProvider";
 import { format } from "@/lib/format";
 import { useToken } from "@/hooks/useToken";
-import { useSupportedNetwork } from "@/hooks/useSupportedNetwork";
 
 export const ClubHeader = () => {
   const { token, wad } = useToken();
   const { isConnected } = useAccount();
   const { data: unionMember } = useUnionMember();
-  const { data: isSupported } = useSupportedNetwork();
 
   const { creditLimit, owed } = unionMember;
 
@@ -34,7 +32,7 @@ export const ClubHeader = () => {
       </div>
 
       <div className="flex">
-        {isSupported && (
+        {isConnected && (
           <>
             <RoundedButton
               className="mr-2 sm:text-[0px] sm:pl-[12px] sm:pr-[8px]"

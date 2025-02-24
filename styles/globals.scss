@@ -84,9 +84,6 @@
   body {
     @apply bg-background text-foreground;
   }
-  .unsupported {
-    @apply blur-[4px] pointer-events-none;
-  }
 }
 
 body {
