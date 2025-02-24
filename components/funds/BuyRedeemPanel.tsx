@@ -1,7 +1,7 @@
 // @ts-ignore
 import { ConfettiIcon, AddIcon, LinkOutIcon } from "@unioncredit/ui";
 import { useAccount } from "wagmi";
-import { Address } from "viem";
+import { Address, formatUnits } from "viem";
 
 import { RoundedButton } from "@/components/ui/RoundedButton";
 import { useClubData } from "@/hooks/useClubData";
@@ -40,11 +40,11 @@ export const BuyRedeemPanel = ({
   const footerStats = [
     {
       title: "Your Holdings",
-      value: formatDecimals(clubTokenBalance, decimals, 0),
+      value: formatDecimals(clubTokenBalance, decimals, 2),
     },
     {
       title: "Market value",
-      value: `$${Number(clubTokenBalance) * tokenPrice}`
+      value: `$${Number(formatUnits(clubTokenBalance, decimals)) * tokenPrice}`
     },
     {
       title: "Lockup period",
