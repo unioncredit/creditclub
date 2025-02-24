@@ -31,11 +31,11 @@ export const BuyRedeemPanel = ({
   const {
     symbol,
     decimals,
-    totalAssets,
+    totalSupply,
     lockupPeriod,
   } = clubData;
 
-  const totalAssetsFormatted = formatDecimals(totalAssets, decimals, 2);
+  const totalSupplyFormatted = formatDecimals(totalSupply, decimals, 2);
 
   const footerStats = [
     {
@@ -59,7 +59,7 @@ export const BuyRedeemPanel = ({
           <h3 className="font-medium text-sm font-mono">Market cap</h3>
 
           <div className="flex">
-            <p className="text-sm font-mono font-medium">${totalAssetsFormatted}</p>
+            <p className="text-sm font-mono font-medium">${totalSupplyFormatted}</p>
           </div>
         </div>
 
