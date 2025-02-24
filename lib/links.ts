@@ -5,6 +5,10 @@ export const getEtherscanAddressLink = (address: Address) => `https://sepolia.ba
 export const createClubUrl = (clubAddress: Address) => `${process.env.NEXT_PUBLIC_URL}/clubs/${clubAddress}`;
 
 export const createIpfsImageUrl = (path: string ) => {
+  if (!path) {
+    return "";
+  }
+
   // path = ipfs://abcd1234...
   const cid = path.split('/');
   if (cid.length < 2) {

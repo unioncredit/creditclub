@@ -2,7 +2,6 @@
 import { AddressBookIcon } from "@unioncredit/ui";
 
 import CheckIcon from "@/assets/check-icon.svg";
-import BlackBearIcon from "@/assets/black-bear.svg";
 import { cn } from "@/lib/utils";
 import { RoundedButton } from "@/components/ui/RoundedButton";
 import { useModals } from "@/providers/ModalManagerProvider";
@@ -13,6 +12,10 @@ import { useGatingToken } from "@/hooks/useGatingToken";
 import { useInvites } from "@/hooks/useInvites";
 import { useClubContacts } from "@/hooks/useClubContacts";
 import { useAccount } from "wagmi";
+import { createIpfsImageUrl } from "@/lib/links";
+import Image from "next/image";
+import React from "react";
+import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 
 export const MembershipClaim = ({
   clubAddress,
@@ -25,8 +28,10 @@ export const MembershipClaim = ({
   const { data: clubContacts } = useClubContacts(clubAddress);
   const { data: gatingTokenData } = useGatingToken(clubAddress);
   const { data: inviteData } = useInvites(clubAddress);
+  const { data: memberNftdata } = useClubMemberNft(clubAddress);
 
   const { name, memberMax } = clubData;
+  const { image: nftIpfsUrl } = memberNftdata;
 
   const {
     enabled: inviteEnabled,
@@ -72,10 +77,15 @@ export const MembershipClaim = ({
         <div className={cn("mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-stone-100 rounded-2xl border", {
           "border-green-600": isQualfified,
         })}>
-          <BlackBearIcon width={48} height={48} className={cn({
-            "opacity-10": !isQualfified,
-            "text-green-600 fill": isQualfified,
-          })} />
+          <Image
+            width={48}
+            height={48}
+            src={createIpfsImageUrl(nftIpfsUrl)}
+            alt="Fund Image"
+            className={cn("rounded-xl border border-stone-200 min-w-[42px]", {
+              "opacity-20": !isQualfified,
+            })}
+          />
           <p className="text-lg">You are {!isQualfified && "not"} qualified</p>
         </div>
       )}

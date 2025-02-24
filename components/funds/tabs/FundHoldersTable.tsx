@@ -2,17 +2,17 @@ import {
   ColumnDef
 } from "@tanstack/react-table"
 import { DataTable } from "@/components/ui/DataTable";
-import { format, truncateAddress } from "@/lib/format";
-import { TOKENS } from "@/constants";
+import { formatDecimals, truncateAddress } from "@/lib/format";
 import { Address } from "viem";
 import { useClubContacts } from "@/hooks/useClubContacts";
 import { PrimaryLabel } from "@/components/shared/PrimaryLabel";
 import { useTokenPrice } from "@/hooks/useTokenPrice";
 import { BlockHeaderAvatar } from "@/components/shared/BlockHeaderAvatar";
+import { useClubData } from "@/hooks/useClubData";
 
 interface FundHolderRow {
   id: number;
-  shares: bigint;
+  shares: string;
   marketValue: string;
 }
 
@@ -47,7 +47,7 @@ const columns: ColumnDef<FundHolderRow>[] = [
     accessorKey: "shares",
     header: () => <div className="text-right">Shares</div>,
     cell: ({ getValue }) => (
-      <div className="text-right">{format(getValue() as bigint, TOKENS.UNION, 0)}</div>
+      <div className="text-right">{getValue() as string}</div>
     ),
   },
   {
@@ -64,14 +64,17 @@ export const FundHoldersTable = ({
 }: {
   clubAddress: Address;
 }) => {
+  const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress);
   const { data: tokenPrice }  = useTokenPrice(clubAddress);
+
+  const { decimals } = clubData;
 
   const rows: FundHolderRow[] = clubContacts.map(({ address, numShares }, index) => ({
     id: index,
     address,
-    shares: numShares,
-    marketValue: `$${Number(numShares) * tokenPrice}`,
+    shares: formatDecimals(numShares, decimals),
+    marketValue: `$${(parseFloat(formatDecimals(numShares, decimals)) * tokenPrice).toFixed(2)}`,
   }));
 
   return <DataTable columns={columns} data={rows} />

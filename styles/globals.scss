@@ -95,3 +95,9 @@ body {
 svg.fill path {
   fill: currentColor;
 }
+
+.no-scroll {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}

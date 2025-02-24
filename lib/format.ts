@@ -22,7 +22,7 @@ export const formatDecimals = (
   value: bigint,
   decimals: number,
   digits = 2,
-  rounded = true,
+  rounded = false,
   stripTrailingZeros = false,
   formatDust = true
 ) => {

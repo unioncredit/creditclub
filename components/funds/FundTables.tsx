@@ -15,9 +15,9 @@ export const FundTables = ({
   return (
     <Tabs className={cn("border border-black font-mono rounded-lg overflow-hidden", className)} defaultValue="stats">
       <TabsList>
-        <TabsTrigger value="stats">Fund Stats</TabsTrigger>
-        <TabsTrigger value="holders">FUND Holders</TabsTrigger>
-        <TabsTrigger value="trustees">Fund Trustees</TabsTrigger>
+        <TabsTrigger value="stats">Stats</TabsTrigger>
+        <TabsTrigger value="holders">Holders</TabsTrigger>
+        <TabsTrigger value="trustees">Trustees</TabsTrigger>
       </TabsList>
       <TabsContent value="stats">
         <FundStatsPanel clubAddress={clubAddress} />

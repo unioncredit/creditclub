@@ -4,9 +4,9 @@ module.exports = {
   sassOptions: {
     silenceDeprecations: ['legacy-js-api'],
   },
-  experimental: {
-    optimizePackageImports: ["lodash", "viem", "wagmi"]
-  },
+  // experimental: {
+  //   optimizePackageImports: ["lodash", "viem", "wagmi"]
+  // },
   images: {
     remotePatterns: [
       {
@@ -15,14 +15,14 @@ module.exports = {
       }
     ],
   },
-  modularizeImports: {
-    "viem": {
-      transform: "viem/{{member}}",
-    },
-    "wagmi": {
-      transform: "wagmi/{{member}}",
-    },
-  },
+  // modularizeImports: {
+  //   "viem": {
+  //     transform: "viem/{{member}}",
+  //   },
+  //   "wagmi": {
+  //     transform: "wagmi/{{member}}",
+  //   },
+  // },
   transpilePackages: [
     '@uniswap/conedison',
     '@uniswap/widgets',

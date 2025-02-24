@@ -5,22 +5,23 @@ import {
   // @ts-ignore
 } from "@unioncredit/ui";
 import { Address } from "viem";
+import React from "react";
+import Image from "next/image";
 
-import BlackBear from "@/assets/black-bear.svg";
 import FarcasterIcon from "@/assets/socials/farcaster.svg";
 import GithubIcon from "@/assets/socials/github.svg";
 import LensIcon from "@/assets/socials/lens.svg";
 
-import { IconCube } from "@/components/shared/IconCube";
 import { Badge } from "@/components/ui/Badge";
 import { truncateAddress } from "@/lib/format";
-import { getEtherscanAddressLink } from "@/lib/links";
+import { createIpfsImageUrl, getEtherscanAddressLink } from "@/lib/links";
 import { usePrimaryLabel } from "@/hooks/usePrimaryLabel";
 import { useTalentSocials } from "@/hooks/useTalentSocials";
-import React from "react";
+
 import { useClubData } from "@/hooks/useClubData";
 import { useClubContacts } from "@/hooks/useClubContacts";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 
 const DISPLAYED_SOCIALS = ["farcaster", "github", "lens"];
 
@@ -35,6 +36,8 @@ export const ClubDetails = ({
 }: {
   clubAddress: Address;
 }) => {
+  const { copy: copyContractAddr, copied: copiedContractAddr } = useCopyToClipboard();
+  const { copy: copyCreatorAddr, copied: copiedCreatorAddr } = useCopyToClipboard();
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress)
   const { data: clubMemberNftData } = useClubMemberNft(clubAddress);
@@ -45,16 +48,24 @@ export const ClubDetails = ({
   });
 
   const { name, symbol, creatorAddress } = clubData;
-  const { description } = clubMemberNftData;
+  const { description, image: nftIpfsUrl } = clubMemberNftData;
 
   const clubBadges = [
     {
-      label: `CA:${truncateAddress(clubAddress)}`,
+      prefix: "CA",
+      label: truncateAddress(clubAddress),
       url: getEtherscanAddressLink(clubAddress),
+      value: clubAddress,
+      copy: copyContractAddr,
+      copied: copiedContractAddr,
     },
     {
-      label: `BY:${deployerName}`,
+      prefix: "BY",
+      label: deployerName,
       url: getEtherscanAddressLink(creatorAddress),
+      value: creatorAddress,
+      copy: copyCreatorAddr,
+      copied: copiedCreatorAddr,
     }
   ];
 
@@ -74,20 +85,36 @@ export const ClubDetails = ({
   return (
     <div>
       <div className="flex items-between pb-4 border-b border-gray-200 sm:items-start">
-        <IconCube width={42} height={42} icon={BlackBear} color="#F4F4F6" />
+        <Image
+          width={58}
+          height={58}
+          src={createIpfsImageUrl(nftIpfsUrl)}
+          alt="Fund Image"
+          className="rounded-xl border border-stone-200 min-w-[42px]"
+        />
 
         <div className="pl-3">
           <h1 className="font-sans text-2xl font-medium">{name} ({symbol})</h1>
 
           <ul className="flex gap-1 flex-wrap">
-            {clubBadges.map(({ label, url }, index) => (
+            {clubBadges.map(({ prefix, label, url, value, copy, copied }, index) => (
               <li key={index}>
                 <Badge
-                  onClick={() => open(url)}
                   className="whitespace-nowrap"
                 >
-                  {label}
-                  <LinkOutIcon width={16} height={16} className="ml-0.5" />
+                  {prefix}:
+                  <span
+                    onClick={() => copy(value)}
+                    className="cursor-pointer hover:underline"
+                  >
+                    {copied ? "Copied!" : label}
+                  </span>
+
+                  <LinkOutIcon
+                    width={16}
+                    height={16}
+                    onClick={() => open(url)}
+                    className="ml-0.5 cursor-pointer" />
                 </Badge>
               </li>
             ))}

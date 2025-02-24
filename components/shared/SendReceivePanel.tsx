@@ -22,7 +22,7 @@ export const SendReceivePanel = ({
   const { title: rightTitle, value: rightValue, icon: rightIcon } = rightPanel;
 
   return (
-    <div className={cn("p-6 bg-stone-100 rounded-lg flex justify-between", className)}>
+    <div className={cn("p-3 rounded-lg flex justify-between", className)}>
       <div className="bg-white p-4 rounded-lg flex flex-col items-center border border-stone-300">
         <p className="text-stone-600 text-center">{leftTitle}</p>
         <p className="font-medium flex items-center gap-1">

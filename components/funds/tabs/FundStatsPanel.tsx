@@ -74,7 +74,7 @@ export const FundStatsPanel = ({
     },
     {
       name: "# of Shares",
-      value: clubContacts.reduce((acc, curr) => acc + curr.numShares, 0n).toString(),
+      value: formatDecimals(clubContacts.reduce((acc, curr) => acc + curr.numShares, 0n), decimals),
     },
     {
       name: "# of Defaulted",
