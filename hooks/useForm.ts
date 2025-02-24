@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { formatUnits, parseUnits } from "viem";
 
 import { format } from "@/lib/format";
@@ -8,6 +8,7 @@ export interface IFormField {
   raw: bigint;
   display: string;
   formatted: string;
+  decimals: number;
 }
 export type IFormValues = Record<string, IFormField | string>;
 export type IFormErrors = Record<string, string | void>;
@@ -17,14 +18,40 @@ export type ISetNumberFunc = {
 };
 
 export const useForm = ({
+  decimals,
   validate,
 }: {
+  decimals: number;
   validate: (inputs: IFormValues) => void;
 }) => {
   const [values, setValues] = useState<IFormValues>({});
   const [errors, setErrors] = useState<IFormErrors>({});
 
-  const { token, unit } = useToken();
+  const { token } = useToken();
+
+  useEffect(() => {
+    setValues(vs => Object.keys(vs).reduce((acc, curr) => {
+      const value = vs[curr];
+      if (!value) {
+        return acc;
+      }
+      if (typeof value === "string") {
+        return {
+          ...acc,
+          [curr]: value,
+        }
+      }
+
+      return {
+        ...acc,
+        [curr]: {
+          ...value,
+          raw: parseUnits(value.display, decimals),
+          decimals,
+        }
+      }
+    }, {}));
+  }, [decimals]);
 
   const empty = {
     raw: 0n,
@@ -48,20 +75,22 @@ export const useForm = ({
       // the display value to an empty string
       newValues = {
         ...values,
-        [name]: { raw: 0n, display: "", formatted: "" },
+        [name]: { raw: 0n, display: "", formatted: "", decimals },
       };
     } else {
       const parsed =
         type === "display"
           ? {
-            raw: parseUnits(value as string, unit),
+            raw: parseUnits(value as string, decimals),
             display: value as string,
             formatted: value as string,
+            decimals,
           }
           : {
             raw: value as bigint,
             display: formatValue(value as bigint, rounded),
-            formatted: formatUnits(value as bigint, unit),
+            formatted: formatUnits(value as bigint, decimals),
+            decimals,
           };
 
       newValues = { ...values, [name]: parsed };

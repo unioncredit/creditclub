@@ -1,8 +1,10 @@
 import {
+  Button,
   Modal,
   ModalOverlay,
   Input,
   SegmentedControl,
+  InfoBanner,
   // @ts-ignore
 } from "@unioncredit/ui";
 
@@ -19,6 +21,9 @@ import { IFormField, IFormValues, useForm } from "@/hooks/useForm";
 import { useMintRedeemPreview } from "@/hooks/useMintRedeemPreview";
 import { ApprovalButton } from "@/components/shared/ApprovalButton";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
+import { useWrite } from "@/hooks/useWrite";
+import { useClubActivation } from "@/hooks/useClubActivation";
+import { formatDuration } from "@/lib/utils";
 
 export const MINT_REDEEM_MODAL = "mint-redeem-modal";
 
@@ -36,6 +41,7 @@ export const MintRedeemModal = ({
   const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress)
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
+  const { activated, locked, remaining } = useClubActivation(clubAddress);
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
@@ -77,8 +83,14 @@ export const MintRedeemModal = ({
   const validate = (inputs: IFormValues) => {
     const shares = inputs.shares as IFormField;
 
-    if (shares.raw > sendTokenBalance) {
-      return `Only ${formatDecimals(sendTokenBalance, sendTokenDecimals)} ${sendTokenSymbol} Available`;
+    if (tab === "mint") {
+      if (shares.raw > sendTokenBalance) {
+        return `Only ${formatDecimals(sendTokenBalance, sendTokenDecimals)} ${sendTokenSymbol} Available`;
+      }
+    } else {
+      if (shares.raw > clubTokenBalance) {
+        return `Only ${formatDecimals(sendTokenBalance, sendTokenDecimals)} ${sendTokenSymbol} Available`;
+      }
     }
   };
 
@@ -88,7 +100,7 @@ export const MintRedeemModal = ({
     values = {},
     errors = {},
     empty
-  } = useForm({ validate });
+  } = useForm({ decimals: sendTokenDecimals, validate });
 
   const shares = values.shares as IFormField || empty;
   const sharesRaw = shares.raw || 0n;
@@ -97,6 +109,21 @@ export const MintRedeemModal = ({
     action: tab,
     shares: sharesRaw,
     clubAddress,
+  });
+
+  const redeemButtonProps = useWrite({
+    ...creditVaultContract,
+    functionName: "redeem",
+    args: [sharesRaw, address, address],
+    label: sharesRaw <= 0n
+      ? "Enter an amount"
+      : `${action} ${formatDecimals(amountReceived, receiveTokenDecimals, 0)} ${receiveTokenSymbol}`,
+    disabled: !!errors.shares || sharesRaw <= 0n || clubTokenBalance < sharesRaw,
+    onComplete: async () => {
+      close();
+      refetchClubData();
+      refetchClubMember();
+    }
   });
 
   return (
@@ -132,6 +159,7 @@ export const MintRedeemModal = ({
             value={shares.formatted}
             onChange={register("shares")}
             error={errors.shares}
+            disabled={tab === "redeem" && locked}
           />
 
           <SendReceivePanel
@@ -148,35 +176,54 @@ export const MintRedeemModal = ({
             }}
           />
 
-          <ApprovalButton
-            owner={address}
-            amount={sharesRaw}
-            disabled={!!errors.shares || sharesRaw < 0n || assetBalance < sharesRaw}
-            spender={creditVaultContract.address}
-            tokenContract={{
-              abi: erc20Abi,
-              address: assetTokenAddress,
-            }}
-            actionProps={{
-              ...creditVaultContract,
-              ...(tab === "mint" ? {
-                functionName: "deposit",
-                args: [sharesRaw, address],
-              } : {
-                functionName: "redeem",
-                args: [sharesRaw, address, address],
-              }),
-              label: sharesRaw <= 0n
+          {tab === "mint" ? (
+            <ApprovalButton
+              owner={address}
+              amount={sharesRaw}
+              disabled={!!errors.shares || sharesRaw < 0n || assetBalance < sharesRaw}
+              spender={creditVaultContract.address}
+              tokenContract={{
+                abi: erc20Abi,
+                address: assetTokenAddress,
+              }}
+              actionProps={{
+                ...creditVaultContract,
+                label: sharesRaw <= 0n
+                  ? "Enter an amount"
+                  : sharesRaw > assetBalance
+                    ? "Insufficient balance"
+                    : `${action} ${formatDecimals(amountReceived, receiveTokenDecimals, 0)} ${receiveTokenSymbol}`,
+                disabled: !!errors.shares || sharesRaw < 0n || assetBalance < sharesRaw,
+                onComplete: async () => {
+                  close();
+                  refetchClubData();
+                  refetchClubMember();
+                }
+              }}
+            />
+          ) : (
+            <Button
+              fluid
+              className="mt-4"
+              color="primary"
+              size="large"
+              label={sharesRaw <= 0n
                 ? "Enter an amount"
-                : `${action} ${formatDecimals(amountReceived, receiveTokenDecimals, 0)} ${receiveTokenSymbol}`,
-              disabled: !!errors.shares || sharesRaw < 0n || assetBalance < sharesRaw,
-              onComplete: async () => {
-                close();
-                refetchClubData();
-                refetchClubMember();
-              }
-            }}
-          />
+                : sharesRaw > clubTokenBalance
+                  ? "Insufficient balance"
+                  : `${action} ${formatDecimals(amountReceived, receiveTokenDecimals, 0)} ${receiveTokenSymbol}`}
+              {...redeemButtonProps}
+            />
+          )}
+
+          {tab === "redeem" && (!activated || locked) && (
+            <InfoBanner
+              align="left"
+              variant="warning"
+              label={!activated ? "Redeem is not available until the club has been activated and the lock period has expired." : `Redeem is not available until the club locked period has expired. There are ${formatDuration(remaining)} remaining until the club is unlocked.`}
+              className="text-sm mt-4 p-3 bg-yellow-50 text-yellow-600 font-mono border border-yellow-600 rounded-lg"
+            />
+          )}
         </Modal.Body>
       </Modal>
     </ModalOverlay>

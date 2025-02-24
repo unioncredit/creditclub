@@ -128,6 +128,10 @@ export const useClubData = (clubAddress: Address) => {
     {
       ...creditVaultContract,
       functionName: "creator",
+    },
+    {
+      ...creditVaultContract,
+      functionName: "activationDate",
     }
   ];
 
@@ -170,6 +174,7 @@ export const useClubData = (clubAddress: Address) => {
     startingPercentTrust = 0n,
     totalSupply = 0n,
     creatorAddress = zeroAddress,
+    activationDate = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -203,6 +208,7 @@ export const useClubData = (clubAddress: Address) => {
     totalSupply,
     raiseOver: totalAssets >= initialRaise,
     creatorAddress,
+    activationDate,
   };
 
   return { ...result, data };
