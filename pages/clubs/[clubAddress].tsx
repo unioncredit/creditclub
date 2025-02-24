@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { Address } from "viem";
-import { GetServerSideProps } from "next";
 import { useAccount } from "wagmi";
 
 import { Columned } from "@/components/shared/Columned";
@@ -18,20 +17,14 @@ import { useClubMember } from "@/hooks/useClubMember";
 import { useClubData } from "@/hooks/useClubData";
 import { ClubActions } from "@/components/funds/ClubActions";
 import { BuyRedeemPanel } from "@/components/funds/BuyRedeemPanel";
-
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  return {
-    props: {
-      clubAddress: params?.clubAddress,
-    },
-  };
-};
+import { useRouter } from "next/router";
 
 export default function FundSinglePage({
   clubAddress,
 }: {
   clubAddress: Address;
 }) {
+  const router = useRouter();
   const { address } = useAccount();
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubMember } = useClubMember(address, clubAddress);
@@ -39,6 +32,9 @@ export default function FundSinglePage({
 
   const { name, openRaise, raiseOver } = clubData;
   const { isMember } = clubMember;
+
+  // Use the router.query.clubAddress if clubAddress prop is not provided
+  clubAddress = (clubAddress || router.query.clubAddress) as Address
 
   return (
     <>

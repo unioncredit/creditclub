@@ -44,7 +44,7 @@ export const BuyRedeemPanel = ({
     },
     {
       title: "Market value",
-      value: `$${Number(formatUnits(clubTokenBalance, decimals)) * tokenPrice}`
+      value: `~$${(Number(formatUnits(clubTokenBalance, decimals)) * tokenPrice).toFixed(2)}`
     },
     {
       title: "Lockup period",
