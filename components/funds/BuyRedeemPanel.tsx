@@ -1,6 +1,6 @@
 // @ts-ignore
 import { ConfettiIcon, AddIcon, LinkOutIcon } from "@unioncredit/ui";
-import { useAccount } from "wagmi";
+import { useAccount, useWatchAsset } from "wagmi";
 import { Address, formatUnits } from "viem";
 
 import { RoundedButton } from "@/components/ui/RoundedButton";
@@ -23,6 +23,7 @@ export const BuyRedeemPanel = ({
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: tokenPrice } = useTokenPrice(clubAddress);
+  const { watchAsset } = useWatchAsset();
 
   const {
     clubTokenBalance,
@@ -63,8 +64,18 @@ export const BuyRedeemPanel = ({
           </div>
         </div>
 
-        <RoundedButton size="small">
-          <AddIcon width={24}/>
+        <RoundedButton
+          size="small"
+          onClick={() => watchAsset({
+            type: 'ERC20',
+            options: {
+              address: clubAddress,
+              symbol: symbol,
+              decimals: decimals,
+            },
+          })}
+        >
+          < AddIcon width={24} />
           ${symbol}
         </RoundedButton>
       </header>
@@ -80,7 +91,8 @@ export const BuyRedeemPanel = ({
         ))}
       </ul>
 
-      <p className="my-2 rounded-lg font-mono text-blue-600 bg-blue-50 text-xs p-2">Raise Over. To acquire ${symbol} you will need to buy it on secondary markets.</p>
+      <p className="my-2 rounded-lg font-mono text-blue-600 bg-blue-50 text-xs p-2">Raise Over. To acquire ${symbol} you
+        will need to buy it on secondary markets.</p>
 
       <div className="flex gap-1">
         <RoundedButton
