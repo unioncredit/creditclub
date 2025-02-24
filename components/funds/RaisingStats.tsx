@@ -12,6 +12,7 @@ import { formatDecimals } from "@/lib/format";
 import { formatDuration } from "@/lib/utils";
 import { useTokenPrice } from "@/hooks/useTokenPrice";
 import { useClubMember } from "@/hooks/useClubMember";
+import { useErc20Token } from "@/hooks/useErc20Token";
 
 export const RaisingStats = ({
   clubAddress,
@@ -23,6 +24,7 @@ export const RaisingStats = ({
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: tokenPrice } = useTokenPrice(clubAddress);
+  const { data: assetToken } = useErc20Token(clubData.assetAddress);
 
   const {
     clubTokenBalance,
@@ -36,8 +38,10 @@ export const RaisingStats = ({
     lockupPeriod,
   } = clubData;
 
-  const raisedFormatted = formatDecimals(totalAssets, decimals, 2);
-  const goalFormatted = formatDecimals(initialRaise, decimals, 2);
+  const { decimals: assetDecimals } = assetToken;
+
+  const raisedFormatted = formatDecimals(totalAssets, assetDecimals, 2);
+  const goalFormatted = formatDecimals(initialRaise, assetDecimals, 2);
 
   const barValues: DistributionBarItem[] = [
     {

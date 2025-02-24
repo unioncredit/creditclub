@@ -4,6 +4,7 @@ import { useClubData } from "@/hooks/useClubData";
 import { format, formatDecimals } from "@/lib/format";
 import { useToken } from "@/hooks/useToken";
 import { useClubContacts } from "@/hooks/useClubContacts";
+import { useErc20Token } from "@/hooks/useErc20Token";
 
 export const FundStatsPanel = ({
   clubAddress,
@@ -13,6 +14,7 @@ export const FundStatsPanel = ({
   const { token } = useToken();
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress);
+  const { data: assetToken } = useErc20Token(clubData.assetAddress);
 
   const defaultedContacts = clubContacts.filter((v) => v.isOverdue);
   const defaultedAmount = defaultedContacts.reduce((acc, c) => acc + c.locking, 0n);
@@ -26,10 +28,14 @@ export const FundStatsPanel = ({
     totalLockedStake
   } = clubData;
 
+  const {
+    decimals: assetDecimals
+  } = assetToken;
+
   const fundStatsRows: StatGridRow[] = [
     {
       name: "Initial Raise",
-      value: `$${formatDecimals(initialRaise, decimals)}`
+      value: `$${formatDecimals(initialRaise, assetDecimals)}`
     },
   ];
 
@@ -40,7 +46,7 @@ export const FundStatsPanel = ({
     },
     {
       name: "Total Assets",
-      value: `${formatDecimals(totalAssets, decimals)}`
+      value: `${formatDecimals(totalAssets, assetDecimals)}`
     },
     {
       name: "Total Supply",
