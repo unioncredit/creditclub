@@ -1,5 +1,5 @@
-import { useRouter } from "next/router";
 import { Address } from "viem";
+import Link from "next/link";
 
 import { ShadowButton } from "@/components/ui/ShadowButton";
 import { ProgressBar } from "@/components/shared/ProgressBar";
@@ -12,7 +12,6 @@ export const ClubPromoBanner = ({
 }: {
   clubAddress: Address;
 }) => {
-  const router = useRouter();
   const { data: clubData } = useClubData(clubAddress);
   const { data: icoStats } = useIcoStats(clubAddress);
 
@@ -29,12 +28,11 @@ export const ClubPromoBanner = ({
         </div>
       </div>
 
-      <ShadowButton
-        className="sm:mt-4"
-        onClick={() => router.push(createClubUrl(clubAddress))}
-      >
-        Check eligibility
-      </ShadowButton>
+      <Link href={createClubUrl(clubAddress)}>
+        <ShadowButton className="sm:mt-4">
+          Check eligibility
+        </ShadowButton>
+      </Link>
     </div>
   )
 };
