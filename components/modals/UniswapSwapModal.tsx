@@ -28,7 +28,7 @@ export const UniswapSwapModal = ({
   
   return (
     <ModalOverlay onClick={close}>
-      <Modal>
+      <Modal className="UniswapSwapModal">
         {!connectedChain || connectedChain.id !== DEFAULT_CHAIN_ID ? (
           <>
             <Modal.Header title="Incorrect network" onClose={close} />

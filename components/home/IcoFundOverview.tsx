@@ -5,6 +5,7 @@ import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { useIcoStats } from "@/hooks/useIcoStats";
 import { formatDuration } from "@/lib/utils";
 import { useClubContacts } from "@/hooks/useClubContacts";
+import { useClubActivation } from "@/hooks/useClubActivation";
 
 export const IcoFundOverview = ({
   clubAddress,
@@ -17,6 +18,7 @@ export const IcoFundOverview = ({
   const { data: clubMemberNftData } = useClubMemberNft(clubAddress);
   const { data: icoStats } = useIcoStats(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress);
+  const { activated, locked, remaining } = useClubActivation(clubAddress);
 
   const { name, symbol, lockupPeriod, memberMax } = clubData;
   const { description } = clubMemberNftData;
@@ -44,9 +46,13 @@ export const IcoFundOverview = ({
       value: `$${current} of $${goal}`
     },
     {
-      name: "Lockup Period",
-      value: formatDuration(Number(lockupPeriod))
-    },
+      name: activated ? "Lockup remaining" : "Lockup period",
+      value: activated
+        ? locked
+          ? formatDuration(remaining)
+          : "Expired"
+        : formatDuration(Number(lockupPeriod)),
+    }
   ];
 
   return <StatGrid title="Fund Overview" rows={rows} className={className} />

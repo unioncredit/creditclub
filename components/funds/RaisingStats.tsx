@@ -13,6 +13,7 @@ import { formatDuration } from "@/lib/utils";
 import { useTokenPrice } from "@/hooks/useTokenPrice";
 import { useClubMember } from "@/hooks/useClubMember";
 import { useErc20Token } from "@/hooks/useErc20Token";
+import { useClubActivation } from "@/hooks/useClubActivation";
 
 export const RaisingStats = ({
   clubAddress,
@@ -25,6 +26,7 @@ export const RaisingStats = ({
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: tokenPrice } = useTokenPrice(clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
+  const { activated, locked, remaining } = useClubActivation(clubAddress);
 
   const {
     clubTokenBalance,
@@ -68,8 +70,12 @@ export const RaisingStats = ({
       value: `~$${(Number(formatUnits(clubTokenBalance, decimals)) * tokenPrice).toFixed(2)}`
     },
     {
-      title: "Lockup period",
-      value: formatDuration(Number(lockupPeriod)),
+      title: activated ? "Lockup remaining" : "Lockup period",
+      value: activated
+        ? locked
+          ? formatDuration(remaining)
+          : "Expired"
+        : formatDuration(Number(lockupPeriod)),
     }
   ];
 
@@ -81,7 +87,7 @@ export const RaisingStats = ({
           <p className="text-3xl font-mono">${raisedFormatted}</p>
         </div>
 
-        <RoundedButton size="small">
+        <RoundedButton size="small" className="pointer-events-none">
           <ChartIcon width={24}/>
           ICO: Open
         </RoundedButton>

@@ -5,6 +5,7 @@ import { useToastProps } from "@/hooks/useToastProps";
 import { waitForTransactionReceipt, writeContract } from "@wagmi/core";
 import { useAccount, useConfig, useSwitchChain } from "wagmi";
 import { WriteContractErrorType } from "viem";
+import { usePrivy } from "@privy-io/react-auth";
 
 export const useWrite = ({
   functionName,
@@ -28,6 +29,7 @@ export const useWrite = ({
   const createToast = useToastProps(functionName, contract, args);
 
   const { switchChainAsync } = useSwitchChain();
+  const { connectOrCreateWallet } = usePrivy();
   const { chain: connectedChain, isConnected } = useAccount();
   const { addToast, closeToast } = useToasts();
 
@@ -110,14 +112,15 @@ export const useWrite = ({
 
   return useMemo(
     () => ({
-      disabled: disabled || loading || !isConnected,
+      disabled: disabled || loading,
       loading,
-      onClick,
       ...(!isConnected ? {
         icon: undefined,
-        label : "Connect Wallet"
+        label : "Connect Wallet",
+        onClick: connectOrCreateWallet,
       } : {
         icon,
+        onClick,
       })
     }),
     [icon, disabled, loading, isConnected, onClick]

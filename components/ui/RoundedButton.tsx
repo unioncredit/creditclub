@@ -9,7 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        light: "bg-white text-black border-stone-200 hover:bg-stone-100",
+        light: "bg-white text-black border-stone-200 hover:bg-slate-100",
         dark: "bg-primary text-white hover:opacity-90",
         rainbow: "!px-0.5 !py-0.5 [background-image:linear-gradient(white,white),linear-gradient(to_left,#FBC224,#E879F9,#4338CA,#60A5FA)] [background-origin:border-box] [background-clip:content-box,border-box] border-double border-2 rounded-xl hover:scale-[101%] transition-transform hover:shadow",
         blue: "text-white bg-blue-600"

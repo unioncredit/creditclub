@@ -1,13 +1,14 @@
-import { useReadContract } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 import { useCallback, useEffect, useState } from "react";
 import { Address, maxUint256 } from "viem";
 
 // @ts-ignore
-import { MultiStepButton } from "@unioncredit/ui";
+import { Button, MultiStepButton } from "@unioncredit/ui";
 
 import { useWrite } from "@/hooks/useWrite";
 import { MultiStep } from "@/constants";
 import { useToken } from "@/hooks/useToken";
+import { usePrivy } from "@privy-io/react-auth";
 
 const initialItems = [{ number: 1, status: MultiStep.SELECTED }, { number: 2 }];
 const initialButtonProps = { label: "Enter an amount", disabled: true, loading: false };
@@ -34,6 +35,8 @@ export const ApprovalButton = ({
   const [showSteps, setShowSteps] = useState(false);
 
   const { token } = useToken();
+  const { isConnected } = useAccount();
+  const { connectOrCreateWallet } = usePrivy();
 
   /*--------------------------------------------------------------
     Contract Functions
@@ -70,8 +73,8 @@ export const ApprovalButton = ({
         // The amount is more than the allowance so we
         // need to prompt the user to approve this contract
         setAction({
-          ...transactionApproveProps,
           label: transactionApproveProps.loading ? `Approving ${token}...` : `Approve ${token}`,
+          ...transactionApproveProps,
           loading: false,
           disabled: transactionApproveProps.loading || disabled,
         });
@@ -123,12 +126,21 @@ export const ApprovalButton = ({
     Render Component
    --------------------------------------------------------------*/
 
-  return (
+  return isConnected ? (
     <MultiStepButton
       id="approval-component"
       items={items}
       action={action}
       showSteps={requireApproval && showSteps}
     />
-  );
+  ) : (
+    <Button
+      fluid
+      color="primary"
+      size="large"
+      onClick={connectOrCreateWallet}
+    >
+      {isConnected ? "Disconnect" : "Connect wallet"}
+    </Button>
+  )
 };

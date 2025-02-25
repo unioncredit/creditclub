@@ -22,7 +22,7 @@ export const MembershipClaim = ({
 }: {
   clubAddress: Address;
 }) => {
-  const { isConnected} = useAccount();
+  const { isConnected } = useAccount();
   const { open: openModal } = useModals();
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress);
@@ -74,7 +74,7 @@ export const MembershipClaim = ({
       </header>
 
       {isConnected && (
-        <div className={cn("mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-stone-100 rounded-2xl border", {
+        <div className={cn("mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-slate-100 rounded-2xl border", {
           "border-green-600": isQualfified,
         })}>
           <Image

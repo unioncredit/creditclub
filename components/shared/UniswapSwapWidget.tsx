@@ -17,7 +17,7 @@ if (typeof window !== "undefined") {
 
 const theme: Theme = {
   ...defaultTheme,
-  accent: "#2A2736"
+  accent: "#2A2736",
 }
 
 export const UniswapSwapWidget = ({
@@ -60,7 +60,7 @@ export const UniswapSwapWidget = ({
       routerUrl="https://api.uniswap.org/v1/"
       tokenList={tokenList}
       onError={(error) => console.log({ error })}
-      hideConnectionUI={true}
+      hideConnectionUI={false}
       defaultInputTokenAddress={inputTokenAddress}
       defaultOutputTokenAddress={outputTokenAddress}
     />

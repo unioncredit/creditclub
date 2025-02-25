@@ -47,7 +47,7 @@ export const PostMintNftModal = ({
             align="left"
             variant="warning"
             label={`Welcome Member #${tokenId}! You are now an official member of ${clubName}. You now have $${format(startingCredit, token)} in credit from ${clubName} on the Union credit network.`}
-            className="font-mono border-b border-black text-xs p-3 bg-stone-100 text-black absolute top-[80px] left-0 right-0"
+            className="font-mono border-b border-black text-xs p-3 bg-slate-100 text-black absolute top-[80px] left-0 right-0"
           />
 
           <div className="mt-16 flex justify-center w-full">

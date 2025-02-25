@@ -51,7 +51,7 @@ export const ClubActions = ({
   });
 
   return (
-    <div className="p-4 border rounded-2xl bg-stone-50">
+    <div className="p-4 border rounded-2xl bg-slate-50">
       <header className="flex justify-between gap-2 border-b pb-4">
         <h2 className="text-lg text-stone-500 font-medium">Club Member Actions</h2>
 
@@ -61,7 +61,7 @@ export const ClubActions = ({
         </div>
       </header>
 
-      <div className="mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-stone-100 rounded-2xl border">
+      <div className="mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-slate-100 rounded-2xl border">
         <TextCube width={48} height={48} background="#1F1D29" foreground="white">
           {getInitials(name)}
         </TextCube>

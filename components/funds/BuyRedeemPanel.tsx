@@ -1,5 +1,5 @@
 // @ts-ignore
-import { ConfettiIcon, AddIcon, LinkOutIcon } from "@unioncredit/ui";
+import { ChartIcon, ConfettiIcon, AddIcon, LinkOutIcon } from "@unioncredit/ui";
 import { useAccount, useWatchAsset } from "wagmi";
 import { Address, formatUnits } from "viem";
 
@@ -12,17 +12,19 @@ import { formatDuration } from "@/lib/utils";
 import { useTokenPrice } from "@/hooks/useTokenPrice";
 import { useClubMember } from "@/hooks/useClubMember";
 import { UNISWAP_SWAP_MODAL } from "@/components/modals/UniswapSwapModal";
+import { useClubActivation } from "@/hooks/useClubActivation";
 
 export const BuyRedeemPanel = ({
   clubAddress,
 }: {
   clubAddress: Address;
 }) => {
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
   const { open: openModal } = useModals();
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: tokenPrice } = useTokenPrice(clubAddress);
+  const { activated, locked, remaining } = useClubActivation(clubAddress);
   const { watchAsset } = useWatchAsset();
 
   const {
@@ -48,8 +50,12 @@ export const BuyRedeemPanel = ({
       value: `~$${(Number(formatUnits(clubTokenBalance, decimals)) * tokenPrice).toFixed(2)}`
     },
     {
-      title: "Lockup period",
-      value: formatDuration(Number(lockupPeriod)),
+      title: activated ? "Lockup remaining" : "Lockup period",
+      value: activated
+        ? locked
+          ? formatDuration(remaining)
+          : "Expired"
+        : formatDuration(Number(lockupPeriod)),
     }
   ];
 
@@ -64,20 +70,27 @@ export const BuyRedeemPanel = ({
           </div>
         </div>
 
-        <RoundedButton
-          size="small"
-          onClick={() => watchAsset({
-            type: 'ERC20',
-            options: {
-              address: clubAddress,
-              symbol: symbol,
-              decimals: decimals,
-            },
-          })}
-        >
-          < AddIcon width={24} />
-          ${symbol}
-        </RoundedButton>
+        <div className="flex items-center gap-2">
+          <RoundedButton size="small" className="pointer-events-none">
+            <ChartIcon width={24}/>
+            ICO: Closed
+          </RoundedButton>
+
+          <RoundedButton
+            size="small"
+            onClick={() => watchAsset({
+              type: 'ERC20',
+              options: {
+                address: clubAddress,
+                symbol: symbol,
+                decimals: decimals,
+              },
+            })}
+          >
+            < AddIcon width={24} />
+            ${symbol}
+          </RoundedButton>
+        </div>
       </header>
 
       <ul className="mt-4 flex flex-col items-center justify-between border-b">
@@ -99,6 +112,7 @@ export const BuyRedeemPanel = ({
           size="medium"
           variant="blue"
           className="w-full text-sm"
+          disabled={!isConnected}
           onClick={() => openModal(UNISWAP_SWAP_MODAL, {
             clubAddress,
           })}
@@ -110,6 +124,7 @@ export const BuyRedeemPanel = ({
           size="medium"
           variant="dark"
           className="w-full text-sm"
+          disabled={!isConnected}
           onClick={() => openModal(MINT_REDEEM_MODAL, {
             activeTab: "redeem",
             clubAddress,

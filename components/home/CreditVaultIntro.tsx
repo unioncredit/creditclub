@@ -22,7 +22,7 @@ export const CreditVaultIntro = ({
         Introducing Credit Vaults
       </Heading>
 
-      <div className="bg-stone-100 border border-black mt-4">
+      <div className="bg-slate-100 border border-black mt-4">
         <Image
           width={1573}
           height={510}

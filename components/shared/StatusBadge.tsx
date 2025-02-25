@@ -31,7 +31,7 @@ export const StatusBadge = ({
       ) : isMember ? (
         <Badge label="Member" className="bg-blue-600 text-white" />
       ) : (
-        <Badge label="Not-member" className="bg-stone-300" />
+        <Badge label="Not-member" className="bg-slate-300" />
       )}
     </>
   );
