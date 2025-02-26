@@ -76,20 +76,22 @@ export const BuyRedeemPanel = ({
             ICO: Closed
           </RoundedButton>
 
-          <RoundedButton
-            size="small"
-            onClick={() => watchAsset({
-              type: 'ERC20',
-              options: {
-                address: clubAddress,
-                symbol: symbol,
-                decimals: decimals,
-              },
-            })}
-          >
-            < AddIcon width={24} />
-            ${symbol}
-          </RoundedButton>
+          {isConnected && (
+            <RoundedButton
+              size="small"
+              onClick={() => watchAsset({
+                type: 'ERC20',
+                options: {
+                  address: clubAddress,
+                  symbol: symbol,
+                  decimals: decimals,
+                },
+              })}
+            >
+              < AddIcon width={24} />
+              ${symbol}
+            </RoundedButton>
+          )}
         </div>
       </header>
 
