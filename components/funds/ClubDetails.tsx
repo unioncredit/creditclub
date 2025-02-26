@@ -98,24 +98,24 @@ export const ClubDetails = ({
 
           <ul className="flex gap-1 flex-wrap">
             {clubBadges.map(({ prefix, label, url, value, copy, copied }, index) => (
-              <li key={index}>
+              <li key={index} className="flex items-center gap-1">
+                <span className="text-xs">{prefix} :</span>
                 <Badge
                   className="whitespace-nowrap"
                 >
-                  {prefix}:
                   <span
                     onClick={() => copy(value)}
-                    className="cursor-pointer hover:underline"
+                    className="cursor-pointer"
                   >
                     {copied ? "Copied!" : label}
                   </span>
-
-                  <LinkOutIcon
-                    width={16}
-                    height={16}
-                    onClick={() => open(url)}
-                    className="ml-0.5 cursor-pointer" />
                 </Badge>
+                <LinkOutIcon
+                  width={16}
+                  height={16}
+                  onClick={() => open(url)}
+                  className="cursor-pointer"
+                />
               </li>
             ))}
           </ul>
