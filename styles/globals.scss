@@ -3,17 +3,33 @@
 @tailwind utilities;
 
 // @unioncredit/ui styles
-@import "union-ui/Box";
-@import "union-ui/Button";
-@import "union-ui/Card";
-@import "union-ui/DistributionBar";
-@import "union-ui/Dot";
-@import "union-ui/Input";
-@import "union-ui/Modals";
-@import "union-ui/MultiStepButton";
-@import "union-ui/Notification";
-@import "union-ui/NotificationStack";
-@import "union-ui/SegmentedControl";
+@import "@unioncredit/ui/src/Box/box";
+@import "@unioncredit/ui/src/Button/Button";
+@import "@unioncredit/ui/src/Card/Card";
+@import "@unioncredit/ui/src/Control/Control";
+@import "@unioncredit/ui/src/DistributionBar/DistributionBar";
+@import "@unioncredit/ui/src/Dot/Dot";
+@import "@unioncredit/ui/src/Grid/grid";
+@import "@unioncredit/ui/src/Input/Input";
+@import "@unioncredit/ui/src/Modal/Modal";
+@import "@unioncredit/ui/src/Modal/modal-overlay";
+@import "@unioncredit/ui/src/MultiStepButton/MultiStepButton";
+@import "@unioncredit/ui/src/Notification/Notification";
+@import "@unioncredit/ui/src/Notification/notification-stack";
+@import "@unioncredit/ui/src/NumericalBlock/NumericalBlock";
+@import "@unioncredit/ui/src/NumericalRow/NumericalRows";
+@import "@unioncredit/ui/src/OptionSelect/OptionSelect";
+@import "@unioncredit/ui/src/OptionCard/OptionCard";
+@import "@unioncredit/ui/src/SegmentedControl/SegmentedControl";
+@import "@unioncredit/ui/src/Text/Text";
+@import "@unioncredit/ui/src/Toggle/Toggle";
+@import "@unioncredit/ui/src/Tooltip/Tooltip";
+
+@import "union-ui/BuyInvitesModal";
+@import "union-ui/InviteesTable";
+@import "union-ui/RepayModal";
+@import "union-ui/RewardsModal";
+@import "union-ui/UnionRepayModal";
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
@@ -104,4 +120,8 @@ svg.fill path {
 
 .UniswapSwapModal div[hover] {
   display: none !important;
+}
+
+.modal .backButton {
+  margin-right: 8px;
 }

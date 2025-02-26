@@ -10,13 +10,24 @@ import { RoundedButton } from "@/components/ui/RoundedButton";
 import { useUnionMember } from "@/providers/UnionMemberProvider";
 import { format } from "@/lib/format";
 import { useToken } from "@/hooks/useToken";
+import { useModals } from "@/providers/ModalManagerProvider";
+import { BORROW_MODAL } from "@/components/modals/BorrowModal";
+import { REPAY_MODAL } from "@/components/modals/RepayModal";
+import { TOKENS } from "@/constants";
+import { REWARDS_MODAL } from "@/components/modals/RewardsModal";
+import { Address } from "viem";
 
-export const ClubHeader = () => {
+export const ClubHeader = ({
+  clubAddress,
+}: {
+  clubAddress: Address;
+}) => {
   const { token, wad } = useToken();
   const { isConnected } = useAccount();
   const { data: unionMember } = useUnionMember();
+  const { open: openModal } = useModals();
 
-  const { creditLimit, owed } = unionMember;
+  const { creditLimit, unionBalance, owed } = unionMember;
 
   return (
     <header className="w-full items-center flex justify-between">
@@ -37,7 +48,7 @@ export const ClubHeader = () => {
             <RoundedButton
               className="mr-2 sm:text-[0px] sm:pl-[12px] sm:pr-[8px]"
               icon={<WalletIcon width={24} />}
-              onClick={() => open("https://app.union.finance/")}
+              onClick={() => openModal(BORROW_MODAL)}
             >
               <span className="md:hidden">Borrow · </span>${format(creditLimit, token, creditLimit < wad ? 2 : 0)}
             </RoundedButton>
@@ -45,9 +56,19 @@ export const ClubHeader = () => {
             <RoundedButton
               className="mr-2 sm:text-[0px] sm:pl-[12px] sm:pr-[8px]"
               icon={<RepayIcon width={24} />}
-              onClick={() => open("https://app.union.finance/")}
+              onClick={() => openModal(REPAY_MODAL)}
             >
               <span className="md:hidden">Repay · </span>${format(owed, token, owed < wad ? 2 : 0)}
+            </RoundedButton>
+
+            <RoundedButton
+              icon={<UnionIcon width={24} />}
+              className="mr-2 sm:text-[0px] sm:pl-[12px] sm:pr-[8px]"
+              onClick={() => openModal(REWARDS_MODAL, {
+                clubAddress,
+              })}
+            >
+              {format(unionBalance, TOKENS.UNION, 0)}
             </RoundedButton>
           </>
         )}

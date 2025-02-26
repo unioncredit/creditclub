@@ -7,6 +7,7 @@ export const DEFAULT_CHAIN_ID = DEFAULT_CHAIN.id;
 export const BLOCKS_PER_YEAR = 31540000n;
 export const SECONDS_PER_DAY = 86400;
 export const WAD_1E18 = 1000000000000000000n;
+export const BLOCK_SPEED = 1e3;
 
 export type IToken = "DAI" | "USDC" | "UNION";
 
@@ -60,6 +61,14 @@ export const WagmiErrors: Record<string, { title: string; content: string; }> = 
     title: "Transaction failed",
     content: "User rejected the request",
   }
+};
+
+export const FormErrors = {
+  INSUFFICIENT_BALANCE: "Insufficient balance",
+  INSUFFICIENT_CREDIT_LIMIT: "Insufficient credit limit",
+  INSUFFICIENT_FUNDS: "Insufficient funds in protocol",
+  MIN_BORROW: (amount: string) => `Amount less than minimum borrow (${amount})`,
+  IS_OVERDUE: "You cannot borrow with an overdue balance",
 };
 
 export const MultiStep: Record<"SELECTED" | "PENDING" | "COMPLETE", string> = {

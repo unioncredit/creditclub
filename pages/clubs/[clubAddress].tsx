@@ -44,7 +44,7 @@ export default function FundSinglePage({
 
       <main>
         <Columned width={1020} className="py-8">
-          <ClubHeader />
+          <ClubHeader clubAddress={clubAddress} />
           {isQualified && !isMember && <BannerCta clubAddress={clubAddress} className="mt-4" />}
 
           <Container className="mt-4">

@@ -16,7 +16,19 @@ export const UnionDataProvider = ({ children }: { children: React.ReactNode; }) 
     contracts: [
       {
         ...uTokenContract,
+        functionName: "minBorrow",
+      },
+      {
+        ...uTokenContract,
+        functionName: "originationFee",
+      },
+      {
+        ...uTokenContract,
         functionName: "overdueTime",
+      },
+      {
+        ...uTokenContract,
+        functionName: "borrowRatePerSecond",
       },
     ].map(c => ({
       ...c,
@@ -25,11 +37,17 @@ export const UnionDataProvider = ({ children }: { children: React.ReactNode; }) 
   });
 
   const [
+    minBorrow = 0n,
+    originationFee = 0n,
     overdueTime = 0n,
+    borrowRatePerSecond = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
+    minBorrow,
+    originationFee,
     overdueTime,
+    borrowRatePerSecond,
   };
 
   return (

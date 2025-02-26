@@ -10,6 +10,7 @@ import { init } from "@airstack/airstack-react";
 import { ToastsProvider } from "@/providers/ToastsProvider";
 import { UnionMemberProvider } from "@/providers/UnionMemberProvider";
 import { UnionDataProvider } from "@/providers/UnionDataProvider";
+import { CacheProvider } from "@/providers/CacheProvider";
 
 const queryClient = new QueryClient();
 
@@ -50,15 +51,17 @@ function MyApp({ Component, pageProps }: AppProps) {
         <QueryClientProvider client={queryClient}>
           <Web3Provider>
             <ToastsProvider>
-              <UnionDataProvider>
-                <UnionMemberProvider>
-                  <ConnectedMemberProvider>
-                    <ModalManagerProvider>
-                      <Component {...pageProps} />
-                    </ModalManagerProvider>
-                  </ConnectedMemberProvider>
-                </UnionMemberProvider>
-              </UnionDataProvider>
+              <CacheProvider>
+                <UnionDataProvider>
+                  <UnionMemberProvider>
+                    <ConnectedMemberProvider>
+                      <ModalManagerProvider>
+                        <Component {...pageProps} />
+                      </ModalManagerProvider>
+                    </ConnectedMemberProvider>
+                  </UnionMemberProvider>
+                </UnionDataProvider>
+              </CacheProvider>
             </ToastsProvider>
           </Web3Provider>
         </QueryClientProvider>

@@ -21,7 +21,10 @@ export type IUnionMemberContext = Omit<UseReadContractsReturnType, "data"> & {
 
 export type IUnionDataContext = Omit<UseReadContractsReturnType, "data"> & {
   data: {
+    minBorrow: bigint;
+    originationFee: bigint;
     overdueTime: bigint;
+    borrowRatePerSecond: bigint;
   },
 }
 

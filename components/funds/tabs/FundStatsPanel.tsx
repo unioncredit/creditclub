@@ -5,6 +5,8 @@ import { format, formatDecimals } from "@/lib/format";
 import { useToken } from "@/hooks/useToken";
 import { useClubContacts } from "@/hooks/useClubContacts";
 import { useErc20Token } from "@/hooks/useErc20Token";
+import { calculateInterestRate } from "@/lib/utils";
+import { useUnionData } from "@/providers/UnionDataProvider";
 
 export const FundStatsPanel = ({
   clubAddress,
@@ -15,6 +17,7 @@ export const FundStatsPanel = ({
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
+  const { data: protocol } = useUnionData();
 
   const defaultedContacts = clubContacts.filter((v) => v.isOverdue);
   const defaultedAmount = defaultedContacts.reduce((acc, c) => acc + c.locking, 0n);
@@ -27,6 +30,10 @@ export const FundStatsPanel = ({
     totalSupply,
     totalLockedStake
   } = clubData;
+
+  const {
+    borrowRatePerSecond,
+  } = protocol;
 
   const {
     decimals: assetDecimals
@@ -91,7 +98,10 @@ export const FundStatsPanel = ({
   const earningsStatsRows: StatGridRow[] = [
     {
       name: "Interest",
-      value: "0%",
+      value: `${format(
+        calculateInterestRate(borrowRatePerSecond, token) * 100n,
+        token,
+      )}%`,
     },
     {
       name: "Change in assets",

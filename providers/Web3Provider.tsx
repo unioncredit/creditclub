@@ -6,7 +6,7 @@ import { cookieStorage, createStorage } from "wagmi";
 
 export const config = createConfig({
   ssr: true,
-  chains: [mainnet, base],
+  chains: [base, mainnet],
   transports: {
     [base.id]: http(),
     [mainnet.id]: http(),
