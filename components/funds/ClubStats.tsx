@@ -1,7 +1,6 @@
 // @ts-ignore
 import { ConfettiIcon, UnionIcon } from "@unioncredit/ui";
 import { Address } from "viem";
-import { useAccount } from "wagmi";
 
 import { RoundedButton } from "@/components/ui/RoundedButton";
 import { DistributionBarItem, DistributionBarValues } from "@/components/shared/DistributionBarValues";
@@ -23,7 +22,6 @@ export const ClubStats = ({
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress);
   const { open: openModal } = useModals();
-  const { isConnected } = useAccount();
   const { token } = useToken();
 
   const { stakedBalance, totalLockedStake, unclaimedRewards } = clubData;
@@ -61,12 +59,10 @@ export const ClubStats = ({
           <p className="text-3xl font-mono">${format(stakedBalance, token)}</p>
         </div>
 
-        {isConnected && (
-          <RoundedButton size="small" onClick={() => openModal(FIXED_BID_MODAL, { clubAddress: clubAddress })}>
-            <UnionIcon width={24}/>
-            Fixed BID
-          </RoundedButton>
-        )}
+        <RoundedButton size="small" onClick={() => openModal(FIXED_BID_MODAL, { clubAddress: clubAddress })}>
+          <UnionIcon width={24}/>
+          Fixed BID
+        </RoundedButton>
       </header>
 
       <DistributionBarValues items={barValues}/>
