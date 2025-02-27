@@ -74,9 +74,7 @@ export const MembershipClaim = ({
       </header>
 
       {isConnected && (
-        <div className={cn("mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-slate-100 rounded-2xl border", {
-          "border-green-600": isQualfified,
-        })}>
+        <div className={cn("mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-slate-100 rounded-2xl border")}>
           <Image
             width={48}
             height={48}

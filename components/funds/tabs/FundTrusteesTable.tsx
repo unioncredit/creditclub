@@ -8,10 +8,10 @@ import { format, truncateAddress } from "@/lib/format";
 import { useClubContacts } from "@/hooks/useClubContacts";
 import { useToken } from "@/hooks/useToken";
 import { PrimaryLabel } from "@/components/shared/PrimaryLabel";
-import { BlockHeaderAvatar } from "@/components/shared/BlockHeaderAvatar";
 import { useLastRepay } from "@/hooks/useLastRepay";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { IContact } from "@/providers/types";
+import { Avatar } from "@/components/shared/Avatar";
 
 interface FundTrusteeRow {
   address: Address;
@@ -27,7 +27,7 @@ const columns: ColumnDef<FundTrusteeRow>[] = [
     header: "",
     accessorKey: "address",
     cell: ({ getValue }) => (
-      <BlockHeaderAvatar address={getValue() as Address} className="mx-auto" />
+      <Avatar address={getValue() as Address} size={32} className="flex justify-center mx-auto" />
     )
   },
   {

@@ -6,7 +6,6 @@ import {
   ChevronIcon,
   ManageIcon,
   RepayIcon,
-  LinkOutIcon
 // @ts-ignore
 } from "@unioncredit/ui";
 
@@ -21,6 +20,8 @@ import { getInitials } from "@/lib/utils";
 import { useVesting } from "@/hooks/useVesting";
 import { useWrite } from "@/hooks/useWrite";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
+import { useModals } from "@/providers/ModalManagerProvider";
+import { REPAY_MODAL } from "@/components/modals/RepayModal";
 
 export const ClubActions = ({
   clubAddress,
@@ -29,6 +30,7 @@ export const ClubActions = ({
 }) => {
   const { token } = useToken();
   const { address } = useAccount();
+  const { open: openModal } = useModals();
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
   const { data: vestingData } = useVesting(clubAddress);
@@ -113,6 +115,7 @@ export const ClubActions = ({
           </div>
 
           <RoundedButton
+            disabled={owed === 0n}
             icon={(
               <IconCube
                 width={18}
@@ -123,9 +126,9 @@ export const ClubActions = ({
               />
             )}
             className="bg-[#EEF2FF] hover:bg-[#EEF2FF] hover:opacity-90 h-[54px] text-[#5F85FF] w-[156px] justify-start"
-            onClick={() => open("https://app.union.finance/")}
+            onClick={() => openModal(REPAY_MODAL)}
           >
-            Repay <LinkOutIcon width={24} className="fill text-blue-600 ml-auto" />
+            Repay
           </RoundedButton>
         </div>
       </div>

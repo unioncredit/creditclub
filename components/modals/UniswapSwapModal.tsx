@@ -39,7 +39,7 @@ export const UniswapSwapModal = ({
                   variant="dark"
                   onClick={() => switchChain({ chainId: DEFAULT_CHAIN_ID })}
                 >
-                  Switch Network
+                  Switch to {DEFAULT_CHAIN.name}
                 </RoundedButton>
               </div>
             </Modal.Body>

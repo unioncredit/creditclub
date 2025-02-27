@@ -61,7 +61,7 @@ export const UniswapSwapWidget = ({
       tokenList={tokenList}
       onError={(error) => console.log({ error })}
       hideConnectionUI={false}
-      defaultInputTokenAddress={inputTokenAddress}
+      // defaultInputTokenAddress={inputTokenAddress}
       defaultOutputTokenAddress={outputTokenAddress}
     />
   )

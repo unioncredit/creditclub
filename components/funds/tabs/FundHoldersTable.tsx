@@ -7,8 +7,8 @@ import { Address } from "viem";
 import { useClubContacts } from "@/hooks/useClubContacts";
 import { PrimaryLabel } from "@/components/shared/PrimaryLabel";
 import { useTokenPrice } from "@/hooks/useTokenPrice";
-import { BlockHeaderAvatar } from "@/components/shared/BlockHeaderAvatar";
 import { useClubData } from "@/hooks/useClubData";
+import { Avatar } from "@/components/shared/Avatar";
 
 interface FundHolderRow {
   id: number;
@@ -26,7 +26,7 @@ const columns: ColumnDef<FundHolderRow>[] = [
     accessorKey: "address",
     header: "",
     cell: ({ getValue }) => (
-      <BlockHeaderAvatar address={getValue() as Address} className="mx-auto" />
+      <Avatar address={getValue() as Address} size={32} className="flex justify-center mx-auto" />
     )
   },
   {
@@ -52,7 +52,7 @@ const columns: ColumnDef<FundHolderRow>[] = [
   },
   {
     accessorKey: "marketValue",
-    header: () => <div className="text-right">Trust Per Trustee</div>,
+    header: () => <div className="text-right">Market value</div>,
     cell: ({ getValue }) => (
       <div className="text-right">{getValue() as string}</div>
     ),

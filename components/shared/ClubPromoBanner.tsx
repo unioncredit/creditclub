@@ -21,7 +21,7 @@ export const ClubPromoBanner = ({
   return (
     <div className="mt-4 bg-blue-50 p-4 rounded-xl flex items-center justify-between sm:flex-col">
       <div className="flex-1">
-        <h2 className="font-mono">Initial Credit Offering: {name}</h2>
+        <h2 className="font-mono font-medium">Initial Credit Offering: {name}</h2>
         <div className="flex">
           <p className="font-mono text-sm">Progress: ${current} of ${goal} ~ </p>
           <ProgressBar value={percentage} className="flex-1 ml-1 max-w-[200px]" />
@@ -30,7 +30,7 @@ export const ClubPromoBanner = ({
 
       <Link href={createClubUrl(clubAddress)}>
         <ShadowButton className="sm:mt-4">
-          Check eligibility
+          View details
         </ShadowButton>
       </Link>
     </div>

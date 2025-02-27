@@ -73,7 +73,7 @@ export const BuyRedeemPanel = ({
         <div className="flex items-center gap-2">
           <RoundedButton size="small" className="pointer-events-none">
             <ChartIcon width={24}/>
-            ICO: Closed
+            Activated
           </RoundedButton>
 
           {isConnected && (
@@ -119,7 +119,7 @@ export const BuyRedeemPanel = ({
             clubAddress,
           })}
         >
-          Buy {symbol}
+          Buy ${symbol}
         </RoundedButton>
 
         <RoundedButton
@@ -132,7 +132,7 @@ export const BuyRedeemPanel = ({
             clubAddress,
           })}
         >
-          Redeem {symbol}
+          Redeem ${symbol}
         </RoundedButton>
       </div>
     </div>

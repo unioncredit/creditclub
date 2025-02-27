@@ -56,6 +56,9 @@ export const MintRedeemModal = ({
   } = assetToken;
 
   const {
+    raiseOver,
+    totalAssets,
+    initialRaise,
     symbol: clubTokenSymbol,
     decimals: clubTokenDecimals,
   } = clubData;
@@ -126,6 +129,20 @@ export const MintRedeemModal = ({
     }
   });
 
+  const inputError = () => {
+    if (errors.shares) {
+      return errors.shares;
+    }
+
+    if (tab === "mint") {
+      if (totalAssets + amountReceived > initialRaise) {
+        return "You cannot mint more than the initial raise";
+      }
+    }
+
+    return null;
+  };
+
   return (
     <ModalOverlay onClick={close}>
       <Modal>
@@ -139,6 +156,7 @@ export const MintRedeemModal = ({
               {
                 id: "mint",
                 label: "Mint",
+                disabled: raiseOver,
               },
               {
                 id: "redeem",
@@ -158,7 +176,7 @@ export const MintRedeemModal = ({
             className="mt-4"
             value={shares.formatted}
             onChange={register("shares")}
-            error={errors.shares}
+            error={inputError()}
             disabled={tab === "redeem" && locked}
           />
 
@@ -175,6 +193,15 @@ export const MintRedeemModal = ({
               icon: ` ${receiveTokenSymbol}`
             }}
           />
+
+          {tab === "redeem" && (!activated || locked) && (
+            <InfoBanner
+              align="left"
+              variant="warning"
+              label={!activated ? "Redeem is not available until the club has been activated and the lock period has expired." : `Redeem is not available until the club locked period has expired. There are ${formatDuration(remaining)} remaining until the club is unlocked.`}
+              className="text-sm mt-4 p-3 bg-slate-50  font-mono border border-black"
+            />
+          )}
 
           {tab === "mint" ? (
             <ApprovalButton
@@ -215,15 +242,6 @@ export const MintRedeemModal = ({
                   ? "Insufficient balance"
                   : `${action} ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`}
               {...redeemButtonProps}
-            />
-          )}
-
-          {tab === "redeem" && (!activated || locked) && (
-            <InfoBanner
-              align="left"
-              variant="warning"
-              label={!activated ? "Redeem is not available until the club has been activated and the lock period has expired." : `Redeem is not available until the club locked period has expired. There are ${formatDuration(remaining)} remaining until the club is unlocked.`}
-              className="text-sm mt-4 p-3 bg-yellow-50 text-yellow-600 font-mono border border-yellow-600 rounded-lg"
             />
           )}
         </Modal.Body>

@@ -4,7 +4,6 @@
 
 // @unioncredit/ui styles
 @import "@unioncredit/ui/src/Box/box";
-@import "@unioncredit/ui/src/Button/Button";
 @import "@unioncredit/ui/src/Card/Card";
 @import "@unioncredit/ui/src/Control/Control";
 @import "@unioncredit/ui/src/DistributionBar/DistributionBar";
@@ -25,6 +24,7 @@
 @import "@unioncredit/ui/src/Toggle/Toggle";
 @import "@unioncredit/ui/src/Tooltip/Tooltip";
 
+@import "union-ui/Button";
 @import "union-ui/BuyInvitesModal";
 @import "union-ui/InviteesTable";
 @import "union-ui/RepayModal";

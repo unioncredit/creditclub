@@ -215,6 +215,7 @@ export const useClubData = (clubAddress: Address) => {
     creatorAddress,
     activationDate,
     rewardsManagerAddress,
+    activated: activationDate > 0n,
   };
 
   return { ...result, data };
