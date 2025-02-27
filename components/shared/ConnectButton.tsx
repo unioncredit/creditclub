@@ -20,7 +20,7 @@ export const ConnectButton = () => {
       onClick={isConnected ? disconnectWallet : connectOrCreateWallet}
       icon={!isConnected && <WalletIcon width={24} className="fill fill-white" />}
     >
-      {isConnected ? "Disconnect" : "Connect wallet"}
+      {isConnected ? "Disconnect" : "Connect"}
     </RoundedButton>
   )
 };

@@ -6,6 +6,7 @@ import cn from "classnames";
 import CreditClubLogo from "@/assets/creditclub-logo.svg";
 import MobileCreditClubLogo from "@/assets/creditclub-mobile-logo.svg";
 import { ConnectButton } from "@/components/shared/ConnectButton";
+import Link from "next/link";
 
 export const Header = () => {
   const { isConnected } = useAccount();
@@ -23,7 +24,11 @@ export const Header = () => {
         </a>
       </div>
 
-      <div className="flex">
+      <div className="flex items-center gap-8 md:gap-4 sm:gap-1">
+        <Link href="/blog" className="text-xl font-mono hover:font-medium sm:text-base">
+          {"{Updates}"}
+        </Link>
+
         <div className={cn("ConnectButton", {
           "disconnected": !isConnected,
         })}>
