@@ -23,7 +23,9 @@ export default function HomePage() {
           <Header />
           <ClubPromoBanner clubAddress={clubAddress} />
           <Container className="mt-4">
-            <CreditVaultIntro clubAddress={clubAddress} />
+            <div className="max-w-[750px] m-auto py-4">
+              <CreditVaultIntro clubAddress={clubAddress} />
+            </div>
           </Container>
           <Container className="mt-4">
             <IcoView clubAddress={clubAddress} />
