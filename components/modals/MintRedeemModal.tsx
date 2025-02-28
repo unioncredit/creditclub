@@ -135,7 +135,7 @@ export const MintRedeemModal = ({
     }
 
     if (tab === "mint") {
-      if (totalAssets + amountReceived > initialRaise) {
+      if (totalAssets + sharesRaw > initialRaise) {
         return "You cannot mint more than the initial raise";
       }
     }
@@ -207,7 +207,7 @@ export const MintRedeemModal = ({
             <ApprovalButton
               owner={address}
               amount={sharesRaw}
-              disabled={!!errors.shares || sharesRaw < 0n || assetBalance < sharesRaw}
+              disabled={!!inputError() || sharesRaw < 0n || assetBalance < sharesRaw}
               spender={creditVaultContract.address}
               tokenContract={{
                 abi: erc20Abi,
