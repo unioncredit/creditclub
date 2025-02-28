@@ -3,22 +3,26 @@
 $iconGutter: 4px;
 $disabledOpacity: 0.5;
 
-.button--rounded {
-  position: relative;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  cursor: pointer;
-  transition: all 100ms;
-  text-decoration: none;
-  box-sizing: border-box;
-  white-space: nowrap;
-  padding: 12px 24px;
-  border-radius: 12px;
+
+
+.button {
+  &--rounded {
+    position: relative;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    cursor: pointer;
+    transition: all 100ms;
+    text-decoration: none;
+    box-sizing: border-box;
+    white-space: nowrap;
+    padding: 12px 24px;
+    border-radius: 12px;
+  }
 
   &--noLabel {
     padding: 12px !important;
