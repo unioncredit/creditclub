@@ -1,5 +1,4 @@
 import { GetStaticPaths, GetStaticProps } from "next";
-import { notFound } from "next/navigation";
 import Head from "next/head";
 import React from "react";
 
@@ -19,10 +18,10 @@ export const getStaticPaths = (async () => {
   return {
     paths: slugs.map((slug) => ({
       params: {
-        slug: slug.replace(".md", "")
+        slug,
       }
     })),
-    fallback: true, // false or "blocking"
+    fallback: false,
   }
 }) satisfies GetStaticPaths;
 
@@ -46,10 +45,6 @@ export default function BlogPostSingle({
   content: string;
 }) {
   const clubAddress = process.env.NEXT_PUBLIC_CLUB_PROMO_ADDRESS! as Address;
-
-  if (!post) {
-    return notFound();
-  }
 
   return (
     <>
