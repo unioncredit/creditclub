@@ -1,9 +1,9 @@
-import { GetServerSideProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { notFound } from "next/navigation";
 import Head from "next/head";
 import React from "react";
 
-import { getPostBySlug, markdownToHtml } from "@/lib/blog";
+import { getPostBySlug, getPostSlugs, markdownToHtml } from "@/lib/blog";
 import { Columned } from "@/components/shared/Columned";
 import { Footer } from "@/components/shared/Footer";
 import { Header } from "@/components/shared/Header";
@@ -13,8 +13,20 @@ import { BlogBody } from "@/components/blog/BlogBody";
 import { Address } from "viem";
 import { ClubPromoBanner } from "@/components/shared/ClubPromoBanner";
 
+export const getStaticPaths = (async () => {
+  const slugs = getPostSlugs();
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  return {
+    paths: slugs.map((slug) => ({
+      params: {
+        slug: slug.replace(".md", "")
+      }
+    })),
+    fallback: true, // false or "blocking"
+  }
+}) satisfies GetStaticPaths;
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = params?.slug as string;
   const post = getPostBySlug(slug);
 

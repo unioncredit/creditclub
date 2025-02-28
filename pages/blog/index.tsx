@@ -1,21 +1,21 @@
 import Head from "next/head";
+import { GetStaticProps } from "next";
+import Link from "next/link";
+import { Address } from "viem";
 
 import { Columned } from "@/components/shared/Columned";
 import { Footer } from "@/components/shared/Footer";
 import { Header } from "@/components/shared/Header";
 import { Container } from "@/components/shared/Container";
 import { getAllPosts } from "@/lib/blog";
-import { GetServerSideProps } from "next";
 import { Post } from "@/interfaces/post";
-import Link from "next/link";
 import { ClubPromoBanner } from "@/components/shared/ClubPromoBanner";
-import { Address } from "viem";
 
-export const getServerSideProps = (async () => {
+export const getStaticProps = (async () => {
   const posts = getAllPosts();
 
   return { props: { posts } }
-}) satisfies GetServerSideProps<{ posts: Post[] }>
+}) satisfies GetStaticProps<{ posts: Post[] }>
 
 export default function BlogPage({
   posts,
