@@ -2,6 +2,7 @@ import {
   LinkOutIcon,
   ManageIcon,
   DelegateIcon,
+  MarketingIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
 import { Address } from "viem";
@@ -22,6 +23,8 @@ import { useClubData } from "@/hooks/useClubData";
 import { useClubContacts } from "@/hooks/useClubContacts";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
+import { RoundedButton } from "@/components/ui/RoundedButton";
+import { useNativeShare } from "@/hooks/useNativeShare";
 
 const DISPLAYED_SOCIALS = ["farcaster", "github", "lens"];
 
@@ -36,6 +39,7 @@ export const ClubDetails = ({
 }: {
   clubAddress: Address;
 }) => {
+  const { share, copied } = useNativeShare();
   const { copy: copyContractAddr, copied: copiedContractAddr } = useCopyToClipboard();
   const { copy: copyCreatorAddr, copied: copiedCreatorAddr } = useCopyToClipboard();
   const { data: clubData } = useClubData(clubAddress);
@@ -93,10 +97,25 @@ export const ClubDetails = ({
           className="rounded-xl border border-stone-200 min-w-[42px]"
         />
 
-        <div className="pl-3">
-          <h1 className="font-sans text-2xl font-medium">{name} ({symbol})</h1>
+        <div className="pl-3 w-full">
+          <div className="flex items-center justify-between w-full">
+            <h1 className="font-sans text-2xl font-medium">{name} ({symbol})</h1>
 
-          <ul className="flex gap-1 flex-wrap">
+            <RoundedButton
+              size="pill"
+              className="font-mono"
+              onClick={() => share({
+                url: process.env.NEXT_PUBLIC_URL!,
+                title: `Join me in ${name}`,
+                text: description,
+              })}
+            >
+              <MarketingIcon width={16} />
+              {copied ? "Copied!" : "Share"}
+            </RoundedButton>
+          </div>
+
+          <ul className="flex items-center gap-1 flex-wrap">
             {clubBadges.map(({ prefix, label, url, value, copy, copied }, index) => (
               <li key={index} className="flex items-center gap-1">
                 <span className="text-xs">{prefix} :</span>

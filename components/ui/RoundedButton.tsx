@@ -15,6 +15,7 @@ const buttonVariants = cva(
         blue: "text-white bg-blue-600"
       },
       size: {
+        pill: "h-[26px] text-xs px-1",
         small: "h-[32px] text-sm px-1.5",
         default: "h-[48px] text-base px-4",
         medium: "h-[52px] text-base px-6",
