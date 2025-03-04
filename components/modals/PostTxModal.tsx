@@ -3,10 +3,8 @@ import { Hash } from "viem";
 import {
   Box,
   Button,
-  ButtonRow,
   Modal,
   ModalOverlay,
-  Heading,
   LinkOutIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
@@ -36,7 +34,7 @@ export const PostTxModal = ({
         <Modal.Header title={header} onClose={close} />
         <Modal.Body>
           <Box direction="vertical" align="center">
-            <Heading m="12px 0 32px" level={2} size="xlarge" weight="medium">{title}</Heading>
+            <h2 className="font-mono text-2xl font-semibold">{title}</h2>
             {content}
 
             {action && (
@@ -49,7 +47,7 @@ export const PostTxModal = ({
               />
             )}
 
-            <ButtonRow fluid mt="24px">
+            <div className="flex items-center gap-2 w-full mt-4">
               <Button
                 fluid
                 color="secondary"
@@ -66,7 +64,7 @@ export const PostTxModal = ({
                   onClick={() => open(`https://basescan.org/tx/${hash}`)}
                 />
               )}
-            </ButtonRow>
+            </div>
           </Box>
         </Modal.Body>
       </Modal>

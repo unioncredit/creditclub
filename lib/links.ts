@@ -1,6 +1,6 @@
 import { Address } from "viem";
 
-export const getEtherscanAddressLink = (address: Address) => `https://sepolia.basescan.org/address/${address}`;
+export const getEtherscanAddressLink = (address: Address) => `https://basescan.org/address/${address}`;
 
 export const createClubUrl = (clubAddress: Address) => `${process.env.NEXT_PUBLIC_URL}/clubs/${clubAddress}`;
 

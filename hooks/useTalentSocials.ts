@@ -8,7 +8,7 @@ export const useTalentSocials = (address: Address) => {
     staleTime: 120_000,
     queryKey: ["useTalentSocials", address],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:3000/api/${address}/socials`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/${address}/socials`);
 
       if (response.status === 200 || response.status === 304) {
         return response.json();

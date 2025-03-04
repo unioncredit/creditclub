@@ -22,6 +22,7 @@ import { useWrite } from "@/hooks/useWrite";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 import { useModals } from "@/providers/ModalManagerProvider";
 import { REPAY_MODAL } from "@/components/modals/RepayModal";
+import { CLUB_PARAMETERS_MODAL } from "@/components/modals/ClubParametersModal";
 
 export const ClubActions = ({
   clubAddress,
@@ -57,17 +58,17 @@ export const ClubActions = ({
       <header className="flex justify-between gap-2 border-b pb-4">
         <h2 className="text-lg text-stone-500 font-medium">Club Member Actions</h2>
 
-        <div className="flex items-center">
+        <button className="flex items-center cursor-pointer" onClick={() => openModal(CLUB_PARAMETERS_MODAL, { clubAddress })}>
           <ManageIcon width={24} height={24} />
           <ChevronIcon width={24} height={24} className="-ml-1.5" />
-        </div>
+        </button>
       </header>
 
       <div className="mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-slate-100 rounded-2xl border">
         <TextCube width={48} height={48} background="#1F1D29" foreground="white">
           {getInitials(name)}
         </TextCube>
-        <p className="text-lg">{name} Member #{tokenId.toString()}</p>
+        <p className="text-lg">{name} Member #{(tokenId + 1n).toString()}</p>
       </div>
 
       {vestingEnabled && (

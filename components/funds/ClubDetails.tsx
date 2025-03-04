@@ -88,22 +88,37 @@ export const ClubDetails = ({
 
   return (
     <div>
-      <div className="flex items-between pb-4 border-b border-gray-200 sm:items-start">
-        <Image
-          width={58}
-          height={58}
-          src={createIpfsImageUrl(nftIpfsUrl)}
-          alt="Fund Image"
-          className="rounded-xl border border-stone-200 min-w-[42px]"
-        />
+      <div className="flex items-between pb-4 border-b border-gray-200 sm:items-start sm:flex-col">
+        <div className="sm:flex sm:justify-between sm:w-full">
+          <Image
+            width={58}
+            height={58}
+            src={createIpfsImageUrl(nftIpfsUrl)}
+            alt="Fund Image"
+            className="rounded-xl border border-stone-200 min-w-[42px]"
+          />
+
+          <RoundedButton
+            size="pill"
+            className="font-mono hidden sm:flex"
+            onClick={() => share({
+              url: process.env.NEXT_PUBLIC_URL!,
+              title: `Join me in ${name}`,
+              text: description,
+            })}
+          >
+            <MarketingIcon width={16} />
+            {copied ? "Copied!" : "Share"}
+          </RoundedButton>
+        </div>
 
         <div className="pl-3 w-full">
-          <div className="flex items-center justify-between w-full">
-            <h1 className="font-sans text-2xl font-medium">{name} ({symbol})</h1>
+          <div className="flex items-start justify-between w-full">
+            <h1 className="font-sans text-2xl font-medium sm:mt-2">{name} ({symbol})</h1>
 
             <RoundedButton
               size="pill"
-              className="font-mono"
+              className="font-mono sm:hidden"
               onClick={() => share({
                 url: process.env.NEXT_PUBLIC_URL!,
                 title: `Join me in ${name}`,
@@ -115,7 +130,7 @@ export const ClubDetails = ({
             </RoundedButton>
           </div>
 
-          <ul className="flex items-center gap-1 flex-wrap">
+          <ul className="flex items-center gap-1 flex-wrap sm:mt-1">
             {clubBadges.map(({ prefix, label, url, value, copy, copied }, index) => (
               <li key={index} className="flex items-center gap-1">
                 <span className="text-xs">{prefix} :</span>

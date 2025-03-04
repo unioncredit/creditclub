@@ -30,55 +30,79 @@ export const ClubHeader = ({
   const { creditLimit, unionBalance, owed } = unionMember;
 
   return (
-    <header className="w-full items-center flex justify-between">
-      <div className="sm:hidden">
-        <a href="/">
-          <CreditClubLogo className="w-[200px]" />
-        </a>
-      </div>
-      <div className="hidden sm:block">
-        <a href="/">
-          <MobileCreditClubLogo className="h-[50px] max-w-[115px] -ml-4 scale-90" />
-        </a>
-      </div>
+    <header className="w-full items-center flex flex-col">
+      <div className="w-full items-center flex justify-between">
+        <div className="sm:hidden">
+          <a href="/">
+            <CreditClubLogo className="w-[200px]" />
+          </a>
+        </div>
+        <div className="hidden sm:block">
+          <a href="/">
+            <MobileCreditClubLogo className="h-[50px] max-w-[115px] -ml-4 scale-90" />
+          </a>
+        </div>
 
-      <div className="flex">
-        {isConnected && (
-          <>
-            <RoundedButton
-              className="mr-2 sm:text-[0px] sm:pl-[12px] sm:pr-[8px]"
-              icon={<WalletIcon width={24} />}
-              onClick={() => openModal(BORROW_MODAL)}
-            >
-              <span className="md:hidden">Borrow · </span>${format(creditLimit, token, creditLimit < wad ? 2 : 0)}
-            </RoundedButton>
+        <div className="flex">
+          {isConnected && (
+            <>
+              <div className="sm:hidden whitespace-nowrap">
+                <RoundedButton
+                  className="mr-2 sm:text-[0px] sm:pl-[12px] sm:pr-[8px]"
+                  icon={<WalletIcon width={24} />}
+                  onClick={() => openModal(BORROW_MODAL)}
+                >
+                  <span className="md:hidden">Borrow · </span>${format(creditLimit, token, creditLimit < wad ? 2 : 0)}
+                </RoundedButton>
 
-            <RoundedButton
-              className="mr-2 sm:text-[0px] sm:pl-[12px] sm:pr-[8px]"
-              icon={<RepayIcon width={24} />}
-              onClick={() => openModal(REPAY_MODAL)}
-            >
-              <span className="md:hidden">Repay · </span>${format(owed, token, owed < wad ? 2 : 0)}
-            </RoundedButton>
+                <RoundedButton
+                  className="mr-2 sm:text-[0px] sm:pl-[12px] sm:pr-[8px]"
+                  icon={<RepayIcon width={24} />}
+                  onClick={() => openModal(REPAY_MODAL)}
+                >
+                  <span className="md:hidden">Repay · </span>${format(owed, token, owed < wad ? 2 : 0)}
+                </RoundedButton>
+              </div>
 
-            <RoundedButton
-              icon={<UnionIcon width={24} />}
-              className="mr-2 sm:text-[0px] sm:pl-[12px] sm:pr-[8px]"
-              onClick={() => openModal(REWARDS_MODAL, {
-                clubAddress,
-              })}
-            >
-              {format(unionBalance, TOKENS.UNION, 0)}
-            </RoundedButton>
-          </>
-        )}
+              <RoundedButton
+                icon={<UnionIcon width={24} />}
+                className="mr-2 sm:text-[0px] sm:pl-[12px] sm:pr-[8px]"
+                onClick={() => openModal(REWARDS_MODAL, {
+                  clubAddress,
+                })}
+              >
+                {format(unionBalance, TOKENS.UNION, 0)}
+              </RoundedButton>
+            </>
+          )}
 
-        <div className={cn("ConnectButton", {
-          "disconnected": !isConnected,
-        })}>
-          <ConnectButton/>
+          <div className={cn("ConnectButton", {
+            "disconnected": !isConnected,
+          })}>
+            <ConnectButton/>
+          </div>
         </div>
       </div>
+
+      {isConnected && (
+        <div className="sm:flex hidden gap-2 w-full mt-2">
+          <RoundedButton
+            className="flex-1 w-full text-sm"
+            icon={<WalletIcon width={24} />}
+            onClick={() => openModal(BORROW_MODAL)}
+          >
+            Borrow · ${format(creditLimit, token, 0)}
+          </RoundedButton>
+
+          <RoundedButton
+            className="flex-1 w-full text-sm"
+            icon={<RepayIcon width={24} />}
+            onClick={() => openModal(REPAY_MODAL)}
+          >
+            Repay · ${format(owed, token, 0)}
+          </RoundedButton>
+        </div>
+      )}
     </header>
   );
 };

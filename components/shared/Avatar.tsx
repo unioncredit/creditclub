@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Address } from "viem";
+import makeBlockie from "ethereum-blockies-base64";
 // @ts-ignore
 import { Avatar as UnionUiAvatar } from "@unioncredit/ui";
 
 import { useEns } from "@/hooks/useEns";
-import { BlockHeaderAvatar } from "@/components/shared/BlockHeaderAvatar";
 
 export function Avatar({
   address,
@@ -18,16 +18,17 @@ export function Avatar({
   const [error, setError] = useState(false);
 
   const { avatar, isLoading, isError } = useEns(address);
+  const blockie = makeBlockie(address);
 
-  return !isLoading && !isError && !error && avatar ? (
+  return (
     <div className={className}>
       <UnionUiAvatar
         size={size}
-        src={avatar}
+        src={
+          isError || isLoading || error ? blockie : avatar || blockie
+        }
         onError={() => setError(true)}
       />
     </div>
-  ) : (
-    <BlockHeaderAvatar address={address} className={className} />
-  );
+  )
 }

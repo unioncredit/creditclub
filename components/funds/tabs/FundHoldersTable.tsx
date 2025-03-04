@@ -6,7 +6,7 @@ import { formatDecimals, truncateAddress } from "@/lib/format";
 import { Address } from "viem";
 import { useClubContacts } from "@/hooks/useClubContacts";
 import { PrimaryLabel } from "@/components/shared/PrimaryLabel";
-import { useTokenPrice } from "@/hooks/useTokenPrice";
+import { useTokenPriceData } from "@/hooks/useTokenPriceData";
 import { useClubData } from "@/hooks/useClubData";
 import { Avatar } from "@/components/shared/Avatar";
 
@@ -66,9 +66,10 @@ export const FundHoldersTable = ({
 }) => {
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress);
-  const { data: tokenPrice }  = useTokenPrice(clubAddress);
+  const { data: priceData }  = useTokenPriceData(clubAddress);
 
   const { decimals } = clubData;
+  const { price: tokenPrice } = priceData;
 
   const rows: FundHolderRow[] = clubContacts.map(({ address, numShares }, index) => ({
     id: index,

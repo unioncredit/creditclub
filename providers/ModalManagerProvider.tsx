@@ -13,6 +13,8 @@ import { INVITE_MODAL, InviteModal } from "@/components/modals/InviteModal";
 import { POST_TX_MODAL, PostTxModal } from "@/components/modals/PostTxModal";
 import { REWARDS_MODAL, RewardsModal } from "@/components/modals/RewardsModal";
 import { UNION_REPAY_MODAL, UnionRepayModal } from "@/components/modals/UnionRepayModal";
+import { ACCOUNT_MODAL, AccountModal } from "@/components/modals/AccountModal";
+import { CLUB_PARAMETERS_MODAL, ClubParametersModal } from "@/components/modals/ClubParametersModal";
 
 interface IModalManagerContext {
   open: (key: string, props?: any) => void;
@@ -24,8 +26,10 @@ const ModalContext = createContext({} as IModalManagerContext);
 export const useModals = () => useContext(ModalContext);
 
 const modals: Record<string, any> = {
+  [ACCOUNT_MODAL]: AccountModal,
   [BORROW_MODAL]: BorrowModal,
   [BUY_INVITES_MODAL]: BuyInvitesModal,
+  [CLUB_PARAMETERS_MODAL]: ClubParametersModal,
   [FIXED_BID_MODAL]: FixedBidModal,
   [INVITE_MODAL]: InviteModal,
   [MINT_NFT_MODAL]: MintNftModal,

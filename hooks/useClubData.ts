@@ -136,6 +136,10 @@ export const useClubData = (clubAddress: Address) => {
     {
       ...creditVaultContract,
       functionName: "rewardManager",
+    },
+    {
+      ...creditVaultContract,
+      functionName: "initialInvitedLength"
     }
   ];
 
@@ -180,6 +184,7 @@ export const useClubData = (clubAddress: Address) => {
     creatorAddress = zeroAddress,
     activationDate = 0n,
     rewardsManagerAddress = zeroAddress,
+    initialInvitedLength = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -216,6 +221,7 @@ export const useClubData = (clubAddress: Address) => {
     activationDate,
     rewardsManagerAddress,
     activated: activationDate > 0n,
+    initialInvitedLength,
   };
 
   return { ...result, data };

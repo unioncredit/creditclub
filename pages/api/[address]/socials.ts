@@ -50,6 +50,7 @@ async function handler(
   const { passport } = await response.json() as PassportCredentialsResponse;
   const { passport_socials } = passport;
 
+  res.setHeader("Cache-Control", "s-maxage=86400, stale-while-revalidate=86400");
   return res.status(200).json(passport_socials.map((social) => ({
     follower_count: social.follower_count,
     following_count: social.following_count,

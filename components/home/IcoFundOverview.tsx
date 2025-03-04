@@ -46,11 +46,11 @@ export const IcoFundOverview = ({
       value: `$${current} of $${goal}`
     },
     {
-      name: activated ? "Lockup remaining" : "Lockup period",
+      name: "Redeemable",
       value: activated
         ? locked
           ? formatDuration(remaining)
-          : "Expired"
+          : "Now"
         : formatDuration(Number(lockupPeriod)),
     }
   ];

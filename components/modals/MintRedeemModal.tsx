@@ -5,6 +5,8 @@ import {
   Input,
   SegmentedControl,
   InfoBanner,
+  CalendarIcon,
+  WalletIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
 
@@ -13,7 +15,7 @@ import { SendReceivePanel } from "@/components/shared/SendReceivePanel";
 import { useState } from "react";
 import { useClubData } from "@/hooks/useClubData";
 import { Address, erc20Abi } from "viem";
-import { useAccount } from "wagmi";
+import { useAccount, useWatchAsset } from "wagmi";
 import { useClubMember } from "@/hooks/useClubMember";
 import { useErc20Token } from "@/hooks/useErc20Token";
 import { formatDecimals } from "@/lib/format";
@@ -23,7 +25,8 @@ import { ApprovalButton } from "@/components/shared/ApprovalButton";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 import { useWrite } from "@/hooks/useWrite";
 import { useClubActivation } from "@/hooks/useClubActivation";
-import { formatDuration } from "@/lib/utils";
+import { capitalize, formatDuration } from "@/lib/utils";
+import { POST_TX_MODAL } from "@/components/modals/PostTxModal";
 
 export const MINT_REDEEM_MODAL = "mint-redeem-modal";
 
@@ -36,12 +39,13 @@ export const MintRedeemModal = ({
 }) => {
   const [tab, setTab] = useState<"mint" | "redeem">(activeTab);
 
-  const { close } = useModals();
+  const { open: openModal, close } = useModals();
   const { address } = useAccount();
   const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress)
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
   const { activated, locked, remaining } = useClubActivation(clubAddress);
+  const { watchAsset } = useWatchAsset();
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
@@ -61,6 +65,7 @@ export const MintRedeemModal = ({
     initialRaise,
     symbol: clubTokenSymbol,
     decimals: clubTokenDecimals,
+    lockupPeriod,
   } = clubData;
 
   const {
@@ -69,18 +74,21 @@ export const MintRedeemModal = ({
     sendTokenDecimals,
     receiveTokenSymbol,
     receiveTokenDecimals,
+    receiveTokenAddress,
   } = tab === "mint" ? {
     sendTokenSymbol: assetTokenSymbol,
     sendTokenBalance: assetBalance,
     sendTokenDecimals: assetTokenDecimals,
     receiveTokenSymbol: clubTokenSymbol,
     receiveTokenDecimals: clubTokenDecimals,
+    receiveTokenAddress: clubAddress,
   } : {
     sendTokenSymbol: clubTokenSymbol,
     sendTokenBalance: clubTokenBalance,
     sendTokenDecimals: clubTokenDecimals,
     receiveTokenSymbol: assetTokenSymbol,
     receiveTokenDecimals: assetTokenDecimals,
+    receiveTokenAddress: assetTokenAddress,
   };
 
   const validate = (inputs: IFormValues) => {
@@ -122,10 +130,43 @@ export const MintRedeemModal = ({
       ? "Enter an amount"
       : `${action} ${formatDecimals(amountReceived, receiveTokenDecimals, 0)} ${receiveTokenSymbol}`,
     disabled: !!errors.shares || sharesRaw <= 0n || clubTokenBalance < sharesRaw,
-    onComplete: async () => {
+    onComplete: async (hash: string) => {
       close();
       refetchClubData();
       refetchClubMember();
+      openModal(POST_TX_MODAL, {
+        header: `Your ${tab} was successful`,
+        title: capitalize(tab),
+        content: (
+          <>
+            <p className="font-mono mt-2">You successfully {tab}ed {formatDecimals(amountReceived, receiveTokenDecimals, 2, false)} {receiveTokenDecimals}</p>
+
+            {tab === "mint" && (
+              <div className="flex items-center gap-2 my-4 text-sm text-blue-600">
+                <CalendarIcon width={24} className="fill" />
+                Redeemable: {activated
+                ? locked
+                  ? formatDuration(remaining)
+                  : "Now"
+                : formatDuration(Number(lockupPeriod))}
+              </div>
+            )}
+          </>
+        ),
+        action: {
+          icon: WalletIcon,
+          label: "Add token to wallet",
+          onClick: () => watchAsset({
+            type: 'ERC20',
+            options: {
+              address: receiveTokenAddress,
+              symbol: receiveTokenSymbol,
+              decimals: receiveTokenDecimals,
+            },
+          })
+        },
+        hash,
+      })
     }
   });
 
@@ -169,7 +210,7 @@ export const MintRedeemModal = ({
             type="number"
             name="amount"
             label={`${action} Amount`}
-            rightLabel={`Max. ${formatDecimals(sendTokenBalance, sendTokenDecimals, 2)}`}
+            rightLabel={`Max. ${formatDecimals(sendTokenBalance, sendTokenDecimals, 2)} ${sendTokenSymbol}`}
             rightLabelAction={() => setRawValue("shares", sendTokenBalance)}
             suffix={sendTokenSymbol}
             placeholder="0.0"

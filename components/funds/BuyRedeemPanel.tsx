@@ -9,10 +9,11 @@ import { useModals } from "@/providers/ModalManagerProvider";
 import { MINT_REDEEM_MODAL } from "@/components/modals/MintRedeemModal";
 import { formatDecimals } from "@/lib/format";
 import { formatDuration } from "@/lib/utils";
-import { useTokenPrice } from "@/hooks/useTokenPrice";
+import { useTokenPriceData } from "@/hooks/useTokenPriceData";
 import { useClubMember } from "@/hooks/useClubMember";
 import { UNISWAP_SWAP_MODAL } from "@/components/modals/UniswapSwapModal";
 import { useClubActivation } from "@/hooks/useClubActivation";
+import { PoolMarketData } from "@/components/funds/PoolMarketData";
 
 export const BuyRedeemPanel = ({
   clubAddress,
@@ -23,7 +24,7 @@ export const BuyRedeemPanel = ({
   const { open: openModal } = useModals();
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubMember } = useClubMember(address, clubAddress);
-  const { data: tokenPrice } = useTokenPrice(clubAddress);
+  const { data: priceData } = useTokenPriceData(clubAddress);
   const { activated, locked, remaining } = useClubActivation(clubAddress);
   const { watchAsset } = useWatchAsset();
 
@@ -38,7 +39,9 @@ export const BuyRedeemPanel = ({
     lockupPeriod,
   } = clubData;
 
-  const totalSupplyFormatted = formatDecimals(totalSupply, decimals, 2);
+  const { price: tokenPrice } = priceData;
+
+  const totalSupplyFormatted = (tokenPrice * Number(formatUnits(totalSupply, decimals))).toFixed(2);
 
   const footerStats = [
     {
@@ -50,11 +53,11 @@ export const BuyRedeemPanel = ({
       value: `~$${(Number(formatUnits(clubTokenBalance, decimals)) * tokenPrice).toFixed(2)}`
     },
     {
-      title: activated ? "Lockup remaining" : "Lockup period",
+      title: "Redeemable",
       value: activated
         ? locked
           ? formatDuration(remaining)
-          : "Expired"
+          : "Now"
         : formatDuration(Number(lockupPeriod)),
     }
   ];
@@ -88,7 +91,7 @@ export const BuyRedeemPanel = ({
                 },
               })}
             >
-              < AddIcon width={24} />
+              <AddIcon width={24} />
               ${symbol}
             </RoundedButton>
           )}
@@ -114,7 +117,6 @@ export const BuyRedeemPanel = ({
           size="medium"
           variant="blue"
           className="w-full text-sm"
-          disabled={!isConnected}
           onClick={() => openModal(UNISWAP_SWAP_MODAL, {
             clubAddress,
           })}
@@ -126,7 +128,6 @@ export const BuyRedeemPanel = ({
           size="medium"
           variant="dark"
           className="w-full text-sm"
-          disabled={!isConnected}
           onClick={() => openModal(MINT_REDEEM_MODAL, {
             activeTab: "redeem",
             clubAddress,
@@ -135,6 +136,8 @@ export const BuyRedeemPanel = ({
           Redeem ${symbol}
         </RoundedButton>
       </div>
+
+      <PoolMarketData clubAddress={clubAddress} className="mt-2" />
     </div>
   );
 }

@@ -10,6 +10,10 @@ export function cn(...inputs: ClassValue[]) {
 
 
 export function formatDuration(seconds: number): string {
+  if (seconds <= 0) {
+    return "0";
+  }
+
   const days = Math.floor(seconds / (24 * 60 * 60));
   const hours = Math.floor((seconds % (24 * 60 * 60)) / (60 * 60));
   const minutes = Math.floor((seconds % (60 * 60)) / 60);
@@ -70,3 +74,8 @@ export const generateNumberFromAddress = (address: Address, max = 10): number =>
   // Create a random number between 1-max (using modulo operation + 1)
   return (numericValue % max) + 1;
 };
+
+export function capitalize(text: string): string {
+  if (!text) return text; // Handle empty or null values.
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}

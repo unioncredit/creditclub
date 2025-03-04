@@ -30,7 +30,7 @@ export const MembershipClaim = ({
   const { data: inviteData } = useInvites(clubAddress);
   const { data: memberNftdata } = useClubMemberNft(clubAddress);
 
-  const { name, memberMax } = clubData;
+  const { name, memberMax, initialInvitedLength } = clubData;
   const { image: nftIpfsUrl } = memberNftdata;
 
   const {
@@ -54,9 +54,19 @@ export const MembershipClaim = ({
         completed: tokenQualified,
       },
     ] : []),
-    ...(inviteEnabled ? [
+    ...((inviteEnabled && initialInvitedLength > 0n) ? [
       {
-        label: "Invited by a member or creator",
+        label: "Invited by member or creator",
+        completed: inviteQualified,
+      },
+    ] : inviteEnabled ? [
+      {
+        label: "Invited by member",
+        completed: inviteQualified,
+      },
+    ] : initialInvitedLength > 0n ? [
+      {
+        label: "Invited by creator",
         completed: inviteQualified,
       },
     ] : []),
