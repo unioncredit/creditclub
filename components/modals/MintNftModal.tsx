@@ -1,4 +1,5 @@
 import {
+  Button,
   Modal,
   ModalOverlay,
   // @ts-ignore
@@ -22,6 +23,7 @@ import { useClubMember } from "@/hooks/useClubMember";
 import { useClubContacts } from "@/hooks/useClubContacts";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { createIpfsImageUrl } from "@/lib/links";
+import { useIsQualified } from "@/hooks/useIsQualified";
 
 export const MINT_NFT_MODAL = "mint-nft-modal";
 
@@ -39,6 +41,7 @@ export const MintNftModal = ({
   const { data: clubMemberNftData } = useClubMemberNft(clubAddress);
   const { data: newMemberData } = useNewMemberData(address, clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
+  const { data: isQualified } = useIsQualified(clubAddress);
 
   const {
     assetBalance
@@ -113,36 +116,45 @@ export const MintNftModal = ({
             rows={rows}
           />
 
-          <ApprovalButton
-            owner={address}
-            amount={costToMint}
-            disabled={assetBalance < costToMint}
-            spender={clubAddress}
-            tokenContract={{
-              abi: erc20Abi,
-              address: assetAddress,
-            }}
-            actionProps={{
-              ...creditVaultContract,
-              label: "Join Club",
-              disabled: assetBalance < costToMint,
-              functionName: "mintMemberNFT",
-              args: [address],
-              onComplete: async () => {
-                refetchClubData();
-                refetchClubMember();
-                refetchClubContacts();
+          {isQualified ? (
+            <ApprovalButton
+              owner={address}
+              amount={costToMint}
+              disabled={assetBalance < costToMint}
+              spender={clubAddress}
+              tokenContract={{
+                abi: erc20Abi,
+                address: assetAddress,
+              }}
+              actionProps={{
+                ...creditVaultContract,
+                label: "Join Club",
+                disabled: assetBalance < costToMint,
+                functionName: "mintMemberNFT",
+                args: [address],
+                onComplete: async () => {
+                  refetchClubData();
+                  refetchClubMember();
+                  refetchClubContacts();
 
-                openModal(POST_MINT_NFT_MODAL, {
-                  clubName: name,
-                  tokenId,
-                  rows,
-                  startingCredit: initialTrustAmount,
-                  nftImageUrl: createIpfsImageUrl(ipfsImageLink),
-                });
-              }
-            }}
-          />
+                  openModal(POST_MINT_NFT_MODAL, {
+                    clubName: name,
+                    tokenId,
+                    rows,
+                    startingCredit: initialTrustAmount,
+                    nftImageUrl: createIpfsImageUrl(ipfsImageLink),
+                  });
+                }
+              }}
+            />
+          ) : (
+            <Button
+              fluid
+              size="large"
+              disabled={true}
+              label="You do not qualify"
+            />
+          )}
         </Modal.Body>
       </Modal>
     </ModalOverlay>

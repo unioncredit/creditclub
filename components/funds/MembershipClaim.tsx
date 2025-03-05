@@ -16,6 +16,7 @@ import { createIpfsImageUrl } from "@/lib/links";
 import Image from "next/image";
 import React from "react";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
+import { useIsQualified } from "@/hooks/useIsQualified";
 
 export const MembershipClaim = ({
   clubAddress,
@@ -29,12 +30,14 @@ export const MembershipClaim = ({
   const { data: gatingTokenData } = useGatingToken(clubAddress);
   const { data: inviteData } = useInvites(clubAddress);
   const { data: memberNftdata } = useClubMemberNft(clubAddress);
+  const { data: isQualified } = useIsQualified(clubAddress);
 
-  const { name, memberMax, initialInvitedLength } = clubData;
+  const { name, memberMax } = clubData;
   const { image: nftIpfsUrl } = memberNftdata;
 
   const {
-    enabled: inviteEnabled,
+    creatorInvitesEnabled,
+    memberInvitesEnabled,
     qualified: inviteQualified
   } = inviteData;
 
@@ -45,8 +48,6 @@ export const MembershipClaim = ({
     name: tokenName
   } = gatingTokenData;
 
-  const isQualfified = (tokenEnabled && tokenQualified) || (inviteEnabled && inviteQualified);
-
   const requirementRows = [
     ...(tokenEnabled ? [
       {
@@ -54,17 +55,17 @@ export const MembershipClaim = ({
         completed: tokenQualified,
       },
     ] : []),
-    ...((inviteEnabled && initialInvitedLength > 0n) ? [
+    ...((creatorInvitesEnabled && memberInvitesEnabled) ? [
       {
         label: "Invited by member or creator",
         completed: inviteQualified,
       },
-    ] : inviteEnabled ? [
+    ] : memberInvitesEnabled ? [
       {
         label: "Invited by member",
         completed: inviteQualified,
       },
-    ] : initialInvitedLength > 0n ? [
+    ] : creatorInvitesEnabled ? [
       {
         label: "Invited by creator",
         completed: inviteQualified,
@@ -91,10 +92,10 @@ export const MembershipClaim = ({
             src={createIpfsImageUrl(nftIpfsUrl)}
             alt="Fund Image"
             className={cn("rounded-xl border border-stone-200 min-w-[42px]", {
-              "opacity-20": !isQualfified,
+              "opacity-20": !isQualified,
             })}
           />
-          <p className="text-lg">You are {!isQualfified && "not"} qualified</p>
+          <p className="text-lg">You are {!isQualified && "not"} qualified</p>
         </div>
       )}
 

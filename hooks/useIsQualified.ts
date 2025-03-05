@@ -17,7 +17,7 @@ export const useIsQualified = (clubAddress: Address) => {
   } = gatingTokenData;
 
   return {
-    data: (tokenEnabled && tokenQualified) || (inviteEnabled && inviteQualified),
+    data: (inviteEnabled && inviteQualified) && (!tokenEnabled || tokenQualified),
     refetch: () => {
       refetchGatingToken();
       refetchInvites();

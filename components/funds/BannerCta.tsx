@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { useModals } from "@/providers/ModalManagerProvider";
 import { MINT_NFT_MODAL } from "@/components/modals/MintNftModal";
 import { Address } from "viem";
+import { useClubData } from "@/hooks/useClubData";
 
 export const BannerCta = ({
   clubAddress,
@@ -12,6 +13,9 @@ export const BannerCta = ({
   className?: string;
 }) => {
   const { open } = useModals();
+  const { data: clubData } = useClubData(clubAddress);
+
+  const { name } = clubData;
 
   return (
     <div className={cn("p-6 text-center bg-blue-50 rounded-xl", className)}>
@@ -21,7 +25,7 @@ export const BannerCta = ({
         variant="light"
         onClick={() => open(MINT_NFT_MODAL, { clubAddress })}
       >
-        Claim Creditline From BC
+        Join {name}
       </ShadowButton>
     </div>
   )

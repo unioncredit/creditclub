@@ -112,7 +112,7 @@ export const ClubDetails = ({
           </RoundedButton>
         </div>
 
-        <div className="pl-3 w-full">
+        <div className="pl-3 w-full sm:pl-0">
           <div className="flex items-start justify-between w-full">
             <h1 className="font-sans text-2xl font-medium sm:mt-2">{name} ({symbol})</h1>
 

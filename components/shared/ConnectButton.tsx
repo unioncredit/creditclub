@@ -7,6 +7,7 @@ import { RoundedButton } from "@/components/ui/RoundedButton";
 import { Avatar } from "@/components/shared/Avatar";
 import { useModals } from "@/providers/ModalManagerProvider";
 import { ACCOUNT_MODAL } from "@/components/modals/AccountModal";
+import { PrimaryLabel } from "@/components/shared/PrimaryLabel";
 
 export const ConnectButton = () => {
   const { open: openModal } = useModals();
@@ -15,7 +16,8 @@ export const ConnectButton = () => {
 
   return (
     <RoundedButton
-      variant="dark"
+      variant={isConnected ? "light" : "dark"}
+      className={isConnected ? "px-3 text-sm gap-2" : undefined}
       onClick={
         isConnected
           ? () => openModal(ACCOUNT_MODAL, { address })
@@ -28,7 +30,7 @@ export const ConnectButton = () => {
       ) : (
         <>
           <Avatar address={address} size={28} className="rounded-full overflow-hidden" />
-          <ChevronIcon width={24} className="fill text-slate-200 -mr-2" />
+          <PrimaryLabel address={address} />
         </>
       )}
     </RoundedButton>
