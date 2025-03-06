@@ -16,6 +16,8 @@ import { format } from "@/lib/format";
 import { ActivityTypes, IToken, TOKENS } from "@/constants";
 import { AddressLink } from "@/components/shared/AddressLink";
 import { IClubEvent, IClubEventType } from "@/fetchers/fetchClubEvents";
+import { useToken } from "@/hooks/useToken";
+import { useClubActivity } from "@/hooks/useClubActivity";
 
 // prettier-ignore
 const texts = {
@@ -83,6 +85,24 @@ const texts = {
       </a>
     </>
   ),
+  [ActivityTypes.MINT]: (x: IClubEvent) => (
+    <>
+      <AddressLink address={x.address} /> ·
+      <a href={`https://basescan.org/tx/${x.hash}`} target="_blank" rel="noopener">
+        <span className="text-gray-500"> Minted</span>{" · "}
+        <span className="font-mono">{format(x.amount, TOKENS.UNION, 0)} $BC</span>
+      </a>
+    </>
+  ),
+  [ActivityTypes.REDEEM]: (x: IClubEvent) => (
+    <>
+      <AddressLink address={x.address} /> ·
+      <a href={`https://basescan.org/tx/${x.hash}`} target="_blank" rel="noopener">
+        <span className="text-gray-500"> Redeemed</span>{" · "}
+        <span className="font-mono">{format(x.amount, TOKENS.USDC, 0)} $USDC</span>
+      </a>
+    </>
+  ),
 };
 
 const ActivityRow = ({
@@ -107,6 +127,8 @@ const ActivityRow = ({
     [ActivityTypes.ROUND_WON]: ConfettiIcon,
     [ActivityTypes.INVITATION_EVENT]: VouchIcon,
     [ActivityTypes.BID_PLACED]: WalletIcon,
+    [ActivityTypes.MINT]: WithdrawIcon,
+    [ActivityTypes.REDEEM]: DepositIcon,
   };
 
   // @ts-ignore
@@ -125,32 +147,8 @@ const ActivityRow = ({
 };
 
 export const ClubActivity = () => {
-  const activity: IClubEvent[] = [
-    {
-      address: "0xDD470917C52a25179a6B5260eAA9609230Be4ce0",
-      amount: 6830151353151351351351n,
-      hash: "0x0",
-      type: "ROUND_WON"
-    },
-    {
-      address: "0xDD470917C52a25179a6B5260eAA9609230Be4ce0",
-      amount: 1023151353151351351351n,
-      hash: "0x0",
-      type: "REPAID"
-    },
-    {
-      address: "0x3dc32a01506982646D021d5C93Fd8Fc6290Ae8DC",
-      amount: 86151353151351351351n,
-      hash: "0x0",
-      type: "REPAID"
-    },
-    {
-      address: "0x3dc32a01506982646D021d5C93Fd8Fc6290Ae8DC",
-      amount: 183151353151351351351n,
-      hash: "0x0",
-      type: "REPAID"
-    }
-  ];
+  const { token } = useToken();
+  const { data: activity } = useClubActivity();
 
   return (
     <div className="mt-6 text-left p-6 sm:p-4 border rounded-xl">
@@ -165,7 +163,7 @@ export const ClubActivity = () => {
           </Card.Body>
         ) : (
           activity.slice(0, 4).map((tx: any, index) => (
-            <ActivityRow key={index} token={TOKENS.DAI} {...tx} />
+            <ActivityRow key={index} token={token} {...tx} />
           ))
         )}
       </div>

@@ -18,6 +18,7 @@ import { useClubData } from "@/hooks/useClubData";
 import { ClubActions } from "@/components/funds/ClubActions";
 import { BuyRedeemPanel } from "@/components/funds/BuyRedeemPanel";
 import { useRouter } from "next/router";
+import { ClubActivity } from "@/components/funds/ClubActivity";
 
 export default function FundSinglePage({
   clubAddress,
@@ -50,7 +51,7 @@ export default function FundSinglePage({
 
           <Container className="mt-4">
             <div className="flex w-full md:flex-col">
-              <section className="flex flex-col justify-between flex-1 text-left">
+              <section className="flex flex-col flex-1 text-left">
                 <ClubDetails clubAddress={clubAddress} />
                 <ClubStats clubAddress={clubAddress} />
               </section>
@@ -66,6 +67,7 @@ export default function FundSinglePage({
                 ) : (
                   <MembershipClaim clubAddress={clubAddress} />
                 )}
+                <ClubActivity />
               </section>
             </div>
 

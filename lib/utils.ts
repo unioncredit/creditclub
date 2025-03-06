@@ -8,7 +8,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-
 export function formatDuration(seconds: number): string {
   if (seconds <= 0) {
     return "0";
@@ -78,4 +77,12 @@ export const generateNumberFromAddress = (address: Address, max = 10): number =>
 export function capitalize(text: string): string {
   if (!text) return text; // Handle empty or null values.
   return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+export const objectToWhere = (where?: { [key: string]: string }) => {
+  return where
+    ? `where: { ${Object.keys(where)
+      .map((key) => `${key}: "${where[key]}"`)
+      .join(",")} }`
+    : "";
 }

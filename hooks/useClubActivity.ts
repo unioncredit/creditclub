@@ -8,7 +8,7 @@ export const useClubActivity = () => {
 
   const fetch = useCallback(async () => {
     setLoading(true);
-    const clubEvents = await fetchClubEvents(DEFAULT_CHAIN_ID);
+    const clubEvents = await fetchClubEvents();
 
     setData(clubEvents);
     setLoading(false);

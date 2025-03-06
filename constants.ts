@@ -44,6 +44,8 @@ export const ActivityTypes = {
   ROUND_WON: "ROUND_WON",
   INVITATION_EVENT: "INVITATION_EVENT",
   BID_PLACED: "BID_PLACED",
+  MINT: "MINT",
+  REDEEM: "REDEEM",
 };
 
 export const ToastStatus: Record<"SUCCESS" | "FAILED" | "PENDING", IToastStatus> = {
