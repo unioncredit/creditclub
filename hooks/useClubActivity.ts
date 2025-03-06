@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { fetchClubEvents, IClubEvent } from "@/fetchers/fetchClubEvents";
-import { DEFAULT_CHAIN_ID } from "@/constants";
 
 export const useClubActivity = () => {
   const [data, setData] = useState<IClubEvent[]>([]);

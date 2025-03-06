@@ -3,7 +3,6 @@ import { Address, zeroAddress } from "viem";
 
 import { fetchInvitations, IInvitation } from "@/fetchers/fetchInvitations";
 import { useCache } from "@/providers/CacheProvider";
-import { DEFAULT_CHAIN_ID } from "@/constants";
 
 export const useSentInvitations = ({ sender }: { sender?: Address; }) => {
   const cacheKey = `useSentInvitations__${sender}`;
