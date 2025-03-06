@@ -1,5 +1,5 @@
 // @ts-ignore
-import { WalletIcon, RepayIcon, UnionIcon } from "@unioncredit/ui";
+import { WalletIcon, RepayIcon, UnionIcon, VouchIcon } from "@unioncredit/ui";
 import { useAccount } from "wagmi";
 import cn from "classnames";
 
@@ -16,6 +16,7 @@ import { REPAY_MODAL } from "@/components/modals/RepayModal";
 import { TOKENS } from "@/constants";
 import { REWARDS_MODAL } from "@/components/modals/RewardsModal";
 import { Address } from "viem";
+import { INVITE_MODAL } from "@/components/modals/InviteModal";
 
 export const ClubHeader = ({
   clubAddress,
@@ -73,6 +74,12 @@ export const ClubHeader = ({
               >
                 {format(unionBalance, TOKENS.UNION, 0)}
               </RoundedButton>
+
+              <RoundedButton
+                icon={<VouchIcon width={24} />}
+                className="mr-2"
+                onClick={() => openModal(INVITE_MODAL)}
+              />
             </>
           )}
 

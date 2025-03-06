@@ -13,7 +13,6 @@ export interface IInvitation {
 }
 
 export const fetchInvitations = async (
-  chainId: number,
   where: Record<string, string> = {}
 ) => {
   const whereQuery = objectToWhere(where);

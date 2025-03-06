@@ -15,7 +15,7 @@ export const useSentInvitations = ({ sender }: { sender?: Address; }) => {
     if (!sender) return;
     setLoading(true);
     setData([]);
-    const invitations = await fetchInvitations(DEFAULT_CHAIN_ID, {
+    const invitations = await fetchInvitations({
       sender: sender.toLowerCase(),
     });
 
