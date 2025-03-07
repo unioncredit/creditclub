@@ -25,7 +25,7 @@ import { ApprovalButton } from "@/components/shared/ApprovalButton";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 import { useWrite } from "@/hooks/useWrite";
 import { useClubActivation } from "@/hooks/useClubActivation";
-import { capitalize, formatDuration } from "@/lib/utils";
+import { formatDuration } from "@/lib/utils";
 import { POST_TX_MODAL } from "@/components/modals/PostTxModal";
 
 export const MINT_REDEEM_MODAL = "mint-redeem-modal";
@@ -135,24 +135,9 @@ export const MintRedeemModal = ({
       refetchClubData();
       refetchClubMember();
       openModal(POST_TX_MODAL, {
-        header: `Your ${tab} was successful`,
-        title: capitalize(tab),
-        content: (
-          <>
-            <p className="font-mono mt-2">You successfully {tab}ed {formatDecimals(amountReceived, receiveTokenDecimals, 2, false)} {receiveTokenDecimals}</p>
-
-            {tab === "mint" && (
-              <div className="flex items-center gap-2 my-4 text-sm text-blue-600">
-                <CalendarIcon width={24} className="fill" />
-                Redeemable: {activated
-                ? locked
-                  ? formatDuration(remaining)
-                  : "Now"
-                : formatDuration(Number(lockupPeriod))}
-              </div>
-            )}
-          </>
-        ),
+        header: `Your redeem was successful`,
+        title: "Redeem",
+        content: <p className="font-mono mt-2">You successfully redeemed {formatDecimals(amountReceived, receiveTokenDecimals, 2, false)} {receiveTokenSymbol}</p>,
         action: {
           icon: WalletIcon,
           label: "Add token to wallet",
@@ -264,10 +249,40 @@ export const MintRedeemModal = ({
                     ? "Insufficient balance"
                     : `${action} ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`,
                 disabled: !!errors.shares || sharesRaw < 0n || assetBalance < sharesRaw,
-                onComplete: async () => {
-                  close();
+                onComplete: async (hash: string) => {
                   refetchClubData();
                   refetchClubMember();
+                  openModal(POST_TX_MODAL, {
+                    header: `Your mint was successful`,
+                    title: "Mint",
+                    content: (
+                      <>
+                        <p className="font-mono mt-2">You successfully minted {formatDecimals(amountReceived, receiveTokenDecimals, 2, false)} {receiveTokenSymbol}</p>
+
+                        <div className="flex items-center gap-2 my-4 text-sm text-blue-600">
+                          <CalendarIcon width={24} className="fill" />
+                          Redeemable: {activated
+                          ? locked
+                            ? formatDuration(remaining)
+                            : "Now"
+                          : formatDuration(Number(lockupPeriod))}
+                        </div>
+                      </>
+                    ),
+                    action: {
+                      icon: WalletIcon,
+                      label: "Add token to wallet",
+                      onClick: () => watchAsset({
+                        type: 'ERC20',
+                        options: {
+                          address: receiveTokenAddress,
+                          symbol: receiveTokenSymbol,
+                          decimals: receiveTokenDecimals,
+                        },
+                      })
+                    },
+                    hash,
+                  })
                 }
               }}
             />
