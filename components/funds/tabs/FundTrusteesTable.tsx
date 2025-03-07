@@ -86,8 +86,6 @@ export const FundTrusteesTable = ({
   const { token } = useToken();
   const { data: clubContacts } = useClubContacts(clubAddress);
 
-  console.log({ clubContacts });
-
   const rows: FundTrusteeRow[] = clubContacts.map((contact) => ({
     address: contact.address,
     trust: format(contact.trust, token),
@@ -96,5 +94,6 @@ export const FundTrusteesTable = ({
     status: contact,
   }));
 
+  // @ts-ignore
   return <DataTable columns={columns} data={rows} />
 };

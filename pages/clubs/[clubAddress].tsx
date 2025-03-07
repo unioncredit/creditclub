@@ -54,6 +54,7 @@ export default function FundSinglePage({
               <section className="flex flex-col flex-1 text-left">
                 <ClubDetails clubAddress={clubAddress} />
                 <ClubStats clubAddress={clubAddress} />
+                <ClubActivity />
               </section>
               <section className="flex-1 pl-6 flex flex-col justify-between max-w-[450px] md:pl-0 md:mt-4 md:max-w-none">
                 {vaultTokenEnabled && (
@@ -67,7 +68,6 @@ export default function FundSinglePage({
                 ) : (
                   <MembershipClaim clubAddress={clubAddress} />
                 )}
-                <ClubActivity />
               </section>
             </div>
 

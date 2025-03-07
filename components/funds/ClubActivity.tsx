@@ -18,6 +18,7 @@ import { AddressLink } from "@/components/shared/AddressLink";
 import { IClubEvent, IClubEventType } from "@/fetchers/fetchClubEvents";
 import { useToken } from "@/hooks/useToken";
 import { useClubActivity } from "@/hooks/useClubActivity";
+import React from "react";
 
 // prettier-ignore
 const texts = {
@@ -151,13 +152,13 @@ export const ClubActivity = () => {
   const { data: activity } = useClubActivity();
 
   return (
-    <div className="mt-6 text-left p-6 sm:p-4 border rounded-xl">
+    <div className="mt-6 text-left p-4 sm:p-4 border rounded-xl">
       <header className="pb-4 border-b">
-        <h2 className="text-xl font-medium">Latest Club Activity</h2>
+        <h2 className="text-lg text-stone-500 font-medium">Latest Club Activity</h2>
       </header>
 
       <div className="mt-4 flex flex-col gap-1.5">
-        {activity.length <= 0 ? (
+      {activity.length <= 0 ? (
           <Card.Body>
             <EmptyState label="No activity to show" />
           </Card.Body>

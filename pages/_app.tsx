@@ -33,9 +33,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           crossOrigin=""
         />
 
-        <link rel="icon" type="image/png" href="/favicons/glasses-black.png" />
-        <link rel="icon" type="image/svg+xml" href="/favicons/glasses-black.svg" />
-        <link rel="apple-touch-icon" href="/favicons/glasses-black.png" />
+        <link rel="icon" type="image/png" href="/favicons/favicon.png" />
+        <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
+        <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png" />
         <link rel="manifest" href="/favicons/manifest.json" />
 
         <title>CreditClub</title>
