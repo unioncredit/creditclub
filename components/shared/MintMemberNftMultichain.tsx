@@ -16,11 +16,18 @@ import { useClubMember } from "@/hooks/useClubMember";
 import { useClubData } from "@/hooks/useClubData";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 import { useIsQualified } from "@/hooks/useIsQualified";
+import { useClubContacts } from "@/hooks/useClubContacts";
+import { StatGridRow } from "@/components/shared/StatGrid";
+import { useClubMemberNft } from "@/hooks/useClubMemberNft";
+import { createIpfsImageUrl } from "@/lib/links";
+import { useNewMemberData } from "@/hooks/useNewMemberData";
 
 export const MintMemberNftMultichain = ({
   clubAddress,
+  rows,
 }: {
   clubAddress: Address;
+  rows: StatGridRow[];
 }) => {
   const [toastId, setToastId] = useState<string | null>(null);
 
@@ -28,15 +35,21 @@ export const MintMemberNftMultichain = ({
   const { addToast, closeToast } = useToasts();
   const { address } = useAccount();
   const { connectWallet } = usePrivy();
-  const { data: clubMember, refetch: refetchMember } = useClubMember(address, clubAddress);
-  const { data: clubData, refetch: refetchCreditClub } = useClubData(clubAddress);
+  const { refetch: refetchClubContacts } = useClubContacts(clubAddress);
+  const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
+  const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
+  const { data: clubMemberNftData } = useClubMemberNft(clubAddress);
+  const { data: newMemberData } = useNewMemberData(address, clubAddress);
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
   const tokenContract = useContract("token");
 
   const { isMember } = clubMember;
-  const { costToMint } = clubData;
+  const { name, costToMint } = clubData;
+  const { image: ipfsImageLink } = clubMemberNftData;
+  const { initialTrustAmount, tokenId } = newMemberData;
+
   const createToast = useToastProps("mintMemberNFT", creditVaultContract.address, [address]);
 
   return (
@@ -75,10 +88,17 @@ export const MintMemberNftMultichain = ({
           closeToast(toastId);
         }
         setToastId(addToast(createToast(ToastStatus.SUCCESS), false));
-        refetchCreditClub();
-        refetchMember();
+
+        refetchClubData();
+        refetchClubMember();
+        refetchClubContacts();
+
         openModal(POST_MINT_NFT_MODAL, {
-          hash: r.transactionHash,
+          clubName: name,
+          tokenId,
+          rows,
+          startingCredit: initialTrustAmount,
+          nftImageUrl: createIpfsImageUrl(ipfsImageLink),
         });
       }}
       onTxError={() => {

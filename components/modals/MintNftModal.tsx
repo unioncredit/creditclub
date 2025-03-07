@@ -1,5 +1,4 @@
 import {
-  Button,
   Modal,
   ModalOverlay,
   // @ts-ignore
@@ -8,22 +7,16 @@ import {
 import { useModals } from "@/providers/ModalManagerProvider";
 import Image from "next/image";
 import { StatGrid, StatGridRow } from "@/components/shared/StatGrid";
-import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
-import { Address, erc20Abi } from "viem";
+import { Address } from "viem";
 import { useClubData } from "@/hooks/useClubData";
 import { useAccount } from "wagmi";
 import { useNewMemberData } from "@/hooks/useNewMemberData";
 import { format, formatDecimals } from "@/lib/format";
 import { useToken } from "@/hooks/useToken";
 import { formatDuration } from "@/lib/utils";
-import { POST_MINT_NFT_MODAL } from "@/components/modals/PostMintNftModal";
 import { useErc20Token } from "@/hooks/useErc20Token";
-import { ApprovalButton } from "@/components/shared/ApprovalButton";
-import { useClubMember } from "@/hooks/useClubMember";
-import { useClubContacts } from "@/hooks/useClubContacts";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { createIpfsImageUrl } from "@/lib/links";
-import { useIsQualified } from "@/hooks/useIsQualified";
 import { MintMemberNftMultichain } from "@/components/shared/MintMemberNftMultichain";
 
 export const MINT_NFT_MODAL = "mint-nft-modal";
@@ -33,20 +26,13 @@ export const MintNftModal = ({
 }: {
   clubAddress: Address;
 }) => {
-  const { open: openModal, close } = useModals();
+  const { close } = useModals();
   const { address } = useAccount();
   const { token } = useToken();
-  const { refetch: refetchClubContacts } = useClubContacts(clubAddress);
-  const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress);
-  const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
+  const { data: clubData } = useClubData(clubAddress);
   const { data: clubMemberNftData } = useClubMemberNft(clubAddress);
   const { data: newMemberData } = useNewMemberData(address, clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
-  const { data: isQualified } = useIsQualified(clubAddress);
-
-  const {
-    assetBalance
-  } = clubMember;
 
   const {
     image: ipfsImageLink,
@@ -60,7 +46,6 @@ export const MintNftModal = ({
   const {
     name,
     costToMint,
-    assetAddress,
   } = clubData;
 
   const {
@@ -69,8 +54,6 @@ export const MintNftModal = ({
     vestingDurationInSeconds,
     tokenId,
   } = newMemberData;
-
-  const creditVaultContract = useCreditVaultContract(clubAddress);
 
   const rows: StatGridRow[] = [
     {
@@ -117,7 +100,7 @@ export const MintNftModal = ({
             rows={rows}
           />
 
-          <MintMemberNftMultichain clubAddress={clubAddress} />
+          <MintMemberNftMultichain clubAddress={clubAddress} rows={rows} />
         </Modal.Body>
       </Modal>
     </ModalOverlay>
