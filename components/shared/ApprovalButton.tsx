@@ -36,7 +36,7 @@ export const ApprovalButton = ({
 
   const { token } = useToken();
   const { isConnected } = useAccount();
-  const { connectOrCreateWallet } = usePrivy();
+  const { connectWallet } = usePrivy();
 
   /*--------------------------------------------------------------
     Contract Functions
@@ -138,7 +138,7 @@ export const ApprovalButton = ({
       fluid
       color="primary"
       size="large"
-      onClick={connectOrCreateWallet}
+      onClick={connectWallet}
     >
       {isConnected ? "Disconnect" : "Connect wallet"}
     </Button>

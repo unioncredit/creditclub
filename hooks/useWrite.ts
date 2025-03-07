@@ -29,7 +29,7 @@ export const useWrite = ({
   const createToast = useToastProps(functionName, contract, args);
 
   const { switchChainAsync } = useSwitchChain();
-  const { connectOrCreateWallet } = usePrivy();
+  const { connectWallet } = usePrivy();
   const { chain: connectedChain, isConnected } = useAccount();
   const { addToast, closeToast } = useToasts();
 
@@ -117,7 +117,7 @@ export const useWrite = ({
       ...(!isConnected ? {
         icon: undefined,
         label : "Connect Wallet",
-        onClick: connectOrCreateWallet,
+        onClick: connectWallet,
       } : {
         icon,
         onClick,

@@ -12,7 +12,7 @@ import { PrimaryLabel } from "@/components/shared/PrimaryLabel";
 export const ConnectButton = () => {
   const { open: openModal } = useModals();
   const { address, isConnected } = useAccount();
-  const { connectOrCreateWallet } = usePrivy();
+  const { connectWallet } = usePrivy();
 
   return (
     <RoundedButton
@@ -21,7 +21,7 @@ export const ConnectButton = () => {
       onClick={
         isConnected
           ? () => openModal(ACCOUNT_MODAL, { address })
-          : connectOrCreateWallet
+          : connectWallet
       }
       icon={!isConnected && <WalletIcon width={24} className="fill fill-white" />}
     >

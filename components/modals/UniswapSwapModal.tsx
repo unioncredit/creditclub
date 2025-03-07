@@ -24,7 +24,7 @@ export const UniswapSwapModal = ({
   const { chain: connectedChain, isConnected } = useAccount();
   const { data: clubData } = useClubData(clubAddress);
   const { switchChain } = useSwitchChain();
-  const { connectOrCreateWallet } = usePrivy();
+  const { connectWallet } = usePrivy();
 
   const { symbol, assetAddress } = clubData;
   
@@ -51,7 +51,7 @@ export const UniswapSwapModal = ({
                   <RoundedButton
                     size="large"
                     variant="blue"
-                    onClick={connectOrCreateWallet}
+                    onClick={connectWallet}
                   >
                     Connect wallet
                   </RoundedButton>
