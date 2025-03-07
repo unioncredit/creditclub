@@ -1,10 +1,12 @@
 import "../styles/globals.scss";
+import '@decent.xyz/the-box/index.css';
+
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { PrivyProvider } from "@privy-io/react-auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Web3Provider } from "../providers/Web3Provider";
-import { ConnectedMemberProvider } from "../providers/ConnectedMemberProvider";
+import { Web3Provider } from "@/providers/Web3Provider";
+import { ConnectedMemberProvider } from "@/providers/ConnectedMemberProvider";
 import { ModalManagerProvider } from "@/providers/ModalManagerProvider";
 import { init } from "@airstack/airstack-react";
 import { ToastsProvider } from "@/providers/ToastsProvider";

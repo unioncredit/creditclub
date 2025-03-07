@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@airstack/airstack-react": "^0.6.4",
+    "@decent.xyz/box-common": "^4.0.91",
+    "@decent.xyz/the-box": "^4.0.91",
     "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^2.0.12",
     "@privy-io/react-auth": "^2.0.2",

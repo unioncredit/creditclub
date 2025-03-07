@@ -24,6 +24,7 @@ import { useClubContacts } from "@/hooks/useClubContacts";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { createIpfsImageUrl } from "@/lib/links";
 import { useIsQualified } from "@/hooks/useIsQualified";
+import { MintMemberNftMultichain } from "@/components/shared/MintMemberNftMultichain";
 
 export const MINT_NFT_MODAL = "mint-nft-modal";
 
@@ -116,45 +117,7 @@ export const MintNftModal = ({
             rows={rows}
           />
 
-          {isQualified ? (
-            <ApprovalButton
-              owner={address}
-              amount={costToMint}
-              disabled={assetBalance < costToMint}
-              spender={clubAddress}
-              tokenContract={{
-                abi: erc20Abi,
-                address: assetAddress,
-              }}
-              actionProps={{
-                ...creditVaultContract,
-                label: "Join Club",
-                disabled: assetBalance < costToMint,
-                functionName: "mintMemberNFT",
-                args: [address],
-                onComplete: async () => {
-                  refetchClubData();
-                  refetchClubMember();
-                  refetchClubContacts();
-
-                  openModal(POST_MINT_NFT_MODAL, {
-                    clubName: name,
-                    tokenId,
-                    rows,
-                    startingCredit: initialTrustAmount,
-                    nftImageUrl: createIpfsImageUrl(ipfsImageLink),
-                  });
-                }
-              }}
-            />
-          ) : (
-            <Button
-              fluid
-              size="large"
-              disabled={true}
-              label="You do not qualify"
-            />
-          )}
+          <MintMemberNftMultichain clubAddress={clubAddress} />
         </Modal.Body>
       </Modal>
     </ModalOverlay>

@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "components/MintMemberNftMultichain";
+
 // @unioncredit/ui styles
 @import "@unioncredit/ui/src/Box/box";
 @import "@unioncredit/ui/src/Card/Card";

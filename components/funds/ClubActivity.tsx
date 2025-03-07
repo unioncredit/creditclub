@@ -91,7 +91,7 @@ const texts = {
       <AddressLink address={x.address} /> ·
       <a href={`https://basescan.org/tx/${x.hash}`} target="_blank" rel="noopener">
         <span className="text-gray-500"> Minted</span>{" · "}
-        <span className="font-mono">{format(x.amount, TOKENS.UNION, 0)} $BC</span>
+        <span className="font-mono">{format(x.amount, TOKENS.UNION, 0)} $BUILDERS</span>
       </a>
     </>
   ),
