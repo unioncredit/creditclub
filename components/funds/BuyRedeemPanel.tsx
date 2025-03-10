@@ -73,7 +73,7 @@ export const BuyRedeemPanel = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:flex-col">
           <RoundedButton size="small" className="pointer-events-none">
             <ChartIcon width={24}/>
             Activated
