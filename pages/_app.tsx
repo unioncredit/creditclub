@@ -13,6 +13,7 @@ import { ToastsProvider } from "@/providers/ToastsProvider";
 import { UnionMemberProvider } from "@/providers/UnionMemberProvider";
 import { UnionDataProvider } from "@/providers/UnionDataProvider";
 import { CacheProvider } from "@/providers/CacheProvider";
+import { FathomAnalytics } from "@/components/shared/FathomAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
+      <FathomAnalytics />
       <Head>
         <link
           rel="preload"
