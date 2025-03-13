@@ -19,7 +19,7 @@ export const CreditVaultIntro = ({
         type="h1"
         className="border-b border-black pb-2"
       >
-        Introducing a CreditClub.
+        Introducing CreditClub.
       </Heading>
 
       <div className="bg-slate-100 border border-black mt-4">
