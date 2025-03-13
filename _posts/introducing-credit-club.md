@@ -8,14 +8,14 @@ ogImage:
 ---
 While DeFi has revolutionized financial speculation and trading, it has largely failed to connect with the real economy—the goods, services, and communities that form the backbone of our daily lives.
 
-This is due to a lack of effective productive-capital formation.
+This is due to a lack of effective productive-capital formation. 
 
 CreditClub bridges that gap by enabling anyone to create a tokenized onchain credit union.  Permissionless credit markets begin with permissionless credit structures.  
 
 At its most basic, a Credit Club is a single shared pool of funds ("credit vault") that extends credit to up to 150 members, with the pool of funds funded by Member dues or a Token launch.
 
   A new financial primitive where:
-- **Capital becomes renewable**: $1 can become $1.10 when put to productive use, no need for a "greater fool".
+- **Capital becomes renewable**: $1 can become $1.10 without the need for a "greater fool" when put to productive use, .
 - **Trust becomes collateral**: Your reputation within your community secures globally usable credit
 - **Value stays Local**: Local financial relationships strengthen local economic ecosystems
 
