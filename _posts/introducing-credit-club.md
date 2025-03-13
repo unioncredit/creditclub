@@ -19,7 +19,7 @@ At its most basic, a Credit Club is a single shared pool of funds ("credit vault
 - **Trust becomes collateral**: Your reputation within your community secures your credit
 - **Value stays Local**: Local financial relationships strengthen economic ecosystems
 
-**Long Term Capital Games**
+## Long Term Capital Games
 In modern banking, your deposits in your local "community" bank branch do not increase the number of local loans. Nor does your good credit behavior significantly affect the returns of anyone local to you.
 
 In a CreditClub, there is a direct link: your actions are directly tied to the credit of your fellow members.
@@ -32,8 +32,7 @@ Yet, what a lot of identity and reputation protocols miss is that Reputation is 
 
 The goal with CreditClub is to make credit a "long-term game with friends" that sustainably and consistently creates value.
 
-**Who is a credit club for?**
-
+## Who is a credit club for?
 CreditClub lets you port any reputation you have in a local context for use in a global blockchain.
 
 Identity is multifaceted, and so too are your groups. We imagine folks being part of multiple credit clubs, with their final credit limit being an aggregate of it all.
