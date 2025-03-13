@@ -19,7 +19,7 @@ export const CreditVaultIntro = ({
         type="h1"
         className="border-b border-black pb-2"
       >
-        Introducing Credit Vaults
+        Introducing a CreditClub.
       </Heading>
 
       <div className="bg-slate-100 border border-black mt-4">
@@ -31,11 +31,11 @@ export const CreditVaultIntro = ({
         />
       </div>
 
-      <p className="mt-4">Credit Vaults are tokenized perpetual credit funds.</p>
-      <p className="mt-4">1 Credit Vault can extend a fixed amount of credit to 150 addresses</p>
+      <p className="mt-4">Credit Clubs are tokenized onchain credit "unions".</p>
+      <p className="mt-4">1 club can extend a prorata of credit to 150 addresses</p>
 
       <Heading type="h1" className="mt-8">
-        How a credit vault works:
+        How a credit club (currently) works:
       </Heading>
 
       <ul className="mt-4 ml-8 flex flex-col gap-1.5">
