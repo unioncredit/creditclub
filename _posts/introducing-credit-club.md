@@ -46,8 +46,7 @@ Identity is multifaceted, and so too are your groups. We imagine folks being par
 Any group with a shared common bond makes sense to create a credit club for. 
 
 ## How Credit Club Works
-
-![[Pasted image 20250313042607.png]]
+![image](/images/blog/introducing-credit-vaults/credit-vault-diagram.png)
 
 Credit Club operates on a few key components:
 1. **CreditVault**: The Contract that manages collective credit capacity
