@@ -23,7 +23,7 @@ export const PoolMarketData = ({
       <div>
         <h3 className="font-semibold">{symbol}/USDC Pool:</h3>
         <p className="text-sm">24hr Volume: <span className="font-medium">${volume_24h}</span></p>
-        <p className="text-sm">Price: <span className="font-medium">${price}</span></p>
+        <p className="text-sm">Price: <span className="font-medium">${price.toFixed(2)}</span></p>
       </div>
 
       <ShadowButton
