@@ -58,7 +58,7 @@ export const CreditVaultIntro = ({
           variant="blue"
           onClick={() => router.push(createClubUrl(clubAddress))}
         >
-          Check if you qualify
+          Check if you Qualify for Beta
         </ShadowButton>
       </div>
     </section>
