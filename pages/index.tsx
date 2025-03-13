@@ -15,7 +15,7 @@ export default function HomePage() {
   return (
     <>
       <Head>
-        <title>CreditClub - Introducing Credit Vaults</title>
+        <title>CreditClub - Build Credit With Friends</title>
       </Head>
 
       <main>
