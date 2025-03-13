@@ -16,8 +16,8 @@ At its most basic, a Credit Club is a single shared pool of funds ("credit vault
 
   A new financial primitive where:
 - **Capital becomes renewable**: $1 can become $1.10 when put to productive use, no need for a "greater fool".
-- **Trust becomes collateral**: Your reputation within your community secures your credit
-- **Value stays Local**: Local financial relationships strengthen economic ecosystems
+- **Trust becomes collateral**: Your reputation within your community secures globally usable credit
+- **Value stays Local**: Local financial relationships strengthen local economic ecosystems
 
 ## Long Term Capital Games
 In modern banking, your deposits in your local "community" bank branch do not increase the number of local loans. Nor does your good credit behavior significantly affect the returns of anyone local to you.
@@ -39,7 +39,7 @@ Identity is multifaceted, and so too are your groups. We imagine folks being par
 
 - A friend group
 - A family credit association
-- Local merchants
+- Holders of a specific NFT
 - Young professionals
 - Farmers CoOp
 
@@ -47,7 +47,7 @@ Any group with a shared common bond makes sense to create a credit club for.
 
 ## How Credit Club Works
 
-Credit Club operates on a few key components:
+A Credit Club consists of a few key components:
 1. **CreditVault**: The Contract that manages collective credit capacity
 2. **MemberNFT**: Your identity and standing within the club, holders can claim a prorata of credit.
 3. **VaultToken**: A club can raise an ICO("Initial Credit Offering") by launching a token
