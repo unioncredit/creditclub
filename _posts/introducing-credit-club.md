@@ -65,7 +65,7 @@ Who can mint a membership can be determined by a initial whitelist, tokengate, m
 ## How to participate:
 We're reimagining finance as club goods for local economies. We lend to friends with no expectation of return, yet when it comes to yield-generating investments, we prefer to give those returns away to distant institutions.
 
-1. **[Builders Demo]([url](https://creditclub.cc/clubs/0x2072ea35ebdc3b9318a6214f220f9bad1b54f815)):** If you had a Builders Score >88 you can claim a credit membership, and if not you can mint the $BUILDERS token
+1. **[Builders Demo](https://creditclub.cc/club/0x2072ea35ebdc3b9318a6214f220f9bad1b54f815):** If you had a Builders Score >88 you can claim a credit membership, and if not you can mint the $BUILDERS token
 2. **Community Deployments**: [Apply to launch one of the first Credit Clubs](https://forms.gle/SQBKk6dSesV9GFn47v)
 3. **Join the Warpcast channel:** [/creditclub](https://warpcast.com/~/channel/creditclub)
-4. **Follow along:** [twitter:@creditclub_eth]([url](http://twitter.com/creditclub_eth)) or [farcaster:creditclub]([url](http://warpcast.com/creditclub))
+4. **Follow along:** [twitter:@creditclub_eth](http://twitter.com/creditclub_eth) or [farcaster:creditclub](http://warpcast.com/creditclub)
