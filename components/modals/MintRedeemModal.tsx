@@ -298,6 +298,7 @@ export const MintRedeemModal = ({
                   ? "Insufficient balance"
                   : `${action} ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`}
               {...redeemButtonProps}
+              disabled={!activated}
             />
           )}
         </Modal.Body>
