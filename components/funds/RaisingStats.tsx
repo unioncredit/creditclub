@@ -56,7 +56,7 @@ export const RaisingStats = ({
       title: "Raised",
     },
     {
-      value: Number(initialRaise),
+      value: Number(initialRaise - totalAssets),
       label: `$${goalFormatted}`,
       color: "blue50",
       title: "Goal",
