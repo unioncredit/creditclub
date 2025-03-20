@@ -29,7 +29,7 @@ export const useToastProps = (functionName: string, contract: Address, args: any
             ...props,
             title: `Approving ${contract === unionContract.address
               ? "UNION"
-              : token}`,
+              : "token"}`,
             content: "Transaction pending",
           };
         case "feelingLucky":
@@ -56,6 +56,12 @@ export const useToastProps = (functionName: string, contract: Address, args: any
             title: "Claiming Credit",
             content: "Transaction pending",
           };
+        case "decentSwap":
+          return {
+            ...props,
+            title: "Swapping tokens",
+            content: "Transaction pending",
+          };
         default:
           return {
             ...props,
@@ -74,7 +80,7 @@ export const useToastProps = (functionName: string, contract: Address, args: any
             ...props,
             title: `Approved ${contract === unionContract.address
               ? "UNION"
-              : token}`,
+              : "token"}`,
             content: "Transaction successful",
           };
         case "feelingLucky":
@@ -101,6 +107,12 @@ export const useToastProps = (functionName: string, contract: Address, args: any
             title: "Claimed Credit",
             content: "Transaction successful",
           };
+        case "decentSwap":
+          return {
+            ...props,
+            title: "Swap complete",
+            content: "Transaction successful",
+          };
         default:
           return {
             ...props,
@@ -119,7 +131,7 @@ export const useToastProps = (functionName: string, contract: Address, args: any
             ...props,
             title: `Approving ${contract === unionContract.address
               ? "UNION"
-              : token}`,
+              : "token"}`,
             content: "Transaction failed",
           };
         case "feelingLucky":
@@ -144,6 +156,12 @@ export const useToastProps = (functionName: string, contract: Address, args: any
           return {
             ...props,
             title: "Claiming Credit",
+            content: "Transaction failed",
+          };
+        case "decentSwap":
+          return {
+            ...props,
+            title: "Swapping tokens",
             content: "Transaction failed",
           };
         default:

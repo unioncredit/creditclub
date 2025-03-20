@@ -7,7 +7,6 @@ import { Button, MultiStepButton } from "@unioncredit/ui";
 
 import { useWrite } from "@/hooks/useWrite";
 import { MultiStep } from "@/constants";
-import { useToken } from "@/hooks/useToken";
 import { usePrivy } from "@privy-io/react-auth";
 
 const initialItems = [{ number: 1, status: MultiStep.SELECTED }, { number: 2 }];
@@ -34,7 +33,6 @@ export const ApprovalButton = ({
   const [action, setAction] = useState(initialButtonProps);
   const [showSteps, setShowSteps] = useState(false);
 
-  const { token } = useToken();
   const { isConnected } = useAccount();
   const { connectWallet } = usePrivy();
 
@@ -73,7 +71,7 @@ export const ApprovalButton = ({
         // The amount is more than the allowance so we
         // need to prompt the user to approve this contract
         setAction({
-          label: transactionApproveProps.loading ? `Approving ${token}...` : `Approve ${token}`,
+          label: transactionApproveProps.loading ? `Approving token...` : `Approve token`,
           ...transactionApproveProps,
           loading: false,
           disabled: transactionApproveProps.loading || disabled,

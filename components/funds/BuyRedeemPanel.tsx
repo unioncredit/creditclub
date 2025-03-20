@@ -11,9 +11,9 @@ import { formatDecimals } from "@/lib/format";
 import { formatDuration } from "@/lib/utils";
 import { useTokenPriceData } from "@/hooks/useTokenPriceData";
 import { useClubMember } from "@/hooks/useClubMember";
-import { UNISWAP_SWAP_MODAL } from "@/components/modals/UniswapSwapModal";
 import { useClubActivation } from "@/hooks/useClubActivation";
 import { PoolMarketData } from "@/components/funds/PoolMarketData";
+import { BUY_SELL_MODAL } from "@/components/modals/BuySellModal";
 
 export const BuyRedeemPanel = ({
   clubAddress,
@@ -112,17 +112,32 @@ export const BuyRedeemPanel = ({
       <p className="my-2 rounded-lg font-mono text-blue-600 bg-blue-50 text-xs p-2">Raise Over. To acquire ${symbol} you
         will need to buy it on secondary markets.</p>
 
-      <div className="flex gap-1">
-        <RoundedButton
-          size="medium"
-          variant="blue"
-          className="w-full text-sm"
-          onClick={() => openModal(UNISWAP_SWAP_MODAL, {
-            clubAddress,
-          })}
-        >
-          Buy ${symbol}
-        </RoundedButton>
+      <div className="flex flex-col gap-1">
+        <div className="flex gap-1">
+          <RoundedButton
+            size="medium"
+            variant="blue"
+            className="w-full text-sm"
+            onClick={() => openModal(BUY_SELL_MODAL, {
+              initialTab: "buy",
+              clubAddress,
+            })}
+          >
+            Buy ${symbol}
+          </RoundedButton>
+
+          <RoundedButton
+            size="medium"
+            variant="blue"
+            className="w-full text-sm"
+            onClick={() => openModal(BUY_SELL_MODAL, {
+              initialTab: "sell",
+              clubAddress,
+            })}
+          >
+            Sell ${symbol}
+          </RoundedButton>
+        </div>
 
         <RoundedButton
           size="medium"
