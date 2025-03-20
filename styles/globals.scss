@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 @import "components/MintMemberNftMultichain";
+@import "components/TokenSelectInput";
+@import "components/DecentTokenSelect";
 
 // @unioncredit/ui styles
 @import "@unioncredit/ui/src/Box/box";
@@ -12,6 +14,7 @@
 @import "@unioncredit/ui/src/Dot/Dot";
 @import "@unioncredit/ui/src/Grid/grid";
 @import "@unioncredit/ui/src/Input/Input";
+@import "@unioncredit/ui/src/LoadingSpinner/loading-spinner";
 @import "@unioncredit/ui/src/Modal/Modal";
 @import "@unioncredit/ui/src/Modal/modal-overlay";
 @import "@unioncredit/ui/src/MultiStepButton/MultiStepButton";
@@ -21,7 +24,9 @@
 @import "@unioncredit/ui/src/NumericalRow/NumericalRows";
 @import "@unioncredit/ui/src/OptionSelect/OptionSelect";
 @import "@unioncredit/ui/src/OptionCard/OptionCard";
+@import "@unioncredit/ui/src/Select/select";
 @import "@unioncredit/ui/src/SegmentedControl/SegmentedControl";
+@import "@unioncredit/ui/src/Skeleton/skeleton";
 @import "@unioncredit/ui/src/Text/Text";
 @import "@unioncredit/ui/src/Toggle/Toggle";
 @import "@unioncredit/ui/src/Tooltip/Tooltip";
@@ -126,4 +131,16 @@ svg.fill path {
 
 .modal .backButton {
   margin-right: 8px;
+}
+
+.BuySellModal {
+  overflow: visible !important;
+
+  .Card__body {
+    overflow: visible !important;
+  }
+}
+
+.notification-stack {
+  z-index: 999999 !important;
 }

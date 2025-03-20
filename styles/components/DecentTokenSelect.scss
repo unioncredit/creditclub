@@ -1,0 +1,33 @@
+.DecentTokenSelect {
+  + svg {
+    margin-left: 8px;
+  }
+
+  .select-control {
+    height: 38px;
+    min-height: 0;
+    max-width: 125px;
+    border-radius: 4px;
+
+    // Popup menu
+    & + div {
+      width: 175px !important;
+      right: 0;
+    }
+
+    .avatar + div {
+      height: 38px;
+    }
+
+    .dropdown-indicator {
+      width: 8px;
+      height: 8px;
+      margin-top: 2px;
+      margin-right: 8px;
+    }
+
+    div:first-child {
+      height: 25px;
+    }
+  }
+}

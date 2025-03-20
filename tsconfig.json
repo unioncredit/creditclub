@@ -22,7 +22,8 @@
     "exactOptionalPropertyTypes": false,
     "moduleResolution": "node",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@decent.xyz/box-common": ["node_modules/@decent.xyz/box-common"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],

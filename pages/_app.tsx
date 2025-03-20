@@ -14,6 +14,7 @@ import { UnionMemberProvider } from "@/providers/UnionMemberProvider";
 import { UnionDataProvider } from "@/providers/UnionDataProvider";
 import { CacheProvider } from "@/providers/CacheProvider";
 import { FathomAnalytics } from "@/components/shared/FathomAnalytics";
+import { BoxHooksContextProvider } from "@decent.xyz/box-hooks";
 
 const queryClient = new QueryClient();
 
@@ -55,19 +56,21 @@ function MyApp({ Component, pageProps }: AppProps) {
       >
         <QueryClientProvider client={queryClient}>
           <Web3Provider>
-            <ToastsProvider>
-              <CacheProvider>
-                <UnionDataProvider>
-                  <UnionMemberProvider>
-                    <ConnectedMemberProvider>
-                      <ModalManagerProvider>
-                        <Component {...pageProps} />
-                      </ModalManagerProvider>
-                    </ConnectedMemberProvider>
-                  </UnionMemberProvider>
-                </UnionDataProvider>
-              </CacheProvider>
-            </ToastsProvider>
+            <BoxHooksContextProvider apiKey={process.env.NEXT_PUBLIC_DECENT_API_KEY!}>
+              <ToastsProvider>
+                <CacheProvider>
+                  <UnionDataProvider>
+                    <UnionMemberProvider>
+                      <ConnectedMemberProvider>
+                        <ModalManagerProvider>
+                          <Component {...pageProps} />
+                        </ModalManagerProvider>
+                      </ConnectedMemberProvider>
+                    </UnionMemberProvider>
+                  </UnionDataProvider>
+                </CacheProvider>
+              </ToastsProvider>
+            </BoxHooksContextProvider>
           </Web3Provider>
         </QueryClientProvider>
       </PrivyProvider>

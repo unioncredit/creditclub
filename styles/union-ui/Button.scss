@@ -6,6 +6,13 @@ $disabledOpacity: 0.5;
 
 
 .button {
+  &[disabled="true"],
+  &[disabled],
+  &[disabled]:hover,
+  &[disabled="true"]:hover {
+    opacity: $disabledOpacity !important;
+  }
+
   &--rounded {
     position: relative;
     font-size: 16px;
@@ -78,13 +85,6 @@ $disabledOpacity: 0.5;
   &--fluid {
     width: 100%;
     flex: 1 1 0;
-  }
-
-  &[disabled="true"],
-  &[disabled],
-  &[disabled]:hover,
-  &[disabled="true"]:hover {
-    opacity: $disabledOpacity;
   }
 
   &:focus {

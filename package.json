@@ -14,6 +14,7 @@
   "dependencies": {
     "@airstack/airstack-react": "^0.6.4",
     "@decent.xyz/box-common": "^4.0.91",
+    "@decent.xyz/box-hooks": "^4.0.112",
     "@decent.xyz/the-box": "^4.0.91",
     "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^2.0.12",
