@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 export const runtime = "edge";
 export const revalidate = 86400; // Cache for 24 hours
 
-const networkLogos = {
+const networkLogos: Record<string, string> = {
   "10": "/images/networks/optimism.png",
   "8453": "/images/networks/base.png",
 };
@@ -13,6 +13,7 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
+  // @ts-ignore
   const searchParams = req.nextUrl.searchParams
   const logo = searchParams.get("logo");
   const chainId = searchParams.get("chainId");

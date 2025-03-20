@@ -10,7 +10,6 @@ import { ToastStatus, WagmiErrors } from "@/constants";
 import { useToasts } from "@/providers/ToastsProvider";
 import { useToastProps } from "@/hooks/useToastProps";
 
-// @ts-ignore
 export const useDecentSwap = ({
   config,
   icon,
