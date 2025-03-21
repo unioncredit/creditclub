@@ -25,6 +25,8 @@ import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { RoundedButton } from "@/components/ui/RoundedButton";
 import { useNativeShare } from "@/hooks/useNativeShare";
+import { CLUB_PARAMETERS_MODAL } from "@/components/modals/ClubParametersModal";
+import { useModals } from "@/providers/ModalManagerProvider";
 
 const DISPLAYED_SOCIALS = ["farcaster", "github", "lens"];
 
@@ -39,6 +41,7 @@ export const ClubDetails = ({
 }: {
   clubAddress: Address;
 }) => {
+  const { open: openModal } = useModals();
   const { share, copied } = useNativeShare();
   const { copy: copyContractAddr, copied: copiedContractAddr } = useCopyToClipboard();
   const { copy: copyCreatorAddr, copied: copiedCreatorAddr } = useCopyToClipboard();
@@ -157,10 +160,10 @@ export const ClubDetails = ({
       </div>
 
       <div className="flex items-center justify-between pt-4 gap-2">
-        <p className="flex items-center gap-1 font-sans font-medium text-lg">
+        <button className="flex items-center gap-1 font-sans font-medium text-lg" onClick={() => openModal(CLUB_PARAMETERS_MODAL, { clubAddress })}>
           <ManageIcon width={24} height={24} />
           Details
-        </p>
+        </button>
 
         <ul className="flex gap-1">
           {detailBadges.map(({ label, url, icon: Icon }, index) => (
