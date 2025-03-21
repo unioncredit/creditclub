@@ -59,7 +59,7 @@ export default function BlogPostSingle({
           <Container className="mt-4 font-mono">
             <div className="max-w-[750px] m-auto py-4">
               <header className="border-b-2 border-black pb-2">
-                <h1 className="text-2xl font-medium">{post.title}</h1>
+                <h1 className="text-2xl font-medium sm:text-xl">{post.title}</h1>
                 <p className="text-slate-500">{post.date}</p>
               </header>
 
