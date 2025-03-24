@@ -1,4 +1,4 @@
-import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable } from "@tanstack/react-table";
+import { ColumnDef, flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, SortingState, useReactTable, OnChangeFn } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table";
 import { DataTablePagination } from "@/components/ui/DataTablePagination";
 
@@ -6,7 +6,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   sorting?: SortingState
-  onSortingChange?: (sorting: SortingState) => void
+  onSortingChange?: OnChangeFn<SortingState>
 }
 
 export const DataTable = <TData, TValue>({

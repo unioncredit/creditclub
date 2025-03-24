@@ -1,9 +1,10 @@
 import {
   ColumnDef,
-  SortingState
+  SortingState,
+  OnChangeFn
 } from "@tanstack/react-table"
 import { Address } from "viem";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import { DataTable } from "@/components/ui/DataTable";
 import { formatDecimals, truncateAddress } from "@/lib/format";
@@ -98,6 +99,10 @@ export const FundHoldersTable = ({
   const { data: clubData } = useClubData(clubAddress);
   const { data: priceData }  = useTokenPriceData(clubAddress);
 
+  const handleSortingChange: OnChangeFn<SortingState> = useCallback((updaterOrValue) => {
+    setSorting(updaterOrValue);
+  }, []);
+
   const { decimals } = clubData;
   const { price: tokenPrice } = priceData;
 
@@ -121,7 +126,7 @@ export const FundHoldersTable = ({
       columns={columns} 
       data={rows} 
       sorting={sorting}
-      onSortingChange={setSorting}
+      onSortingChange={handleSortingChange}
     />
   );
 };

@@ -1,9 +1,10 @@
 import {
   ColumnDef,
-  SortingState
+  SortingState,
+  OnChangeFn
 } from "@tanstack/react-table"
 import { Address } from "viem";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import { DataTable } from "@/components/ui/DataTable";
 import { format, truncateAddress } from "@/lib/format";
@@ -115,6 +116,10 @@ export const FundTrusteesTable = ({
   const { token } = useToken();
   const { data: clubContacts } = useClubContacts(clubAddress);
 
+  const handleSortingChange: OnChangeFn<SortingState> = useCallback((updaterOrValue) => {
+    setSorting(updaterOrValue);
+  }, []);
+
   const rows: FundTrusteeRow[] = clubContacts.map((contact) => {
     const trustStr = format(contact.trust, token);
     const usedStr = format(contact.locking, token);
@@ -138,7 +143,7 @@ export const FundTrusteesTable = ({
       columns={columns} 
       data={rows} 
       sorting={sorting}
-      onSortingChange={setSorting}
+      onSortingChange={handleSortingChange}
     />
   );
 };
