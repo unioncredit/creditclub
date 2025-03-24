@@ -1,7 +1,9 @@
 import {
-  ColumnDef
+  ColumnDef,
+  SortingState
 } from "@tanstack/react-table"
 import { Address } from "viem";
+import { useState } from "react";
 
 import { DataTable } from "@/components/ui/DataTable";
 import { format, truncateAddress } from "@/lib/format";
@@ -19,6 +21,8 @@ interface FundTrusteeRow {
   used: string;
   lastRepay: bigint;
   status: IContact;
+  numericTrust?: number;
+  numericUsed?: number;
 }
 
 const columns: ColumnDef<FundTrusteeRow>[] = [
@@ -28,7 +32,8 @@ const columns: ColumnDef<FundTrusteeRow>[] = [
     accessorKey: "address",
     cell: ({ getValue }) => (
       <Avatar address={getValue() as Address} size={32} className="flex justify-center mx-auto" />
-    )
+    ),
+    enableSorting: false
   },
   {
     accessorKey: "address",
@@ -46,17 +51,39 @@ const columns: ColumnDef<FundTrusteeRow>[] = [
   },
   {
     accessorKey: "trust",
-    header: () => <div className="text-right">Trust</div>,
+    header: ({ column }) => (
+      <div className="text-right cursor-pointer flex items-center justify-end gap-1" onClick={() => column.toggleSorting()}>
+        Trust
+        <span className="inline-flex flex-col">
+          <span className={`opacity-${column.getIsSorted() === "asc" ? "100" : "30"} -mb-1`}>▲</span>
+          <span className={`opacity-${column.getIsSorted() === "desc" ? "100" : "30"}`}>▼</span>
+        </span>
+      </div>
+    ),
     cell: ({ getValue }) => (
       <div className="text-right">${getValue() as string}</div>
     ),
+    sortingFn: (rowA, rowB) => {
+      return rowA.original.numericTrust! - rowB.original.numericTrust!;
+    }
   },
   {
     accessorKey: "used",
-    header: () => <div className="text-right">Used</div>,
+    header: ({ column }) => (
+      <div className="text-right cursor-pointer flex items-center justify-end gap-1" onClick={() => column.toggleSorting()}>
+        Used
+        <span className="inline-flex flex-col">
+          <span className={`opacity-${column.getIsSorted() === "asc" ? "100" : "30"} -mb-1`}>▲</span>
+          <span className={`opacity-${column.getIsSorted() === "desc" ? "100" : "30"}`}>▼</span>
+        </span>
+      </div>
+    ),
     cell: ({ getValue }) => (
       <div className="text-right">${getValue() as string}</div>
     ),
+    sortingFn: (rowA, rowB) => {
+      return rowA.original.numericUsed! - rowB.original.numericUsed!;
+    }
   },
   {
     accessorKey: "lastRepay",
@@ -74,7 +101,8 @@ const columns: ColumnDef<FundTrusteeRow>[] = [
     header: () => <div className="text-right">Status</div>,
     cell: ({ getValue }) => (
       <StatusBadge contact={getValue() as IContact} />
-    )
+    ),
+    enableSorting: false
   },
 ]
 
@@ -83,17 +111,34 @@ export const FundTrusteesTable = ({
 }: {
   clubAddress: Address;
 }) => {
+  const [sorting, setSorting] = useState<SortingState>([]);
   const { token } = useToken();
   const { data: clubContacts } = useClubContacts(clubAddress);
 
-  const rows: FundTrusteeRow[] = clubContacts.map((contact) => ({
-    address: contact.address,
-    trust: format(contact.trust, token),
-    used: format(contact.locking, token),
-    lastRepay: contact.lastRepay,
-    status: contact,
-  }));
+  const rows: FundTrusteeRow[] = clubContacts.map((contact) => {
+    const trustStr = format(contact.trust, token);
+    const usedStr = format(contact.locking, token);
+    
+    const numericTrust = parseFloat(trustStr);
+    const numericUsed = parseFloat(usedStr);
+    
+    return {
+      address: contact.address,
+      trust: trustStr,
+      used: usedStr,
+      lastRepay: contact.lastRepay,
+      status: contact,
+      numericTrust,
+      numericUsed
+    };
+  });
 
-  // @ts-ignore
-  return <DataTable columns={columns} data={rows} />
+  return (
+    <DataTable 
+      columns={columns} 
+      data={rows} 
+      sorting={sorting}
+      onSortingChange={setSorting}
+    />
+  );
 };
