@@ -15,6 +15,13 @@ export const DataTable = <TData, TValue>({
   sorting = [],
   onSortingChange,
 }: DataTableProps<TData, TValue>) => {
+  // Add debug logging
+  console.log('DataTable rendering with:', { 
+    dataLength: data.length, 
+    columns: columns.length,
+    sortingState: sorting 
+  });
+
   const table = useReactTable({
     data,
     columns,
@@ -26,6 +33,11 @@ export const DataTable = <TData, TValue>({
       },
     },
     onSortingChange,
+    enableSorting: true,
+    manualSorting: false,
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -42,7 +54,8 @@ export const DataTable = <TData, TValue>({
                   return (
                     <TableHead 
                       key={header.id}
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${header.column.getCanSort() ? 'cursor-pointer select-none' : ''}`}
+                      onClick={header.column.getCanSort() ? header.column.getToggleSortingHandler() : undefined}
                     >
                       {header.isPlaceholder
                         ? null

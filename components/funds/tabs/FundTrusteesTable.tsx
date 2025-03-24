@@ -22,8 +22,8 @@ interface FundTrusteeRow {
   used: string;
   lastRepay: bigint;
   status: IContact;
-  numericTrust?: number;
-  numericUsed?: number;
+  numericTrust: number;
+  numericUsed: number;
 }
 
 const columns: ColumnDef<FundTrusteeRow>[] = [
@@ -51,40 +51,36 @@ const columns: ColumnDef<FundTrusteeRow>[] = [
     }
   },
   {
-    accessorKey: "trust",
+    id: "trust",
+    accessorFn: (row) => row.numericTrust, 
     header: ({ column }) => (
-      <div className="text-right cursor-pointer flex items-center justify-end gap-1" onClick={() => column.toggleSorting()}>
+      <div className="text-right cursor-pointer flex items-center justify-end gap-1">
         Trust
-        <span className="inline-flex flex-col">
-          <span className={`opacity-${column.getIsSorted() === "asc" ? "100" : "30"} -mb-1`}>▲</span>
-          <span className={`opacity-${column.getIsSorted() === "desc" ? "100" : "30"}`}>▼</span>
-        </span>
+        <div className="ml-1 inline-flex flex-col">
+          <span className={column.getIsSorted() === "asc" ? "text-black" : "text-gray-400"}>▲</span>
+          <span className={column.getIsSorted() === "desc" ? "text-black" : "text-gray-400"}>▼</span>
+        </div>
       </div>
     ),
-    cell: ({ getValue }) => (
-      <div className="text-right">${getValue() as string}</div>
+    cell: ({ row }) => (
+      <div className="text-right">${row.original.trust}</div>
     ),
-    sortingFn: (rowA, rowB) => {
-      return rowA.original.numericTrust! - rowB.original.numericTrust!;
-    }
   },
   {
-    accessorKey: "used",
+    id: "used",
+    accessorFn: (row) => row.numericUsed,
     header: ({ column }) => (
-      <div className="text-right cursor-pointer flex items-center justify-end gap-1" onClick={() => column.toggleSorting()}>
+      <div className="text-right cursor-pointer flex items-center justify-end gap-1">
         Used
-        <span className="inline-flex flex-col">
-          <span className={`opacity-${column.getIsSorted() === "asc" ? "100" : "30"} -mb-1`}>▲</span>
-          <span className={`opacity-${column.getIsSorted() === "desc" ? "100" : "30"}`}>▼</span>
-        </span>
+        <div className="ml-1 inline-flex flex-col">
+          <span className={column.getIsSorted() === "asc" ? "text-black" : "text-gray-400"}>▲</span>
+          <span className={column.getIsSorted() === "desc" ? "text-black" : "text-gray-400"}>▼</span>
+        </div>
       </div>
     ),
-    cell: ({ getValue }) => (
-      <div className="text-right">${getValue() as string}</div>
+    cell: ({ row }) => (
+      <div className="text-right">${row.original.used}</div>
     ),
-    sortingFn: (rowA, rowB) => {
-      return rowA.original.numericUsed! - rowB.original.numericUsed!;
-    }
   },
   {
     accessorKey: "lastRepay",
@@ -114,9 +110,10 @@ export const FundTrusteesTable = ({
 }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const { token } = useToken();
-  const { data: clubContacts } = useClubContacts(clubAddress);
+  const { data: clubContacts = [] } = useClubContacts(clubAddress);
 
   const handleSortingChange: OnChangeFn<SortingState> = useCallback((updaterOrValue) => {
+    console.log('Trustee sorting changed to:', updaterOrValue);
     setSorting(updaterOrValue);
   }, []);
 
@@ -124,8 +121,9 @@ export const FundTrusteesTable = ({
     const trustStr = format(contact.trust, token);
     const usedStr = format(contact.locking, token);
     
-    const numericTrust = parseFloat(trustStr);
-    const numericUsed = parseFloat(usedStr);
+    // Ensure we have valid numbers for sorting
+    const numericTrust = parseFloat(trustStr) || 0;
+    const numericUsed = parseFloat(usedStr) || 0;
     
     return {
       address: contact.address,
@@ -136,6 +134,11 @@ export const FundTrusteesTable = ({
       numericTrust,
       numericUsed
     };
+  });
+
+  console.log('Rendering trustees table with data:', { 
+    contacts: clubContacts.length, 
+    rows: rows.length
   });
 
   return (

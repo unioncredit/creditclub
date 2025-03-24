@@ -19,15 +19,11 @@ interface FundHolderRow {
   address: Address;
   shares: string;
   marketValue: string;
-  numericShares?: number; // Added for sorting
-  numericValue?: number; // Added for sorting
+  numericShares: number; // For sorting
+  numericValue: number; // For sorting
 }
 
 const columns: ColumnDef<FundHolderRow>[] = [
-  // {
-  //   accessorKey: "id",
-  //   header: "#",
-  // },
   {
     id: "avatar",
     accessorKey: "address",
@@ -52,40 +48,36 @@ const columns: ColumnDef<FundHolderRow>[] = [
     }
   },
   {
-    accessorKey: "shares",
+    id: "shares",
+    accessorFn: (row) => row.numericShares,
     header: ({ column }) => (
-      <div className="text-right cursor-pointer flex items-center justify-end gap-1" onClick={() => column.toggleSorting()}>
+      <div className="text-right cursor-pointer flex items-center justify-end gap-1">
         Shares
-        <span className="inline-flex flex-col">
-          <span className={`opacity-${column.getIsSorted() === "asc" ? "100" : "30"} -mb-1`}>▲</span>
-          <span className={`opacity-${column.getIsSorted() === "desc" ? "100" : "30"}`}>▼</span>
-        </span>
+        <div className="ml-1 inline-flex flex-col">
+          <span className={column.getIsSorted() === "asc" ? "text-black" : "text-gray-400"}>▲</span>
+          <span className={column.getIsSorted() === "desc" ? "text-black" : "text-gray-400"}>▼</span>
+        </div>
       </div>
     ),
-    cell: ({ getValue }) => (
-      <div className="text-right">{getValue() as string}</div>
+    cell: ({ row }) => (
+      <div className="text-right">{row.original.shares}</div>
     ),
-    sortingFn: (rowA, rowB) => {
-      return rowA.original.numericShares! - rowB.original.numericShares!;
-    }
   },
   {
-    accessorKey: "marketValue",
+    id: "marketValue",
+    accessorFn: (row) => row.numericValue,
     header: ({ column }) => (
-      <div className="text-right cursor-pointer flex items-center justify-end gap-1" onClick={() => column.toggleSorting()}>
+      <div className="text-right cursor-pointer flex items-center justify-end gap-1">
         Market value
-        <span className="inline-flex flex-col">
-          <span className={`opacity-${column.getIsSorted() === "asc" ? "100" : "30"} -mb-1`}>▲</span>
-          <span className={`opacity-${column.getIsSorted() === "desc" ? "100" : "30"}`}>▼</span>
-        </span>
+        <div className="ml-1 inline-flex flex-col">
+          <span className={column.getIsSorted() === "asc" ? "text-black" : "text-gray-400"}>▲</span>
+          <span className={column.getIsSorted() === "desc" ? "text-black" : "text-gray-400"}>▼</span>
+        </div>
       </div>
     ),
-    cell: ({ getValue }) => (
-      <div className="text-right">{getValue() as string}</div>
+    cell: ({ row }) => (
+      <div className="text-right">{row.original.marketValue}</div>
     ),
-    sortingFn: (rowA, rowB) => {
-      return rowA.original.numericValue! - rowB.original.numericValue!;
-    }
   },
 ]
 
@@ -95,20 +87,22 @@ export const FundHoldersTable = ({
   clubAddress: Address;
 }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const { data: holders } = useHolders();
+  const { data: holders = [] } = useHolders();
   const { data: clubData } = useClubData(clubAddress);
   const { data: priceData }  = useTokenPriceData(clubAddress);
 
   const handleSortingChange: OnChangeFn<SortingState> = useCallback((updaterOrValue) => {
+    console.log('Sorting changed to:', updaterOrValue);
     setSorting(updaterOrValue);
   }, []);
 
-  const { decimals } = clubData;
-  const { price: tokenPrice } = priceData;
+  // Ensure clubData and priceData are available before processing
+  const decimals = clubData?.decimals || 18; // Default to 18 if undefined
+  const tokenPrice = priceData?.price || 0;
 
   const rows: FundHolderRow[] = holders.map(({ id: address, amount }, index) => {
     const formattedShares = formatDecimals(amount, decimals);
-    const sharesNum = parseFloat(formattedShares);
+    const sharesNum = parseFloat(formattedShares) || 0;
     const marketValue = sharesNum * tokenPrice;
     
     return {
@@ -119,6 +113,13 @@ export const FundHoldersTable = ({
       numericShares: sharesNum,
       numericValue: marketValue
     };
+  });
+
+  console.log('Rendering holders table with data:', { 
+    holders: holders.length, 
+    rows: rows.length,
+    decimals,
+    tokenPrice
   });
 
   return (
