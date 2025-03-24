@@ -31,3 +31,21 @@
 .markdown ol li {
   @apply list-decimal;
 }
+
+@media all and (max-width: 496px) {
+  .markdown h2 {
+    @apply text-xl;
+  }
+
+  .markdown h3 {
+    @apply text-base;
+  }
+
+  .markdown p,
+  .markdown ul,
+  .markdown ol,
+  .markdown blockquote {
+    @apply text-base;
+  }
+
+}
