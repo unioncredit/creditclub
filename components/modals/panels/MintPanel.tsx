@@ -122,7 +122,10 @@ export const MintPanel = ({
         name="amount"
         label="Mint Amount"
         rightLabel={`Max. ${formatDecimals(sendTokenBalance, sendTokenDecimals, 2)} ${sendTokenSymbol}`}
-        rightLabelAction={() => setRawValue("amount", sendTokenBalance)}
+        rightLabelAction={() => {
+          const maxAmount = initialRaise - totalAssets;
+          setRawValue("amount", maxAmount > sendTokenBalance ? sendTokenBalance : maxAmount);
+        }}
         suffix={<Usdc />}
         placeholder="0.0"
         className="mt-4"
