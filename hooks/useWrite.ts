@@ -64,7 +64,7 @@ export const useWrite = ({
         ...memoizedProps,
         functionName,
         args: memoizedArgs,
-
+        chainId: DEFAULT_CHAIN_ID,
         // @ts-ignore
         value,
       });
