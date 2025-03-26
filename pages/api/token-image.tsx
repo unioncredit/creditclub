@@ -42,11 +42,11 @@ async function handler(
           alignItems: 'center',
         }}
       >
-        <img src={logo} width={24} height={24}  alt="logo image" />
+        <img src={logo} width={48} height={48} alt="logo image" />
         <img
           alt="network logo"
-          width={12}
-          height={12}
+          width={24}
+          height={24}
           src={process.env.NEXT_PUBLIC_URL + networkLogos[chainId]}
           style={{
             position: "absolute",
@@ -57,8 +57,8 @@ async function handler(
       </div>
     ),
     {
-      width: 24,
-      height: 24,
+      width: 48,
+      height: 48,
     },
   );
 }

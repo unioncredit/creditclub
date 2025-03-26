@@ -128,7 +128,7 @@ export const BuyRedeemPanel = ({
 
           <RoundedButton
             size="medium"
-            variant="blue"
+            variant="light"
             className="w-full text-sm"
             onClick={() => openModal(BUY_SELL_MODAL, {
               initialTab: "sell",

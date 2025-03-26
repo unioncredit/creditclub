@@ -49,7 +49,6 @@ export const SellPanel = ({
 
   const {
     register,
-    setNumber,
     setRawValue,
     values = {},
     errors = {},
@@ -60,19 +59,19 @@ export const SellPanel = ({
 
   const percentages = [
     {
-      value: 0.25,
+      value: 25n,
       label: "25%",
     },
     {
-      value: 0.5,
+      value: 50n,
       label: "50%",
     },
     {
-      value: 0.75,
+      value: 75n,
       label: "75%",
     },
     {
-      value: 1,
+      value: 100n,
       label: "Max",
     },
   ];
@@ -108,7 +107,7 @@ export const SellPanel = ({
             size="pill"
             className="flex-1 text-slate-500 text-sm mt-2"
             disabled={amount.raw <= 0n}
-            onClick={() => setNumber("amount", (parseFloat(formatDecimals(clubTokenBalance, decimals)) * value).toString(), "display", false) }
+            onClick={() => setRawValue("amount", (clubTokenBalance * value) / 100n) }
           >
             {label}
           </RoundedButton>

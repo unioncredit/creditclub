@@ -14,6 +14,7 @@ import { DecentSwapButton } from "@/components/shared/DecentSwapButton";
 import { useClubMember } from "@/hooks/useClubMember";
 import { useAccount } from "wagmi";
 import { useModals } from "@/providers/ModalManagerProvider";
+import { usdcContract } from "@/contracts/base";
 
 export const BuyPanel = ({
   clubAddress,
@@ -29,7 +30,9 @@ export const BuyPanel = ({
   const { refetch: refetchClubMember } = useClubMember(address, clubAddress);
 
   const { symbol } = clubData;
-  const maxBalance = token ? formatDecimals(token.balance, token.decimals) : "0.00";
+
+  const maxBalanceRaw = token ? token.balance : 0n;
+  const maxBalance = formatDecimals(maxBalanceRaw, token?.decimals || 0);
 
   const validate = (inputs: IFormValues) => {
     const amount = inputs.amount as IFormField;
@@ -44,7 +47,6 @@ export const BuyPanel = ({
 
   const {
     register,
-    setNumber,
     setRawValue,
     values = {},
     errors = {},
@@ -56,19 +58,19 @@ export const BuyPanel = ({
 
   const percentages = [
     {
-      value: 0.25,
+      value: 25n,
       label: "25%",
     },
     {
-      value: 0.5,
+      value: 50n,
       label: "50%",
     },
     {
-      value: 0.75,
+      value: 75n,
       label: "75%",
     },
     {
-      value: 1,
+      value: 100n,
       label: "Max",
     },
   ];
@@ -84,7 +86,12 @@ export const BuyPanel = ({
         label="Buy amount:"
         placeholder="0.0"
         className="mt-4 TokenSelectInput"
-        suffix={<DecentTokenSelect onChange={(token: UserTokenInfo) => setToken(token)} />}
+        suffix={(
+          <DecentTokenSelect
+            initialToken={usdcContract.address}
+            onChange={(token: UserTokenInfo) => setToken(token)}
+          />
+        )}
         value={amount.formatted}
         onChange={register("amount")}
         error={errors.amount}
@@ -103,7 +110,7 @@ export const BuyPanel = ({
                 key={index}
                 size="pill"
                 className="flex-1 text-slate-500 text-sm mt-2"
-                onClick={() => setNumber("amount", (parseFloat(maxBalance) * value).toString(), "display", false) }
+                onClick={() => setRawValue("amount", (maxBalanceRaw * value) / 100n)}
               >
                 {label}
               </RoundedButton>
