@@ -85,6 +85,9 @@ export const MintPanel = ({
     if (amount.raw > sendTokenBalance) {
       return `Only ${formatDecimals(sendTokenBalance, sendTokenDecimals)} ${sendTokenSymbol} Available`;
     }
+    if (totalAssets + amount.raw > initialRaise) {
+      return `Maximum mint amount is ${formatDecimals(initialRaise - totalAssets, sendTokenDecimals)} ${sendTokenSymbol}`;
+    }
   };
 
   const {
@@ -121,10 +124,10 @@ export const MintPanel = ({
         type="number"
         name="amount"
         label="Mint Amount"
-        rightLabel={`Max. ${formatDecimals(sendTokenBalance, sendTokenDecimals, 2)} ${sendTokenSymbol}`}
+        rightLabel={`Max. ${formatDecimals(initialRaise - totalAssets < sendTokenBalance ? initialRaise - totalAssets : sendTokenBalance, sendTokenDecimals, 2)} ${sendTokenSymbol}`}
         rightLabelAction={() => {
           const maxAmount = initialRaise - totalAssets;
-          setRawValue("amount", maxAmount > sendTokenBalance ? sendTokenBalance : maxAmount);
+          setRawValue("amount", maxAmount < sendTokenBalance ? maxAmount : sendTokenBalance);
         }}
         suffix={<Usdc />}
         placeholder="0.0"
