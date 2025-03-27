@@ -1,6 +1,6 @@
 // @ts-ignore
 import { AddIcon, ConfettiIcon, ChartIcon, LinkOutIcon, WalletIcon, CalendarIcon, Text } from "@unioncredit/ui";
-import { useAccount, useWatchAsset } from "wagmi";
+import { useAccount } from "wagmi";
 import { Address, formatUnits } from "viem";
 
 import { RoundedButton } from "@/components/ui/RoundedButton";
@@ -20,14 +20,13 @@ export const RaisingStats = ({
 }: {
   clubAddress: Address;
 }) => {
-  const { address, isConnected } = useAccount();
+  const { address } = useAccount();
   const { open: openModal } = useModals();
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: priceData } = useTokenPriceData(clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
   const { activated, locked, remaining } = useClubActivation(clubAddress);
-  const { watchAsset } = useWatchAsset();
 
   const {
     clubTokenBalance,
@@ -86,32 +85,15 @@ export const RaisingStats = ({
     <div className="mb-4 p-4 border rounded-2xl">
       <header className="flex items-start justify-between">
         <div>
-          <h3 className="font-medium text-sm text-stone-500">Raising</h3>
+          <h3 className="font-medium text-sm text-zinc-500">Raising</h3>
           <p className="text-3xl font-mono">${raisedFormatted}</p>
         </div>
 
         <div className="flex items-center gap-2 sm:flex-col">
-          <RoundedButton size="small" className="pointer-events-none">
+          <RoundedButton size="small" className="pointer-events-none text-zinc-700">
             <ChartIcon width={24}/>
             ICO: Open
           </RoundedButton>
-
-          {isConnected && (
-            <RoundedButton
-              size="small"
-              onClick={() => watchAsset({
-                type: 'ERC20',
-                options: {
-                  address: clubAddress,
-                  symbol: symbol,
-                  decimals: decimals,
-                },
-              })}
-            >
-              <AddIcon width={24} />
-              ${symbol}
-            </RoundedButton>
-          )}
         </div>
       </header>
 
@@ -131,8 +113,8 @@ export const RaisingStats = ({
 
       <footer className="mt-4 px-2 flex flex-col items-center justify-between">
         {footerStats.map(({ title, value }, index) => (
-          <div key={index} className="flex items-center justify-between gap-2 w-full border-t py-2">
-            <h3 className="font-medium text-lg text-stone-500">{title}</h3>
+          <div key={index} className="flex items-center justify-between gap-2 w-full border-t py-2 text-zinc-500">
+            <h3 className="font-medium text-lg">{title}</h3>
             <p className="text-lg font-mono font-medium flex gap-1 items-center">
               {value}
 
