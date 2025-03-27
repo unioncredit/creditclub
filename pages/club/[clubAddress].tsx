@@ -35,7 +35,7 @@ export default function FundSinglePage({
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
 
-  const { openRaise, activated, vaultTokenEnabled } = clubData;
+  const { openRaise, activated, vaultTokenEnabled, stakedBalance } = clubData;
   const { isMember } = clubMember;
 
   return (
@@ -53,7 +53,9 @@ export default function FundSinglePage({
             <div className="flex w-full md:flex-col">
               <section className="flex flex-col flex-1 text-left">
                 <ClubDetails clubAddress={clubAddress} />
-                <ClubStats clubAddress={clubAddress} />
+                {stakedBalance > 0n && (
+                  <ClubStats clubAddress={clubAddress} />
+                )}
                 <ClubActivity />
               </section>
               <section className="flex-1 pl-6 flex flex-col justify-between max-w-[450px] md:pl-0 md:mt-4 md:max-w-none">
