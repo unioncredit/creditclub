@@ -8,16 +8,18 @@ export const usePrimaryLabel = ({
   address,
   shouldTruncate = true,
   defaultValue,
+  ensName,
 }: {
   address: Address | undefined;
   shouldTruncate?: boolean;
   defaultValue?: string;
+  ensName?: string | null;
 }) => {
   const { name: ens } = useEns(address || zeroAddress);
   const { data: farcasterData } = useFarcasterData(address || zeroAddress);
   const { name: fname } = farcasterData;
 
-  const formattedEns = ens && shouldTruncate ? truncateEns(ens) : ens;
+  const formattedEns = (ensName || ens) && shouldTruncate ? truncateEns(ensName || ens) : (ensName || ens);
   const formattedAddress = address && shouldTruncate ? truncateAddress(address) : address;
 
   return { data: formattedEns || fname || formattedAddress || defaultValue };

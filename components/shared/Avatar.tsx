@@ -10,10 +10,12 @@ export function Avatar({
   address,
   size,
   className,
+  ensAvatar,
 }: {
   address: Address;
   size?: number;
   className?: string;
+  ensAvatar?: string | null;
 }) {
   const [error, setError] = useState(false);
 
@@ -25,7 +27,7 @@ export function Avatar({
       <UnionUiAvatar
         size={size}
         src={
-          isError || isLoading || error ? blockie : avatar || blockie
+          isError || isLoading || error ? blockie : ensAvatar || avatar || blockie
         }
         onError={() => setError(true)}
       />
