@@ -1,5 +1,5 @@
 // @ts-ignore
-import { WalletIcon, RepayIcon, UnionIcon } from "@unioncredit/ui";
+import { WalletIcon, RepayIcon, UnionIcon, BlogIcon, FarcasterIcon, TwitterIcon } from "@unioncredit/ui";
 import { useAccount } from "wagmi";
 import cn from "classnames";
 
@@ -20,13 +20,14 @@ export const Header = () => {
       </div>
       <div className="hidden sm:block">
         <a href="/">
-          <MobileCreditClubLogo className="h-[50px] max-w-[115px] -ml-4 scale-90" />
+          <MobileCreditClubLogo className="h-[50px] max-w-[115px] -ml-6 scale-75" />
         </a>
       </div>
 
       <div className="flex items-center gap-8 md:gap-4 sm:gap-1">
-        <Link href="/blog" className="text-xl font-mono hover:font-medium sm:text-base">
-          {"{Updates}"}
+        <Link href="/blog" className="flex items-center gap-2 text-xl font-mono hover:font-medium sm:text-base">
+          <BlogIcon width={24} height={24} />
+          Updates
         </Link>
 
         <div className={cn("ConnectButton", {

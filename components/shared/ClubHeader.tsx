@@ -1,5 +1,5 @@
 // @ts-ignore
-import { WalletIcon, RepayIcon, UnionIcon, VouchIcon } from "@unioncredit/ui";
+import { BlogIcon, FarcasterIcon, WalletIcon, RepayIcon, UnionIcon, VouchIcon, PopoverMenu, ListIcon, TwitterIcon } from "@unioncredit/ui";
 import { useAccount } from "wagmi";
 import cn from "classnames";
 
@@ -13,7 +13,6 @@ import { useToken } from "@/hooks/useToken";
 import { useModals } from "@/providers/ModalManagerProvider";
 import { BORROW_MODAL } from "@/components/modals/BorrowModal";
 import { REPAY_MODAL } from "@/components/modals/RepayModal";
-import { TOKENS } from "@/constants";
 import { REWARDS_MODAL } from "@/components/modals/RewardsModal";
 import { Address } from "viem";
 import { INVITE_MODAL } from "@/components/modals/InviteModal";
@@ -28,7 +27,7 @@ export const ClubHeader = ({
   const { data: unionMember } = useUnionMember();
   const { open: openModal } = useModals();
 
-  const { creditLimit, unionBalance, owed } = unionMember;
+  const { creditLimit, owed } = unionMember;
 
   return (
     <header className="w-full items-center flex flex-col">
@@ -47,13 +46,13 @@ export const ClubHeader = ({
         <div className="flex">
           {isConnected && (
             <>
-              <div className="sm:hidden whitespace-nowrap">
+              <div className="md:hidden whitespace-nowrap">
                 <RoundedButton
                   className="mr-2 sm:text-[0px] sm:pl-[12px] sm:pr-[8px]"
                   icon={<WalletIcon width={24} />}
                   onClick={() => openModal(BORROW_MODAL)}
                 >
-                  <span className="md:hidden">Borrow · </span>${format(creditLimit, token, creditLimit < wad ? 2 : 0)}
+                  <span className="lg:hidden">Borrow · </span>${format(creditLimit, token, creditLimit < wad ? 2 : 0)}
                 </RoundedButton>
 
                 <RoundedButton
@@ -61,7 +60,7 @@ export const ClubHeader = ({
                   icon={<RepayIcon width={24} />}
                   onClick={() => openModal(REPAY_MODAL)}
                 >
-                  <span className="md:hidden">Repay · </span>${format(owed, token, owed < wad ? 2 : 0)}
+                  <span className="lg:hidden">Repay · </span>${format(owed, token, owed < wad ? 2 : 0)}
                 </RoundedButton>
               </div>
 
@@ -71,14 +70,29 @@ export const ClubHeader = ({
                 onClick={() => openModal(REWARDS_MODAL, {
                   clubAddress,
                 })}
-              >
-                {format(unionBalance, TOKENS.UNION, 0)}
-              </RoundedButton>
+              />
 
               <RoundedButton
                 icon={<VouchIcon width={24} />}
                 className="mr-2"
                 onClick={() => openModal(INVITE_MODAL)}
+              />
+
+              <PopoverMenu
+                items={[
+                  { label: "Updates", icon: BlogIcon, href: "/blog" },
+                  { label: "Warpcast", icon: FarcasterIcon, target: "_blank", href: "https://warpcast.com/creditclub" },
+                  { label: "Twitter", icon: TwitterIcon, target: "_blank", href: "https://x.com/creditclub_eth" },
+                ]}
+                position="left"
+                button={(toggleOpen: () => void) => (
+                  <RoundedButton
+                    onClick={toggleOpen}
+                    className="w-[58px] mr-2"
+                  >
+                    <ListIcon width={26} height={26} />
+                  </RoundedButton>
+                )}
               />
             </>
           )}
@@ -92,7 +106,7 @@ export const ClubHeader = ({
       </div>
 
       {isConnected && (
-        <div className="sm:flex hidden gap-2 w-full mt-2">
+        <div className="md:flex hidden gap-2 w-full mt-2">
           <RoundedButton
             className="flex-1 w-full text-sm"
             icon={<WalletIcon width={24} />}
