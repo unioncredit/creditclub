@@ -18,6 +18,10 @@ import { useClubData } from "@/hooks/useClubData";
 import { useRaffleCooldown } from "@/hooks/useRaffleCooldown";
 import { format } from "@/lib/format";
 import { TOKENS } from "@/constants";
+import { useClubActivity } from "@/hooks/useClubActivity";
+import { useClubMember } from "@/hooks/useClubMember";
+import { useAccount } from "wagmi";
+import { REWARDS_RAFFLE_WINNER_MODAL } from "@/components/modals/RewardsRaffleWinnerModal";
 
 export const REWARDS_RAFFLE_MODAL = "feeling-lucky-modal";
 
@@ -26,9 +30,13 @@ export const RewardsRaffleModal = ({
 }: {
   clubAddress: Address;
 }) => {
-  const { close } = useModals();
+  const { address } = useAccount();
+  const { open: openModal, close } = useModals();
   const { data: clubData } = useClubData(clubAddress);
   const { complete, hours, minutes, seconds } = useRaffleCooldown(clubAddress);
+  const { refetch: refetchClubData } = useClubData(clubAddress);
+  const { refetch: refetchMember } = useClubMember(address, clubAddress);
+  const { refetch: refetchClubActivity } = useClubActivity();
   const {
     bidBucketBalance,
     bidBucketPercentage,
@@ -36,6 +44,7 @@ export const RewardsRaffleModal = ({
     callerPercentage,
     winnerBalance,
     winnerPercentage,
+    rewardsToDistribute,
   } = useRewards(clubAddress);
 
   const { costToCall } = clubData;
@@ -46,8 +55,21 @@ export const RewardsRaffleModal = ({
     ...creditVaultContract,
     functionName: "feelingLucky",
     value: costToCall,
-    disabled: !complete,
+    disabled: !complete || rewardsToDistribute <= 0,
     icon: PlayIcon,
+    onComplete: async (hash: string) => {
+      refetchMember();
+      refetchClubData();
+      refetchClubActivity(10000);
+
+      openModal(REWARDS_RAFFLE_WINNER_MODAL, {
+        clubAddress,
+        hash,
+        winnerBalance,
+        bidBucketBalance,
+        callerBalance,
+      })
+    }
   });
 
   return (

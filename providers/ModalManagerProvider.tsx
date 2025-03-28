@@ -16,6 +16,7 @@ import { UNION_REPAY_MODAL, UnionRepayModal } from "@/components/modals/UnionRep
 import { ACCOUNT_MODAL, AccountModal } from "@/components/modals/AccountModal";
 import { CLUB_PARAMETERS_MODAL, ClubParametersModal } from "@/components/modals/ClubParametersModal";
 import { BUY_SELL_MODAL, BuySellModal } from "@/components/modals/BuySellModal";
+import { REWARDS_RAFFLE_WINNER_MODAL, RewardsRaffleWinnerModal } from "@/components/modals/RewardsRaffleWinnerModal";
 
 interface IModalManagerContext {
   open: (key: string, props?: any) => void;
@@ -41,6 +42,7 @@ const modals: Record<string, any> = {
   [REPAY_MODAL]: RepayModal,
   [REWARDS_MODAL]: RewardsModal,
   [REWARDS_RAFFLE_MODAL]: RewardsRaffleModal,
+  [REWARDS_RAFFLE_WINNER_MODAL]: RewardsRaffleWinnerModal,
   [UNION_REPAY_MODAL]: UnionRepayModal,
   [UNISWAP_SWAP_MODAL]: UniswapSwapModal,
 };
