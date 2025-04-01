@@ -61,12 +61,12 @@ export const useWrite = ({
       }
 
       const hash = await writeContract(config, {
-        ...memoizedProps,
         functionName,
         args: memoizedArgs,
         chainId: DEFAULT_CHAIN_ID,
         // @ts-ignore
         value,
+        ...memoizedProps,
       });
 
       // Replace current pending toast with a new pending toast
@@ -104,7 +104,7 @@ export const useWrite = ({
       setLoading(false);
       closeToast(toastId);
     }
-  }, [memoizedProps, createToast, addToast, closeToast, config, functionName, memoizedArgs, value, onComplete]);
+  }, [memoizedProps, createToast, addToast, closeToast, config, functionName, memoizedArgs, value, onComplete, connectedChain, switchChainAsync]);
 
   /*--------------------------------------------------------------
     Return
