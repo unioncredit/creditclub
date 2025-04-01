@@ -4,7 +4,7 @@ import { useReadContracts } from "wagmi";
 import { DEFAULT_CHAIN_ID, TOTAL_PERCENT } from "@/constants";
 import { useContract } from "@/hooks/useContract";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
-import { uTokenContract } from "@/contracts/baseSepolia";
+import { unionContract } from "@/contracts/base";
 
 export const useClubData = (clubAddress: Address) => {
   const tokenContract = useContract("token");
@@ -28,7 +28,7 @@ export const useClubData = (clubAddress: Address) => {
       functionName: "fixedBidPrice",
     },
     {
-      ...uTokenContract,
+      ...unionContract,
       functionName: "balanceOf",
       args: [clubAddress],
     },
