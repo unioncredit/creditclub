@@ -41,7 +41,7 @@ export const BuyRedeemPanel = ({
 
   const { price: tokenPrice } = priceData;
 
-  const totalSupplyFormatted = commify((tokenPrice * Number(formatUnits(totalSupply, decimals))), 2);
+  const totalSupplyFormatted = commify((tokenPrice * Number(formatUnits(totalSupply, decimals))), 0);
 
   const footerStats = [
     {
