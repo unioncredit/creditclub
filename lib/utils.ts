@@ -20,7 +20,7 @@ export function formatDuration(seconds: number): string {
   const parts = [];
   if (days > 0) parts.push(`${days} ${days === 1 ? "day" : "days"}`);
   if (hours > 0) parts.push(`${hours} ${hours === 1 ? "hour" : "hours"}`);
-  if (minutes > 0) parts.push(`${minutes} ${minutes === 1 ? "minute" : "minutes"}`);
+  if (minutes > 0 && days === 0) parts.push(`${minutes} ${minutes === 1 ? "minute" : "minutes"}`);
 
   return parts.join(", ");
 }
