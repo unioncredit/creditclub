@@ -45,7 +45,7 @@ const texts = {
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://basescan.org/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500"> Borrowed</span>
+        <span className="text-gray-500"> Borrowed</span>{" · "}
         <span className="font-mono">{format(x.amount, token, 0)} {token}</span>
       </a>
     </>
@@ -81,7 +81,7 @@ const texts = {
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://basescan.org/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500"> Bucket Won</span>{" · "}
+        <span className="text-gray-500"> $1 Bid Placed</span>{" · "}
         <span className="font-mono">{format(x.amount, TOKENS.UNION, 0)} UNION</span>
       </a>
     </>
