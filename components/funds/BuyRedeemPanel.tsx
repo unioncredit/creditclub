@@ -7,7 +7,7 @@ import { RoundedButton } from "@/components/ui/RoundedButton";
 import { useClubData } from "@/hooks/useClubData";
 import { useModals } from "@/providers/ModalManagerProvider";
 import { MINT_REDEEM_MODAL } from "@/components/modals/MintRedeemModal";
-import { formatDecimals } from "@/lib/format";
+import { formatDecimals, commify } from "@/lib/format";
 import { formatDuration } from "@/lib/utils";
 import { useTokenPriceData } from "@/hooks/useTokenPriceData";
 import { useClubMember } from "@/hooks/useClubMember";
@@ -41,7 +41,7 @@ export const BuyRedeemPanel = ({
 
   const { price: tokenPrice } = priceData;
 
-  const totalSupplyFormatted = (tokenPrice * Number(formatUnits(totalSupply, decimals))).toFixed(2);
+  const totalSupplyFormatted = commify((tokenPrice * Number(formatUnits(totalSupply, decimals))), 2);
 
   const footerStats = [
     {
@@ -50,7 +50,7 @@ export const BuyRedeemPanel = ({
     },
     {
       title: "Market value",
-      value: `~$${(Number(formatUnits(clubTokenBalance, decimals)) * tokenPrice).toFixed(2)}`
+      value: `~$${commify((Number(formatUnits(clubTokenBalance, decimals)) * tokenPrice), 2)}`
     },
     {
       title: "Redeemable",
