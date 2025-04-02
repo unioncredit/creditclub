@@ -54,6 +54,7 @@ export const RedeemPanel = ({
   const {
     symbol: clubTokenSymbol,
     decimals: clubTokenDecimals,
+    lockupPeriod,
   } = clubData;
 
   const {
@@ -97,6 +98,8 @@ export const RedeemPanel = ({
     clubAddress,
   });
 
+  const isLocked = !activated || locked || Number(lockupPeriod) > 0;
+
   const redeemButtonProps = useWrite({
     ...creditVaultContract,
     functionName: "redeem",
@@ -104,7 +107,7 @@ export const RedeemPanel = ({
     label: sharesRaw <= 0n
       ? "Enter an amount"
       : `Redeem ${formatDecimals(amountReceived, receiveTokenDecimals, 0)} ${receiveTokenSymbol}`,
-    disabled: !!errors.shares || sharesRaw <= 0n || clubTokenBalance < sharesRaw,
+    disabled: !!errors.shares || sharesRaw <= 0n || clubTokenBalance < sharesRaw || isLocked,
     onComplete: async (hash: string) => {
       close();
       refetchClubData();
@@ -150,7 +153,6 @@ export const RedeemPanel = ({
         value={shares.formatted}
         onChange={register("shares")}
         error={inputError()}
-        disabled={locked}
         suffix={(
           <Image
             width={24}
@@ -160,10 +162,8 @@ export const RedeemPanel = ({
             className="border border-black"
           />
         )}
-        {...(!locked ? {
-          rightLabel: `Max. ${formatDecimals(sendTokenBalance, sendTokenDecimals, 2)} ${sendTokenSymbol}`,
-          rightLabelAction: () => setRawValue("shares", sendTokenBalance),
-        } : {})}
+        rightLabel={`Max. ${formatDecimals(sendTokenBalance, sendTokenDecimals, 2)} ${sendTokenSymbol}`}
+        rightLabelAction={() => setRawValue("shares", sendTokenBalance)}
       />
 
       <h2 className="mt-4 mb-0.5">You receive:</h2>
@@ -171,21 +171,20 @@ export const RedeemPanel = ({
         <Input
           disabled={true}
           placeHolder="0.0"
-          value={locked ? "" : formatDecimals(amountReceived, receiveTokenDecimals, 2, false)}
+          value={formatDecimals(amountReceived, receiveTokenDecimals, 2, false)}
           suffix={<Usdc />}
         />
       </div>
 
-      {(!activated || locked) ? (
+      {isLocked && (
         <InfoBanner
           align="left"
           variant="warning"
-          label={!activated ? "Redeem is not available until the club has been activated and the lock period has expired." : `Redeem is not available until the club locked period has expired. There are ${formatDuration(remaining)} remaining until the club is unlocked.`}
-          className="text-sm mt-4 p-2 bg-slate-50  font-mono border border-black"
+          label={!activated 
+            ? "Redeem is not available until the club has been activated and the lock period has expired." 
+            : `Redeem is not available until the club locked period has expired. There are ${formatDuration(remaining)} remaining until the club is unlocked.`}
+          className="text-sm mt-4 p-2 bg-slate-50 font-mono border border-black"
         />
-      ) : (
-        <>
-        </>
       )}
 
       <Button
@@ -195,7 +194,7 @@ export const RedeemPanel = ({
         size="large"
         label={!activated
           ? "Club not activated"
-          : locked
+          : isLocked
             ? `Locked for ${formatDuration(remaining)}`
             : sharesRaw <= 0n
               ? "Enter an amount"
@@ -203,8 +202,7 @@ export const RedeemPanel = ({
                 ? "Insufficient balance"
                 : `Redeem ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`}
         {...redeemButtonProps}
-        disabled={!activated}
       />
     </>
   )
-}
+};
