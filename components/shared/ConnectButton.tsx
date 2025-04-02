@@ -30,7 +30,9 @@ export const ConnectButton = () => {
       ) : (
         <>
           <Avatar address={address} size={28} className="rounded-full overflow-hidden" />
-          <PrimaryLabel address={address} />
+          <span className="sm:hidden">
+            <PrimaryLabel address={address} />
+          </span>
         </>
       )}
     </RoundedButton>
