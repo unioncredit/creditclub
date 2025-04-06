@@ -5,7 +5,6 @@ import { useReadContracts } from "wagmi";
 import { DEFAULT_CHAIN_ID } from "@/constants";
 import useRelatedAddresses from "@/hooks/useRelatedAddresses";
 import { usePopulateEns } from "@/hooks/usePopulateEns";
-import { usePopulateFnames } from "@/hooks/usePopulateFnames";
 import { useContract } from "@/hooks/useContract";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 
@@ -79,11 +78,10 @@ export const useClubContacts = (clubAddress: Address) => {
   };
 
   const ensPopulated = usePopulateEns(data);
-  const fnamePopulated = usePopulateFnames(ensPopulated);
 
   return {
     ...result,
     refetch,
-    data: fnamePopulated
+    data: ensPopulated
   }
 }
