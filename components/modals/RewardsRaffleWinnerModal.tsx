@@ -72,15 +72,15 @@ export const RewardsRaffleWinnerModal = ({
 
   const statRows: StatGridRow[] = [
     {
-      name: `Vault - ${bidBucketPercentage}%`,
-      value: `${bidBucketBalance.toFixed(2)} UNION to $${symbol}`,
-    },
-    {
-      name: `Winner - ${winnerPercentage}%`,
+      name: `Winner [${winnerPercentage}%]`,
       value: `${winnerBalance.toFixed(2)} UNION to ${winnerName}`,
     },
     {
-      name: `Caller - ${callerPercentage}%`,
+      name: `Vault  [${bidBucketPercentage}%]`,
+      value: `${bidBucketBalance.toFixed(2)} UNION to $${symbol}`,
+    },
+    {
+      name: `Caller [${callerPercentage}%]`,
       value: `${callerBalance.toFixed(2)} UNION to ${callerName}`
     },
   ];
@@ -126,6 +126,8 @@ export const RewardsRaffleWinnerModal = ({
             {hash && (
               <Button
                 fluid
+                color="secondary"
+                variant="light"
                 icon={LinkOutIcon}
                 label="Etherscan"
                 onClick={() => open(`https://basescan.org/tx/${hash}`)}
