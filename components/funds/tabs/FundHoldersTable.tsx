@@ -1,84 +1,116 @@
 import {
-  ColumnDef
+  ColumnDef,
+  SortingState
 } from "@tanstack/react-table"
 import { Address } from "viem";
+import { useState } from "react";
 
 import { DataTable } from "@/components/ui/DataTable";
-import { formatDecimals, truncateAddress } from "@/lib/format";
-import { PrimaryLabel } from "@/components/shared/PrimaryLabel";
-import { useTokenPriceData } from "@/hooks/useTokenPriceData";
-import { useClubData } from "@/hooks/useClubData";
-import { Avatar } from "@/components/shared/Avatar";
+import { format, truncateAddress } from "@/lib/format";
 import { useHolders } from "@/hooks/useHolders";
+import { PrimaryLabel } from "@/components/shared/PrimaryLabel";
+import { Avatar } from "@/components/shared/Avatar";
 
 interface FundHolderRow {
-  id: number;
+  address: Address;
   shares: string;
   marketValue: string;
+  numericShares: number;
+  numericMarketValue: number;
 }
 
-const columns: ColumnDef<FundHolderRow>[] = [
-  // {
-  //   accessorKey: "id",
-  //   header: "#",
-  // },
-  {
-    id: "avatar",
-    accessorKey: "address",
-    header: "",
-    cell: ({ getValue }) => (
-      <Avatar address={getValue() as Address} size={32} className="flex justify-center mx-auto" />
-    )
-  },
-  {
-    accessorKey: "address",
-    header: "Fund Holder",
-    cell: ({ getValue }) => {
-      const address = getValue() as Address;
-
-      return (
-        <div>
-          <p><PrimaryLabel address={address} /></p>
-          <p className="text-stone-400">{truncateAddress(address)}</p>
-        </div>
-      )
-    }
-  },
-  {
-    accessorKey: "shares",
-    header: () => <div className="text-right">Shares</div>,
-    cell: ({ getValue }) => (
-      <div className="text-right">{getValue() as string}</div>
-    ),
-  },
-  {
-    accessorKey: "marketValue",
-    header: () => <div className="text-right">Market value</div>,
-    cell: ({ getValue }) => (
-      <div className="text-right">{getValue() as string}</div>
-    ),
-  },
-]
-
 export const FundHoldersTable = ({
-  clubAddress,
+  tokenAddress,
+  decimals,
+  tokenPrice,
 }: {
-  clubAddress: Address;
+  tokenAddress: Address;
+  decimals?: number;
+  tokenPrice?: number;
 }) => {
-  const { data: holders } = useHolders();
-  const { data: clubData } = useClubData(clubAddress);
-  const { data: priceData }  = useTokenPriceData(clubAddress);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const { data: holders = [] } = useHolders(tokenAddress);
+  
+  // Safety for undefined values
+  const actualDecimals = decimals || 18;
+  const actualTokenPrice = tokenPrice || 0;
 
-  const { decimals } = clubData;
-  const { price: tokenPrice } = priceData;
+  console.log('Processing holder data:', { 
+    holders: holders.length, 
+    tokenPrice: actualTokenPrice,
+    decimals: actualDecimals 
+  });
 
-  const rows: FundHolderRow[] = holders.map(({ id: address, amount }, index) => ({
-    id: index,
-    address,
-    shares: formatDecimals(amount, decimals),
-    marketValue: `$${(parseFloat(formatDecimals(amount, decimals)) * tokenPrice).toFixed(2)}`,
-  }));
+  // Process data for rows
+  const rows: FundHolderRow[] = holders.map((holder) => {
+    const sharesStr = format(holder.value, actualDecimals);
+    // Calculate market value safely
+    const marketValueStr = `${(parseFloat(sharesStr) * actualTokenPrice).toFixed(2)}`;
+    
+    // Ensure we have valid numbers for sorting
+    const numericShares = parseFloat(sharesStr) || 0;
+    const numericMarketValue = parseFloat(marketValueStr) || 0;
+    
+    return {
+      address: holder.owner,
+      shares: sharesStr,
+      marketValue: marketValueStr,
+      numericShares,
+      numericMarketValue
+    };
+  });
 
-  // @ts-ignore
-  return <DataTable columns={columns} data={rows} />
+  // Define columns with improved meta for alignment
+  const columns: ColumnDef<FundHolderRow>[] = [
+    {
+      id: "avatar",
+      header: "",
+      cell: ({ row }) => (
+        <Avatar address={row.original.address} size={32} className="flex justify-center mx-auto" />
+      ),
+      enableSorting: false
+    },
+    {
+      id: "address",
+      accessorKey: "address",
+      header: "Member",
+      cell: ({ row }) => {
+        const address = row.original.address;
+        return (
+          <div>
+            <p><PrimaryLabel address={address} /></p>
+            <p className="text-stone-400">{truncateAddress(address)}</p>
+          </div>
+        )
+      },
+      enableSorting: false
+    },
+    {
+      id: "shares",
+      accessorKey: "numericShares",
+      header: "Shares",
+      cell: ({ row }) => (
+        <div className="text-right">{row.original.shares}</div>
+      ),
+      meta: { alignRight: true }
+    },
+    {
+      id: "marketValue",
+      accessorKey: "numericMarketValue",
+      header: "Market value",
+      cell: ({ row }) => (
+        <div className="text-right">${row.original.marketValue}</div>
+      ),
+      meta: { alignRight: true }
+    },
+  ];
+
+  return (
+    <DataTable 
+      columns={columns} 
+      data={rows} 
+      sorting={sorting}
+      onSortingChange={setSorting}
+    />
+  );
 };
