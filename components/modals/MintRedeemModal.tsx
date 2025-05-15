@@ -22,7 +22,7 @@ export const MintRedeemModal = ({
   const { close } = useModals();
   const { data: clubData } = useClubData(clubAddress);
 
-  const { symbol: clubTokenSymbol, raiseOver } = clubData;
+  const { symbol: clubTokenSymbol } = clubData;
 
   const action = tab === "mint" ? "Mint" : "Redeem";
 
@@ -39,7 +39,6 @@ export const MintRedeemModal = ({
               {
                 id: "mint",
                 label: "Mint",
-                disabled: raiseOver,
               },
               {
                 id: "redeem",

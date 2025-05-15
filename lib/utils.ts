@@ -10,7 +10,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatDuration(seconds: number): string {
   if (seconds <= 0) {
-    return "0";
+    return "Expired";
   }
 
   const days = Math.floor(seconds / (24 * 60 * 60));

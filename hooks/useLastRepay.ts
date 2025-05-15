@@ -1,6 +1,6 @@
 import { useBlockTime } from "@/hooks/useBlockTime";
-import { formatTimestamp } from "@/lib/format";
 import { useUnionData } from "@/providers/UnionDataProvider";
+import { formatDuration } from "@/lib/utils";
 
 export const useLastRepay = (lastRepay: bigint) => {
   const { data: unionData } = useUnionData();
@@ -19,7 +19,7 @@ export const useLastRepay = (lastRepay: bigint) => {
       overdue: paymentDueTimestamp ? today.getTime() > paymentDueTimestamp : false,
       timestamp: paymentDueTimestamp,
       formatted: paymentDueTimestamp
-        ? formatTimestamp(Math.abs(today.getTime() - paymentDueTimestamp))
+        ? formatDuration(Math.abs(today.getTime() - paymentDueTimestamp) / 1000)
         : "N/A",
     },
   };

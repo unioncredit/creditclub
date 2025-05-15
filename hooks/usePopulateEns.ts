@@ -23,6 +23,9 @@ export const usePopulateEns = (contacts: IContact[]) => {
     ],
     functionName: "getNames",
     args: [contacts?.map(({ address }) => address)],
+    query: {
+      staleTime: Infinity,
+    }
   });
 
   return contacts?.map((row, i) => ({

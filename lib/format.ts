@@ -1,5 +1,6 @@
 import { DUST_THRESHOLD, IToken, UNIT } from "@/constants";
 import { formatUnits } from "viem";
+import { formatDuration } from "@/lib/utils";
 
 export const formattedNumber = (value: bigint, token: IToken, digits = 2, rounded = true) => {
   return parseFloat(format(value, token, digits, rounded, false, false).replace(",", ""));
@@ -94,20 +95,11 @@ export const parseMilliseconds = (milliseconds: number) => {
   };
 };
 
-export const formatTimestamp = (milliseconds: number) => {
-  if (!milliseconds) {
-    return null;
-  }
+export const formatDurationUntil = (timestamp: number | bigint) => {
+  // Current time in seconds
+  const currentTime = Math.floor(Date.now() / 1000);
 
-  const { days, hours, minutes } = parseMilliseconds(milliseconds);
-
-  return days > 0
-    ? `${days} days`
-    : hours > 0
-      ? `${hours} hours`
-      : minutes > 0
-        ? `${minutes} minutes`
-        : null;
+  return formatDuration(Math.max(Number(timestamp) - currentTime, 0));
 };
 
 export const toPercent = (number: string | bigint, digits = 0) =>

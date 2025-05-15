@@ -6,6 +6,7 @@ import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 import { useMemberNftContract } from "@/hooks/useMemberNftContract";
 import { useClubData } from "@/hooks/useClubData";
 import { useContract } from "@/hooks/useContract";
+import { useStakingContract } from "@/hooks/useStakingContract";
 
 export const useClubMember = (memberAddress: Address | undefined, clubAddress: Address) => {
   const { data: clubData } = useClubData(clubAddress);
@@ -13,11 +14,13 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const {
     memberNftAddress,
     assetAddress,
+    stakingAddress,
   } = clubData;
 
   const userManagerContract = useContract("userManager");
   const memberNftContract = useMemberNftContract(memberNftAddress);
   const creditVaultContract = useCreditVaultContract(clubAddress);
+  const stakingContract = useStakingContract(stakingAddress);
 
   const contracts = [
     {
@@ -27,6 +30,11 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     },
     {
       ...memberNftContract,
+      functionName: "balanceOf",
+      args: [memberAddress],
+    },
+    {
+      ...stakingContract,
       functionName: "balanceOf",
       args: [memberAddress],
     },
@@ -72,6 +80,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const [
     clubTokenBalance = 0n,
     memberNftBalance = 0n,
+    stakedBalance = 0n,
     assetBalance = 0n,
     owed = 0n,
     vouch = 0n,
@@ -98,18 +107,21 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     })),
     query: {
       enabled: tokenId !== undefined,
+      staleTime: Infinity,
     }
   });
 
   const [
     percentVested = 0n,
     nftCreditStatus = undefined,
+    // @ts-ignore
   ] = resultTwo.data?.map(d => d.result as never) || [];
 
   const data = {
     isMember: memberNftBalance > 0n,
     clubTokenBalance,
     assetBalance,
+    stakedBalance,
     owed,
     vouch,
     tokenId,

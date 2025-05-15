@@ -49,7 +49,7 @@ export const RewardsRaffleWinnerModal = ({
 
   const { data: event } = useEventLog({
     hash,
-    eventName: "RoundCompleted",
+    eventName: "FeelingLucky",
     abi: creditVaultAbi,
   });
 

@@ -7,7 +7,6 @@ import {
 } from "@unioncredit/ui";
 import { Address } from "viem";
 import React from "react";
-import Image from "next/image";
 
 import FarcasterIcon from "@/assets/socials/farcaster.svg";
 import GithubIcon from "@/assets/socials/github.svg";
@@ -15,7 +14,7 @@ import LensIcon from "@/assets/socials/lens.svg";
 
 import { Badge } from "@/components/ui/Badge";
 import { truncateAddress } from "@/lib/format";
-import { createIpfsImageUrl, getEtherscanAddressLink } from "@/lib/links";
+import { getEtherscanAddressLink } from "@/lib/links";
 import { usePrimaryLabel } from "@/hooks/usePrimaryLabel";
 import { useTalentSocials } from "@/hooks/useTalentSocials";
 
@@ -54,8 +53,8 @@ export const ClubDetails = ({
     shouldTruncate: true,
   });
 
-  const { name, symbol, creatorAddress } = clubData;
-  const { description, image: nftIpfsUrl } = clubMemberNftData;
+  const { name, image, symbol, creatorAddress } = clubData;
+  const { description } = clubMemberNftData;
 
   const clubBadges = [
     {
@@ -93,12 +92,10 @@ export const ClubDetails = ({
     <div>
       <div className="flex items-between pb-4 border-b border-gray-200 sm:items-start sm:flex-col">
         <div className="sm:flex sm:justify-between sm:w-full">
-          <Image
-            width={58}
-            height={58}
-            src={createIpfsImageUrl(nftIpfsUrl)}
+          <img
+            src={image}
             alt="Fund Image"
-            className="rounded-xl border border-stone-200 min-w-[42px]"
+            className="rounded-xl border border-stone-200 w-[58px] h-[58px] min-w-[58px]"
           />
 
           <RoundedButton

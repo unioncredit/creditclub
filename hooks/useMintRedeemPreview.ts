@@ -6,13 +6,13 @@ import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 export const useMintRedeemPreview = ({
   action,
   shares,
-  clubAddress,
+  erc4626Address,
 }: {
   action: "mint" | "redeem";
   shares: bigint;
-  clubAddress: Address;
+  erc4626Address: Address;
 }) => {
-  const creditVaultContract = useCreditVaultContract(clubAddress);
+  const creditVaultContract = useCreditVaultContract(erc4626Address);
 
   const result = useReadContract({
     ...creditVaultContract,

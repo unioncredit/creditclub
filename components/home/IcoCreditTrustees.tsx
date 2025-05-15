@@ -2,12 +2,12 @@ import { Address } from "viem";
 import { useAccount } from "wagmi";
 
 import { StatGrid, type StatGridRow } from "@/components/shared/StatGrid";
-import { useClubData } from "@/hooks/useClubData";
 import { useClubContacts } from "@/hooks/useClubContacts";
 import { useNewMemberData } from "@/hooks/useNewMemberData";
 import { useToken } from "@/hooks/useToken";
 import { format } from "@/lib/format";
 import { useIsQualified } from "@/hooks/useIsQualified";
+import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 
 export const IcoCreditTrustees = ({
   clubAddress,
@@ -18,13 +18,13 @@ export const IcoCreditTrustees = ({
 }) => {
   const { token } = useToken();
   const { address, isConnected } = useAccount();
-  const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress);
   const { data: newMemberData } = useNewMemberData(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
+  const { data: memberNftData } = useClubMemberNft(clubAddress);
 
-  const { memberMax, costToMint } = clubData;
   const { initialTrustAmount } = newMemberData;
+  const { membershipCost, maxMembers } = memberNftData;
 
   const rows: StatGridRow[] = [
     {
@@ -33,11 +33,11 @@ export const IcoCreditTrustees = ({
     },
     {
       name: "Trustees",
-      value: `${clubContacts.length} claimed of ${memberMax} available`
+      value: `${clubContacts.length} claimed of ${maxMembers} available`
     },
     {
       name: "Cost to mint",
-      value: `$${format(costToMint, token)}`
+      value: `$${format(membershipCost, token)}`
     },
     {
       name: "Starting credit",

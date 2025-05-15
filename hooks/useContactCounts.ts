@@ -19,6 +19,10 @@ export const useContactCounts = (address: Address) => {
         args: [address],
       },
     ].map(c => ({ ...c, chainId: DEFAULT_CHAIN_ID })),
+    query: {
+      enabled: !!address,
+      staleTime: Infinity,
+    }
   });
 
   const [

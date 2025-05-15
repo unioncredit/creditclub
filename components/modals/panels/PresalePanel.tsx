@@ -1,49 +1,55 @@
-import {
-  Input,
-  CalendarIcon,
-  WalletIcon,
-  Usdc,
-  // @ts-ignore
-} from "@unioncredit/ui";
-import { useState } from "react";
+// @ts-ignore
+import { WalletIcon, CalendarIcon, Input, Usdc, Modal, ModalOverlay, SegmentedControl } from "@unioncredit/ui";
 import { Address, erc20Abi } from "viem";
 import { useAccount, useWatchAsset } from "wagmi";
 
-import { useModals } from "@/providers/ModalManagerProvider";
 import { useClubData } from "@/hooks/useClubData";
+import { useModals } from "@/providers/ModalManagerProvider";
 import { useClubMember } from "@/hooks/useClubMember";
 import { useErc20Token } from "@/hooks/useErc20Token";
-import { formatDecimals } from "@/lib/format";
+import { useClubAuction } from "@/hooks/useClubAuction";
+import { useClubActivation } from "@/hooks/useClubActivation";
 import { IFormField, IFormValues, useForm } from "@/hooks/useForm";
+import { formatDecimals, formatDurationUntil } from "@/lib/format";
 import { useMintRedeemPreview } from "@/hooks/useMintRedeemPreview";
 import { ApprovalButton } from "@/components/shared/ApprovalButton";
-import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
-import { useClubActivation } from "@/hooks/useClubActivation";
-import { formatDuration } from "@/lib/utils";
 import { POST_TX_MODAL } from "@/components/modals/PostTxModal";
-import { Checkbox } from "@/components/ui/Checkbox";
-import { useClubAuction } from "@/hooks/useClubAuction";
+import { formatDuration } from "@/lib/utils";
+import { DistributionBarItem, DistributionBarValues } from "@/components/shared/DistributionBarValues";
+import { useClubStaking } from "@/hooks/useClubStaking";
+import { useAuctionContract } from "@/hooks/useAuctionContract";
+import { useCurrentTime } from "@/hooks/useCurrentTime";
 
-export const MintPanel = ({
+export const PresalePanel = ({
   clubAddress,
 }: {
   clubAddress: Address;
 }) => {
-  const [checked, setChecked] = useState<boolean>(false);
-
   const { open: openModal } = useModals();
   const { address } = useAccount();
   const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress)
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
   const { data: auctionData } = useClubAuction(clubAddress);
+  const { data: stakingData } = useClubStaking(clubAddress);
   const { activated, locked, remaining } = useClubActivation(clubAddress);
   const { watchAsset } = useWatchAsset();
+  const { hasPassed } = useCurrentTime();
 
-  const creditVaultContract = useCreditVaultContract(clubAddress);
+  const auctionContract = useAuctionContract(clubData.auctionAddress);
 
   const { assetBalance } = clubMember;
-  const { minTarget } = auctionData;
+  const {
+    totalDeposits,
+    minTarget,
+    maxTarget,
+    end,
+  } = auctionData;
+
+  const {
+    symbol: stakingTokenSymbol,
+    decimals: stakingTokenDecimals,
+  } = stakingData;
 
   const {
     address: assetTokenAddress,
@@ -52,11 +58,10 @@ export const MintPanel = ({
   } = assetToken;
 
   const {
-    image,
     totalAssets,
-    symbol: clubTokenSymbol,
-    decimals: clubTokenDecimals,
     lockupPeriod,
+    stakingAddress,
+    auctionAddress,
   } = clubData;
 
   const {
@@ -70,9 +75,9 @@ export const MintPanel = ({
     sendTokenSymbol: assetTokenSymbol,
     sendTokenBalance: assetBalance,
     sendTokenDecimals: assetTokenDecimals,
-    receiveTokenSymbol: clubTokenSymbol,
-    receiveTokenDecimals: clubTokenDecimals,
-    receiveTokenAddress: clubAddress,
+    receiveTokenSymbol: stakingTokenSymbol,
+    receiveTokenDecimals: stakingTokenDecimals,
+    receiveTokenAddress: auctionAddress,
   };
 
   const validate = (inputs: IFormValues) => {
@@ -99,7 +104,7 @@ export const MintPanel = ({
   const { data: amountReceived } = useMintRedeemPreview({
     action: "mint",
     shares: amountRaw,
-    erc4626Address: clubAddress,
+    erc4626Address: stakingAddress,
   });
 
   const inputError = () => {
@@ -112,6 +117,21 @@ export const MintPanel = ({
 
     return null;
   };
+
+  const barValues: DistributionBarItem[] = [
+    {
+      value: Number(totalDeposits),
+      label: `$${formatDecimals(totalDeposits, assetTokenDecimals, 2)}`,
+      color: "green600",
+      title: "Raised",
+    },
+    {
+      value: Number(maxTarget - totalDeposits),
+      label: `$${formatDecimals(maxTarget - totalDeposits, assetTokenDecimals, 2)}`,
+      color: "blue50",
+      title: "Remaining",
+    }
+  ];
 
   return (
     <>
@@ -126,62 +146,39 @@ export const MintPanel = ({
         }}
         suffix={<Usdc />}
         placeholder="0.0"
-        className="mt-4"
         value={amount.formatted}
         onChange={register("amount")}
         error={inputError()}
       />
 
-      <h2 className="mt-4 mb-0.5">You receive:</h2>
-      <div className="bg-stone-100 p-1 rounded-2xl">
-        <Input
-          disabled={true}
-          value={formatDecimals(amountReceived, receiveTokenDecimals, 2, false)}
-          suffix={(
-            <img
-              width={24}
-              height={24}
-              src={image}
-              alt="Fund Image"
-              className="border border-black"
-            />
-          )}
-        />
-      </div>
+      <div className="p-4 my-4 rounded-xl border bg-zinc-100">
+        <DistributionBarValues items={barValues} className="mt-0 mb-4 border rounded" />
 
-      <div className="flex gap-1 p-2 border border-black font-mono my-4 bg-stone-100">
-        <Checkbox
-          id="terms"
-          className="mr-1"
-          checked={checked}
-          onCheckedChange={(value: boolean) => setChecked(value)}
-        />
-        <label
-          htmlFor="terms"
-          className="text-xs peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-          I understand that this is risky, that I may lose all my funds, and I will not be able to withdraw funds until the lockup period ends.
-        </label>
+        {end > 0n && (
+          <p className="mt-4 bg-white border p-3 rounded-xl text-center">
+            {hasPassed(end) ? "Raise period ended" : `Raise ends in: ${formatDurationUntil(Number(end))}`}
+          </p>
+        )}
       </div>
 
       <ApprovalButton
         owner={address}
         amount={amountRaw}
-        disabled={!!inputError() || amountRaw < 0n || assetBalance < amountRaw || !checked}
-        spender={creditVaultContract.address}
+        disabled={!!inputError() || amountRaw < 0n || assetBalance < amountRaw}
+        spender={receiveTokenAddress}
         tokenContract={{
           abi: erc20Abi,
           address: assetTokenAddress,
         }}
         actionProps={{
-          ...creditVaultContract,
+          ...auctionContract,
           functionName: "deposit",
-          args: [amountRaw, address],
+          args: [address, amountRaw],
           label: amountRaw <= 0n
             ? "Enter an amount"
             : amountRaw > assetBalance
               ? "Insufficient balance"
-              : `Mint ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`,
+              : `Mint ${formatDecimals(amountReceived, stakingTokenDecimals, 2)} ${receiveTokenSymbol}`,
           disabled: !!errors.amount || amountRaw < 0n || assetBalance < amountRaw,
           onComplete: async (hash: string) => {
             refetchClubData();
@@ -222,4 +219,4 @@ export const MintPanel = ({
       />
     </>
   )
-}
+};

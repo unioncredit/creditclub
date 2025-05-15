@@ -7,7 +7,6 @@ import {
   LinkOutIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
-import Image from "next/image";
 
 import { useModals } from "@/providers/ModalManagerProvider";
 import { ShadowButton as FlatButton } from "@/components/ui/ShadowButton";
@@ -51,7 +50,7 @@ export const PostMintNftModal = ({
           />
 
           <div className="mt-16 flex justify-center w-full">
-            <Image
+            <img
               width={150}
               height={150}
               src={nftImageUrl}

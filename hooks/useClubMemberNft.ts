@@ -1,4 +1,4 @@
-import { Address } from "viem";
+import { Address, zeroAddress } from "viem";
 import { useReadContracts } from "wagmi";
 
 import { DEFAULT_CHAIN_ID } from "@/constants";
@@ -16,6 +16,18 @@ export const useClubMemberNft = (clubAddress: Address) => {
       ...memberNftContract,
       functionName: "contractURI",
     },
+    {
+      ...memberNftContract,
+      functionName: "membershipCost",
+    },
+    {
+      ...memberNftContract,
+      functionName: "gatingToken"
+    },
+    {
+      ...memberNftContract,
+      functionName: "maxMembers"
+    }
   ];
 
   const result = useReadContracts({
@@ -26,11 +38,16 @@ export const useClubMemberNft = (clubAddress: Address) => {
     })),
     query: {
       enabled: !!clubAddress,
+      staleTime: Infinity,
     }
   });
 
   const [
     contractURI = "",
+    membershipCost = 0n,
+    gatingTokenAddress = zeroAddress,
+    maxMembers = 0n,
+    // @ts-ignore
   ] = result.data?.map(d => d.result as never) || [];
 
   const contractMetadata = JSON.parse(decodeURIComponent(contractURI.replace("data:application/json;utf8,", "")) || "{}");
@@ -45,6 +62,9 @@ export const useClubMemberNft = (clubAddress: Address) => {
     name,
     description,
     image,
+    membershipCost,
+    gatingTokenAddress,
+    maxMembers
   };
 
   return { ...result, data };

@@ -18,11 +18,10 @@ import { IFormField, IFormValues, useForm } from "@/hooks/useForm";
 import { useMintRedeemPreview } from "@/hooks/useMintRedeemPreview";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 import { useWrite } from "@/hooks/useWrite";
-import { useClubActivation } from "@/hooks/useClubActivation";
-import { formatDuration } from "@/lib/utils";
 import { POST_TX_MODAL } from "@/components/modals/PostTxModal";
+import { useClubStaking } from "@/hooks/useClubStaking";
 
-export const RedeemPanel = ({
+export const RefundPresalePanel = ({
   clubAddress,
 }: {
   clubAddress: Address;
@@ -33,10 +32,10 @@ export const RedeemPanel = ({
   const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress)
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
-  const { activated, locked, remaining } = useClubActivation(clubAddress);
+  const { data: stakingData } = useClubStaking(clubAddress);
   const { watchAsset } = useWatchAsset();
 
-  const creditVaultContract = useCreditVaultContract(clubAddress);
+  const stakingContract = useCreditVaultContract(clubData.stakingAddress);
 
   const { clubTokenBalance } = clubMember;
 
@@ -48,10 +47,12 @@ export const RedeemPanel = ({
 
   const {
     image,
-    symbol: clubTokenSymbol,
-    decimals: clubTokenDecimals,
-    lockupEnd,
   } = clubData;
+
+  const {
+    decimals: stakingTokenDecimals,
+    symbol: stakingTokenSymbol,
+  } = stakingData;
 
   const {
     sendTokenSymbol,
@@ -61,9 +62,9 @@ export const RedeemPanel = ({
     receiveTokenDecimals,
     receiveTokenAddress,
   } = {
-    sendTokenSymbol: clubTokenSymbol,
+    sendTokenSymbol: stakingTokenSymbol,
     sendTokenBalance: clubTokenBalance,
-    sendTokenDecimals: clubTokenDecimals,
+    sendTokenDecimals: stakingTokenDecimals,
     receiveTokenSymbol: assetTokenSymbol,
     receiveTokenDecimals: assetTokenDecimals,
     receiveTokenAddress: assetTokenAddress,
@@ -94,16 +95,14 @@ export const RedeemPanel = ({
     erc4626Address: clubAddress,
   });
 
-  const isLocked = !activated || locked || Number(lockupEnd) > 0;
-
   const redeemButtonProps = useWrite({
-    ...creditVaultContract,
+    ...stakingContract,
     functionName: "redeem",
     args: [sharesRaw, address, address],
     label: sharesRaw <= 0n
       ? "Enter an amount"
       : `Redeem ${formatDecimals(amountReceived, receiveTokenDecimals, 0)} ${receiveTokenSymbol}`,
-    disabled: !!errors.shares || sharesRaw <= 0n || clubTokenBalance < sharesRaw || isLocked,
+    disabled: !!errors.shares || sharesRaw <= 0n || clubTokenBalance < sharesRaw,
     onComplete: async (hash: string) => {
       close();
       refetchClubData();
@@ -140,6 +139,13 @@ export const RedeemPanel = ({
 
   return (
     <>
+      <InfoBanner
+        align="left"
+        variant="warning"
+        label={`Raise failed to reach its goal. Please redeem your $${stakingTokenSymbol} for the $${assetTokenSymbol} you deposited.`}
+        className="p-2 bg-yellow-50 border-yellow-600 text-yellow-800 font-mono border rounded-lg text-center"
+      />
+
       <Input
         type="number"
         name="amount"
@@ -172,31 +178,16 @@ export const RedeemPanel = ({
         />
       </div>
 
-      {isLocked && (
-        <InfoBanner
-          align="left"
-          variant="warning"
-          label={!activated 
-            ? "Redeem is not available until the club has been activated and the lock period has expired." 
-            : `Redeem is not available until the club locked period has expired. There are ${formatDuration(remaining)} remaining until the club is unlocked.`}
-          className="text-sm mt-4 p-2 bg-slate-50 font-mono border border-black"
-        />
-      )}
-
       <Button
         fluid
         className="mt-4"
         color="primary"
         size="large"
-        label={!activated
-          ? "Club not activated"
-          : isLocked
-            ? `Locked for ${formatDuration(remaining)}`
-            : sharesRaw <= 0n
-              ? "Enter an amount"
-              : sharesRaw > clubTokenBalance
-                ? "Insufficient balance"
-                : `Redeem ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`}
+        label={sharesRaw <= 0n
+          ? "Enter an amount"
+          : sharesRaw > clubTokenBalance
+            ? "Insufficient balance"
+            : `Redeem ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`}
         {...redeemButtonProps}
       />
     </>

@@ -54,6 +54,10 @@ export const useClubContacts = (clubAddress: Address) => {
       ...c,
       chainId: DEFAULT_CHAIN_ID,
     })),
+    query: {
+      enabled: !!clubAddress,
+      staleTime: Infinity,
+    }
   }));
 
   const results = result.data?.map(d => d.result) || [];

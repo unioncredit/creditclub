@@ -1,20 +1,17 @@
 // @ts-ignore
 import { Button, Input, Modal, Select } from "@unioncredit/ui";
+import { useAccount } from "wagmi";
+import { Address, Hash } from "viem";
+import { useState } from "react";
 
 import { RoundedButton } from "@/components/ui/RoundedButton";
 import { useClubData } from "@/hooks/useClubData";
-import { Address, Hash } from "viem";
-import { useState } from "react";
 import { formatDecimals } from "@/lib/format";
 import { IFormField, IFormValues, useForm } from "@/hooks/useForm";
 import { DEFAULT_CHAIN_ID } from "@/constants";
 import { DecentSwapButton } from "@/components/shared/DecentSwapButton";
-import { createIpfsImageUrl } from "@/lib/links";
-import Image from "next/image";
-import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { useErc20Token } from "@/hooks/useErc20Token";
 import { useClubMember } from "@/hooks/useClubMember";
-import { useAccount } from "wagmi";
 import { useModals } from "@/providers/ModalManagerProvider";
 
 export const SellPanel = ({
@@ -28,14 +25,9 @@ export const SellPanel = ({
   const { address } = useAccount();
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubMemberData, refetch: refetchClubMember } = useClubMember(address, clubAddress);
-  const { data: clubMemberNftData } = useClubMemberNft(clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
 
-  const {
-    image: ipfsImageLink,
-  } = clubMemberNftData;
-
-  const { decimals, symbol } = clubData;
+  const { image, decimals, symbol } = clubData;
   const { address: assetAddress, symbol: assetSymbol } = assetToken;
   const { clubTokenBalance } = clubMemberData;
 
@@ -85,10 +77,10 @@ export const SellPanel = ({
         placeholder="0.0"
         className="mt-4 TokenSelectInput"
         suffix={(
-          <Image
+          <img
             width={24}
             height={24}
-            src={createIpfsImageUrl(ipfsImageLink)}
+            src={image}
             alt="Fund Image"
             className="border border-stone-200"
           />

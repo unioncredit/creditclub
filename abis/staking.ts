@@ -1,4 +1,4 @@
-export const creditVaultAbi = [
+export const stakingAbi = [
   {
     "type": "constructor",
     "inputs": [],
@@ -6,7 +6,7 @@ export const creditVaultAbi = [
   },
   {
     "type": "function",
-    "name": "FEELING_LUCKY_COST",
+    "name": "SCALE",
     "inputs": [],
     "outputs": [
       {
@@ -16,97 +16,6 @@ export const creditVaultAbi = [
       }
     ],
     "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "FULL_SCALE",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "INITIAL_SUPPLY",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "_contractURI",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "string",
-        "internalType": "string"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "_feeRecipient",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "_nft",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "_percentVested",
-    "inputs": [
-      {
-        "name": "updatedAt",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "percent",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "activate",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
   },
   {
     "type": "function",
@@ -203,52 +112,6 @@ export const creditVaultAbi = [
   },
   {
     "type": "function",
-    "name": "callerPercent",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "claimCredit",
-    "inputs": [
-      {
-        "name": "tokenId",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "claimLpFees",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "contractURI",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "string",
-        "internalType": "string"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "convertToAssets",
     "inputs": [
       {
@@ -281,19 +144,6 @@ export const creditVaultAbi = [
         "name": "",
         "type": "uint256",
         "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "creator",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
       }
     ],
     "stateMutability": "view"
@@ -337,310 +187,31 @@ export const creditVaultAbi = [
   },
   {
     "type": "function",
-    "name": "description",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "string",
-        "internalType": "string"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "feeRecipient",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "feelingLucky",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "payable"
-  },
-  {
-    "type": "function",
-    "name": "fixedBid",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "fixedBidPrice",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "image",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "string",
-        "internalType": "string"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "init",
     "inputs": [
       {
-        "name": "_creator",
+        "name": "_vault",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "_name",
-        "type": "string",
-        "internalType": "string"
+        "name": "_auction",
+        "type": "address",
+        "internalType": "address"
       },
       {
-        "name": "_symbol",
-        "type": "string",
-        "internalType": "string"
+        "name": "_withdrawBucket",
+        "type": "address",
+        "internalType": "address"
       },
       {
-        "name": "_image",
-        "type": "string",
-        "internalType": "string"
-      },
-      {
-        "name": "_description",
-        "type": "string",
-        "internalType": "string"
-      },
-      {
-        "name": "addressParams",
-        "type": "tuple",
-        "internalType": "struct IVault.AddressParams",
-        "components": [
-          {
-            "name": "asset",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "userManager",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "registerHelper",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "uToken",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "union",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "auction",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "staking",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "liquidityManager",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "nft",
-            "type": "address",
-            "internalType": "address"
-          }
-        ]
-      },
-      {
-        "name": "configParams",
-        "type": "tuple",
-        "internalType": "struct IVault.ConfigParams",
-        "components": [
-          {
-            "name": "lockupPeriod",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "fixedBidPrice",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "withdrawFeeBps",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "vestingDuration",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "startingPercentTrust",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "feeRecipient",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "isClosedEndFund",
-            "type": "bool",
-            "internalType": "bool"
-          },
-          {
-            "name": "isPublic",
-            "type": "bool",
-            "internalType": "bool"
-          },
-          {
-            "name": "isTokenEnabled",
-            "type": "bool",
-            "internalType": "bool"
-          }
-        ]
+        "name": "_withdrawFeeBps",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "isActivated",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "isClosedEndFund",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "isPublic",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "isTokenEnabled",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "lastReward",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "liquidityManager",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "lockupEnd",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "lockupPeriod",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -757,92 +328,6 @@ export const creditVaultAbi = [
   },
   {
     "type": "function",
-    "name": "nft",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "onMemberKick",
-    "inputs": [
-      {
-        "name": "guy",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "onMemberLeave",
-    "inputs": [
-      {
-        "name": "guy",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "onMemberMinted",
-    "inputs": [
-      {
-        "name": "tokenId",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "to",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "onMemberTransfer",
-    "inputs": [
-      {
-        "name": "tokenId",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "from",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "to",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "owner",
     "inputs": [],
     "outputs": [
@@ -856,8 +341,19 @@ export const creditVaultAbi = [
   },
   {
     "type": "function",
-    "name": "ping",
-    "inputs": [],
+    "name": "preMint",
+    "inputs": [
+      {
+        "name": "guy",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "outputs": [],
     "stateMutability": "nonpayable"
   },
@@ -968,60 +464,8 @@ export const creditVaultAbi = [
   },
   {
     "type": "function",
-    "name": "registerHelper",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "renounceOwnership",
     "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "rewardCooldown",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "setContractURI",
-    "inputs": [
-      {
-        "name": "contractURI_",
-        "type": "string",
-        "internalType": "string"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setFeeRecipient",
-    "inputs": [
-      {
-        "name": "feeRecipient_",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
     "outputs": [],
     "stateMutability": "nonpayable"
   },
@@ -1037,32 +481,6 @@ export const creditVaultAbi = [
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "staking",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "startingPercentTrust",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -1171,65 +589,13 @@ export const creditVaultAbi = [
   },
   {
     "type": "function",
-    "name": "uToken",
+    "name": "vault",
     "inputs": [],
     "outputs": [
       {
         "name": "",
         "type": "address",
         "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "union",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "userManager",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "vestingDuration",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "winnerPercent",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
@@ -1265,6 +631,19 @@ export const creditVaultAbi = [
   },
   {
     "type": "function",
+    "name": "withdrawBucket",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "withdrawFeeBps",
     "inputs": [],
     "outputs": [
@@ -1275,12 +654,6 @@ export const creditVaultAbi = [
       }
     ],
     "stateMutability": "view"
-  },
-  {
-    "type": "event",
-    "name": "Activated",
-    "inputs": [],
-    "anonymous": false
   },
   {
     "type": "event",
@@ -1340,56 +713,6 @@ export const creditVaultAbi = [
   },
   {
     "type": "event",
-    "name": "FeelingLucky",
-    "inputs": [
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "winner",
-        "type": "address",
-        "indexed": false,
-        "internalType": "address"
-      },
-      {
-        "name": "winnerAmount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "callerAmount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "FixedBid",
-    "inputs": [
-      {
-        "name": "guy",
-        "type": "address",
-        "indexed": false,
-        "internalType": "address"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
     "name": "Initialized",
     "inputs": [
       {
@@ -1422,26 +745,19 @@ export const creditVaultAbi = [
   },
   {
     "type": "event",
-    "name": "SetContractURI",
+    "name": "PreMint",
     "inputs": [
       {
-        "name": "contractURI_",
-        "type": "string",
-        "indexed": false,
-        "internalType": "string"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "SetFeeRecipient",
-    "inputs": [
-      {
-        "name": "feeRecipient",
+        "name": "guy",
         "type": "address",
         "indexed": false,
         "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
     "anonymous": false
@@ -1520,32 +836,6 @@ export const creditVaultAbi = [
       }
     ],
     "anonymous": false
-  },
-  {
-    "type": "error",
-    "name": "AlreadyActive",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "AmountIsZero",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "BadDebt",
-    "inputs": [
-      {
-        "name": "overdueType",
-        "type": "string",
-        "internalType": "string"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "ClosedFund",
-    "inputs": []
   },
   {
     "type": "error",
@@ -1724,17 +1014,7 @@ export const creditVaultAbi = [
   },
   {
     "type": "error",
-    "name": "KickTooEarly",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "Locked",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "NotActive",
+    "name": "NotActivated",
     "inputs": []
   },
   {
@@ -1744,34 +1024,8 @@ export const creditVaultAbi = [
   },
   {
     "type": "error",
-    "name": "NotEnabled",
-    "inputs": []
-  },
-  {
-    "type": "error",
     "name": "NotInitializing",
     "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "NotPublic",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "NotSoLucky",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "Overdue",
-    "inputs": [
-      {
-        "name": "overdueType",
-        "type": "string",
-        "internalType": "string"
-      }
-    ]
   },
   {
     "type": "error",
@@ -1797,11 +1051,6 @@ export const creditVaultAbi = [
   },
   {
     "type": "error",
-    "name": "RateLimit",
-    "inputs": []
-  },
-  {
-    "type": "error",
     "name": "SafeERC20FailedOperation",
     "inputs": [
       {
@@ -1813,12 +1062,7 @@ export const creditVaultAbi = [
   },
   {
     "type": "error",
-    "name": "TrustZero",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "ValueNotEnough",
+    "name": "WithrawFeeToHigh",
     "inputs": []
   }
 ] as const;

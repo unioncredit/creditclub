@@ -19,10 +19,6 @@ export const useInvites = (clubAddress: Address) => {
       functionName: "invited",
       args: [address]
     },
-    {
-      ...creditVaultContract,
-      functionName: "initialInvitedLength"
-    }
   ];
 
   const result = useReadContracts({
@@ -39,13 +35,11 @@ export const useInvites = (clubAddress: Address) => {
   const [
     inviteEnabled = false,
     invited = false,
-    initialInvitedLength = 0n,
     // @ts-ignore
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
-    enabled: inviteEnabled || initialInvitedLength > 0n,
-    creatorInvitesEnabled: initialInvitedLength > 0n,
+    enabled: inviteEnabled,
     memberInvitesEnabled: inviteEnabled,
     qualified: invited
   };

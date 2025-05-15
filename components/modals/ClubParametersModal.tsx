@@ -12,6 +12,7 @@ import Link from "next/link";
 import { getEtherscanAddressLink } from "@/lib/links";
 import { WAD_1E18 } from "@/constants";
 import { AddressDisplay } from "@/components/shared/AddressDisplay";
+import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 
 export const CLUB_PARAMETERS_MODAL = "club-parameters-modal";
 
@@ -22,17 +23,20 @@ export const ClubParametersModal = ({
 }) => {
   const { close } = useModals();
   const { data: clubData } = useClubData(clubAddress);
+  const { data: memberNftData } = useClubMemberNft(clubAddress);
   const { data: inviteData } = useInvites(clubAddress);
 
   const { enabled: invitesEnabled } = inviteData;
   const {
     vestingDurationInSeconds,
-    gatingTokenAddress,
     startingPercentTrust,
     creatorAddress,
     rewardsManagerAddress,
     memberNftAddress
   } = clubData;
+  const {
+    gatingTokenAddress
+  } = memberNftData;
 
   const parameters = [
     {

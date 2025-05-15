@@ -4,17 +4,16 @@ import { useClubData } from "@/hooks/useClubData";
 export const useClubActivation = (clubAddress: Address) => {
   const { data: clubData } = useClubData(clubAddress);
   
-  const { activationDate, lockupPeriod } = clubData;
+  const { isActivated, lockupEnd } = clubData;
 
   // Current time in seconds
   const currentTime = Math.floor(Date.now() / 1000);
 
-  const activated = activationDate > 0n;
-  const remaining = Math.max(Number(activationDate + lockupPeriod) - currentTime, 0);
+  const remaining = Math.max(Number(lockupEnd) - currentTime, 0);
 
   return {
-    activated,
-    locked: !activated || currentTime < (activationDate + lockupPeriod),
+    activated: isActivated,
+    locked: !isActivated || currentTime < lockupEnd,
     remaining,
   }
 };

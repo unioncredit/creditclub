@@ -19,7 +19,6 @@ import { useIsQualified } from "@/hooks/useIsQualified";
 import { useClubContacts } from "@/hooks/useClubContacts";
 import { StatGridRow } from "@/components/shared/StatGrid";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
-import { createIpfsImageUrl } from "@/lib/links";
 import { useNewMemberData } from "@/hooks/useNewMemberData";
 
 export const MintMemberNftMultichain = ({
@@ -46,8 +45,8 @@ export const MintMemberNftMultichain = ({
   const tokenContract = useContract("token");
 
   const { isMember } = clubMember;
-  const { name, costToMint } = clubData;
-  const { image: ipfsImageLink } = clubMemberNftData;
+  const { name, image } = clubData;
+  const { membershipCost } = clubMemberNftData;
   const { initialTrustAmount, tokenId } = newMemberData;
 
   const createToast = useToastProps("mintMemberNFT", creditVaultContract.address, [address]);
@@ -72,7 +71,7 @@ export const MintMemberNftMultichain = ({
         chainId: ChainId.BASE,
         contractAddress: creditVaultContract.address,
         cost: {
-          amount: costToMint,
+          amount: membershipCost,
           isNative: false,
           tokenAddress: tokenContract.address,
         },
@@ -98,7 +97,7 @@ export const MintMemberNftMultichain = ({
           tokenId,
           rows,
           startingCredit: initialTrustAmount,
-          nftImageUrl: createIpfsImageUrl(ipfsImageLink),
+          nftImageUrl: image,
         });
       }}
       onTxError={() => {

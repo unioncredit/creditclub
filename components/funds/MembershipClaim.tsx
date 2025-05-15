@@ -1,5 +1,7 @@
 // @ts-ignore
 import { AddressBookIcon } from "@unioncredit/ui";
+import { useAccount } from "wagmi";
+import React from "react";
 
 import CheckIcon from "@/assets/check-icon.svg";
 import { cn } from "@/lib/utils";
@@ -11,10 +13,6 @@ import { useClubData } from "@/hooks/useClubData";
 import { useGatingToken } from "@/hooks/useGatingToken";
 import { useInvites } from "@/hooks/useInvites";
 import { useClubContacts } from "@/hooks/useClubContacts";
-import { useAccount } from "wagmi";
-import { createIpfsImageUrl } from "@/lib/links";
-import Image from "next/image";
-import React from "react";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { useIsQualified } from "@/hooks/useIsQualified";
 
@@ -32,11 +30,10 @@ export const MembershipClaim = ({
   const { data: memberNftdata } = useClubMemberNft(clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
 
-  const { name, memberMax } = clubData;
-  const { image: nftIpfsUrl } = memberNftdata;
+  const { name, image } = clubData;
+  const { maxMembers } = memberNftdata;
 
   const {
-    creatorInvitesEnabled,
     memberInvitesEnabled,
     qualified: inviteQualified
   } = inviteData;
@@ -55,19 +52,9 @@ export const MembershipClaim = ({
         completed: tokenQualified,
       },
     ] : []),
-    ...((creatorInvitesEnabled && memberInvitesEnabled) ? [
-      {
-        label: "Invited by member or creator",
-        completed: inviteQualified,
-      },
-    ] : memberInvitesEnabled ? [
+    ...(memberInvitesEnabled ? [
       {
         label: "Invited by member",
-        completed: inviteQualified,
-      },
-    ] : creatorInvitesEnabled ? [
-      {
-        label: "Invited by creator",
         completed: inviteQualified,
       },
     ] : []),
@@ -80,18 +67,16 @@ export const MembershipClaim = ({
 
         <div className="flex items-center gap-1">
           <AddressBookIcon width={24} height={24} />
-          <p className="text-sm text-blue-600">{Number(memberMax) - clubContacts.length} Remaining</p>
+          <p className="text-sm text-blue-600">{Number(maxMembers) - clubContacts.length} Remaining</p>
         </div>
       </header>
 
       {isConnected && (
         <div className={cn("mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-slate-100 rounded-2xl border")}>
-          <Image
-            width={48}
-            height={48}
-            src={createIpfsImageUrl(nftIpfsUrl)}
+          <img
+            src={image}
             alt="Fund Image"
-            className={cn("rounded-xl border border-stone-200 min-w-[42px]", {
+            className={cn("rounded-xl border border-stone-200 w-[42px] h-[42px] min-w-[42px]", {
               "opacity-20": !isQualified,
             })}
           />

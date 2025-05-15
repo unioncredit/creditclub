@@ -5,7 +5,6 @@ import {
   Usdc,
   // @ts-ignore
 } from "@unioncredit/ui";
-import { useState } from "react";
 import { Address, erc20Abi } from "viem";
 import { useAccount, useWatchAsset } from "wagmi";
 
@@ -18,26 +17,23 @@ import { IFormField, IFormValues, useForm } from "@/hooks/useForm";
 import { useMintRedeemPreview } from "@/hooks/useMintRedeemPreview";
 import { ApprovalButton } from "@/components/shared/ApprovalButton";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
-import { useClubActivation } from "@/hooks/useClubActivation";
 import { formatDuration } from "@/lib/utils";
 import { POST_TX_MODAL } from "@/components/modals/PostTxModal";
-import { Checkbox } from "@/components/ui/Checkbox";
 import { useClubAuction } from "@/hooks/useClubAuction";
+import { useClubActivation } from "@/hooks/useClubActivation";
 
-export const MintPanel = ({
+export const StakePanel = ({
   clubAddress,
 }: {
   clubAddress: Address;
 }) => {
-  const [checked, setChecked] = useState<boolean>(false);
-
   const { open: openModal } = useModals();
-  const { address } = useAccount();
+  const { address: connectedAddress } = useAccount();
   const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress)
-  const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
+  const { data: clubMember, refetch: refetchClubMember } = useClubMember(connectedAddress, clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
   const { data: auctionData } = useClubAuction(clubAddress);
-  const { activated, locked, remaining } = useClubActivation(clubAddress);
+  const { activated } = useClubActivation(clubAddress);
   const { watchAsset } = useWatchAsset();
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
@@ -51,8 +47,9 @@ export const MintPanel = ({
     decimals: assetTokenDecimals,
   } = assetToken;
 
+  console.log({ creditVaultContract, assetTokenAddress });
+
   const {
-    image,
     totalAssets,
     symbol: clubTokenSymbol,
     decimals: clubTokenDecimals,
@@ -113,12 +110,19 @@ export const MintPanel = ({
     return null;
   };
 
+  const footerStats = [
+    {
+      title: "Withdraw Period",
+      value: formatDuration(Number(lockupPeriod)),
+    },
+  ];
+
   return (
     <>
       <Input
         type="number"
         name="amount"
-        label="Mint Amount"
+        label="Amount"
         rightLabel={`Max. ${formatDecimals(minTarget - totalAssets < sendTokenBalance ? minTarget - totalAssets : sendTokenBalance, sendTokenDecimals, 2)} ${sendTokenSymbol}`}
         rightLabelAction={() => {
           const maxAmount = minTarget - totalAssets;
@@ -132,42 +136,21 @@ export const MintPanel = ({
         error={inputError()}
       />
 
-      <h2 className="mt-4 mb-0.5">You receive:</h2>
-      <div className="bg-stone-100 p-1 rounded-2xl">
-        <Input
-          disabled={true}
-          value={formatDecimals(amountReceived, receiveTokenDecimals, 2, false)}
-          suffix={(
-            <img
-              width={24}
-              height={24}
-              src={image}
-              alt="Fund Image"
-              className="border border-black"
-            />
-          )}
-        />
-      </div>
-
-      <div className="flex gap-1 p-2 border border-black font-mono my-4 bg-stone-100">
-        <Checkbox
-          id="terms"
-          className="mr-1"
-          checked={checked}
-          onCheckedChange={(value: boolean) => setChecked(value)}
-        />
-        <label
-          htmlFor="terms"
-          className="text-xs peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-          I understand that this is risky, that I may lose all my funds, and I will not be able to withdraw funds until the lockup period ends.
-        </label>
-      </div>
+      <ul className="my-2 flex flex-col items-center justify-between">
+        {footerStats.map(({ title, value }, index) => (
+          <li key={index} className="flex items-center justify-between gap-2 w-full py-2">
+            <h3 className="font-medium text-stone-500">{title}</h3>
+            <p className="font-mono font-medium flex gap-1 items-center">
+              {value}
+            </p>
+          </li>
+        ))}
+      </ul>
 
       <ApprovalButton
-        owner={address}
+        owner={connectedAddress}
         amount={amountRaw}
-        disabled={!!inputError() || amountRaw < 0n || assetBalance < amountRaw || !checked}
+        disabled={!!inputError() || amountRaw < 0n || assetBalance < amountRaw}
         spender={creditVaultContract.address}
         tokenContract={{
           abi: erc20Abi,
@@ -176,30 +159,28 @@ export const MintPanel = ({
         actionProps={{
           ...creditVaultContract,
           functionName: "deposit",
-          args: [amountRaw, address],
-          label: amountRaw <= 0n
-            ? "Enter an amount"
-            : amountRaw > assetBalance
-              ? "Insufficient balance"
-              : `Mint ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`,
+          args: [amountRaw, connectedAddress],
+          label: !activated ? "Club not activated"
+            : amountRaw <= 0n
+              ? "Enter an amount"
+              : amountRaw > assetBalance
+                ? "Insufficient balance"
+                : `Stake ${formatDecimals(amountRaw, sendTokenDecimals, 2)} ${sendTokenSymbol}`,
           disabled: !!errors.amount || amountRaw < 0n || assetBalance < amountRaw,
           onComplete: async (hash: string) => {
             refetchClubData();
             refetchClubMember();
             openModal(POST_TX_MODAL, {
-              header: `Your mint was successful`,
-              title: "Mint",
+              header: `Your stake was successful`,
+              title: "Stake",
               content: (
                 <>
-                  <p className="font-mono mt-2">You successfully minted {formatDecimals(amountReceived, receiveTokenDecimals, 2, false)} {receiveTokenSymbol}</p>
+                  <p className="font-mono mt-2">You
+                    received {formatDecimals(amountReceived, receiveTokenDecimals, 2, false)} {receiveTokenSymbol}</p>
 
                   <div className="flex items-center gap-2 my-4 text-sm text-blue-600">
                     <CalendarIcon width={24} className="fill" />
-                    Redeemable: {activated
-                    ? locked
-                      ? formatDuration(remaining)
-                      : "Now"
-                    : formatDuration(Number(lockupPeriod))}
+                    Withdrawable in: {formatDuration(Number(lockupPeriod))}
                   </div>
                 </>
               ),

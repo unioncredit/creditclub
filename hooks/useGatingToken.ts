@@ -1,36 +1,31 @@
-import { Address, erc20Abi, erc721Abi, zeroAddress } from "viem";
+import { Address, erc20Abi, zeroAddress } from "viem";
 import { useAccount, useReadContracts } from "wagmi";
 
-import { DEFAULT_CHAIN_ID, GATING_TOKEN_TYPE } from "@/constants";
-import { useClubData } from "@/hooks/useClubData";
+import { DEFAULT_CHAIN_ID } from "@/constants";
+import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 
 export const useGatingToken = (clubAddress: Address) => {
   const { address } = useAccount();
-  const { data: clubData } = useClubData(clubAddress);
+  const { data: memberNftData } = useClubMemberNft(clubAddress);
 
   const {
     gatingTokenAddress,
-    gatingTokenType,
-  } = clubData;
-
-  const tokenAbi = gatingTokenType === GATING_TOKEN_TYPE.ERC20
-    ? erc20Abi
-    : erc721Abi;
+  } = memberNftData;
 
   const contracts = [
     {
-      abi: tokenAbi,
+      abi: erc20Abi,
       address: gatingTokenAddress,
       functionName: "balanceOf",
       args: [address],
     },
     {
-      abi: tokenAbi,
+      abi: erc20Abi,
       address: gatingTokenAddress,
       functionName: "name",
     },
     {
-      abi: tokenAbi,
+      abi: erc20Abi,
       address: gatingTokenAddress,
       functionName: "symbol",
     }
@@ -58,7 +53,6 @@ export const useGatingToken = (clubAddress: Address) => {
     name,
     symbol,
     address: gatingTokenAddress,
-    type: gatingTokenType,
     enabled: gatingTokenAddress !== zeroAddress,
     qualified: balance > 0n,
   };

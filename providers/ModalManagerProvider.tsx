@@ -17,6 +17,8 @@ import { ACCOUNT_MODAL, AccountModal } from "@/components/modals/AccountModal";
 import { CLUB_PARAMETERS_MODAL, ClubParametersModal } from "@/components/modals/ClubParametersModal";
 import { BUY_SELL_MODAL, BuySellModal } from "@/components/modals/BuySellModal";
 import { REWARDS_RAFFLE_WINNER_MODAL, RewardsRaffleWinnerModal } from "@/components/modals/RewardsRaffleWinnerModal";
+import { PRESALE_MODAL, PresaleModal } from "@/components/modals/PresaleModal";
+import { STAKE_UNSTAKE_MODAL, StakeUnstakeModal } from "@/components/modals/StakeUnstakeModal";
 
 interface IModalManagerContext {
   open: (key: string, props?: any) => void;
@@ -39,10 +41,12 @@ const modals: Record<string, any> = {
   [MINT_REDEEM_MODAL]: MintRedeemModal,
   [POST_MINT_NFT_MODAL]: PostMintNftModal,
   [POST_TX_MODAL]: PostTxModal,
+  [PRESALE_MODAL]: PresaleModal,
   [REPAY_MODAL]: RepayModal,
   [REWARDS_MODAL]: RewardsModal,
   [REWARDS_RAFFLE_MODAL]: RewardsRaffleModal,
   [REWARDS_RAFFLE_WINNER_MODAL]: RewardsRaffleWinnerModal,
+  [STAKE_UNSTAKE_MODAL]: StakeUnstakeModal,
   [UNION_REPAY_MODAL]: UnionRepayModal,
   [UNISWAP_SWAP_MODAL]: UniswapSwapModal,
 };

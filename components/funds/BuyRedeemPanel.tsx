@@ -8,12 +8,11 @@ import { useClubData } from "@/hooks/useClubData";
 import { useModals } from "@/providers/ModalManagerProvider";
 import { MINT_REDEEM_MODAL } from "@/components/modals/MintRedeemModal";
 import { formatDecimals, commify } from "@/lib/format";
-import { formatDuration } from "@/lib/utils";
 import { useTokenPriceData } from "@/hooks/useTokenPriceData";
 import { useClubMember } from "@/hooks/useClubMember";
-import { useClubActivation } from "@/hooks/useClubActivation";
 import { PoolMarketData } from "@/components/funds/PoolMarketData";
 import { BUY_SELL_MODAL } from "@/components/modals/BuySellModal";
+import { ShadowButton } from "@/components/ui/ShadowButton";
 
 export const BuyRedeemPanel = ({
   clubAddress,
@@ -25,7 +24,6 @@ export const BuyRedeemPanel = ({
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: priceData } = useTokenPriceData(clubAddress);
-  const { activated, locked, remaining } = useClubActivation(clubAddress);
   const { watchAsset } = useWatchAsset();
 
   const {
@@ -36,7 +34,7 @@ export const BuyRedeemPanel = ({
     symbol,
     decimals,
     totalSupply,
-    lockupPeriod,
+    stakedBalance,
   } = clubData;
 
   const { price: tokenPrice } = priceData;
@@ -45,21 +43,17 @@ export const BuyRedeemPanel = ({
 
   const footerStats = [
     {
-      title: "Your Holdings",
+      title: "Balance",
       value: formatDecimals(clubTokenBalance, decimals, 2),
+    },
+    {
+      title: "Staked",
+      value: formatDecimals(stakedBalance, decimals, 2),
     },
     {
       title: "Market value",
       value: `~$${commify((Number(formatUnits(clubTokenBalance, decimals)) * tokenPrice), 2)}`
     },
-    {
-      title: "Redeemable",
-      value: activated
-        ? locked
-          ? formatDuration(remaining)
-          : "Now"
-        : formatDuration(Number(lockupPeriod)),
-    }
   ];
 
   return (
@@ -99,8 +93,18 @@ export const BuyRedeemPanel = ({
       </header>
 
       <ul className="mt-4 flex flex-col items-center justify-between border-b">
+        <li className="flex items-center justify-between gap-2 w-full border-t py-2 text-zinc-800">
+          <h3 className="font-medium text-lg">Your Holdings</h3>
+          <ShadowButton
+            size="pill"
+            onClick={() => alert(0)}
+          >
+            Stake
+          </ShadowButton>
+        </li>
+
         {footerStats.map(({ title, value }, index) => (
-          <li key={index} className="flex items-center justify-between gap-2 w-full border-t py-2">
+          <li key={index} className="px-2 flex items-center justify-between gap-2 w-full border-t py-2">
             <h3 className="font-medium text-lg text-stone-500">{title}</h3>
             <p className="text-lg font-mono font-medium flex gap-1 items-center">
               {value}

@@ -47,19 +47,15 @@ export const useClubData = (clubAddress: Address) => {
     },
     {
       ...creditVaultContract,
-      functionName: "costToCall",
+      functionName: "FEELING_LUCKY_COST",
     },
     {
       ...creditVaultContract,
-      functionName: "costToMint",
+      functionName: "lastReward",
     },
     {
       ...creditVaultContract,
-      functionName: "checkpoint",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "cooldown",
+      functionName: "rewardCooldown",
     },
     {
       ...creditVaultContract,
@@ -71,31 +67,15 @@ export const useClubData = (clubAddress: Address) => {
     },
     {
       ...creditVaultContract,
-      functionName: "memberNFT",
+      functionName: "nft",
     },
     {
       ...creditVaultContract,
-      functionName: "gatingToken",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "gatingTokenType",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "memberMax"
-    },
-    {
-      ...creditVaultContract,
-      functionName: "vaultTokenEnabled"
+      functionName: "isTokenEnabled"
     },
     {
       ...creditVaultContract,
       functionName: "totalAssets"
-    },
-    {
-      ...creditVaultContract,
-      functionName: "initialRaise"
     },
     {
       ...creditVaultContract,
@@ -107,11 +87,15 @@ export const useClubData = (clubAddress: Address) => {
     },
     {
       ...creditVaultContract,
+      functionName: "lockupEnd"
+    },
+    {
+      ...creditVaultContract,
       functionName: "asset",
     },
     {
       ...creditVaultContract,
-      functionName: "openRaise",
+      functionName: "isPublic",
     },
     {
       ...creditVaultContract,
@@ -131,11 +115,23 @@ export const useClubData = (clubAddress: Address) => {
     },
     {
       ...creditVaultContract,
-      functionName: "activationDate",
+      functionName: "isActivated",
     },
     {
       ...creditVaultContract,
       functionName: "rewardManager",
+    },
+    {
+      ...creditVaultContract,
+      functionName: "auction",
+    },
+    {
+      ...creditVaultContract,
+      functionName: "image",
+    },
+    {
+      ...creditVaultContract,
+      functionName: "staking",
     },
   ];
 
@@ -146,6 +142,7 @@ export const useClubData = (clubAddress: Address) => {
     })),
     query: {
       enabled: !!clubAddress,
+      staleTime: Infinity,
     }
   });
 
@@ -154,32 +151,31 @@ export const useClubData = (clubAddress: Address) => {
     stakedBalance = 0n,
     fixedBidPrice = 0n,
     unionBalance = 0n,
-    callerPercent = 0,
-    winnerPercent = 0,
+    callerPercent = 0n,
+    winnerPercent = 0n,
     unclaimedRewards = 0n,
     costToCall = 0n,
-    costToMint = 0n,
-    checkpoint = 0n,
-    cooldown = 0,
+    lastReward = 0n,
+    rewardCooldown = 0,
     name = "",
     symbol = "",
     memberNftAddress = zeroAddress,
-    gatingTokenAddress = zeroAddress,
-    gatingTokenType = 0,
-    memberMax = 0n,
-    vaultTokenEnabled = false,
+    isTokenEnabled = false,
     totalAssets = 0n,
-    initialRaise = 0n,
     decimals = 0,
     lockupPeriod = 0n,
+    lockupEnd = 0n,
     assetAddress = zeroAddress,
-    openRaise = false,
+    isPublic = false,
     vestingDurationInSeconds = 0n,
     startingPercentTrust = 0n,
     totalSupply = 0n,
     creatorAddress = zeroAddress,
-    activationDate = 0n,
+    isActivated = false,
     rewardsManagerAddress = zeroAddress,
+    auctionAddress = zeroAddress,
+    image = "",
+    stakingAddress = zeroAddress,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -187,35 +183,32 @@ export const useClubData = (clubAddress: Address) => {
     stakedBalance,
     fixedBidPrice,
     unionBalance,
-    callerPercent,
-    winnerPercent,
-    bidBucketPercent: TOTAL_PERCENT - callerPercent - winnerPercent,
+    callerPercent: Number(callerPercent),
+    winnerPercent: Number(winnerPercent),
+    bidBucketPercent: TOTAL_PERCENT - Number(callerPercent) - Number(winnerPercent),
     unclaimedRewards,
     costToCall,
-    costToMint,
-    checkpoint,
-    cooldown,
+    lastReward,
+    rewardCooldown,
     name,
     symbol,
     memberNftAddress,
-    gatingTokenAddress,
-    gatingTokenType,
-    memberMax,
-    vaultTokenEnabled,
+    isTokenEnabled,
     totalAssets,
-    initialRaise,
     decimals,
     lockupPeriod,
+    lockupEnd,
     assetAddress,
-    openRaise,
+    isPublic,
     vestingDurationInSeconds,
     startingPercentTrust,
     totalSupply,
-    raiseOver: totalAssets >= initialRaise,
     creatorAddress,
-    activationDate,
+    isActivated,
     rewardsManagerAddress,
-    activated: activationDate > 0n,
+    auctionAddress,
+    image,
+    stakingAddress,
   };
 
   return { ...result, data };
