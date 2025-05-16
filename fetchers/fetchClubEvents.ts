@@ -13,6 +13,10 @@ export interface IClubEvent {
 }
 
 export const fetchClubEvents = async (vaultAddress: Address) =>{
+  if (!vaultAddress) {
+    return [];
+  }
+
   const query = gql`
       query ($vaultAddress: String!, $limit: Int!) {
           events (

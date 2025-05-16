@@ -13,6 +13,10 @@ export const fetchInvitations = async (
   vaultAddress: Address,
   where: Record<string, string> = {}
 ) => {
+  if (!vaultAddress) {
+    return [];
+  }
+
   const query = gql`
       query ($limit: Int!, $where: invitationFilter!) {
           invitations (

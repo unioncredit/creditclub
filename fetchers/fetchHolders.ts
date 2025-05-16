@@ -7,6 +7,10 @@ export interface Holder {
 }
 
 export const fetchHolders = async (clubAddress: Address) => {
+  if (!clubAddress) {
+    return [];
+  }
+
   const query = gql`
       query ($vaultAddress: String!, $limit: Int!) {
           vaultHolders (
