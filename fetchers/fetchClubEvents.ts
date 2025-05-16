@@ -14,32 +14,34 @@ export interface IClubEvent {
 
 export const fetchClubEvents = async () =>{
   const query = gql`
-      query ($first: Int!) {
-          clubEvents (first: $first, orderBy:timestamp, orderDirection: desc) {
-              type
-              timestamp
-              amount
-              hash
-              account {
-                  id
+      query ($limit: Int!) {
+          events (limit: $limit, orderBy: "timestamp", orderDirection: "desc") {
+              items {
+                  type
+                  timestamp
+                  amount
+                  hash
+                  account
               }
           }
       }
   `;
 
   const variables = {
-    first: 4,
+    limit: 4,
   };
 
   // @ts-ignore
-  const resp: any = await request(process.env.NEXT_PUBLIC_SUBGRAPH_URL, query, variables);
+  const resp: any = await request(process.env.NEXT_PUBLIC_PONDER_URL, query, variables);
 
-  const flattened: IClubEvent[] = resp.clubEvents.map((item: any) => ({
+  const flattened: IClubEvent[] = resp.events.items.map((item: any) => ({
     type: item.type,
     amount: item.amount,
-    address: item.account.id,
+    address: item.account,
     hash: item.hash,
   }));
+
+  console.log({ flattened });
 
   return flattened;
 }

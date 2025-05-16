@@ -47,6 +47,7 @@ export const DUST_THRESHOLD = {
 };
 
 export const ActivityTypes = {
+  CLUB_CREATED: "CLUB_CREATED",
   LOADING: "LOADING",
   JOINED_CLUB: "JOINED_CLUB",
   UPDATED_TRUST: "UPDATED_TRUST",

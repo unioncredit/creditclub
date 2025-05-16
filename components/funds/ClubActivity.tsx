@@ -25,6 +25,14 @@ const texts = {
   [ActivityTypes.LOADING]: () => (
     <Skeleton width={320} height={28} shimmer />
   ),
+  [ActivityTypes.CLUB_CREATED]: (x: IClubEvent) => (
+    <>
+      <AddressLink address={x.address} /> ·
+      <a href={`https://basescan.org/tx/${x.hash}`} target="_blank" rel="noopener">
+        <span className="text-gray-500">Created the club</span>
+      </a>
+    </>
+  ),
   [ActivityTypes.JOINED_CLUB]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
@@ -121,6 +129,7 @@ const ActivityRow = ({
 }) => {
   const icons = {
     [ActivityTypes.LOADING]: null,
+    [ActivityTypes.CLUB_CREATED]: ConfettiIcon,
     [ActivityTypes.JOINED_CLUB]: ConfettiIcon,
     [ActivityTypes.BORROWED]: WithdrawIcon,
     [ActivityTypes.REPAID]: DepositIcon,
