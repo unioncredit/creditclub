@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { fetchClubEvents, IClubEvent } from "@/fetchers/fetchClubEvents";
+import { Address } from "viem";
 
-export const useClubActivity = () => {
+export const useClubActivity = (clubAddress: Address) => {
   const [data, setData] = useState<IClubEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetch = useCallback(async () => {
     setLoading(true);
-    const clubEvents = await fetchClubEvents();
+    const clubEvents = await fetchClubEvents(clubAddress);
 
     setData(clubEvents);
     setLoading(false);

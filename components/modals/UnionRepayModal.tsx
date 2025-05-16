@@ -43,7 +43,7 @@ export const UnionRepayModal = ({
   const { address: connectedAddress } = useAccount();
   const { data: member, refetch: refetchMember } = useUnionMember();
   const { data: rewards } = useRewardsManager(clubAddress);
-  const { refetch: refetchClubActivity } = useClubActivity();
+  const { refetch: refetchClubActivity } = useClubActivity(clubAddress);
 
   const { unionBalance, owed } = member;
   const { address: rewardsManagerAddress, unionPer, contractDaiBalance } = rewards;

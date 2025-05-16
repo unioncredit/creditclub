@@ -156,9 +156,13 @@ const ActivityRow = ({
   );
 };
 
-export const ClubActivity = () => {
+export const ClubActivity = ({
+  clubAddress,
+}: {
+  clubAddress: Address;
+}) => {
   const { token } = useToken();
-  const { data: activity } = useClubActivity();
+  const { data: activity } = useClubActivity(clubAddress);
 
   return (
     <div className="mt-6 text-left p-4 sm:p-4 border rounded-xl">

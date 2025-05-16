@@ -56,7 +56,7 @@ export default function FundSinglePage({
                 {stakedBalance > 0n && (
                   <ClubStats clubAddress={clubAddress} />
                 )}
-                <ClubActivity />
+                <ClubActivity clubAddress={clubAddress} />
               </section>
               <section className="flex-1 pl-6 flex flex-col justify-between max-w-[450px] md:pl-0 md:mt-4 md:max-w-none">
                 {isTokenEnabled && (

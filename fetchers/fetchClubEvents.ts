@@ -12,10 +12,15 @@ export interface IClubEvent {
   hash: Hash;
 }
 
-export const fetchClubEvents = async () =>{
+export const fetchClubEvents = async (vaultAddress: Address) =>{
   const query = gql`
-      query ($limit: Int!) {
-          events (limit: $limit, orderBy: "timestamp", orderDirection: "desc") {
+      query ($vaultAddress: String!, $limit: Int!) {
+          events (
+              limit: $limit,
+              orderBy: "timestamp",
+              orderDirection: "desc",
+              where: { vaultAddress: $vaultAddress }
+          ) {
               items {
                   type
                   timestamp
@@ -29,6 +34,7 @@ export const fetchClubEvents = async () =>{
 
   const variables = {
     limit: 4,
+    vaultAddress,
   };
 
   // @ts-ignore

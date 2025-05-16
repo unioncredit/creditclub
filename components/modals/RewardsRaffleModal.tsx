@@ -36,7 +36,7 @@ export const RewardsRaffleModal = ({
   const { complete, hours, minutes, seconds } = useRaffleCooldown(clubAddress);
   const { refetch: refetchClubData } = useClubData(clubAddress);
   const { refetch: refetchMember } = useClubMember(address, clubAddress);
-  const { refetch: refetchClubActivity } = useClubActivity();
+  const { refetch: refetchClubActivity } = useClubActivity(clubAddress);
   const {
     bidBucketBalance,
     bidBucketPercentage,
