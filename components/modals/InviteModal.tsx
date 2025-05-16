@@ -35,6 +35,7 @@ export const InviteModal = ({
   const { address: connectedAddress } = useAccount();
   const { data: member, refetch: refetchMember, isLoading: memberLoading } = useClubMember(connectedAddress, clubAddress);
   const { data: sentInvitations, addInvite, } = useSentInvitations({
+    clubAddress,
     sender: connectedAddress,
   });
 

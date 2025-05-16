@@ -1,9 +1,6 @@
 import { request, gql } from "graphql-request";
 import { Address } from "viem";
 
-import { objectToWhere } from "@/lib/utils";
-
-
 export interface IInvitation {
   id: string;
   sender: Address;
@@ -13,42 +10,42 @@ export interface IInvitation {
 }
 
 export const fetchInvitations = async (
+  vaultAddress: Address,
   where: Record<string, string> = {}
 ) => {
-  const whereQuery = objectToWhere(where);
   const query = gql`
-      query ($first: Int!) {
+      query ($limit: Int!, $where: invitationFilter!) {
           invitations (
-              first: $first,
-              orderBy:timestamp,
-              orderDirection: desc,
-              ${whereQuery}
+              limit: $limit,
+              where: $where,
           ) {
-              id
-              sender {
-                  id
+              items {
+                  id,
+                  sender,
+                  receiver,
+                  timestamp,
+                  block,
               }
-              receiver {
-                  id
-              }
-              timestamp
-              block
           }
       }
   `;
 
   const variables = {
     first: 50,
+    where: {
+      ...where,
+      vaultAddress,
+    }
   };
 
   // @ts-ignore
-  const resp: any = await request(process.env.NEXT_PUBLIC_SUBGRAPH_URL, query, variables);
+  const resp: any = await request(process.env.NEXT_PUBLIC_PONDER_URL, query, variables);
 
   // @ts-ignore
   const flattened: IInvitation[] = resp.invitations.map(item => ({
     id: item.id,
-    sender: item.sender.id,
-    receiver: item.receiver.id,
+    sender: item.sender,
+    receiver: item.receiver,
     timestamp: Number(item.timestamp),
     block: BigInt(item.block),
   }));

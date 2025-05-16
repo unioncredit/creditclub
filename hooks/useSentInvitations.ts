@@ -4,7 +4,13 @@ import { Address, zeroAddress } from "viem";
 import { fetchInvitations, IInvitation } from "@/fetchers/fetchInvitations";
 import { useCache } from "@/providers/CacheProvider";
 
-export const useSentInvitations = ({ sender }: { sender?: Address; }) => {
+export const useSentInvitations = ({
+  clubAddress,
+  sender,
+}: {
+  clubAddress: Address;
+  sender: Address | undefined;
+}) => {
   const cacheKey = `useSentInvitations__${sender}`;
   const { get, set } = useCache();
   const [data, setData] = useState<IInvitation[]>([]);
@@ -14,8 +20,8 @@ export const useSentInvitations = ({ sender }: { sender?: Address; }) => {
     if (!sender) return;
     setLoading(true);
     setData([]);
-    const invitations = await fetchInvitations({
-      sender: sender.toLowerCase(),
+    const invitations = await fetchInvitations(clubAddress, {
+      sender: sender?.toLowerCase(),
     });
 
     set(cacheKey, invitations);

@@ -4,7 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import { fetchInvitations, IInvitation } from "@/fetchers/fetchInvitations";
 import { useCache } from "@/providers/CacheProvider";
 
-export const useReceivedInvitation = ({ receiver }: { receiver?: Address; }) => {
+export const useReceivedInvitation = ({
+  clubAddress,
+  receiver,
+}: {
+  clubAddress: Address;
+  receiver: Address | undefined;
+}) => {
   const cacheKey = `useReceivedInvitation__${receiver}`;
   const { get, set } = useCache();
   const [data, setData] = useState<IInvitation | null>(null);
@@ -14,8 +20,8 @@ export const useReceivedInvitation = ({ receiver }: { receiver?: Address; }) => 
     if (!receiver) return;
     setLoading(true);
     setData(null);
-    const invitations = await fetchInvitations({
-      receiver: receiver.toLowerCase(),
+    const invitations = await fetchInvitations(clubAddress, {
+      receiver: receiver?.toLowerCase(),
     });
 
     const result = invitations.length > 0 ? invitations[0] : null;
