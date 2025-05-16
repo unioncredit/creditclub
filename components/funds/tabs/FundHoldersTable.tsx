@@ -65,14 +65,14 @@ export const FundHoldersTable = ({
 }: {
   clubAddress: Address;
 }) => {
-  const { data: holders } = useHolders();
+  const { data: holders } = useHolders(clubAddress);
   const { data: clubData } = useClubData(clubAddress);
   const { data: priceData }  = useTokenPriceData(clubAddress);
 
   const { decimals } = clubData;
   const { price: tokenPrice } = priceData;
 
-  const rows: FundHolderRow[] = holders.map(({ id: address, amount }, index) => ({
+  const rows: FundHolderRow[] = holders.map(({ address, amount }, index) => ({
     id: index,
     address,
     shares: formatDecimals(amount, decimals),

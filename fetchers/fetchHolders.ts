@@ -2,30 +2,36 @@ import { request, gql } from "graphql-request";
 import { Address } from "viem";
 
 export interface Holder {
-  id: Address;
+  address: Address;
   amount: bigint;
 }
 
-export const fetchHolders = async () => {
+export const fetchHolders = async (clubAddress: Address) => {
   const query = gql`
-      query ($first: Int!) {
-          holders (first: $first) {
-              id
-              amount
+      query ($vaultAddress: String!, $limit: Int!) {
+          vaultHolders (
+              limit: $limit,
+              where: { vaultAddress: $vaultAddress },
+          ) {
+              items {
+                  address: accountAddress
+                  amount
+              }
           }
       }
   `;
 
   const variables = {
-    first: 1000,
+    limit: 1000,
+    vaultAddress: clubAddress,
   };
 
   // @ts-ignore
-  const resp: any = await request(process.env.NEXT_PUBLIC_SUBGRAPH_URL, query, variables);
+  const resp: any = await request(process.env.NEXT_PUBLIC_PONDER_URL, query, variables);
 
   // @ts-ignore
   const flattened: Holder[] = resp.holders.map(item => ({
-    id: item.id,
+    address: item.address,
     amount: BigInt(item.amount),
   }));
 

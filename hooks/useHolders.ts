@@ -2,8 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 
 import { useCache } from "@/providers/CacheProvider";
 import { fetchHolders, Holder } from "@/fetchers/fetchHolders";
+import { Address } from "viem";
 
-export const useHolders = () => {
+export const useHolders = (clubAddress: Address) => {
   const cacheKey = "useHolders";
   const { get, set } = useCache();
   const [data, setData] = useState<Holder[]>([]);
@@ -12,7 +13,7 @@ export const useHolders = () => {
   const loadData = useCallback(async () => {
     setLoading(true);
     setData([]);
-    const holders = await fetchHolders();
+    const holders = await fetchHolders(clubAddress);
 
     set(cacheKey, holders);
     setData(holders);
