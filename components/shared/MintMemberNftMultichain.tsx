@@ -45,7 +45,7 @@ export const MintMemberNftMultichain = ({
   const tokenContract = useContract("token");
 
   const { isMember } = clubMember;
-  const { name, image } = clubData;
+  const { name, image, memberNftAddress } = clubData;
   const { membershipCost } = clubMemberNftData;
   const { initialTrustAmount, tokenId } = newMemberData;
 
@@ -69,13 +69,13 @@ export const MintMemberNftMultichain = ({
       }}
       actionConfig={{
         chainId: ChainId.BASE,
-        contractAddress: creditVaultContract.address,
+        contractAddress: memberNftAddress,
         cost: {
           amount: membershipCost,
           isNative: false,
           tokenAddress: tokenContract.address,
         },
-        signature: "function mintMemberNFT(address recipient)",
+        signature: "function mint(address guy)",
         args: [address],
       }}
       onTxPending={() => {
