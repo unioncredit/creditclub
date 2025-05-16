@@ -27,7 +27,7 @@ export const fetchHolders = async (clubAddress: Address) => {
 
   const variables = {
     limit: 1000,
-    vaultAddress: clubAddress,
+    vaultAddress: clubAddress.toLowerCase(),
   };
 
   // @ts-ignore

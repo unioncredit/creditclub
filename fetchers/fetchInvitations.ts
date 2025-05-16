@@ -38,7 +38,7 @@ export const fetchInvitations = async (
     first: 50,
     where: {
       ...where,
-      vaultAddress,
+      vaultAddress: vaultAddress.toLowerCase(),
     }
   };
 

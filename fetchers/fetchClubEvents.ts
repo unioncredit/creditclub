@@ -13,6 +13,8 @@ export interface IClubEvent {
 }
 
 export const fetchClubEvents = async (vaultAddress: Address) =>{
+  console.log({ vaultAddress });
+
   if (!vaultAddress) {
     return [];
   }
@@ -38,7 +40,7 @@ export const fetchClubEvents = async (vaultAddress: Address) =>{
 
   const variables = {
     limit: 4,
-    vaultAddress,
+    vaultAddress: vaultAddress.toLowerCase(),
   };
 
   // @ts-ignore
