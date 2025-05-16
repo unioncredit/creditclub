@@ -12,7 +12,6 @@ import { useTokenPriceData } from "@/hooks/useTokenPriceData";
 import { useClubMember } from "@/hooks/useClubMember";
 import { useErc20Token } from "@/hooks/useErc20Token";
 import { useClubAuction } from "@/hooks/useClubAuction";
-import { ShadowButton } from "@/components/ui/ShadowButton";
 import { PRESALE_MODAL } from "@/components/modals/PresaleModal";
 
 export const RaisingStats = ({
@@ -145,12 +144,6 @@ export const RaisingStats = ({
       <footer className="mt-4 px-2 flex flex-col items-center justify-between">
         <div className="flex items-center justify-between gap-2 w-full border-t py-2 text-zinc-800">
           <h3 className="font-medium text-lg">Your Holdings</h3>
-          <ShadowButton
-            size="pill"
-            onClick={() => alert(0)}
-          >
-            Stake
-          </ShadowButton>
         </div>
 
         {footerStats.map(({ title, value }, index) => (

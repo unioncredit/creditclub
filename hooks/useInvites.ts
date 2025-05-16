@@ -1,48 +1,27 @@
 import { Address } from "viem";
-import { useAccount, useReadContracts } from "wagmi";
+import { useAccount } from "wagmi";
 
-import { DEFAULT_CHAIN_ID } from "@/constants";
-import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
+import { useClubMember } from "@/hooks/useClubMember";
+import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 
 export const useInvites = (clubAddress: Address) => {
   const { address } = useAccount();
+  const { data: memberNftData, refetch: refetchClubMemberNft } = useClubMemberNft(clubAddress);
+  const { data: memberData, refetch: refetchClubMember } = useClubMember(address, clubAddress);
 
-  const creditVaultContract = useCreditVaultContract(clubAddress);
-
-  const contracts = [
-    {
-      ...creditVaultContract,
-      functionName: "inviteEnabled",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "invited",
-      args: [address]
-    },
-  ];
-
-  const result = useReadContracts({
-    // @ts-ignore
-    contracts: contracts.map(c => ({
-      ...c,
-      chainId: DEFAULT_CHAIN_ID,
-    })),
-    query: {
-      enabled: !!clubAddress,
-    }
-  });
-
-  const [
-    inviteEnabled = false,
-    invited = false,
-    // @ts-ignore
-  ] = result.data?.map(d => d.result as never) || [];
+  const { isInviteEnabled } = memberNftData;
+  const { isInvited } = memberData;
 
   const data = {
-    enabled: inviteEnabled,
-    memberInvitesEnabled: inviteEnabled,
-    qualified: invited
+    enabled: isInviteEnabled,
+    memberInvitesEnabled: isInviteEnabled,
+    qualified: isInvited
   };
 
-  return { ...result, data };
+  const refetch = () => {
+    refetchClubMemberNft();
+    refetchClubMember();
+  }
+
+  return { refetch, data };
 };

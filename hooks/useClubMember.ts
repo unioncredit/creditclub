@@ -1,4 +1,4 @@
-import { Address, erc20Abi } from "viem";
+import { Address, erc20Abi, zeroAddress } from "viem";
 import { useReadContracts } from "wagmi";
 
 import { DEFAULT_CHAIN_ID } from "@/constants";
@@ -63,6 +63,11 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
       ...creditVaultContract,
       functionName: "previewCreditClaim",
       args: [memberAddress],
+    },
+    {
+      ...memberNftContract,
+      functionName: "_invited",
+      args: [memberAddress],
     }
   ];
 
@@ -86,6 +91,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     vouch = 0n,
     tokenId = 0n,
     previewCreditClaim = 0n,
+    invitedByAddress = zeroAddress,
   ] = resultOne.data?.map(d => d.result as never) || [];
 
   const resultTwo = useReadContracts({
@@ -132,6 +138,8 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     badDebt: nftCreditStatus?.[2] || 0n,
     tier: nftCreditStatus?.[3] || 0,
     inviteCount: nftCreditStatus?.[4] || 0,
+    isInvited: invitedByAddress !== zeroAddress,
+    invitedByAddress,
   };
 
   const {
