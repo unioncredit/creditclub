@@ -15,7 +15,6 @@ import { BORROW_MODAL } from "@/components/modals/BorrowModal";
 import { REPAY_MODAL } from "@/components/modals/RepayModal";
 import { REWARDS_MODAL } from "@/components/modals/RewardsModal";
 import { Address } from "viem";
-import { INVITE_MODAL } from "@/components/modals/InviteModal";
 
 export const ClubHeader = ({
   clubAddress,
@@ -70,12 +69,6 @@ export const ClubHeader = ({
                 onClick={() => openModal(REWARDS_MODAL, {
                   clubAddress,
                 })}
-              />
-
-              <RoundedButton
-                icon={<VouchIcon width={24} />}
-                className="mr-2"
-                onClick={() => openModal(INVITE_MODAL)}
               />
 
               <PopoverMenu

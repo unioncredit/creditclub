@@ -35,7 +35,7 @@ export const fetchInvitations = async (
   `;
 
   const variables = {
-    first: 50,
+    limit: 50,
     where: {
       ...where,
       vaultAddress: vaultAddress.toLowerCase(),
@@ -46,7 +46,7 @@ export const fetchInvitations = async (
   const resp: any = await request(process.env.NEXT_PUBLIC_PONDER_URL, query, variables);
 
   // @ts-ignore
-  const flattened: IInvitation[] = resp.invitations.map(item => ({
+  const flattened: IInvitation[] = resp.invitations.items.map(item => ({
     id: item.id,
     sender: item.sender,
     receiver: item.receiver,

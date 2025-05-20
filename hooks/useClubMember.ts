@@ -68,6 +68,11 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
       ...memberNftContract,
       functionName: "_invited",
       args: [memberAddress],
+    },
+    {
+      ...memberNftContract,
+      functionName: "getInvites",
+      args: [memberAddress],
     }
   ];
 
@@ -92,6 +97,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     tokenId = 0n,
     previewCreditClaim = 0n,
     invitedByAddress = zeroAddress,
+    inviteCount = 0n,
   ] = resultOne.data?.map(d => d.result as never) || [];
 
   const resultTwo = useReadContracts({
@@ -104,7 +110,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
       },
       {
         ...memberNftContract,
-        functionName: "nftCreditStatus",
+        functionName: "getMember",
         args: [tokenId],
       }
     ].map(c => ({
@@ -133,13 +139,12 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     tokenId,
     previewCreditClaim,
     percentVested,
-    baseTrust: nftCreditStatus?.[0] || 0n,
-    active: nftCreditStatus?.[1] || false,
+    baseTrust: nftCreditStatus?.[1] || 0n,
     badDebt: nftCreditStatus?.[2] || 0n,
-    tier: nftCreditStatus?.[3] || 0,
-    inviteCount: nftCreditStatus?.[4] || 0,
+    active: nftCreditStatus?.[4] || false,
     isInvited: invitedByAddress !== zeroAddress,
     invitedByAddress,
+    inviteCount,
   };
 
   const {

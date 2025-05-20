@@ -3,8 +3,7 @@ import { useAccount } from "wagmi";
 import {
   ClaimIcon,
   CalendarIcon,
-  ChevronIcon,
-  ManageIcon,
+  VouchIcon,
   RepayIcon,
 // @ts-ignore
 } from "@unioncredit/ui";
@@ -22,7 +21,8 @@ import { useWrite } from "@/hooks/useWrite";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 import { useModals } from "@/providers/ModalManagerProvider";
 import { REPAY_MODAL } from "@/components/modals/RepayModal";
-import { CLUB_PARAMETERS_MODAL } from "@/components/modals/ClubParametersModal";
+import { INVITE_MODAL } from "@/components/modals/InviteModal";
+import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 
 export const ClubActions = ({
   clubAddress,
@@ -33,12 +33,14 @@ export const ClubActions = ({
   const { address } = useAccount();
   const { open: openModal } = useModals();
   const { data: clubData } = useClubData(clubAddress);
+  const { data: memberNftData } = useClubMemberNft(clubAddress);
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
   const { data: vestingData } = useVesting(clubAddress);
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
   const { name } = clubData;
+  const { isInviteEnabled } = memberNftData;
   const { owed, vouch, tokenId, previewCreditClaim } = clubMember;
   const {
     enabled: vestingEnabled,
@@ -55,13 +57,19 @@ export const ClubActions = ({
 
   return (
     <div className="p-4 border rounded-2xl bg-slate-50">
-      <header className="flex justify-between gap-2 border-b pb-4">
-        <h2 className="text-lg text-stone-500 font-medium">Club Member Actions</h2>
+      <header className="flex items-center justify-between gap-2 border-b pb-4">
+        <h2 className="text-xl text-stone-500 font-medium">Club Member Actions</h2>
 
-        <button className="flex items-center cursor-pointer" onClick={() => openModal(CLUB_PARAMETERS_MODAL, { clubAddress })}>
-          <ManageIcon width={24} height={24} />
-          <ChevronIcon width={24} height={24} className="-ml-1.5" />
-        </button>
+        {isInviteEnabled && (
+          <RoundedButton
+            size="small"
+            className="p-3 h-10"
+            icon={<VouchIcon width={24} />}
+            onClick={() => openModal(INVITE_MODAL, { clubAddress })}
+          >
+            Invite
+          </RoundedButton>
+        )}
       </header>
 
       <div className="mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-slate-100 rounded-2xl border">

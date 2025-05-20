@@ -29,7 +29,7 @@ const texts = {
     <>
       <AddressLink address={x.address} /> ·
       <a href={`https://basescan.org/tx/${x.hash}`} target="_blank" rel="noopener">
-        <span className="text-gray-500">Created the club</span>
+        <span className="text-gray-500"> Created the club</span>
       </a>
     </>
   ),

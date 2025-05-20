@@ -17,7 +17,10 @@ import { AddressInput } from "@/components/shared/AddressInput";
 import { InviteesTable } from "@/components/invites/InviteesTables";
 import { useSentInvitations } from "@/hooks/useSentInvitations";
 import { useClubMember } from "@/hooks/useClubMember";
-import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
+import { useMemberNftContract } from "@/hooks/useMemberNftContract";
+import { useClubData } from "@/hooks/useClubData";
+import { RoundedButton } from "@/components/ui/RoundedButton";
+import { REWARDS_MODAL } from "@/components/modals/RewardsModal";
 
 export const INVITE_MODAL = "invite-modal";
 
@@ -31,15 +34,16 @@ export const InviteModal = ({
 
   const addressInputRef = useRef<HTMLInputElement>(null);
 
-  const { close } = useModals();
+  const { open: openModal, close } = useModals();
   const { address: connectedAddress } = useAccount();
+  const { data: clubData } = useClubData(clubAddress);
   const { data: member, refetch: refetchMember, isLoading: memberLoading } = useClubMember(connectedAddress, clubAddress);
   const { data: sentInvitations, addInvite, } = useSentInvitations({
     clubAddress,
     sender: connectedAddress,
   });
 
-  const creditVaultContract = useCreditVaultContract(clubAddress);
+  const memberNftContract = useMemberNftContract(clubData.memberNftAddress);
 
   const { inviteCount } = member;
 
@@ -51,10 +55,10 @@ export const InviteModal = ({
   };
 
   const inviteUserButtonProps = useWrite({
-    ...creditVaultContract,
+    ...memberNftContract,
     functionName: "invite",
     args: [address],
-    disabled: !address,
+    disabled: !address || inviteCount <= 0n,
     onComplete: async () => {
       clearAddressInput();
       addInvite(address);
@@ -79,13 +83,24 @@ export const InviteModal = ({
             rightLabel={memberLoading ? (
               <Skeleton width={125} height={25} shimmer />
             ) : (
-              <>{inviteCount === 1 ? "1 invite" : `${inviteCount} invites`} remaining</>
+              <>
+                {inviteCount === 1n ? "1 invite" : `${inviteCount} invites`} remaining
+
+                <RoundedButton
+                  size="pill"
+                  variant="blue"
+                  className="min-w-[24px] max-h-[24px] text-lg rounded ml-1"
+                  onClick={() => openModal(REWARDS_MODAL)}
+                >
+                  +
+                </RoundedButton>
+              </>
             )}
           />
 
           <Button
             {...inviteUserButtonProps}
-            label="Invite user"
+            label={inviteCount <= 0 ? "No invites remaining" : "Invite user"}
             icon={VouchIcon}
             size="large"
             mt="16px"
