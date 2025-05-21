@@ -13,8 +13,6 @@ export interface IClubEvent {
 }
 
 export const fetchClubEvents = async (vaultAddress: Address) =>{
-  console.log({ vaultAddress });
-
   if (!vaultAddress) {
     return [];
   }
@@ -52,8 +50,6 @@ export const fetchClubEvents = async (vaultAddress: Address) =>{
     address: item.account,
     hash: item.hash,
   }));
-
-  console.log({ flattened });
 
   return flattened;
 }
