@@ -206,7 +206,12 @@ export const factoryAbi = [
             "internalType": "uint256"
           },
           {
-            "name": "withdrawFeeBps",
+            "name": "vaultWithdrawFeeBps",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "stakingWithdrawFeeBps",
             "type": "uint256",
             "internalType": "uint256"
           },
@@ -257,6 +262,11 @@ export const factoryAbi = [
           },
           {
             "name": "isSoulBound",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "isTiersEnabled",
             "type": "bool",
             "internalType": "bool"
           },
@@ -421,22 +431,7 @@ export const factoryAbi = [
         "internalType": "address"
       },
       {
-        "name": "uniswapPoolManager",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "uniswapPositionManager",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "uniswapPermit2",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "liquidityManagerFeeRecipient",
+        "name": "liquidityManager",
         "type": "address",
         "internalType": "address"
       },
@@ -589,6 +584,18 @@ export const factoryAbi = [
       },
       {
         "name": "staking",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "name": "withdrawBucket",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      },
+      {
+        "name": "auth",
         "type": "address",
         "indexed": false,
         "internalType": "address"

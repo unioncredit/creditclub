@@ -26,7 +26,8 @@ const createParamsInitialState = {
   fixedBidPrice: "1000000",
   membershipCost: "1000000",
   inviteCost: "1000000",
-  withdrawFeeBps: "0",
+  vaultWithdrawFeeBps: "500",
+  stakingWithdrawFeeBps: "500",
   feeRecipient: "0x0000000000000000000000000000000000000000",
   maxMembers: "100",
   minMembers: "25",
@@ -37,6 +38,7 @@ const createParamsInitialState = {
   isClosedEndFund: true,
   isInviteEnabled: true,
   isSoulBound: false,
+  isTiersEnabled: true,
   isPublic: true,
   isTokenEnabled: true,
 };
