@@ -45,7 +45,7 @@ export const MintMemberNftMultichain = ({
   const tokenContract = useContract("token");
 
   const { isMember } = clubMember;
-  const { name, image, memberNftAddress } = clubData;
+  const { name, image, memberNftAddress, isActivated } = clubData;
   const { membershipCost } = clubMemberNftData;
   const { initialTrustAmount, tokenId } = newMemberData;
 
@@ -59,6 +59,9 @@ export const MintMemberNftMultichain = ({
       disableLoadingModals={true}
       chains={[ChainId.OPTIMISM, ChainId.BASE]}
       disableGuard={async () => {
+        if (!isActivated) {
+          return { disable: true, message: "Club not activated" }
+        }
         if (isMember) {
           return { disable: true, message: "Already a member" }
         }

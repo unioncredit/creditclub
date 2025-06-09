@@ -1,4 +1,4 @@
-import { Address } from "viem";
+import { Address, maxUint256 } from "viem";
 import { useReadContracts } from "wagmi";
 
 import { DEFAULT_CHAIN_ID } from "@/constants";
@@ -64,9 +64,10 @@ export const useClubAuction = (clubAddress: Address) => {
     maxTarget,
     totalDeposits,
     end,
-    targetReached: totalDeposits >= minTarget,
     isKilled,
     isFailed,
+    hasMaxTarget: maxTarget !== maxUint256,
+    readyToSettle: totalDeposits >= minTarget,
   };
 
   return { ...result, data };

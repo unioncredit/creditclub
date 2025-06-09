@@ -13,6 +13,9 @@ import { useClubMember } from "@/hooks/useClubMember";
 import { useErc20Token } from "@/hooks/useErc20Token";
 import { useClubAuction } from "@/hooks/useClubAuction";
 import { PRESALE_MODAL } from "@/components/modals/PresaleModal";
+import { useClubActivation } from "@/hooks/useClubActivation";
+import { useWrite } from "@/hooks/useWrite";
+import { useAuctionContract } from "@/hooks/useAuctionContract";
 
 export const RaisingStats = ({
   clubAddress,
@@ -21,11 +24,14 @@ export const RaisingStats = ({
 }) => {
   const { address } = useAccount();
   const { open: openModal } = useModals();
-  const { data: clubData } = useClubData(clubAddress);
-  const { data: auctionData } = useClubAuction(clubAddress);
+  const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress);
+  const { data: auctionData, refetch: refetchAuctionData } = useClubAuction(clubAddress);
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: priceData } = useTokenPriceData(clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
+  const { readyToSettle } = useClubActivation(clubAddress);
+
+  const auctionContract = useAuctionContract(clubData.auctionAddress);
 
   const {
     stakedBalance,
@@ -38,16 +44,47 @@ export const RaisingStats = ({
     isPublic,
   } = clubData;
 
-  const { minTarget, maxTarget, totalDeposits, end, isKilled, isFailed } = auctionData;
+  const {
+    minTarget,
+    maxTarget,
+    totalDeposits,
+    end,
+    isKilled,
+    isFailed,
+    hasMaxTarget,
+  } = auctionData;
 
   const { price: tokenPrice } = priceData;
 
   const { decimals: assetDecimals } = assetToken;
 
-  const markValue = minTarget > 0n && maxTarget == 0n ? Number(minTarget) : undefined;
+  const markValue = minTarget > 0n && maxTarget == maxUint256 ? Number(minTarget) : undefined;
+
+  const activateClubButtonProps = useWrite({
+    ...auctionContract,
+    functionName: "settle",
+    onComplete: async () => {
+      refetchClubData();
+      refetchAuctionData();
+    }
+  });
 
   const barValues: DistributionBarItem[] = [
-    ...(minTarget == 0n && maxTarget > 0n ? [
+    ...(minTarget > 0n && !hasMaxTarget ? [
+      {
+        value: Number(totalDeposits),
+        label: `$${formatDecimals(totalDeposits, assetDecimals, 2)}`,
+        color: "green600",
+        title: "Min",
+      },
+      {
+        value: Number(totalDeposits),
+        label: `$${formatDecimals(totalDeposits, assetDecimals, 2)}`,
+        color: "green600",
+        title: "Raised",
+      },
+    ] : []),
+    ...(minTarget == 0n && hasMaxTarget && maxTarget > 0n ? [
       {
         value: Number(totalDeposits),
         label: `$${formatDecimals(totalDeposits, assetDecimals, 2)}`,
@@ -61,7 +98,7 @@ export const RaisingStats = ({
         title: "Max",
       }
     ] : []),
-    ...(minTarget > 0n && maxTarget > 0n ? [
+    ...(minTarget > 0n && hasMaxTarget && maxTarget > 0n ? [
       {
         value: Number(totalDeposits),
         label: `$${formatDecimals(totalDeposits, assetDecimals, 2)}`,
@@ -75,20 +112,6 @@ export const RaisingStats = ({
         title: "Max",
       }
     ] : []),
-    ...(minTarget > 0n && maxTarget == 0n ? [
-      {
-        value: Number(totalDeposits),
-        label: `$${formatDecimals(totalDeposits, assetDecimals, 2)}`,
-        color: "green600",
-        title: "Raised",
-      },
-      {
-        value: 0,
-        label: `$${formatDecimals(maxTarget, assetDecimals, 2)}`,
-        color: "blue50",
-        title: "Max",
-      }
-    ] : [])
   ];
 
   const footerStats = [
@@ -130,16 +153,33 @@ export const RaisingStats = ({
 
       <DistributionBarValues items={barValues} mark={markValue} />
 
-      <RoundedButton
-        size="large"
-        variant="dark"
-        className="w-full mt-4"
-        onClick={() => openModal(PRESALE_MODAL, {
-          clubAddress,
-        })}
-      >
-        {isKilled || isFailed ? "Refund" : "Mint"} ${symbol} Presale
-      </RoundedButton>
+      {readyToSettle ? (
+        <>
+          <p className="bg-blue-50 border border-blue-600 text-blue-600 text-sm rounded-lg p-2 mt-4 text-center">
+            The club has reached the required targets to be activated!
+          </p>
+
+          <RoundedButton
+            size="large"
+            variant="dark"
+            className="w-full mt-4"
+            {...activateClubButtonProps}
+          >
+            Activate Club
+          </RoundedButton>
+        </>
+      ) : (
+        <RoundedButton
+          size="large"
+          variant="dark"
+          className="w-full mt-4"
+          onClick={() => openModal(PRESALE_MODAL, {
+            clubAddress,
+          })}
+        >
+          {isKilled || isFailed ? "Refund" : "Mint"} ${symbol} Presale
+        </RoundedButton>
+      )}
 
       <footer className="mt-4 px-2 flex flex-col items-center justify-between">
         <div className="flex items-center justify-between gap-2 w-full border-t py-2 text-zinc-800">

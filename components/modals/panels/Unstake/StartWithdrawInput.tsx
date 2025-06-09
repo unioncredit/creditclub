@@ -11,7 +11,7 @@ import { IFormField, IFormValues, useForm } from "@/hooks/useForm";
 import { useClubData } from "@/hooks/useClubData";
 import { useClubMember } from "@/hooks/useClubMember";
 import { useWrite } from "@/hooks/useWrite";
-import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
+import { useStakingContract } from "@/hooks/useStakingContract";
 
 
 export const StartWithdrawInput = ({
@@ -24,15 +24,15 @@ export const StartWithdrawInput = ({
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(connectedAddress, clubAddress);
 
   const { image, decimals, symbol } = clubData;
-  const { clubTokenBalance } = clubMember;
+  const { stakedBalance } = clubMember;
 
-  const creditVaultContract = useCreditVaultContract(clubAddress);
+  const stakingContract = useStakingContract(clubData.stakingAddress);
 
   const validate = (inputs: IFormValues) => {
     const shares = inputs.shares as IFormField;
 
-    if (shares.raw > clubTokenBalance) {
-      return `Only ${formatDecimals(clubTokenBalance, decimals)} ${symbol} Available`;
+    if (shares.raw > stakedBalance) {
+      return `Only ${formatDecimals(stakedBalance, decimals)} ${symbol} Available`;
     }
   };
 
@@ -56,10 +56,10 @@ export const StartWithdrawInput = ({
   };
 
   const withdrawButtonProps = useWrite({
-    ...creditVaultContract,
-    functionName: "withdraw",
+    ...stakingContract,
+    functionName: "redeem",
     args: [sharesRaw, connectedAddress, connectedAddress],
-    disabled: !!errors.shares || sharesRaw <= 0n || clubTokenBalance < sharesRaw,
+    disabled: !!errors.shares || sharesRaw <= 0n || stakedBalance < sharesRaw,
     onComplete: async () => {
       refetchClubData();
       refetchClubMember();
@@ -84,8 +84,8 @@ export const StartWithdrawInput = ({
             className="border border-black"
           />
         )}
-        rightLabel={`Max. ${formatDecimals(clubTokenBalance, decimals, 2)}`}
-        rightLabelAction={() => setRawValue("shares", clubTokenBalance)}
+        rightLabel={`Max. ${formatDecimals(stakedBalance, decimals, 2)}`}
+        rightLabelAction={() => setRawValue("shares", stakedBalance)}
       />
 
       <Button

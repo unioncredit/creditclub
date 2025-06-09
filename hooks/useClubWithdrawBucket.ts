@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import { useAccount, useReadContracts } from "wagmi";
+import { useAccount, useReadContract, useReadContracts } from "wagmi";
 
 import { DEFAULT_CHAIN_ID } from "@/constants";
 import { useClubStaking } from "@/hooks/useClubStaking";
@@ -15,13 +15,24 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
 
   const withdrawBucketContract = useWithdrawBucketContract(withdrawBucketAddress);
 
-  const contracts = [
-    {
-      ...withdrawBucketContract,
-      functionName: "getWithdrawals",
-      args: [connectedAddress],
-    },
-  ];
+  const { data: numWithdrawals = 0n } = useReadContract({
+    ...withdrawBucketContract,
+    functionName: "getWithdrawalsLen",
+    // @ts-ignore
+    args: [connectedAddress],
+    query: {
+      enabled: !!connectedAddress && !!clubAddress,
+      staleTime: Infinity,
+    }
+  })
+
+  const contracts = Array(Number(numWithdrawals)).fill(0).map((_, i) => ({
+    ...withdrawBucketContract,
+    functionName: "getWithdrawals",
+    args: [connectedAddress, i],
+  }));
+
+  console.log(contracts);
 
   const result = useReadContracts({
     // @ts-ignore
@@ -35,9 +46,7 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
     }
   });
 
-  const [
-    withdrawals = [],
-  ] = result.data?.map(d => d.result as never) || [];
+  const withdrawals = result.data?.map(d => d.result as never) || [];
 
   const typedWithdrawals = withdrawals.map((w, id) => ({
     id,
@@ -48,6 +57,7 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
 
   const data = {
     withdrawBucketAddress,
+    numWithdrawals,
     withdrawals: typedWithdrawals,
     lockedWithdrawals: typedWithdrawals.filter(w => !hasPassed(w.end)),
     pendingWithdrawals: typedWithdrawals.filter(w => hasPassed(w.end) && !w.isComplete),

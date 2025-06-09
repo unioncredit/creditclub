@@ -30,7 +30,7 @@ export const MembershipClaim = ({
   const { data: memberNftdata } = useClubMemberNft(clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
 
-  const { name, image } = clubData;
+  const { name, image, isActivated } = clubData;
   const { maxMembers } = memberNftdata;
 
   const {
@@ -46,6 +46,10 @@ export const MembershipClaim = ({
   } = gatingTokenData;
 
   const requirementRows = [
+    {
+      label: "Club activated",
+      completed: isActivated,
+    },
     ...(tokenEnabled ? [
       {
         label: `Holder of ${tokenName} (${symbol})`,

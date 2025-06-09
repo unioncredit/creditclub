@@ -13,6 +13,7 @@ import { useClubMember } from "@/hooks/useClubMember";
 import { PoolMarketData } from "@/components/funds/PoolMarketData";
 import { BUY_SELL_MODAL } from "@/components/modals/BuySellModal";
 import { ShadowButton } from "@/components/ui/ShadowButton";
+import { STAKE_UNSTAKE_MODAL } from "@/components/modals/StakeUnstakeModal";
 
 export const BuyRedeemPanel = ({
   clubAddress,
@@ -97,7 +98,10 @@ export const BuyRedeemPanel = ({
           <h3 className="font-medium text-lg">Your Holdings</h3>
           <ShadowButton
             size="pill"
-            onClick={() => alert(0)}
+            onClick={() => openModal(STAKE_UNSTAKE_MODAL, {
+              activeTab: "stake",
+              clubAddress,
+            })}
           >
             Stake
           </ShadowButton>
@@ -117,7 +121,7 @@ export const BuyRedeemPanel = ({
         will need to buy it on secondary markets.</p>
 
       <div className="flex flex-col gap-1">
-        <div className="flex gap-1">
+        <div className="flex flex-col gap-1">
           <RoundedButton
             size="medium"
             variant="blue"

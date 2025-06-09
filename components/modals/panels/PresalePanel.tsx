@@ -44,6 +44,7 @@ export const PresalePanel = ({
     minTarget,
     maxTarget,
     end,
+    hasMaxTarget,
   } = auctionData;
 
   const {
@@ -80,12 +81,15 @@ export const PresalePanel = ({
     receiveTokenAddress: auctionAddress,
   };
 
+  console.log({ sendTokenBalance, sendTokenDecimals })
+  console.log(`Max. ${formatDecimals(maxTarget - totalAssets < sendTokenBalance ? maxTarget - totalAssets : sendTokenBalance, sendTokenDecimals, 2)} ${sendTokenSymbol}`);
+
   const validate = (inputs: IFormValues) => {
     const amount = inputs.amount as IFormField;
     if (amount.raw > sendTokenBalance) {
       return `Only ${formatDecimals(sendTokenBalance, sendTokenDecimals)} ${sendTokenSymbol} Available`;
     }
-    if (totalAssets + amount.raw > minTarget) {
+    if (totalAssets + amount.raw > maxTarget) {
       return `Maximum mint amount is ${formatDecimals(minTarget - totalAssets, sendTokenDecimals)} ${sendTokenSymbol}`;
     }
   };
@@ -98,6 +102,7 @@ export const PresalePanel = ({
     empty
   } = useForm({ decimals: sendTokenDecimals, validate });
 
+  const maxMintAmount = maxTarget - totalAssets < sendTokenBalance ? maxTarget - totalAssets : sendTokenBalance;
   const amount = values.amount as IFormField || empty;
   const amountRaw = amount.raw || 0n;
 
@@ -111,7 +116,7 @@ export const PresalePanel = ({
     if (errors.amount) {
       return errors.amount;
     }
-    if (totalAssets + amountRaw > minTarget) {
+    if (totalAssets + amountRaw > maxTarget) {
       return "You cannot mint more than the initial raise";
     }
 
@@ -125,12 +130,12 @@ export const PresalePanel = ({
       color: "green600",
       title: "Raised",
     },
-    {
+    ...(hasMaxTarget ? [{
       value: Number(maxTarget - totalDeposits),
       label: `$${formatDecimals(maxTarget - totalDeposits, assetTokenDecimals, 2)}`,
       color: "blue50",
       title: "Remaining",
-    }
+    }] : [])
   ];
 
   return (
@@ -139,10 +144,9 @@ export const PresalePanel = ({
         type="number"
         name="amount"
         label="Mint Amount"
-        rightLabel={`Max. ${formatDecimals(minTarget - totalAssets < sendTokenBalance ? minTarget - totalAssets : sendTokenBalance, sendTokenDecimals, 2)} ${sendTokenSymbol}`}
+        rightLabel={`Max. ${formatDecimals(maxMintAmount, sendTokenDecimals, 2)} ${sendTokenSymbol}`}
         rightLabelAction={() => {
-          const maxAmount = minTarget - totalAssets;
-          setRawValue("amount", maxAmount < sendTokenBalance ? maxAmount : sendTokenBalance);
+          setRawValue("amount", maxMintAmount);
         }}
         suffix={<Usdc />}
         placeholder="0.0"
@@ -188,7 +192,7 @@ export const PresalePanel = ({
               title: "Mint",
               content: (
                 <>
-                  <p className="font-mono mt-2">You successfully minted {formatDecimals(amountReceived, receiveTokenDecimals, 2, false)} {receiveTokenSymbol}</p>
+                  <p className="font-mono mt-2 text-center">You successfully minted {formatDecimals(amountReceived, receiveTokenDecimals, 2, false)} {receiveTokenSymbol}</p>
 
                   <div className="flex items-center gap-2 my-4 text-sm text-blue-600">
                     <CalendarIcon width={24} className="fill" />
