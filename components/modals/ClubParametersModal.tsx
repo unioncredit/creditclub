@@ -32,7 +32,8 @@ export const ClubParametersModal = ({
     startingPercentTrust,
     creatorAddress,
     rewardsManagerAddress,
-    memberNftAddress
+    memberNftAddress,
+    stakingAddress
   } = clubData;
   const {
     gatingTokenAddress
@@ -79,6 +80,10 @@ export const ClubParametersModal = ({
     {
       label: "Membership NFT",
       address: <AddressDisplay address={memberNftAddress} className="font-mono" />
+    },
+    {
+      label: "Staking Contract",
+      address: <AddressDisplay address={stakingAddress} className="font-mono" />
     }
   ];
 
