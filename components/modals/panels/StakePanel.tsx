@@ -2,7 +2,6 @@ import {
   Input,
   CalendarIcon,
   WalletIcon,
-  Usdc,
   // @ts-ignore
 } from "@unioncredit/ui";
 import { Address, erc20Abi } from "viem";
@@ -11,15 +10,15 @@ import { useAccount, useWatchAsset } from "wagmi";
 import { useModals } from "@/providers/ModalManagerProvider";
 import { useClubData } from "@/hooks/useClubData";
 import { useClubMember } from "@/hooks/useClubMember";
-import { useErc20Token } from "@/hooks/useErc20Token";
+//import { useErc20Token } from "@/hooks/useErc20Token";
 import { formatDecimals } from "@/lib/format";
 import { IFormField, IFormValues, useForm } from "@/hooks/useForm";
 import { useMintRedeemPreview } from "@/hooks/useMintRedeemPreview";
 import { ApprovalButton } from "@/components/shared/ApprovalButton";
-import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
+//import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 import { formatDuration } from "@/lib/utils";
 import { POST_TX_MODAL } from "@/components/modals/PostTxModal";
-import { useClubAuction } from "@/hooks/useClubAuction";
+//import { useClubAuction } from "@/hooks/useClubAuction";
 import { useClubActivation } from "@/hooks/useClubActivation";
 import { useClubStaking } from "@/hooks/useClubStaking";
 import { useStakingContract } from "@/hooks/useStakingContract";

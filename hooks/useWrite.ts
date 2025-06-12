@@ -56,7 +56,7 @@ export const useWrite = ({
       if (connectedChain?.id !== DEFAULT_CHAIN_ID) {
         const result = await switchChainAsync({ chainId: DEFAULT_CHAIN_ID });
         if (result.id !== DEFAULT_CHAIN_ID) {
-          throw "Did not connect to valid network";
+          throw new Error("Failed to switch to the correct network");
         }
       }
 
@@ -76,27 +76,61 @@ export const useWrite = ({
 
       const { status } = await waitForTransactionReceipt(config, {
         hash,
-      })
+        timeout: 60_000, // 60 second timeout
+      });
 
-      onComplete && onComplete(hash);
+      if (onComplete) {
+        await onComplete(hash);
+      }
 
       addToast(createToast(status === "success" ? ToastStatus.SUCCESS : ToastStatus.FAILED, hash));
 
       return true;
     } catch (e) {
       const error = e as WriteContractErrorType;
-      const fallback = {
-        title: "Error occurred",
-        content: "Sorry, an unknown error occurred.",
+      console.error("Transaction error:", error);
+
+      let errorMessage = {
+        title: "Transaction failed",
+        content: "Please try again",
       };
 
-      console.log({ error });
+      // Handle specific error types
+      if (error.name === "UserRejectedRequestError") {
+        errorMessage = {
+          title: "Transaction cancelled",
+          content: "You cancelled the transaction",
+        };
+      } else if (error.name === "TransactionExecutionError") {
+        errorMessage = {
+          title: "Transaction failed",
+          content: "The transaction was reverted. Please check your balance and try again.",
+        };
+      } else if (error.cause && typeof error.cause === 'object' && 'reason' in error.cause) {
+        const reason = (error.cause as any).reason;
+        if (reason?.includes("insufficient")) {
+          errorMessage = {
+            title: "Insufficient balance",
+            content: "You don't have enough balance for this transaction",
+          };
+        } else if (reason?.includes("allowance")) {
+          errorMessage = {
+            title: "Approval required",
+            content: "Please approve the token spending first",
+          };
+        }
+      } else if (error.message?.includes("User rejected")) {
+        errorMessage = {
+          title: "Transaction cancelled",
+          content: "You cancelled the transaction",
+        };
+      }
 
       addToast({
         link: null,
         variant: ToastStatus.FAILED,
         id: `${ToastStatus.FAILED}__${functionName}__${Date.now()}`,
-        ...(WagmiErrors[error.name] || fallback)
+        ...(WagmiErrors[error.name] || errorMessage)
       });
 
       return false;
@@ -123,6 +157,6 @@ export const useWrite = ({
         onClick,
       })
     }),
-    [icon, disabled, loading, isConnected, onClick]
+    [icon, disabled, loading, isConnected, onClick, connectWallet]
   );
 }
