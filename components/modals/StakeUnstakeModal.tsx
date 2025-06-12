@@ -7,7 +7,7 @@ import { useClubData } from "@/hooks/useClubData";
 import { useModals } from "@/providers/ModalManagerProvider";
 import { StakePanel } from "@/components/modals/panels/StakePanel";
 import { UnstakePanel } from "@/components/modals/panels/UnstakePanel";
-import { useErc20Token } from "@/hooks/useErc20Token";
+import { useClubStaking } from "@/hooks/useClubStaking";
 
 export const STAKE_UNSTAKE_MODAL = "stake-unstake-modal";
 
@@ -22,17 +22,17 @@ export const StakeUnstakeModal = ({
 
   const { close } = useModals();
   const { data: clubData } = useClubData(clubAddress);
-  const { data: assetToken } = useErc20Token(clubData.assetAddress);
+  const { data: stakingData } = useClubStaking(clubAddress);
 
   const { symbol: clubTokenSymbol } = clubData;
-  const { symbol: assetTokenSymbol } = assetToken;
+  const { symbol: stakingTokenSymbol } = stakingData;
 
   const action = tab === "stake" ? "Stake" : "Unstake";
 
   return (
     <ModalOverlay onClick={close}>
       <Modal>
-        <Modal.Header title={`${action} ${tab === "stake" ? assetTokenSymbol : clubTokenSymbol}`} onClose={close} />
+        <Modal.Header title={`${action} ${tab === "stake" ? clubTokenSymbol : stakingTokenSymbol}`} onClose={close} />
         <Modal.Body>
           <SegmentedControl
             value={tab}

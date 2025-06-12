@@ -21,6 +21,8 @@ import { formatDuration } from "@/lib/utils";
 import { POST_TX_MODAL } from "@/components/modals/PostTxModal";
 import { useClubAuction } from "@/hooks/useClubAuction";
 import { useClubActivation } from "@/hooks/useClubActivation";
+import { useClubStaking } from "@/hooks/useClubStaking";
+import { useStakingContract } from "@/hooks/useStakingContract";
 
 export const StakePanel = ({
   clubAddress,
@@ -31,30 +33,24 @@ export const StakePanel = ({
   const { address: connectedAddress } = useAccount();
   const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress)
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(connectedAddress, clubAddress);
-  const { data: assetToken } = useErc20Token(clubData.assetAddress);
-  const { data: auctionData } = useClubAuction(clubAddress);
+  const { data: stakingData } = useClubStaking(clubAddress);
   const { activated } = useClubActivation(clubAddress);
   const { watchAsset } = useWatchAsset();
 
-  const creditVaultContract = useCreditVaultContract(clubAddress);
+  const stakingContract = useStakingContract(clubData.stakingAddress);
 
-  const { assetBalance } = clubMember;
-  const { minTarget } = auctionData;
-
-  const {
-    address: assetTokenAddress,
-    symbol: assetTokenSymbol,
-    decimals: assetTokenDecimals,
-  } = assetToken;
-
-  console.log({ creditVaultContract, assetTokenAddress });
+  const { clubTokenBalance } = clubMember;
 
   const {
-    totalAssets,
-    symbol: clubTokenSymbol,
-    decimals: clubTokenDecimals,
-    lockupPeriod,
+    image,
+    symbol: vaultTokenSymbol,
+    decimals: vaultTokenDecimals,
   } = clubData;
+
+  const {
+    symbol: stakingTokenSymbol,
+    decimals: stakingTokenDecimals,
+  } = stakingData;
 
   const {
     sendTokenSymbol,
@@ -64,21 +60,18 @@ export const StakePanel = ({
     receiveTokenDecimals,
     receiveTokenAddress,
   } = {
-    sendTokenSymbol: assetTokenSymbol,
-    sendTokenBalance: assetBalance,
-    sendTokenDecimals: assetTokenDecimals,
-    receiveTokenSymbol: clubTokenSymbol,
-    receiveTokenDecimals: clubTokenDecimals,
-    receiveTokenAddress: clubAddress,
+    sendTokenSymbol: vaultTokenSymbol,
+    sendTokenBalance: clubTokenBalance,
+    sendTokenDecimals: vaultTokenDecimals,
+    receiveTokenSymbol: stakingTokenSymbol,
+    receiveTokenDecimals: stakingTokenDecimals,
+    receiveTokenAddress: clubData.stakingAddress,
   };
 
   const validate = (inputs: IFormValues) => {
     const amount = inputs.amount as IFormField;
     if (amount.raw > sendTokenBalance) {
       return `Only ${formatDecimals(sendTokenBalance, sendTokenDecimals)} ${sendTokenSymbol} Available`;
-    }
-    if (totalAssets + amount.raw > minTarget) {
-      return `Maximum mint amount is ${formatDecimals(minTarget - totalAssets, sendTokenDecimals)} ${sendTokenSymbol}`;
     }
   };
 
@@ -96,24 +89,20 @@ export const StakePanel = ({
   const { data: amountReceived } = useMintRedeemPreview({
     action: "mint",
     shares: amountRaw,
-    erc4626Address: clubAddress,
+    erc4626Address: clubData.stakingAddress,
   });
 
   const inputError = () => {
     if (errors.amount) {
       return errors.amount;
     }
-    if (totalAssets + amountRaw > minTarget) {
-      return "You cannot mint more than the initial raise";
-    }
-
     return null;
   };
 
   const footerStats = [
     {
       title: "Withdraw Period",
-      value: formatDuration(Number(lockupPeriod)),
+      value: formatDuration(Number(clubData.lockupPeriod)),
     },
   ];
 
@@ -123,12 +112,19 @@ export const StakePanel = ({
         type="number"
         name="amount"
         label="Amount"
-        rightLabel={`Max. ${formatDecimals(minTarget - totalAssets < sendTokenBalance ? minTarget - totalAssets : sendTokenBalance, sendTokenDecimals, 2)} ${sendTokenSymbol}`}
+        rightLabel={`Max. ${formatDecimals(sendTokenBalance, sendTokenDecimals, 2)} ${sendTokenSymbol}`}
         rightLabelAction={() => {
-          const maxAmount = minTarget - totalAssets;
-          setRawValue("amount", maxAmount < sendTokenBalance ? maxAmount : sendTokenBalance);
+          setRawValue("amount", sendTokenBalance);
         }}
-        suffix={<Usdc />}
+        suffix={(
+          <img
+            width={24}
+            height={24}
+            src={image}
+            alt="Vault Token"
+            className="border border-black"
+          />
+        )}
         placeholder="0.0"
         className="mt-4"
         value={amount.formatted}
@@ -150,23 +146,23 @@ export const StakePanel = ({
       <ApprovalButton
         owner={connectedAddress}
         amount={amountRaw}
-        disabled={!!inputError() || amountRaw < 0n || assetBalance < amountRaw}
-        spender={creditVaultContract.address}
+        disabled={!!inputError() || amountRaw < 0n || clubTokenBalance < amountRaw}
+        spender={stakingContract.address}
         tokenContract={{
           abi: erc20Abi,
-          address: assetTokenAddress,
+          address: clubAddress, // Vault token address
         }}
         actionProps={{
-          ...creditVaultContract,
+          ...stakingContract,
           functionName: "deposit",
           args: [amountRaw, connectedAddress],
           label: !activated ? "Club not activated"
             : amountRaw <= 0n
               ? "Enter an amount"
-              : amountRaw > assetBalance
+              : amountRaw > clubTokenBalance
                 ? "Insufficient balance"
                 : `Stake ${formatDecimals(amountRaw, sendTokenDecimals, 2)} ${sendTokenSymbol}`,
-          disabled: !!errors.amount || amountRaw < 0n || assetBalance < amountRaw,
+          disabled: !!errors.amount || amountRaw < 0n || clubTokenBalance < amountRaw,
           onComplete: async (hash: string) => {
             refetchClubData();
             refetchClubMember();
@@ -180,7 +176,7 @@ export const StakePanel = ({
 
                   <div className="flex items-center gap-2 my-4 text-sm text-blue-600">
                     <CalendarIcon width={24} className="fill" />
-                    Withdrawable in: {formatDuration(Number(lockupPeriod))}
+                    Withdrawable in: {formatDuration(Number(clubData.lockupPeriod))}
                   </div>
                 </>
               ),
