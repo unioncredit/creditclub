@@ -1,4 +1,4 @@
-import { useAccount, useReadContract } from "wagmi";
+import { useReadContract } from "wagmi";
 import { Address, formatEther, formatUnits } from "viem";
 import { useErc20Token } from "@/hooks/useErc20Token";
 
