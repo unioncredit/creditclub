@@ -1,5 +1,5 @@
 import { useReadContract } from "wagmi";
-import { Address, formatEther, formatUnits } from "viem";
+import { Address, formatUnits } from "viem";
 import { useErc20Token } from "@/hooks/useErc20Token";
 
 export const ApprovalDebug = ({
