@@ -22,7 +22,7 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
     args: [connectedAddress],
     query: {
       enabled: !!connectedAddress && !!clubAddress,
-      staleTime: Infinity,
+      staleTime: 30_000,
     }
   })
 
@@ -42,7 +42,7 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
     })),
     query: {
       enabled: !!clubAddress,
-      staleTime: Infinity,
+      staleTime: 30_000,
     }
   });
 

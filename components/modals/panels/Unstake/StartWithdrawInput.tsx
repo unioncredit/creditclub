@@ -12,6 +12,7 @@ import { useClubData } from "@/hooks/useClubData";
 import { useClubMember } from "@/hooks/useClubMember";
 import { useWrite } from "@/hooks/useWrite";
 import { useStakingContract } from "@/hooks/useStakingContract";
+import { useClubWithdrawBucket } from "@/hooks/useClubWithdrawBucket";
 
 
 export const StartWithdrawInput = ({
@@ -22,6 +23,7 @@ export const StartWithdrawInput = ({
   const { address: connectedAddress } = useAccount();
   const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress);
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(connectedAddress, clubAddress);
+  const { refetch: refetchWithdrawBucket } = useClubWithdrawBucket(clubAddress);
 
   const { image, decimals, symbol } = clubData;
   const { stakedBalance } = clubMember;
@@ -63,6 +65,7 @@ export const StartWithdrawInput = ({
     onComplete: async () => {
       refetchClubData();
       refetchClubMember();
+      refetchWithdrawBucket();
     }
   });
 
