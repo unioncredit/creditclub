@@ -96,12 +96,12 @@ export const useWrite = ({
       };
 
       // Handle specific error types
-      if (error.name === "UserRejectedRequestError") {
+      if ((error as any).name === "UserRejectedRequestError" || error.message?.includes("User rejected")) {
         errorMessage = {
           title: "Transaction cancelled",
           content: "You cancelled the transaction",
         };
-      } else if (error.name === "TransactionExecutionError") {
+      } else if ((error as any).name === "TransactionExecutionError") {
         errorMessage = {
           title: "Transaction failed",
           content: "The transaction was reverted. Please check your balance and try again.",
