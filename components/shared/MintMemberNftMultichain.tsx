@@ -49,6 +49,15 @@ export const MintMemberNftMultichain = ({
   const { membershipCost } = clubMemberNftData;
   const { initialTrustAmount, tokenId } = newMemberData;
 
+  // Add trust console logging for mint process
+  console.log("Mint Process - Trust Data:", {
+    initialTrustAmount: initialTrustAmount.toString(),
+    tokenId: tokenId.toString(),
+    membershipCost: membershipCost.toString(),
+    clubAddress,
+    userAddress: address
+  });
+
   const createToast = useToastProps("mintMemberNFT", creditVaultContract.address, [address]);
 
   return (
@@ -86,6 +95,13 @@ export const MintMemberNftMultichain = ({
       }}
       // @ts-ignore
       onTxReceipt={(r: TransactionReceipt) => {
+        console.log("Mint Successful - Trust Allocated:", {
+          startingCredit: initialTrustAmount.toString(),
+          tokenId: tokenId.toString(),
+          transactionHash: r.transactionHash,
+          clubName: name
+        });
+
         if (toastId) {
           closeToast(toastId);
         }

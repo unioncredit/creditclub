@@ -5,9 +5,11 @@ import { StatGrid, type StatGridRow } from "@/components/shared/StatGrid";
 import { useClubContacts } from "@/hooks/useClubContacts";
 import { useNewMemberData } from "@/hooks/useNewMemberData";
 import { useToken } from "@/hooks/useToken";
-import { format } from "@/lib/format";
+import { format, formatDecimals } from "@/lib/format";
 import { useIsQualified } from "@/hooks/useIsQualified";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
+import { useClubData } from "@/hooks/useClubData";
+import { useErc20Token } from "@/hooks/useErc20Token";
 
 export const IcoCreditTrustees = ({
   clubAddress,
@@ -22,9 +24,12 @@ export const IcoCreditTrustees = ({
   const { data: newMemberData } = useNewMemberData(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
   const { data: memberNftData } = useClubMemberNft(clubAddress);
+  const { data: clubData } = useClubData(clubAddress);
+  const { data: assetToken } = useErc20Token(clubData.assetAddress);
 
   const { initialTrustAmount } = newMemberData;
   const { membershipCost, maxMembers } = memberNftData;
+  const { decimals: assetTokenDecimals } = assetToken;
 
   const rows: StatGridRow[] = [
     {
@@ -41,7 +46,7 @@ export const IcoCreditTrustees = ({
     },
     {
       name: "Starting credit",
-      value: isConnected ? `$${format(initialTrustAmount, token)}` : "Connect Wallet"
+      value: isConnected ? `$${formatDecimals(initialTrustAmount, assetTokenDecimals)}` : "Connect Wallet"
     },
     {
       name: "Do you qualify?",

@@ -53,6 +53,19 @@ export const MintNftModal = ({
     tokenId,
   } = newMemberData;
 
+  // Debug trust amount formatting
+  console.log("Trust Amount Debug:", {
+    initialTrustAmount: initialTrustAmount.toString(),
+    totalTrustAmount: totalTrustAmount.toString(),
+    token,
+    assetTokenDecimals,
+    formattedInitialOld: format(initialTrustAmount, token),
+    formattedTotalOld: format(totalTrustAmount, token),
+    formattedInitialNew: formatDecimals(initialTrustAmount, assetTokenDecimals),
+    formattedTotalNew: formatDecimals(totalTrustAmount, assetTokenDecimals),
+    dustThreshold: initialTrustAmount > BigInt(0) && initialTrustAmount < BigInt("10000000000000000") ? "Below dust threshold" : "Above dust threshold"
+  });
+
   const rows: StatGridRow[] = [
     {
       name: "Cost to join",
@@ -60,18 +73,18 @@ export const MintNftModal = ({
     },
     {
       name: "Starting credit",
-      value: `$${format(initialTrustAmount, token)}`
+      value: `$${formatDecimals(initialTrustAmount, assetTokenDecimals)}`
     },
     {
       name: "Vesting Period",
-      value: vestingDurationInSeconds <= 0n
+      value: vestingDurationInSeconds <= BigInt(0)
         ? "No vesting"
         : formatDuration(Number(vestingDurationInSeconds))
     },
-    ...(vestingDurationInSeconds > 0n ? [
+    ...(vestingDurationInSeconds > BigInt(0) ? [
       {
         name: "Credit after vesting",
-        value: `$${format(totalTrustAmount, token)}`
+        value: `$${formatDecimals(totalTrustAmount, assetTokenDecimals)}`
       }
     ] : [])
   ];
