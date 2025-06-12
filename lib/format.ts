@@ -28,8 +28,13 @@ export const formatDecimals = (
   formatDust = true
 ) => {
   if (!value) value = 0n;
-  const dustThreshold = 10n ^ BigInt(decimals - 2)
-  if (formatDust && value < dustThreshold && value > 0n) return "<0.01";
+  // Calculate 10^(decimals - 2) for dust threshold (0.01 threshold)
+  let dustThreshold = BigInt(1);
+  const exponent = decimals - 2;
+  for (let i = 0; i < exponent; i++) {
+    dustThreshold *= BigInt(10);
+  }
+  if (formatDust && value < dustThreshold && value > BigInt(0)) return "<0.01";
   return commify(Number(formatUnits(value, decimals)), digits, rounded, stripTrailingZeros);
 };
 
