@@ -100,12 +100,13 @@ export const FundHoldersTable = ({
     <div>
       {/* Debug info for development */}
       {process.env.NODE_ENV === 'development' && (
-        <div className="mb-4 p-2 bg-blue-50 border border-blue-200 rounded text-xs font-mono">
-          <div className="font-bold mb-1">Debug Info:</div>
-          <div>Club Address: {clubAddress}</div>
-          <div>Total Supply: {formatDecimals(totalSupply, decimals)} tokens</div>
-          <div>Holders Found: {holders.length}</div>
-          <div>Loading: {loading ? 'Yes' : 'No'}</div>
+                 <div className="mb-4 p-2 bg-blue-50 border border-blue-200 rounded text-xs font-mono">
+           <div className="font-bold mb-1">Debug Info:</div>
+           <div>Club Address: {clubAddress}</div>
+           <div>Total Supply: {formatDecimals(totalSupply, decimals)} tokens</div>
+           <div>Holders Found: {holders.length}</div>
+           <div>Loading: {loading ? 'Yes' : 'No'}</div>
+           <div>Factory Address: {process.env.NEXT_PUBLIC_FACTORY_ADDRESS || 'Not set'}</div>
           {totalSupply > 0n && holders.length === 0 && !loading && (
             <div className="text-red-600 font-bold mt-2">
               ⚠️ Issue: Token has supply but no holders in database

@@ -32,6 +32,7 @@ export const fetchHolders = async (clubAddress: Address) => {
 
   console.log('fetchHolders - Request variables:', variables);
   console.log('fetchHolders - Ponder URL:', process.env.NEXT_PUBLIC_PONDER_URL);
+  console.log('fetchHolders - Factory Address:', process.env.NEXT_PUBLIC_FACTORY_ADDRESS);
 
   try {
     if (!process.env.NEXT_PUBLIC_PONDER_URL) {
