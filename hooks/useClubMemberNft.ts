@@ -72,13 +72,16 @@ export const useClubMemberNft = (clubAddress: Address) => {
     gatingTokenAmount = 0n,
     isSoulBound = false,
     inviteCost = 0n,
-    // @ts-ignore
-  ] = result.data?.map(d => d.result as never) || [];
+  ] = result.data?.map(d => d.result) || [];
 
-  let contractMetadata = {};
+  let contractMetadata: {
+    name?: string;
+    description?: string;
+    image?: string;
+  } = {};
   
   try {
-    if (contractURI) {
+    if (contractURI && typeof contractURI === 'string') {
       const cleanedURI = contractURI.replace("data:application/json;utf8,", "");
       const decodedURI = decodeURIComponent(cleanedURI);
       contractMetadata = JSON.parse(decodedURI || "{}");
