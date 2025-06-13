@@ -75,13 +75,34 @@ export const useClubMemberNft = (clubAddress: Address) => {
     // @ts-ignore
   ] = result.data?.map(d => d.result as never) || [];
 
-  const contractMetadata = JSON.parse(decodeURIComponent(contractURI.replace("data:application/json;utf8,", "")) || "{}");
+  let contractMetadata = {};
+  
+  try {
+    if (contractURI) {
+      const cleanedURI = contractURI.replace("data:application/json;utf8,", "");
+      const decodedURI = decodeURIComponent(cleanedURI);
+      contractMetadata = JSON.parse(decodedURI || "{}");
+    }
+  } catch (error) {
+    console.error("Failed to parse contract metadata:", error);
+    console.log("Raw contractURI:", contractURI);
+    contractMetadata = {};
+  }
 
   const {
     name = "",
     description = "",
     image = ""
   } = contractMetadata;
+
+  // Debug logging
+  console.log("Contract metadata:", {
+    contractURI,
+    contractMetadata,
+    name,
+    description,
+    image
+  });
 
   const data = {
     name,
