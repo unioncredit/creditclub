@@ -30,9 +30,28 @@ export const ClubParametersModal = ({
   const { data: memberNftData } = useClubMemberNft(clubAddress);
   const { data: inviteData } = useInvites(clubAddress);
   const { data: auctionData } = useClubAuction(clubAddress);
-  const { data: assetToken } = useErc20Token(clubData.assetAddress);
+  const { data: assetToken } = useErc20Token(clubData?.assetAddress);
   const { data: prorataData } = useProrata(clubAddress);
   const { data: authData } = useClubAuth(clubAddress);
+
+  // Add loading check - if any critical data is missing, don't render
+  if (!clubData || !memberNftData || !inviteData || !auctionData || !assetToken || !prorataData || !authData) {
+    return (
+      <>
+        <ModalOverlay onClick={close} />
+        <Modal className="ClubParametersModal">
+          <Modal.Header title="Club Parameters" onClose={close} />
+          <Modal.Body>
+            <div className="ClubParametersModal__content">
+              <div className="text-center py-8">
+                <p>Loading club parameters...</p>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+      </>
+    );
+  }
 
   const { enabled: invitesEnabled } = inviteData;
   const {
