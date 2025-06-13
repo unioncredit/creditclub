@@ -264,7 +264,7 @@ export const ClubParametersModal = ({
     },
     {
       label: "Member ProRata",
-      value: prorataData.formatted.prorataAmount,
+      value: prorataData?.formatted?.prorataAmount || "Loading...",
     },
   ];
 
