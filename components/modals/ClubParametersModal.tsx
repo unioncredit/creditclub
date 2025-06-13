@@ -15,6 +15,7 @@ import { AddressDisplay } from "@/components/shared/AddressDisplay";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { useClubAuction } from "@/hooks/useClubAuction";
 import { useErc20Token } from "@/hooks/useErc20Token";
+import { useProrata } from "@/hooks/useProrata";
 
 export const CLUB_PARAMETERS_MODAL = "club-parameters-modal";
 
@@ -29,6 +30,7 @@ export const ClubParametersModal = ({
   const { data: inviteData } = useInvites(clubAddress);
   const { data: auctionData } = useClubAuction(clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
+  const { data: prorataData } = useProrata(clubAddress);
 
   const { enabled: invitesEnabled } = inviteData;
   const {
@@ -166,6 +168,10 @@ export const ClubParametersModal = ({
     {
       label: "Token Enabled",
       value: isTokenEnabled ? "True" : "False",
+    },
+    {
+      label: "Member ProRata",
+      value: prorataData.formatted.prorataAmount,
     },
   ];
 
