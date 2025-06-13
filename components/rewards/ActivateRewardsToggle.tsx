@@ -14,10 +14,10 @@ export const ActivateRewardsToggle = ({
 }) => {
   const { data: rewards, refetch, isLoading } = useRewardsManager(clubAddress);
 
-  const { address, allowance } = rewards;
+  const { allowance } = rewards;
 
   const unionContract = useContract("union");
-  const rewardsManagerContract = useRewardsManagerContract(address);
+  const rewardsManagerContract = useRewardsManagerContract();
 
   const transactionApproveProps = useWrite({
     ...unionContract,

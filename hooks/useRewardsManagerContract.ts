@@ -1,10 +1,5 @@
-import { Address } from "viem";
+import { rewardsManagerContract } from "@/contracts/base";
 
-import { rewardsManagerAbi } from "@/abis/rewardsManager";
-
-export const useRewardsManagerContract = (address: Address) => {
-  return {
-    address,
-    abi: rewardsManagerAbi,
-  }
+export const useRewardsManagerContract = () => {
+  return rewardsManagerContract;
 };

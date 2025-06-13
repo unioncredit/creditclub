@@ -3,19 +3,15 @@ import { useAccount, useReadContracts } from "wagmi";
 
 import { DEFAULT_CHAIN_ID } from "@/constants";
 import { useContract } from "@/hooks/useContract";
-import { useClubData } from "@/hooks/useClubData";
 import { useRewardsManagerContract } from "@/hooks/useRewardsManagerContract";
 
 export const useRewardsManager = (clubAddress: Address) => {
   const { address = zeroAddress } = useAccount();
-  const { data: clubData } = useClubData(clubAddress);
-
-  const { rewardsManagerAddress } = clubData;
 
   const chainId = DEFAULT_CHAIN_ID;
   const unionContract = useContract("union");
   const tokenContract = useContract("token");
-  const rewardsManagerContract = useRewardsManagerContract(rewardsManagerAddress);
+  const rewardsManagerContract = useRewardsManagerContract();
 
   const result = useReadContracts({
     contracts: [
@@ -51,7 +47,7 @@ export const useRewardsManager = (clubAddress: Address) => {
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
-    address: rewardsManagerAddress,
+    address: rewardsManagerContract.address,
     allowance,
     unionPer,
     invitePrice,

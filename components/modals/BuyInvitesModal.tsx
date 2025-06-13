@@ -41,10 +41,10 @@ export const BuyInvitesModal = ({
   const { data: rewards } = useRewardsManager(clubAddress);
   const { data: member } = useUnionMember();
 
-  const { address, invitePrice } = rewards;
+  const { invitePrice } = rewards;
   const { unionBalance } = member;
 
-  const rewardsManagerContract = useRewardsManagerContract(address);
+  const rewardsManagerContract = useRewardsManagerContract();
 
   const totalCost = invitePrice * BigInt(numInvites);
 

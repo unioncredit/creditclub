@@ -46,10 +46,10 @@ export const UnionRepayModal = ({
   const { refetch: refetchClubActivity } = useClubActivity(clubAddress);
 
   const { unionBalance, owed } = member;
-  const { address: rewardsManagerAddress, unionPer, contractDaiBalance } = rewards;
+  const { unionPer, contractDaiBalance } = rewards;
 
   const creditVaultContracts = useCreditVaultContract(clubAddress);
-  const rewardsManagerContract = useRewardsManagerContract(rewardsManagerAddress);
+  const rewardsManagerContract = useRewardsManagerContract();
 
   const validate = (inputs: IFormValues) => {
     const amount = inputs.amount as IFormField;

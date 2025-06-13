@@ -5,6 +5,7 @@ import { uTokenAbi } from "@/abis/uToken";
 import { unionAbi } from "@/abis/union";
 import { comptrollerAbi } from "@/abis/comptroller";
 import { unionLensAbi } from "@/abis/unionLens";
+import { rewardsManagerAbi } from "@/abis/rewardsManager";
 
 export const userManagerContract = {
   address: "0xfd745A1e2A220C6aC327EC55d2Cb404CD939f56b" as Address,
@@ -34,4 +35,9 @@ export const comptrollerContract = {
 export const unionLensContract = {
   address: "0x97F8903177300aDDF7b92431DE104ce610768B19" as Address,
   abi: unionLensAbi,
+};
+
+export const rewardsManagerContract = {
+  address: "0xfd745A1e2A220C6aC327EC55d2Cb404CD939f56b" as Address,
+  abi: rewardsManagerAbi,
 };
