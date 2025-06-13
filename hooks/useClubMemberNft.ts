@@ -99,15 +99,16 @@ export const useClubMemberNft = (clubAddress: Address) => {
   } = contractMetadata;
 
   // Debug logging - can be removed after testing
-  if (process.env.NODE_ENV === 'development') {
-    console.log("Contract metadata:", {
-      contractURI,
-      contractMetadata,
-      name,
-      description,
-      image
-    });
-  }
+  console.warn("useClubMemberNft DEBUG:", {
+    clubAddress,
+    contractURI,
+    contractMetadata,
+    name,
+    description,
+    image,
+    resultDataLength: resultData.length,
+    rawResults: resultData
+  });
 
   const data = {
     name,

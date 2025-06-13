@@ -31,7 +31,7 @@ export const IcoFundOverview = ({
     },
     {
       name: "Description",
-      value: description
+      value: description || `[DEBUG: No description - ${JSON.stringify({description, hasData: !!clubMemberNftData})}]`
     },
     // {
     //   name: "Qualified",
