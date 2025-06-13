@@ -163,7 +163,7 @@ export const useClubData = (clubAddress: Address) => {
     },
     {
       ...creditVaultContract,
-      functionName: "auth",
+      functionName: "owner",
     },
   ];
 
@@ -215,7 +215,7 @@ export const useClubData = (clubAddress: Address) => {
     vaultWithdrawFeeBps = 0n,
     stakingWithdrawFeeBps = 0n,
     isTiersEnabled = false,
-    authAddress = zeroAddress,
+    ownerAddress = zeroAddress,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -256,7 +256,7 @@ export const useClubData = (clubAddress: Address) => {
     vaultWithdrawFeeBps,
     stakingWithdrawFeeBps,
     isTiersEnabled,
-    authAddress,
+    ownerAddress,
   };
 
   return { ...result, data };

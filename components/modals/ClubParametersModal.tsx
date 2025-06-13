@@ -66,7 +66,7 @@ export const ClubParametersModal = ({
     name: clubName,
     symbol: clubSymbol,
     image: clubImage,
-    authAddress
+    ownerAddress
   } = clubData || {};
   const {
     name: membershipName,
@@ -115,9 +115,9 @@ export const ClubParametersModal = ({
     {
       title: "Ownership & Authorization",
       parameters: [
-        { label: "Vault Owner (Auth Contract)", value: clubData ? (authAddress === zeroAddress ? "None" : (
-          <Link href={getEtherscanAddressLink(authAddress)} target="_blank" rel="noopener">
-            {truncateAddress(authAddress)}
+        { label: "Vault Owner", value: clubData ? (ownerAddress === zeroAddress ? "None" : (
+          <Link href={getEtherscanAddressLink(ownerAddress)} target="_blank" rel="noopener">
+            {truncateAddress(ownerAddress)}
           </Link>
         )) : <LoadingPlaceholder /> },
         { label: "Club Creator", value: clubData ? (creatorAddress === zeroAddress ? "None" : (
