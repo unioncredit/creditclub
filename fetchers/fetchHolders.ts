@@ -52,6 +52,30 @@ export const fetchHolders = async (clubAddress: Address) => {
     }));
 
     console.log('fetchHolders - Processed holders:', flattened);
+    
+    // Additional debugging: Let's also check what other vault-related data exists
+    console.log('fetchHolders - Checking for any vault-related data in Ponder...');
+    
+    // Try a broader query to see what's available
+    const debugQuery = gql`
+      query ($vaultAddress: String!) {
+        vaultHolders(where: { vaultAddress: $vaultAddress }, limit: 5) {
+          items {
+            address: accountAddress
+            amount
+            vaultAddress
+          }
+        }
+      }
+    `;
+    
+    try {
+      const debugResp: any = await request(process.env.NEXT_PUBLIC_PONDER_URL, debugQuery, { vaultAddress: clubAddress.toLowerCase() });
+      console.log('fetchHolders - Debug query response:', debugResp);
+    } catch (debugError) {
+      console.log('fetchHolders - Debug query failed:', debugError);
+    }
+    
     return flattened;
   } catch (error) {
     console.error('fetchHolders - Error:', error);
