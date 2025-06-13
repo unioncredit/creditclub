@@ -31,7 +31,7 @@ export const ClubParametersModal = ({
   const { data: inviteData } = useInvites(clubAddress);
   const { data: auctionData, isLoading: auctionLoading, error: auctionError } = useClubAuction(clubAddress);
   const { data: assetToken, isLoading: assetTokenLoading, error: assetTokenError } = useErc20Token(clubData?.assetAddress);
-  const { data: prorataData, loading: prorataLoading, error: prorataError } = useProrata(clubAddress);
+  const { data: prorataData, isLoading: prorataLoading, error: prorataError } = useProrata(clubAddress);
   const { data: authData, isLoading: authLoading, error: authError } = useClubAuth(clubAddress);
 
   // Debug logging

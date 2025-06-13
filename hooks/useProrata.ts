@@ -88,11 +88,23 @@ export const useProrata = (clubAddress: Address) => {
 
 // Utility function for getting prorata calculations summary
 export const getProrataInfo = (clubAddress: Address) => {
-  const { data } = useProrata(clubAddress);
+  const { data, isLoading, error } = useProrata(clubAddress);
+  
+  if (isLoading || !data) {
+    return {
+      amount: BigInt(0),
+      formatted: "$0.00",
+      calculation: "Loading...",
+      isLoading,
+      error,
+    };
+  }
   
   return {
     amount: data.prorataAmount,
     formatted: data.formatted.prorataAmount,
     calculation: `${data.formatted.clubStake} ÷ max(${data.formatted.minMembers}, ${data.formatted.currentMembers}) = ${data.formatted.prorataAmount}`,
+    isLoading: false,
+    error: null,
   };
 }; 

@@ -9,7 +9,18 @@ export const ProrataSummary = ({
   clubAddress: Address;
   className?: string;
 }) => {
-  const { data: prorataData } = useProrata(clubAddress);
+  const { data: prorataData, isLoading } = useProrata(clubAddress);
+
+  if (isLoading || !prorataData) {
+    return (
+      <StatGrid 
+        title="Prorata Calculation" 
+        rows={[]} 
+        className={className}
+        size="small"
+      />
+    );
+  }
 
   const rows: StatGridRow[] = [
     {
