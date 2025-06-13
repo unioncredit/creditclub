@@ -30,8 +30,8 @@ const authAbi = [
 ] as const;
 
 export const useClubAuth = (clubAddress: Address) => {
-  const { data: clubData } = useClubData(clubAddress);
-  const { authAddress } = clubData;
+  const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
+  const { authAddress } = clubData || {};
 
   const authContract = {
     address: authAddress,
@@ -59,10 +59,38 @@ export const useClubAuth = (clubAddress: Address) => {
       chainId: DEFAULT_CHAIN_ID,
     })),
     query: {
-      enabled: !!clubAddress && authAddress !== zeroAddress,
+      enabled: !!clubAddress && !!authAddress && authAddress !== zeroAddress,
       staleTime: Infinity,
     }
   });
+
+  // If club data is still loading, return loading state
+  if (clubDataLoading) {
+    return {
+      ...result,
+      isLoading: true,
+      data: {
+        authAddress: zeroAddress,
+        creditManagerAddress: zeroAddress,
+        managerAddress: zeroAddress,
+        feeManagerAddress: zeroAddress,
+      }
+    };
+  }
+
+  // If no auth contract exists, return immediately with zero addresses
+  if (!authAddress || authAddress === zeroAddress) {
+    return {
+      ...result,
+      isLoading: false,
+      data: {
+        authAddress: zeroAddress,
+        creditManagerAddress: zeroAddress,
+        managerAddress: zeroAddress,
+        feeManagerAddress: zeroAddress,
+      }
+    };
+  }
 
   const [
     creditManagerAddress = zeroAddress,
