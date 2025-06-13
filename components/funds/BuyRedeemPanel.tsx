@@ -126,11 +126,11 @@ export const BuyRedeemPanel = ({
         will need to buy it on secondary markets.</p>
 
       <div className="flex flex-col gap-1">
-        <div className="flex flex-col gap-1">
+        <div className="flex gap-1">
           <RoundedButton
             size="medium"
             variant="blue"
-            className="w-full text-sm"
+            className="flex-1 text-sm"
             onClick={() => openModal(BUY_SELL_MODAL, {
               initialTab: "buy",
               clubAddress,
@@ -142,7 +142,7 @@ export const BuyRedeemPanel = ({
           <RoundedButton
             size="medium"
             variant="light"
-            className="w-full text-sm"
+            className="flex-1 text-sm"
             onClick={() => openModal(BUY_SELL_MODAL, {
               initialTab: "sell",
               clubAddress,
