@@ -5,7 +5,7 @@ import { DEFAULT_CHAIN_ID } from "@/constants";
 import { useContract } from "@/hooks/useContract";
 import { useRewardsManagerContract } from "@/hooks/useRewardsManagerContract";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// @ts-ignore - clubAddress kept for API consistency
 export const useRewardsManager = (clubAddress: Address) => {
   const { address = zeroAddress } = useAccount();
 
@@ -36,7 +36,7 @@ export const useRewardsManager = (clubAddress: Address) => {
       },
     ].map(c => ({ ...c, chainId })),
     query: {
-      enabled: address !== zeroAddress,
+      enabled: address !== zeroAddress && !!clubAddress,
     }
   });
 
