@@ -25,6 +25,7 @@ export const ClubParametersModal = ({
 }: {
   clubAddress: Address;
 }) => {
+  console.log('ClubParametersModal rendering with clubAddress:', clubAddress);
   const { close } = useModals();
   const { data: clubData, isLoading: clubDataLoading, error: clubDataError } = useClubData(clubAddress);
   const { data: memberNftData, isLoading: memberNftLoading, error: memberNftError } = useClubMemberNft(clubAddress);
@@ -373,6 +374,8 @@ export const ClubParametersModal = ({
     </div>
   );
 
+  console.log('About to render modal');
+
   return (
     <>
       <ModalOverlay onClick={close} />
@@ -380,6 +383,9 @@ export const ClubParametersModal = ({
         <Modal.Header title="Club Parameters" onClose={close} />
         <Modal.Body>
           <div className="ClubParametersModal__content">
+            <div style={{ padding: '20px', background: 'yellow', margin: '10px' }}>
+              DEBUG: Modal is rendering! Club Address: {clubAddress}
+            </div>
             {renderParameterSection("Club Info & Metadata", clubInfoParams)}
             {renderParameterSection("Authorization & Roles", authParams)}
             {renderParameterSection("Fundraising & Financial", fundraisingParams)}
