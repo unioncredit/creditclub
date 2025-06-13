@@ -48,7 +48,6 @@ export const ClubParametersModal = ({
     vestingDurationInSeconds,
     startingPercentTrust,
     creatorAddress,
-    rewardsManagerAddress,
     memberNftAddress,
     stakingAddress,
     fixedBidPrice,
