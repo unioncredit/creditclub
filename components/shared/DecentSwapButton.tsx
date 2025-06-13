@@ -58,18 +58,34 @@ export const DecentSwapButton = ({
     address: srcToken,
     functionName: "allowance",
     args: [address || zeroAddress, (data?.tx?.to || zeroAddress) as Address],
+    query: {
+      enabled: !!address && !!data?.tx?.to && srcToken !== zeroAddress,
+      refetchOnWindowFocus: false,
+    }
   });
 
   const transactionApproveProps = useWrite({
     abi: erc20Abi,
     address: srcToken,
-    disabled: isLoading,
+    disabled: isLoading || !data?.tx?.to,
     functionName: "approve",
     args: [data?.tx?.to, amount],
     onComplete: async (_: string) => {
-      refetchAllowance()
+      try {
+        // Add a small delay before refetching to ensure blockchain state is updated
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        await refetchAllowance();
+      } catch (error) {
+        console.error("Error refetching allowance:", error);
+      }
     },
   });
+
+  // Check if approval is needed
+  const needsApproval = srcToken !== zeroAddress && 
+                        data?.tx?.to && 
+                        allowance < amount && 
+                        amount > 0n;
 
   return (
     <Button
@@ -79,7 +95,7 @@ export const DecentSwapButton = ({
       size="large"
       {...props}
       {...(
-        (srcToken !== zeroAddress && allowance < amount)
+        needsApproval
           ? {
             ...transactionApproveProps,
             label: "Approve token",
