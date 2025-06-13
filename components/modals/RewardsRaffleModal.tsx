@@ -51,6 +51,28 @@ export const RewardsRaffleModal = ({
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
+  // Add validation for invalid data
+  if (!clubData) {
+    return (
+      <ModalOverlay onClick={close}>
+        <Modal>
+          <Modal.Header title="Rewards Raffle" onClose={close} />
+          <Modal.Body>
+            <div className="text-center py-8">
+              <p className="text-red-600">Error loading club data. Please try again.</p>
+              <Button
+                label="Close"
+                onClick={close}
+                className="mt-4"
+                color="secondary"
+              />
+            </div>
+          </Modal.Body>
+        </Modal>
+      </ModalOverlay>
+    );
+  }
+
   const triggerRaffleButtonProps = useWrite({
     ...creditVaultContract,
     functionName: "feelingLucky",
@@ -85,7 +107,7 @@ export const RewardsRaffleModal = ({
           />
 
           <StatRow
-            percentage={`${winnerPercentage}%`}
+            percentage={`${winnerPercentage.toFixed(1)}%`}
             title="Random Trustee"
             content="Registered & Not Overdue"
             amount={winnerBalance.toFixed(2)}
@@ -94,7 +116,7 @@ export const RewardsRaffleModal = ({
             className="mt-12 sm:mt-16"
           />
           <StatRow
-            percentage={`${bidBucketPercentage}%`}
+            percentage={`${bidBucketPercentage.toFixed(1)}%`}
             title="Credit Vault"
             content="Saved for a rainy day"
             amount={bidBucketBalance.toFixed(2)}
@@ -103,7 +125,7 @@ export const RewardsRaffleModal = ({
             className="mt-2"
           />
           <StatRow
-            percentage={`${callerPercentage}%`}
+            percentage={`${callerPercentage.toFixed(1)}%`}
             title="Caller Reward"
             content="This goes to you"
             amount={callerBalance.toFixed(2)}

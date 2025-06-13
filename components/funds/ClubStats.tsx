@@ -28,7 +28,8 @@ export const ClubStats = ({
 
   const defaultedContacts = clubContacts.filter((v) => v.isOverdue);
   const defaultedAmount = defaultedContacts.reduce((acc, c) => acc + c.locking, 0n);
-  const availableAmount = stakedBalance - totalLockedStake;
+  // Ensure safe BigInt subtraction
+  const availableAmount = stakedBalance >= totalLockedStake ? stakedBalance - totalLockedStake : 0n;
 
   const barValues: DistributionBarItem[] = [
     {
