@@ -34,30 +34,7 @@ export const ClubParametersModal = ({
   const { data: prorataData, isLoading: prorataLoading, error: prorataError } = useProrata(clubAddress);
   const { data: authData, isLoading: authLoading, error: authError } = useClubAuth(clubAddress);
 
-  // Debug logging
-  console.log('ClubParametersModal Debug:', {
-    clubData: !!clubData,
-    memberNftData: !!memberNftData,
-    inviteData: !!inviteData,
-    auctionData: !!auctionData,
-    assetToken: !!assetToken,
-    prorataData: !!prorataData,
-    authData: !!authData,
-    clubDataLoading,
-    memberNftLoading,
-    auctionLoading,
-    assetTokenLoading,
-    prorataLoading,
-    authLoading,
-    errors: {
-      clubDataError,
-      memberNftError,
-      auctionError,
-      assetTokenError,
-      prorataError,
-      authError
-    }
-  });
+
 
   // Helper function to render loading placeholder
   const LoadingPlaceholder = ({ text = "Loading..." }: { text?: string }) => (
@@ -215,8 +192,7 @@ export const ClubParametersModal = ({
   ];
 
   return (
-    <>
-      <ModalOverlay onClick={close} />
+    <ModalOverlay onClick={close}>
       <Modal className="ClubParametersModal">
         <Modal.Header title="Club Parameters" onClose={close} />
         <Modal.Body>
@@ -230,6 +206,6 @@ export const ClubParametersModal = ({
           </div>
         </Modal.Body>
       </Modal>
-    </>
+    </ModalOverlay>
   );
 };
