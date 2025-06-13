@@ -1,6 +1,7 @@
 // @ts-ignore
 import { Box, Toggle, Text, Skeleton } from "@unioncredit/ui";
 import { Address, maxUint256 } from "viem";
+import { useAccount } from "wagmi";
 
 import { useWrite } from "@/hooks/useWrite";
 import { useContract } from "@/hooks/useContract";
@@ -12,6 +13,7 @@ export const ActivateRewardsToggle = ({
 }: {
   clubAddress: Address;
 }) => {
+  const { address } = useAccount();
   const { data: rewards, refetch, isLoading } = useRewardsManager(clubAddress);
 
   const { allowance } = rewards;
@@ -24,9 +26,15 @@ export const ActivateRewardsToggle = ({
     functionName: "approve",
     args: [rewardsManagerContract.address, maxUint256],
     onComplete: async () => {
-      await refetch();
+      // Add a small delay to ensure blockchain state is updated
+      setTimeout(async () => {
+        await refetch();
+      }, 1000);
     },
   });
+
+  // Toggle is active if user has approved rewards manager to spend UNION tokens
+  const isActive = allowance > 0n;
 
   return isLoading ? (
     <Box align="center">
@@ -37,7 +45,7 @@ export const ActivateRewardsToggle = ({
     <Toggle
       label="Activate Rewards"
       labelPosition="start"
-      active={allowance > 0n}
+      active={isActive}
       onChange={() => transactionApproveProps.onClick()}
     />
   )
