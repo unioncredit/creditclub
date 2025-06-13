@@ -163,8 +163,8 @@ export const ClubParametersModal = ({
       parameters: [
         { label: "Max Members", value: memberNftData ? Number(maxMembers) : <LoadingPlaceholder /> },
         { label: "Min Members", value: memberNftData ? Number(minMembers) : <LoadingPlaceholder /> },
-        { label: "Membership Cost", value: memberNftData && assetToken ? `$${formatDecimals(membershipCost, assetDecimals, 2)}` : <LoadingPlaceholder /> },
-        { label: "Invite Cost", value: memberNftData ? `${formatDecimals(inviteCost, 18, 0)} UNION` : <LoadingPlaceholder /> },
+        { label: "Membership Cost", value: memberNftData && assetToken ? `$${formatDecimals(membershipCost, assetDecimals, 4)}` : <LoadingPlaceholder /> },
+        { label: "Invite Cost", value: memberNftData ? `${formatDecimals(inviteCost, 18, 4)} UNION` : <LoadingPlaceholder /> },
         { label: "Member ProRata", value: prorataData?.formatted?.prorataAmount || <LoadingPlaceholder /> },
       ]
     },
@@ -172,7 +172,7 @@ export const ClubParametersModal = ({
       title: "Time & Vesting",
       parameters: [
         { label: "Vesting Duration", value: clubData ? formatDuration(Number(vestingDurationInSeconds)) : <LoadingPlaceholder /> },
-        { label: "Withdraw Period", value: clubData ? formatDuration(Number(withdrawPeriod)) : <LoadingPlaceholder /> },
+        { label: "Withdraw Period", value: clubData ? (Number(withdrawPeriod) === 0 ? "Instant" : formatDuration(Number(withdrawPeriod))) : <LoadingPlaceholder /> },
         { label: "Lockup Period", value: clubData ? formatDuration(Number(lockupPeriod)) : <LoadingPlaceholder /> },
         { label: "Starting Trust Percentage", value: clubData ? (Number(startingPercentTrust) / Number(WAD_1E18)) * 100 + "%" : <LoadingPlaceholder /> },
       ]
@@ -180,10 +180,10 @@ export const ClubParametersModal = ({
     {
       title: "Fees & Recipients",
       parameters: [
-        { label: "Withdraw Fee", value: clubData ? `${Number(withdrawFeeBps) / 100}%` : <LoadingPlaceholder /> },
-        { label: "Vault Withdraw Fee", value: clubData ? `${Number(vaultWithdrawFeeBps) / 100}%` : <LoadingPlaceholder /> },
-        { label: "Staking Withdraw Fee", value: clubData ? `${Number(stakingWithdrawFeeBps) / 100}%` : <LoadingPlaceholder /> },
-        { label: "Feeling Lucky Cost", value: clubData ? `${formatDecimals(costToCall, 18, 6)} ETH` : <LoadingPlaceholder /> },
+        { label: "Withdraw Fee", value: clubData ? `${(Number(withdrawFeeBps) / 100).toFixed(4)}%` : <LoadingPlaceholder /> },
+        { label: "Vault Withdraw Fee", value: clubData ? `${(Number(vaultWithdrawFeeBps) / 100).toFixed(4)}%` : <LoadingPlaceholder /> },
+        { label: "Staking Withdraw Fee", value: clubData ? `${(Number(stakingWithdrawFeeBps) / 100).toFixed(4)}%` : <LoadingPlaceholder /> },
+        { label: "Feeling Lucky Cost", value: clubData ? `${formatDecimals(costToCall, 18, 4)} ETH` : <LoadingPlaceholder /> },
         { label: "Reward Cooldown", value: clubData ? formatDuration(Number(rewardCooldown)) : <LoadingPlaceholder /> },
         { label: "Fee Recipient", value: clubData ? (feeRecipient === zeroAddress ? "None" : (
           <Link href={getEtherscanAddressLink(feeRecipient)} target="_blank" rel="noopener">
