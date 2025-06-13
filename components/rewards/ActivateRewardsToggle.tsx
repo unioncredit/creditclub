@@ -34,7 +34,7 @@ export const ActivateRewardsToggle = ({
   });
 
   // Toggle is active if user has approved rewards manager to spend UNION tokens
-  const isActive = allowance > 0n;
+  const isActive = !!address && allowance > 0n;
 
   return isLoading ? (
     <Box align="center">
