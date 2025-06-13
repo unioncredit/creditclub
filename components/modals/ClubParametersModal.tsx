@@ -63,7 +63,6 @@ export const ClubParametersModal = ({
   const {
     name: membershipName,
     description: clubDescription,
-    image: membershipImage,
     gatingTokenAddress,
     gatingTokenAmount,
     membershipCost,
