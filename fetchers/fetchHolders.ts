@@ -34,6 +34,11 @@ export const fetchHolders = async (clubAddress: Address) => {
   console.log('fetchHolders - Ponder URL:', process.env.NEXT_PUBLIC_PONDER_URL);
 
   try {
+    if (!process.env.NEXT_PUBLIC_PONDER_URL) {
+      console.error('fetchHolders - NEXT_PUBLIC_PONDER_URL environment variable not set');
+      return [];
+    }
+
     // @ts-ignore
     const resp: any = await request(process.env.NEXT_PUBLIC_PONDER_URL, query, variables);
     
@@ -70,8 +75,12 @@ export const fetchHolders = async (clubAddress: Address) => {
     `;
     
     try {
-      const debugResp: any = await request(process.env.NEXT_PUBLIC_PONDER_URL, debugQuery, { vaultAddress: clubAddress.toLowerCase() });
-      console.log('fetchHolders - Debug query response:', debugResp);
+      if (process.env.NEXT_PUBLIC_PONDER_URL) {
+        const debugResp: any = await request(process.env.NEXT_PUBLIC_PONDER_URL, debugQuery, { vaultAddress: clubAddress.toLowerCase() });
+        console.log('fetchHolders - Debug query response:', debugResp);
+      } else {
+        console.log('fetchHolders - NEXT_PUBLIC_PONDER_URL not defined, skipping debug query');
+      }
     } catch (debugError) {
       console.log('fetchHolders - Debug query failed:', debugError);
     }
