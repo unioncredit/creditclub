@@ -64,6 +64,18 @@ export const DecentSwapButton = ({
     }
   });
 
+  // Get token balance to check if user has sufficient funds
+  const { data: tokenBalance = 0n } = useReadContract({
+    abi: erc20Abi,
+    address: srcToken,
+    functionName: "balanceOf",
+    args: [address || zeroAddress],
+    query: {
+      enabled: !!address && srcToken !== zeroAddress,
+      refetchOnWindowFocus: false,
+    }
+  });
+
   const transactionApproveProps = useWrite({
     abi: erc20Abi,
     address: srcToken,
@@ -87,6 +99,38 @@ export const DecentSwapButton = ({
                         allowance < amount && 
                         amount > 0n;
 
+  // Debug logging
+  useEffect(() => {
+    if (process.env.NODE_ENV === "development") {
+      console.log("DecentSwapButton Debug:", {
+        amount: amount.toString(),
+        allowance: allowance.toString(),
+        tokenBalance: tokenBalance.toString(),
+        needsApproval,
+        hasSwapData: !!data?.tx?.to,
+        spender: data?.tx?.to,
+        srcToken,
+        isLoading,
+        hasValidAmount: amount > 0n,
+        hasSufficientBalance: tokenBalance >= amount,
+        buttonState: needsApproval ? "APPROVE" : "SWAP",
+      });
+    }
+  }, [amount, allowance, tokenBalance, needsApproval, data?.tx?.to, srcToken, isLoading]);
+
+  // Enhanced button props with better error handling
+  const enhancedButtonProps = {
+    ...buttonProps,
+    disabled: buttonProps.disabled || 
+              (srcToken !== zeroAddress && tokenBalance < amount) ||
+              (amount <= 0n),
+    label: srcToken !== zeroAddress && tokenBalance < amount 
+      ? "Insufficient balance"
+      : amount <= 0n
+        ? "Enter an amount"
+        : buttonProps.label,
+  };
+
   return (
     <Button
       fluid
@@ -100,9 +144,9 @@ export const DecentSwapButton = ({
             ...transactionApproveProps,
             label: "Approve token",
             loading: buttonProps.loading || transactionApproveProps.loading,
-            disabled: buttonProps.disabled || transactionApproveProps.disabled,
+            disabled: buttonProps.disabled || transactionApproveProps.disabled || tokenBalance < amount,
           }
-          : buttonProps
+          : enhancedButtonProps
       )}
     />
   );
