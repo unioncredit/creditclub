@@ -377,38 +377,72 @@ export const ClubParametersModal = ({
   console.log('About to render modal');
 
   return (
-    <>
-      <ModalOverlay onClick={close} />
-      <Modal className="ClubParametersModal">
-        <Modal.Header title="Club Parameters" onClose={close} />
-        <Modal.Body>
-          <div className="ClubParametersModal__content">
-            <div style={{ padding: '20px', background: 'yellow', margin: '10px' }}>
-              DEBUG: Modal is rendering! Club Address: {clubAddress}
-            </div>
-            {renderParameterSection("Club Info & Metadata", clubInfoParams)}
-            {renderParameterSection("Authorization & Roles", authParams)}
-            {renderParameterSection("Fundraising & Financial", fundraisingParams)}
-            {renderParameterSection("Membership & Access", membershipParams)}
-            {renderParameterSection("Time & Vesting", timeParams)}
-            {renderParameterSection("Fees & Recipients", feeParams)}
-            {renderParameterSection("Gating & Access Control", gatingParams)}
-            {renderParameterSection("Configuration Flags", configParams)}
-            
-            <div className="ClubParametersModal__section">
-              <h3 className="ClubParametersModal__section-title">Contract Addresses</h3>
-              <div className="ClubParametersModal__contracts">
-                {contracts.map((contract, index) => (
-                  <div key={index} className="ClubParametersModal__contract">
-                    <span className="ClubParametersModal__contract-label">{contract.label}:</span>
-                    <span className="ClubParametersModal__contract-address">{contract.address}</span>
-                  </div>
-                ))}
-              </div>
+    <div style={{ 
+      position: 'fixed', 
+      top: 0, 
+      left: 0, 
+      width: '100vw', 
+      height: '100vh', 
+      backgroundColor: 'rgba(0,0,0,0.5)', 
+      zIndex: 9999,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <div style={{
+        backgroundColor: 'white',
+        border: '5px solid red',
+        borderRadius: '8px',
+        width: '90%',
+        height: '90%',
+        overflow: 'auto',
+        padding: '20px'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h2 style={{ margin: 0, fontSize: '24px' }}>Club Parameters</h2>
+          <button 
+            onClick={close}
+            style={{ 
+              background: 'red', 
+              color: 'white', 
+              border: 'none', 
+              padding: '10px 15px', 
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '16px'
+            }}
+          >
+            Close
+          </button>
+        </div>
+        
+        <div style={{ padding: '20px', background: 'yellow', margin: '10px 0', fontSize: '18px', fontWeight: 'bold' }}>
+          🚨 DIRECT RENDER TEST: Modal is working! Club Address: {clubAddress} 🚨
+        </div>
+        
+        <div className="ClubParametersModal__content">
+          {renderParameterSection("Club Info & Metadata", clubInfoParams)}
+          {renderParameterSection("Authorization & Roles", authParams)}
+          {renderParameterSection("Fundraising & Financial", fundraisingParams)}
+          {renderParameterSection("Membership & Access", membershipParams)}
+          {renderParameterSection("Time & Vesting", timeParams)}
+          {renderParameterSection("Fees & Recipients", feeParams)}
+          {renderParameterSection("Gating & Access Control", gatingParams)}
+          {renderParameterSection("Configuration Flags", configParams)}
+          
+          <div className="ClubParametersModal__section">
+            <h3 className="ClubParametersModal__section-title">Contract Addresses</h3>
+            <div className="ClubParametersModal__contracts">
+              {contracts.map((contract, index) => (
+                <div key={index} className="ClubParametersModal__contract">
+                  <span className="ClubParametersModal__contract-label">{contract.label}:</span>
+                  <span className="ClubParametersModal__contract-address">{contract.address}</span>
+                </div>
+              ))}
             </div>
           </div>
-        </Modal.Body>
-      </Modal>
-    </>
+        </div>
+      </div>
+    </div>
   );
 };
