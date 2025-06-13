@@ -115,263 +115,104 @@ export const ClubParametersModal = ({
   } = authData || {};
   const { decimals: assetDecimals = 18 } = assetToken || {};
 
-  // Club Info & Metadata
-  const clubInfoParams = [
-    {
-      label: "Club Name",
-      value: clubData ? (clubName || "None") : <LoadingPlaceholder />,
-    },
-    {
-      label: "Club Symbol", 
-      value: clubData ? (clubSymbol || "None") : <LoadingPlaceholder />,
-    },
-    {
-      label: "Club Image",
-      value: clubData ? (clubImage ? (
-        <div className="flex items-center gap-2">
-          <img src={clubImage} alt="Club" className="w-8 h-8 rounded object-cover" />
-          <Link href={clubImage} target="_blank" rel="noopener" className="text-blue-600 hover:underline">
-            View Image
-          </Link>
-        </div>
-      ) : "None") : <LoadingPlaceholder />,
-    },
-    {
-      label: "Description",
-      value: memberNftData ? (clubDescription || "None") : <LoadingPlaceholder />,
-    },
-    {
-      label: "Membership Name",
-      value: memberNftData ? (membershipName || "None") : <LoadingPlaceholder />,
-    },
-  ];
-
-  // Authorization & Roles
-  const authParams = [
-    {
-      label: "Auth Contract",
-      value: clubData ? (authAddress === zeroAddress ? "None" : (
-        <Link href={getEtherscanAddressLink(authAddress)} target="_blank" rel="noopener">
-          {truncateAddress(authAddress)}
+  // All parameters in a simple list format
+  const parameters = [
+    // Club Info & Metadata
+    { label: "Club Name", value: clubData ? (clubName || "None") : <LoadingPlaceholder /> },
+    { label: "Club Symbol", value: clubData ? (clubSymbol || "None") : <LoadingPlaceholder /> },
+    { label: "Club Image", value: clubData ? (clubImage ? (
+      <div className="flex items-center gap-2">
+        <img src={clubImage} alt="Club" className="w-8 h-8 rounded object-cover" />
+        <Link href={clubImage} target="_blank" rel="noopener" className="text-blue-600 hover:underline">
+          View Image
         </Link>
-      )) : <LoadingPlaceholder />,
-    },
-    {
-      label: "Credit Manager",
-      value: authData ? (creditManagerAddress === zeroAddress ? "None" : (
-        <Link href={getEtherscanAddressLink(creditManagerAddress)} target="_blank" rel="noopener">
-          {truncateAddress(creditManagerAddress)}
-        </Link>
-      )) : <LoadingPlaceholder />,
-    },
-    {
-      label: "Manager",
-      value: authData ? (managerAddress === zeroAddress ? "None" : (
-        <Link href={getEtherscanAddressLink(managerAddress)} target="_blank" rel="noopener">
-          {truncateAddress(managerAddress)}
-        </Link>
-      )) : <LoadingPlaceholder />,
-    },
-    {
-      label: "Fee Manager",
-      value: authData ? (feeManagerAddress === zeroAddress ? "None" : (
-        <Link href={getEtherscanAddressLink(feeManagerAddress)} target="_blank" rel="noopener">
-          {truncateAddress(feeManagerAddress)}
-        </Link>
-      )) : <LoadingPlaceholder />,
-    },
-    {
-      label: "Creator",
-      value: clubData ? (creatorAddress === zeroAddress ? "None" : (
-        <Link href={getEtherscanAddressLink(creatorAddress)} target="_blank" rel="noopener">
-          {truncateAddress(creatorAddress)}
-        </Link>
-      )) : <LoadingPlaceholder />,
-    },
-  ];
-
-  // Fundraising & Financial Parameters
-  const fundraisingParams = [
-    {
-      label: "Raise Min Target",
-      value: auctionData && assetToken ? `$${formatDecimals(minTarget, assetDecimals, 0)}` : <LoadingPlaceholder />,
-    },
-    {
-      label: "Raise Max Target", 
-      value: auctionData && assetToken ? `$${formatDecimals(maxTarget, assetDecimals, 0)}` : <LoadingPlaceholder />,
-    },
-    {
-      label: "Raise Period",
-      value: auctionData ? formatDuration(Number(period)) : <LoadingPlaceholder />,
-    },
-    {
-      label: "Vault Ratio",
-      value: auctionData ? `${Number(vaultRatio) / 100}%` : <LoadingPlaceholder />,
-    },
-    {
-      label: "Asset Ratio",
-      value: auctionData ? `${Number(assetRatio) / 100}%` : <LoadingPlaceholder />,
-    },
-    {
-      label: "Fixed Bid Price",
-      value: clubData && assetToken ? `$${formatDecimals(fixedBidPrice, assetDecimals, 2)}` : <LoadingPlaceholder />,
-    },
-  ];
-
-  // Membership & Access Parameters
-  const membershipParams = [
-    {
-      label: "Max Members",
-      value: memberNftData ? Number(maxMembers) : <LoadingPlaceholder />,
-    },
-    {
-      label: "Min Members",
-      value: memberNftData ? Number(minMembers) : <LoadingPlaceholder />,
-    },
-    {
-      label: "Membership Cost",
-      value: memberNftData && assetToken ? `$${formatDecimals(membershipCost, assetDecimals, 2)}` : <LoadingPlaceholder />,
-    },
-    {
-      label: "Invite Cost",
-      value: memberNftData ? `${formatDecimals(inviteCost, 18, 0)} UNION` : <LoadingPlaceholder />,
-    },
-    {
-      label: "Member ProRata",
-      value: prorataData?.formatted?.prorataAmount || <LoadingPlaceholder />,
-    },
-  ];
-
-  // Time & Vesting Parameters
-  const timeParams = [
-    {
-      label: "Vesting Duration",
-      value: clubData ? formatDuration(Number(vestingDurationInSeconds)) : <LoadingPlaceholder />,
-    },
-    {
-      label: "Withdraw Period",
-      value: clubData ? formatDuration(Number(withdrawPeriod)) : <LoadingPlaceholder />,
-    },
-    {
-      label: "Lockup Period",
-      value: clubData ? formatDuration(Number(lockupPeriod)) : <LoadingPlaceholder />,
-    },
-    {
-      label: "Starting Trust Percentage",
-      value: clubData ? (Number(startingPercentTrust) / Number(WAD_1E18)) * 100 + "%" : <LoadingPlaceholder />,
-    },
-  ];
-
-  // Fee & Financial Settings
-  const feeParams = [
-    {
-      label: "Withdraw Fee",
-      value: clubData ? `${Number(withdrawFeeBps) / 100}%` : <LoadingPlaceholder />,
-    },
-    {
-      label: "Vault Withdraw Fee",
-      value: clubData ? `${Number(vaultWithdrawFeeBps) / 100}%` : <LoadingPlaceholder />,
-    },
-    {
-      label: "Staking Withdraw Fee",
-      value: clubData ? `${Number(stakingWithdrawFeeBps) / 100}%` : <LoadingPlaceholder />,
-    },
-    {
-      label: "Feeling Lucky Cost",
-      value: clubData && assetToken ? `$${formatDecimals(costToCall, assetDecimals, 2)}` : <LoadingPlaceholder />,
-    },
-    {
-      label: "Reward Cooldown",
-      value: clubData ? formatDuration(Number(rewardCooldown)) : <LoadingPlaceholder />,
-    },
-    {
-      label: "Fee Recipient",
-      value: clubData ? (feeRecipient === zeroAddress ? "None" : (
-        <Link href={getEtherscanAddressLink(feeRecipient)} target="_blank" rel="noopener">
-          {truncateAddress(feeRecipient)}
-        </Link>
-      )) : <LoadingPlaceholder />,
-    },
-  ];
-
-  // Gating & Access Control
-  const gatingParams = [
-    {
-      label: "Gating Token",
-      value: memberNftData ? (gatingTokenAddress === zeroAddress
-        ? "None"
-        : (
-          <Link href={getEtherscanAddressLink(gatingTokenAddress)} target="_blank" rel="noopener">
-            {truncateAddress(gatingTokenAddress)}
-          </Link>
-        )) : <LoadingPlaceholder />,
-    },
-    {
-      label: "Gating Token Amount",
-      value: memberNftData ? Number(gatingTokenAmount) : <LoadingPlaceholder />,
-    },
-  ];
-
-  // Configuration Flags
-  const configParams = [
-    {
-      label: "Closed End Fund",
-      value: clubData ? (isClosedEndFund ? "True" : "False") : <LoadingPlaceholder />,
-    },
-    {
-      label: "Invites Enabled",
-      value: inviteData ? (invitesEnabled ? "True" : "False") : <LoadingPlaceholder />,
-    },
-    {
-      label: "Soul Bound",
-      value: memberNftData ? (isSoulBound ? "True" : "False") : <LoadingPlaceholder />,
-    },
-    {
-      label: "Public",
-      value: clubData ? (isPublic ? "True" : "False") : <LoadingPlaceholder />,
-    },
-    {
-      label: "Token Enabled",
-      value: clubData ? (isTokenEnabled ? "True" : "False") : <LoadingPlaceholder />,
-    },
-    {
-      label: "Tiers Enabled",
-      value: clubData ? (isTiersEnabled ? "True" : "False") : <LoadingPlaceholder />,
-    },
-  ];
-
-  const contracts = [
-    {
-      label: "CreditVault",
-      address: <AddressDisplay address={clubAddress} className="font-mono" />
-    },
-    {
-      label: "Reward Manager",
-      address: <AddressDisplay address={rewardsManagerAddress} className="font-mono" />
-    },
-    {
-      label: "Membership NFT",
-      address: <AddressDisplay address={memberNftAddress} className="font-mono" />
-    },
-    {
-      label: "Staking Contract",
-      address: <AddressDisplay address={stakingAddress} className="font-mono" />
-    }
-  ];
-
-  const renderParameterSection = (title: string, params: any[]) => (
-    <div className="ClubParametersModal__section">
-      <h3 className="ClubParametersModal__section-title">{title}</h3>
-      <div className="ClubParametersModal__params">
-        {params.map((param, index) => (
-          <div key={index} className="ClubParametersModal__param">
-            <span className="ClubParametersModal__param-label">{param.label}:</span>
-            <span className="ClubParametersModal__param-value">{param.value}</span>
-          </div>
-        ))}
       </div>
-    </div>
-  );
+    ) : "None") : <LoadingPlaceholder /> },
+    { label: "Description", value: memberNftData ? (clubDescription || "None") : <LoadingPlaceholder /> },
+    { label: "Membership Name", value: memberNftData ? (membershipName || "None") : <LoadingPlaceholder /> },
+
+    // Authorization & Roles
+    { label: "Auth Contract", value: clubData ? (authAddress === zeroAddress ? "None" : (
+      <Link href={getEtherscanAddressLink(authAddress)} target="_blank" rel="noopener">
+        {truncateAddress(authAddress)}
+      </Link>
+    )) : <LoadingPlaceholder /> },
+    { label: "Credit Manager", value: authData ? (creditManagerAddress === zeroAddress ? "None" : (
+      <Link href={getEtherscanAddressLink(creditManagerAddress)} target="_blank" rel="noopener">
+        {truncateAddress(creditManagerAddress)}
+      </Link>
+    )) : <LoadingPlaceholder /> },
+    { label: "Manager", value: authData ? (managerAddress === zeroAddress ? "None" : (
+      <Link href={getEtherscanAddressLink(managerAddress)} target="_blank" rel="noopener">
+        {truncateAddress(managerAddress)}
+      </Link>
+    )) : <LoadingPlaceholder /> },
+    { label: "Fee Manager", value: authData ? (feeManagerAddress === zeroAddress ? "None" : (
+      <Link href={getEtherscanAddressLink(feeManagerAddress)} target="_blank" rel="noopener">
+        {truncateAddress(feeManagerAddress)}
+      </Link>
+    )) : <LoadingPlaceholder /> },
+    { label: "Creator", value: clubData ? (creatorAddress === zeroAddress ? "None" : (
+      <Link href={getEtherscanAddressLink(creatorAddress)} target="_blank" rel="noopener">
+        {truncateAddress(creatorAddress)}
+      </Link>
+    )) : <LoadingPlaceholder /> },
+
+    // Fundraising & Financial
+    { label: "Raise Min Target", value: auctionData && assetToken ? `$${formatDecimals(minTarget, assetDecimals, 0)}` : <LoadingPlaceholder /> },
+    { label: "Raise Max Target", value: auctionData && assetToken ? `$${formatDecimals(maxTarget, assetDecimals, 0)}` : <LoadingPlaceholder /> },
+    { label: "Raise Period", value: auctionData ? formatDuration(Number(period)) : <LoadingPlaceholder /> },
+    { label: "Vault Ratio", value: auctionData ? `${Number(vaultRatio) / 100}%` : <LoadingPlaceholder /> },
+    { label: "Asset Ratio", value: auctionData ? `${Number(assetRatio) / 100}%` : <LoadingPlaceholder /> },
+    { label: "Fixed Bid Price", value: clubData && assetToken ? `$${formatDecimals(fixedBidPrice, assetDecimals, 2)}` : <LoadingPlaceholder /> },
+
+    // Membership & Access
+    { label: "Max Members", value: memberNftData ? Number(maxMembers) : <LoadingPlaceholder /> },
+    { label: "Min Members", value: memberNftData ? Number(minMembers) : <LoadingPlaceholder /> },
+    { label: "Membership Cost", value: memberNftData && assetToken ? `$${formatDecimals(membershipCost, assetDecimals, 2)}` : <LoadingPlaceholder /> },
+    { label: "Invite Cost", value: memberNftData ? `${formatDecimals(inviteCost, 18, 0)} UNION` : <LoadingPlaceholder /> },
+    { label: "Member ProRata", value: prorataData?.formatted?.prorataAmount || <LoadingPlaceholder /> },
+
+    // Time & Vesting
+    { label: "Vesting Duration", value: clubData ? formatDuration(Number(vestingDurationInSeconds)) : <LoadingPlaceholder /> },
+    { label: "Withdraw Period", value: clubData ? formatDuration(Number(withdrawPeriod)) : <LoadingPlaceholder /> },
+    { label: "Lockup Period", value: clubData ? formatDuration(Number(lockupPeriod)) : <LoadingPlaceholder /> },
+    { label: "Starting Trust Percentage", value: clubData ? (Number(startingPercentTrust) / Number(WAD_1E18)) * 100 + "%" : <LoadingPlaceholder /> },
+
+    // Fees & Recipients
+    { label: "Withdraw Fee", value: clubData ? `${Number(withdrawFeeBps) / 100}%` : <LoadingPlaceholder /> },
+    { label: "Vault Withdraw Fee", value: clubData ? `${Number(vaultWithdrawFeeBps) / 100}%` : <LoadingPlaceholder /> },
+    { label: "Staking Withdraw Fee", value: clubData ? `${Number(stakingWithdrawFeeBps) / 100}%` : <LoadingPlaceholder /> },
+    { label: "Feeling Lucky Cost", value: clubData && assetToken ? `$${formatDecimals(costToCall, assetDecimals, 2)}` : <LoadingPlaceholder /> },
+    { label: "Reward Cooldown", value: clubData ? formatDuration(Number(rewardCooldown)) : <LoadingPlaceholder /> },
+    { label: "Fee Recipient", value: clubData ? (feeRecipient === zeroAddress ? "None" : (
+      <Link href={getEtherscanAddressLink(feeRecipient)} target="_blank" rel="noopener">
+        {truncateAddress(feeRecipient)}
+      </Link>
+    )) : <LoadingPlaceholder /> },
+
+    // Gating & Access Control
+    { label: "Gating Token", value: memberNftData ? (gatingTokenAddress === zeroAddress ? "None" : (
+      <Link href={getEtherscanAddressLink(gatingTokenAddress)} target="_blank" rel="noopener">
+        {truncateAddress(gatingTokenAddress)}
+      </Link>
+    )) : <LoadingPlaceholder /> },
+    { label: "Gating Token Amount", value: memberNftData ? Number(gatingTokenAmount) : <LoadingPlaceholder /> },
+
+    // Configuration Flags
+    { label: "Closed End Fund", value: clubData ? (isClosedEndFund ? "True" : "False") : <LoadingPlaceholder /> },
+    { label: "Invites Enabled", value: inviteData ? (invitesEnabled ? "True" : "False") : <LoadingPlaceholder /> },
+    { label: "Soul Bound", value: memberNftData ? (isSoulBound ? "True" : "False") : <LoadingPlaceholder /> },
+    { label: "Public", value: clubData ? (isPublic ? "True" : "False") : <LoadingPlaceholder /> },
+    { label: "Token Enabled", value: clubData ? (isTokenEnabled ? "True" : "False") : <LoadingPlaceholder /> },
+    { label: "Tiers Enabled", value: clubData ? (isTiersEnabled ? "True" : "False") : <LoadingPlaceholder /> },
+
+    // Contract Addresses
+    { label: "CreditVault", value: <AddressDisplay address={clubAddress} className="font-mono" /> },
+    { label: "Reward Manager", value: <AddressDisplay address={rewardsManagerAddress} className="font-mono" /> },
+    { label: "Membership NFT", value: <AddressDisplay address={memberNftAddress} className="font-mono" /> },
+    { label: "Staking Contract", value: <AddressDisplay address={stakingAddress} className="font-mono" /> },
+  ];
 
   return (
     <>
@@ -379,27 +220,13 @@ export const ClubParametersModal = ({
       <Modal className="ClubParametersModal">
         <Modal.Header title="Club Parameters" onClose={close} />
         <Modal.Body>
-          <div className="ClubParametersModal__content">
-            {renderParameterSection("Club Info & Metadata", clubInfoParams)}
-            {renderParameterSection("Authorization & Roles", authParams)}
-            {renderParameterSection("Fundraising & Financial", fundraisingParams)}
-            {renderParameterSection("Membership & Access", membershipParams)}
-            {renderParameterSection("Time & Vesting", timeParams)}
-            {renderParameterSection("Fees & Recipients", feeParams)}
-            {renderParameterSection("Gating & Access Control", gatingParams)}
-            {renderParameterSection("Configuration Flags", configParams)}
-            
-            <div className="ClubParametersModal__section">
-              <h3 className="ClubParametersModal__section-title">Contract Addresses</h3>
-              <div className="ClubParametersModal__contracts">
-                {contracts.map((contract, index) => (
-                  <div key={index} className="ClubParametersModal__contract">
-                    <span className="ClubParametersModal__contract-label">{contract.label}:</span>
-                    <span className="ClubParametersModal__contract-address">{contract.address}</span>
-                  </div>
-                ))}
+          <div className="space-y-4">
+            {parameters.map((param, index) => (
+              <div key={index} className="flex justify-between items-center py-2 border-b border-gray-100">
+                <span className="font-medium text-gray-700">{param.label}:</span>
+                <span className="text-gray-900">{param.value}</span>
               </div>
-            </div>
+            ))}
           </div>
         </Modal.Body>
       </Modal>
