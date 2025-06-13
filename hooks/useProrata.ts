@@ -31,20 +31,6 @@ export const useProrata = (clubAddress: Address) => {
   const { data: clubContacts, isLoading: clubContactsLoading, error: clubContactsError } = useClubContacts(clubAddress);
   const { data: assetToken, isLoading: assetTokenLoading, error: assetTokenError } = useErc20Token(clubData?.assetAddress);
 
-  // Debug logging
-  console.log('useProrata Debug:', {
-    clubAddress,
-    clubData: clubData ? 'has data' : 'null',
-    memberNftData: memberNftData ? 'has data' : 'null',
-    clubContacts: clubContacts ? `array length: ${clubContacts.length}` : 'null',
-    assetToken: assetToken ? 'has data' : 'null',
-    clubDataLoading,
-    memberNftLoading,
-    clubContactsLoading,
-    assetTokenLoading,
-    assetAddress: clubData?.assetAddress
-  });
-
   // Check if any data is still loading
   const isLoading = clubDataLoading || memberNftLoading || clubContactsLoading || assetTokenLoading;
   
@@ -53,13 +39,6 @@ export const useProrata = (clubAddress: Address) => {
 
   // If data is not ready, return loading state
   if (isLoading || !clubData || !memberNftData || !clubContacts || !assetToken) {
-    console.log('useProrata returning loading state:', {
-      isLoading,
-      hasClubData: !!clubData,
-      hasMemberNftData: !!memberNftData,
-      hasClubContacts: !!clubContacts,
-      hasAssetToken: !!assetToken
-    });
     return {
       data: null,
       isLoading,
@@ -99,15 +78,6 @@ export const useProrata = (clubAddress: Address) => {
       divisor: divisor.toString(),
     },
   };
-
-  console.log('useProrata returning data:', {
-    prorataAmount: prorataAmount.toString(),
-    clubStake: clubStake.toString(),
-    minMembers: minMembers.toString(),
-    currentMembers,
-    divisor,
-    formatted: data.formatted
-  });
 
   return {
     data,
