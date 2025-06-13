@@ -42,13 +42,25 @@ export const ClubParametersModal = ({
     stakingAddress,
     fixedBidPrice,
     lockupPeriod,
+    withdrawPeriod,
     withdrawFeeBps,
+    vaultWithdrawFeeBps,
+    stakingWithdrawFeeBps,
     feeRecipient,
     isClosedEndFund,
     isPublic,
-    isTokenEnabled
+    isTokenEnabled,
+    isTiersEnabled,
+    costToCall,
+    rewardCooldown,
+    name: clubName,
+    symbol: clubSymbol,
+    image: clubImage
   } = clubData;
   const {
+    name: membershipName,
+    description: clubDescription,
+    image: membershipImage,
     gatingTokenAddress,
     gatingTokenAmount,
     membershipCost,
@@ -66,7 +78,39 @@ export const ClubParametersModal = ({
   } = auctionData;
   const { decimals: assetDecimals } = assetToken;
 
-  const parameters = [
+  // Club Info & Metadata
+  const clubInfoParams = [
+    {
+      label: "Club Name",
+      value: clubName,
+    },
+    {
+      label: "Club Symbol", 
+      value: clubSymbol,
+    },
+    {
+      label: "Club Image",
+      value: clubImage ? (
+        <div className="flex items-center gap-2">
+          <img src={clubImage} alt="Club" className="w-8 h-8 rounded object-cover" />
+          <Link href={clubImage} target="_blank" rel="noopener" className="text-blue-600 hover:underline">
+            View Image
+          </Link>
+        </div>
+      ) : "None",
+    },
+    {
+      label: "Description",
+      value: clubDescription || "None",
+    },
+    {
+      label: "Membership Name",
+      value: membershipName,
+    },
+  ];
+
+  // Fundraising & Financial Parameters
+  const fundraisingParams = [
     {
       label: "Raise Min Target",
       value: `$${formatDecimals(minTarget, assetDecimals, 0)}`,
@@ -88,16 +132,20 @@ export const ClubParametersModal = ({
       value: `${Number(assetRatio) / 100}%`,
     },
     {
-      label: "Withdraw Period",
-      value: formatDuration(Number(lockupPeriod)),
-    },
-    {
-      label: "Lockup Period",
-      value: formatDuration(Number(lockupPeriod)),
-    },
-    {
       label: "Fixed Bid Price",
       value: `$${formatDecimals(fixedBidPrice, assetDecimals, 2)}`,
+    },
+  ];
+
+  // Membership & Access Parameters
+  const membershipParams = [
+    {
+      label: "Max Members",
+      value: Number(maxMembers),
+    },
+    {
+      label: "Min Members",
+      value: Number(minMembers),
     },
     {
       label: "Membership Cost",
@@ -108,8 +156,52 @@ export const ClubParametersModal = ({
       value: `${formatDecimals(inviteCost, 18, 0)} UNION`,
     },
     {
+      label: "Member ProRata",
+      value: prorataData.formatted.prorataAmount,
+    },
+  ];
+
+  // Time & Vesting Parameters
+  const timeParams = [
+    {
+      label: "Vesting Duration",
+      value: formatDuration(Number(vestingDurationInSeconds)),
+    },
+    {
+      label: "Withdraw Period",
+      value: formatDuration(Number(withdrawPeriod)),
+    },
+    {
+      label: "Lockup Period",
+      value: formatDuration(Number(lockupPeriod)),
+    },
+    {
+      label: "Starting Trust Percentage",
+      value: (Number(startingPercentTrust) / Number(WAD_1E18)) * 100 + "%",
+    },
+  ];
+
+  // Fee & Financial Settings
+  const feeParams = [
+    {
       label: "Withdraw Fee",
       value: `${Number(withdrawFeeBps) / 100}%`,
+    },
+    {
+      label: "Vault Withdraw Fee",
+      value: `${Number(vaultWithdrawFeeBps) / 100}%`,
+    },
+    {
+      label: "Staking Withdraw Fee",
+      value: `${Number(stakingWithdrawFeeBps) / 100}%`,
+    },
+    {
+      label: "Feeling Lucky Cost",
+      value: `$${formatDecimals(costToCall, assetDecimals, 2)}`,
+    },
+    {
+      label: "Reward Cooldown",
+      value: formatDuration(Number(rewardCooldown)),
     },
     {
       label: "Fee Recipient",
@@ -119,22 +211,10 @@ export const ClubParametersModal = ({
         </Link>
       ),
     },
-    {
-      label: "Max Members",
-      value: Number(maxMembers),
-    },
-    {
-      label: "Min Members",
-      value: Number(minMembers),
-    },
-    {
-      label: "Vesting Duration",
-      value: formatDuration(Number(vestingDurationInSeconds)),
-    },
-    {
-      label: "Starting Trust Percentage",
-      value: (Number(startingPercentTrust) / Number(WAD_1E18)) * 100 + "%",
-    },
+  ];
+
+  // Gating & Access Control
+  const gatingParams = [
     {
       label: "Gating Token",
       value: gatingTokenAddress === zeroAddress
@@ -149,6 +229,10 @@ export const ClubParametersModal = ({
       label: "Gating Token Amount",
       value: Number(gatingTokenAmount),
     },
+  ];
+
+  // Configuration Flags
+  const configParams = [
     {
       label: "Closed End Fund",
       value: isClosedEndFund ? "True" : "False",
@@ -170,8 +254,8 @@ export const ClubParametersModal = ({
       value: isTokenEnabled ? "True" : "False",
     },
     {
-      label: "Member ProRata",
-      value: prorataData.formatted.prorataAmount,
+      label: "Tiers Enabled",
+      value: isTiersEnabled ? "True" : "False",
     },
   ];
 
@@ -198,32 +282,49 @@ export const ClubParametersModal = ({
     }
   ];
 
-  return (
-    <ModalOverlay onClick={close}>
-      <Modal>
-        <Modal.Header title="Club parameters" onClose={close} />
-        <Modal.Body>
-          <h2 className="underline font-semibold">Club parameters</h2>
-          <ul className="mt-4 flex flex-col gap-2">
-            {parameters.map(({ label, value }, index) => (
-              <li key={index} className="flex justify-between items-center">
-                <span className="text-stone-600">{label}</span>
-                <span className="text-black font-medium">{value}</span>
-              </li>
-            ))}
-          </ul>
+  const renderParameterSection = (title: string, params: any[]) => (
+    <div className="ClubParametersModal__section">
+      <h3 className="ClubParametersModal__section-title">{title}</h3>
+      <div className="ClubParametersModal__params">
+        {params.map((param, index) => (
+          <div key={index} className="ClubParametersModal__param">
+            <span className="ClubParametersModal__param-label">{param.label}:</span>
+            <span className="ClubParametersModal__param-value">{param.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
-          <h2 className="underline font-semibold mt-6">Club contracts</h2>
-          <ul className="mt-4 flex flex-col gap-2">
-            {contracts.map(({ label, address }, index) => (
-              <li key={index} className="flex justify-between items-center">
-                <span className="text-stone-600">{label}</span>
-                <span className="text-black font-medium">{address}</span>
-              </li>
-            ))}
-          </ul>
+  return (
+    <>
+      <ModalOverlay onClick={close} />
+      <Modal className="ClubParametersModal">
+        <Modal.Header title="Club Parameters" onClose={close} />
+        <Modal.Body>
+          <div className="ClubParametersModal__content">
+            {renderParameterSection("Club Info & Metadata", clubInfoParams)}
+            {renderParameterSection("Fundraising & Financial", fundraisingParams)}
+            {renderParameterSection("Membership & Access", membershipParams)}
+            {renderParameterSection("Time & Vesting", timeParams)}
+            {renderParameterSection("Fees & Recipients", feeParams)}
+            {renderParameterSection("Gating & Access Control", gatingParams)}
+            {renderParameterSection("Configuration Flags", configParams)}
+            
+            <div className="ClubParametersModal__section">
+              <h3 className="ClubParametersModal__section-title">Contract Addresses</h3>
+              <div className="ClubParametersModal__contracts">
+                {contracts.map((contract, index) => (
+                  <div key={index} className="ClubParametersModal__contract">
+                    <span className="ClubParametersModal__contract-label">{contract.label}:</span>
+                    <span className="ClubParametersModal__contract-address">{contract.address}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </Modal.Body>
       </Modal>
-    </ModalOverlay>
+    </>
   );
-}
+};

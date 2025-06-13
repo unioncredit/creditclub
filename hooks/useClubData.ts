@@ -145,6 +145,22 @@ export const useClubData = (clubAddress: Address) => {
       ...creditVaultContract,
       functionName: "withdrawFeeBps",
     },
+    {
+      ...creditVaultContract,
+      functionName: "withdrawPeriod",
+    },
+    {
+      ...creditVaultContract,
+      functionName: "vaultWithdrawFeeBps",
+    },
+    {
+      ...creditVaultContract,
+      functionName: "stakingWithdrawFeeBps",
+    },
+    {
+      ...creditVaultContract,
+      functionName: "isTiersEnabled",
+    },
   ];
 
   const result = useReadContracts({
@@ -191,6 +207,10 @@ export const useClubData = (clubAddress: Address) => {
     feeRecipient = zeroAddress,
     isClosedEndFund = false,
     withdrawFeeBps = 0n,
+    withdrawPeriod = 0n,
+    vaultWithdrawFeeBps = 0n,
+    stakingWithdrawFeeBps = 0n,
+    isTiersEnabled = false,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -227,6 +247,10 @@ export const useClubData = (clubAddress: Address) => {
     feeRecipient,
     isClosedEndFund,
     withdrawFeeBps,
+    withdrawPeriod,
+    vaultWithdrawFeeBps,
+    stakingWithdrawFeeBps,
+    isTiersEnabled,
   };
 
   return { ...result, data };
