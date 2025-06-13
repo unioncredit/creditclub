@@ -16,6 +16,7 @@ import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { useClubAuction } from "@/hooks/useClubAuction";
 import { useErc20Token } from "@/hooks/useErc20Token";
 import { useProrata } from "@/hooks/useProrata";
+import { useClubAuth } from "@/hooks/useClubAuth";
 
 export const CLUB_PARAMETERS_MODAL = "club-parameters-modal";
 
@@ -31,6 +32,7 @@ export const ClubParametersModal = ({
   const { data: auctionData } = useClubAuction(clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
   const { data: prorataData } = useProrata(clubAddress);
+  const { data: authData } = useClubAuth(clubAddress);
 
   const { enabled: invitesEnabled } = inviteData;
   const {
@@ -55,7 +57,8 @@ export const ClubParametersModal = ({
     rewardCooldown,
     name: clubName,
     symbol: clubSymbol,
-    image: clubImage
+    image: clubImage,
+    authAddress
   } = clubData;
   const {
     name: membershipName,
@@ -76,6 +79,11 @@ export const ClubParametersModal = ({
     vaultRatio,
     assetRatio
   } = auctionData;
+  const {
+    creditManagerAddress,
+    managerAddress,
+    feeManagerAddress
+  } = authData;
   const { decimals: assetDecimals } = assetToken;
 
   // Club Info & Metadata
@@ -106,6 +114,50 @@ export const ClubParametersModal = ({
     {
       label: "Membership Name",
       value: membershipName,
+    },
+  ];
+
+  // Authorization & Roles
+  const authParams = [
+    {
+      label: "Auth Contract",
+      value: authAddress === zeroAddress ? "None" : (
+        <Link href={getEtherscanAddressLink(authAddress)} target="_blank" rel="noopener">
+          {truncateAddress(authAddress)}
+        </Link>
+      ),
+    },
+    {
+      label: "Credit Manager",
+      value: creditManagerAddress === zeroAddress ? "None" : (
+        <Link href={getEtherscanAddressLink(creditManagerAddress)} target="_blank" rel="noopener">
+          {truncateAddress(creditManagerAddress)}
+        </Link>
+      ),
+    },
+    {
+      label: "Manager",
+      value: managerAddress === zeroAddress ? "None" : (
+        <Link href={getEtherscanAddressLink(managerAddress)} target="_blank" rel="noopener">
+          {truncateAddress(managerAddress)}
+        </Link>
+      ),
+    },
+    {
+      label: "Fee Manager",
+      value: feeManagerAddress === zeroAddress ? "None" : (
+        <Link href={getEtherscanAddressLink(feeManagerAddress)} target="_blank" rel="noopener">
+          {truncateAddress(feeManagerAddress)}
+        </Link>
+      ),
+    },
+    {
+      label: "Creator",
+      value: creatorAddress === zeroAddress ? "None" : (
+        <Link href={getEtherscanAddressLink(creatorAddress)} target="_blank" rel="noopener">
+          {truncateAddress(creatorAddress)}
+        </Link>
+      ),
     },
   ];
 
@@ -265,10 +317,6 @@ export const ClubParametersModal = ({
       address: <AddressDisplay address={clubAddress} className="font-mono" />
     },
     {
-      label: "Creator",
-      address: <AddressDisplay address={creatorAddress} className="font-mono" />
-    },
-    {
       label: "Reward Manager",
       address: <AddressDisplay address={rewardsManagerAddress} className="font-mono" />
     },
@@ -304,6 +352,7 @@ export const ClubParametersModal = ({
         <Modal.Body>
           <div className="ClubParametersModal__content">
             {renderParameterSection("Club Info & Metadata", clubInfoParams)}
+            {renderParameterSection("Authorization & Roles", authParams)}
             {renderParameterSection("Fundraising & Financial", fundraisingParams)}
             {renderParameterSection("Membership & Access", membershipParams)}
             {renderParameterSection("Time & Vesting", timeParams)}

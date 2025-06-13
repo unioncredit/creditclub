@@ -161,6 +161,10 @@ export const useClubData = (clubAddress: Address) => {
       ...creditVaultContract,
       functionName: "isTiersEnabled",
     },
+    {
+      ...creditVaultContract,
+      functionName: "auth",
+    },
   ];
 
   const result = useReadContracts({
@@ -211,6 +215,7 @@ export const useClubData = (clubAddress: Address) => {
     vaultWithdrawFeeBps = 0n,
     stakingWithdrawFeeBps = 0n,
     isTiersEnabled = false,
+    authAddress = zeroAddress,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -251,6 +256,7 @@ export const useClubData = (clubAddress: Address) => {
     vaultWithdrawFeeBps,
     stakingWithdrawFeeBps,
     isTiersEnabled,
+    authAddress,
   };
 
   return { ...result, data };
