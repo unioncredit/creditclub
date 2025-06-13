@@ -128,7 +128,7 @@ export const DecentSwapButton = ({
       ? "Insufficient balance"
       : amount <= 0n
         ? "Enter an amount"
-        : buttonProps.label,
+        : (buttonProps as any).label || "Buy Tokens",
   };
 
   return (
