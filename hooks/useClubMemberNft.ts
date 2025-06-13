@@ -32,6 +32,22 @@ export const useClubMemberNft = (clubAddress: Address) => {
       ...memberNftContract,
       functionName: "isInviteEnabled"
     },
+    {
+      ...memberNftContract,
+      functionName: "minMembers"
+    },
+    {
+      ...memberNftContract,
+      functionName: "gatingTokenAmount"
+    },
+    {
+      ...memberNftContract,
+      functionName: "isSoulBound"
+    },
+    {
+      ...memberNftContract,
+      functionName: "inviteCost"
+    },
   ];
 
   const result = useReadContracts({
@@ -52,6 +68,10 @@ export const useClubMemberNft = (clubAddress: Address) => {
     gatingTokenAddress = zeroAddress,
     maxMembers = 0n,
     isInviteEnabled = false,
+    minMembers = 0n,
+    gatingTokenAmount = 0n,
+    isSoulBound = false,
+    inviteCost = 0n,
     // @ts-ignore
   ] = result.data?.map(d => d.result as never) || [];
 
@@ -71,6 +91,10 @@ export const useClubMemberNft = (clubAddress: Address) => {
     gatingTokenAddress,
     maxMembers,
     isInviteEnabled,
+    minMembers,
+    gatingTokenAmount,
+    isSoulBound,
+    inviteCost,
   };
 
   return { ...result, data };

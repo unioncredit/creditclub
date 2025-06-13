@@ -36,6 +36,18 @@ export const useClubAuction = (clubAddress: Address) => {
       ...auctionContract,
       functionName: "isFailed",
     },
+    {
+      ...auctionContract,
+      functionName: "period",
+    },
+    {
+      ...auctionContract,
+      functionName: "vaultRatio",
+    },
+    {
+      ...auctionContract,
+      functionName: "assetRatio",
+    },
   ];
 
   const result = useReadContracts({
@@ -57,6 +69,9 @@ export const useClubAuction = (clubAddress: Address) => {
     end = 0n,
     isKilled = false,
     isFailed = false,
+    period = 0n,
+    vaultRatio = 0n,
+    assetRatio = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
@@ -68,6 +83,9 @@ export const useClubAuction = (clubAddress: Address) => {
     isFailed,
     hasMaxTarget: maxTarget !== maxUint256,
     readyToSettle: totalDeposits >= minTarget,
+    period,
+    vaultRatio,
+    assetRatio,
   };
 
   return { ...result, data };
