@@ -28,10 +28,15 @@ export const BuySellModal = ({
 
   const { symbol } = clubData;
 
+  // Drop symbol from title if it's too long to prevent layout issues
+  const title = symbol && symbol.length > 8 
+    ? capitalize(tab) 
+    : `${capitalize(tab)} $${symbol}`;
+
   return (
     <ModalOverlay onClick={close}>
       <Modal className="BuySellModal">
-        <Modal.Header title={`${capitalize(tab)} $${symbol}`} onClose={close} />
+        <Modal.Header title={title} onClose={close} />
         <Modal.Body>
           <SegmentedControl
             value={tab}
