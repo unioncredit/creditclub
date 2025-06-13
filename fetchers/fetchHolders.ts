@@ -34,7 +34,7 @@ export const fetchHolders = async (clubAddress: Address) => {
   const resp: any = await request(process.env.NEXT_PUBLIC_PONDER_URL, query, variables);
 
   // @ts-ignore
-  const flattened: Holder[] = resp.holders.items.map(item => ({
+  const flattened: Holder[] = resp.vaultHolders.items.map(item => ({
     address: item.address,
     amount: BigInt(item.amount),
   }));

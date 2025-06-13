@@ -57,6 +57,11 @@ export const BuyRedeemPanel = ({
     },
   ];
 
+  // Drop symbol from button labels if it's too long to prevent layout issues
+  const buyLabel = symbol && symbol.length > 8 ? "Buy" : `Buy $${symbol}`;
+  const sellLabel = symbol && symbol.length > 8 ? "Sell" : `Sell $${symbol}`;
+  const redeemLabel = symbol && symbol.length > 8 ? "Redeem" : `Redeem $${symbol}`;
+
   return (
     <div className="mb-4 p-4 border rounded-2xl">
       <header className="flex items-center justify-between">
@@ -131,7 +136,7 @@ export const BuyRedeemPanel = ({
               clubAddress,
             })}
           >
-            Buy ${symbol}
+            {buyLabel}
           </RoundedButton>
 
           <RoundedButton
@@ -143,7 +148,7 @@ export const BuyRedeemPanel = ({
               clubAddress,
             })}
           >
-            Sell ${symbol}
+            {sellLabel}
           </RoundedButton>
         </div>
 
@@ -156,7 +161,7 @@ export const BuyRedeemPanel = ({
             clubAddress,
           })}
         >
-          Redeem ${symbol}
+          {redeemLabel}
         </RoundedButton>
       </div>
 
