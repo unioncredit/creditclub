@@ -177,7 +177,7 @@ export const ClubParametersModal = ({
         { label: "Withdraw Fee", value: clubData ? `${Number(withdrawFeeBps) / 100}%` : <LoadingPlaceholder /> },
         { label: "Vault Withdraw Fee", value: clubData ? `${Number(vaultWithdrawFeeBps) / 100}%` : <LoadingPlaceholder /> },
         { label: "Staking Withdraw Fee", value: clubData ? `${Number(stakingWithdrawFeeBps) / 100}%` : <LoadingPlaceholder /> },
-        { label: "Feeling Lucky Cost", value: clubData ? `${formatDecimals(costToCall, 18, 4)} ETH` : <LoadingPlaceholder /> },
+        { label: "Feeling Lucky Cost", value: clubData ? `${formatDecimals(costToCall, 18, 6)} ETH` : <LoadingPlaceholder /> },
         { label: "Reward Cooldown", value: clubData ? formatDuration(Number(rewardCooldown)) : <LoadingPlaceholder /> },
         { label: "Fee Recipient", value: clubData ? (feeRecipient === zeroAddress ? "None" : (
           <Link href={getEtherscanAddressLink(feeRecipient)} target="_blank" rel="noopener">
