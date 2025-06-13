@@ -26,13 +26,13 @@ export const ClubParametersModal = ({
   clubAddress: Address;
 }) => {
   const { close } = useModals();
-  const { data: clubData, isLoading: clubDataLoading, error: clubDataError } = useClubData(clubAddress);
-  const { data: memberNftData, isLoading: memberNftLoading, error: memberNftError } = useClubMemberNft(clubAddress);
+  const { data: clubData } = useClubData(clubAddress);
+  const { data: memberNftData } = useClubMemberNft(clubAddress);
   const { data: inviteData } = useInvites(clubAddress);
-  const { data: auctionData, isLoading: auctionLoading, error: auctionError } = useClubAuction(clubAddress);
-  const { data: assetToken, isLoading: assetTokenLoading, error: assetTokenError } = useErc20Token(clubData?.assetAddress);
-  const { data: prorataData, isLoading: prorataLoading, error: prorataError } = useProrata(clubAddress);
-  const { data: authData, isLoading: authLoading, error: authError } = useClubAuth(clubAddress);
+  const { data: auctionData } = useClubAuction(clubAddress);
+  const { data: assetToken } = useErc20Token(clubData?.assetAddress);
+  const { data: prorataData } = useProrata(clubAddress);
+  const { data: authData } = useClubAuth(clubAddress);
 
 
 
