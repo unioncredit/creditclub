@@ -26,16 +26,44 @@ export const ClubParametersModal = ({
   clubAddress: Address;
 }) => {
   const { close } = useModals();
-  const { data: clubData } = useClubData(clubAddress);
-  const { data: memberNftData } = useClubMemberNft(clubAddress);
+  const { data: clubData, isLoading: clubDataLoading, error: clubDataError } = useClubData(clubAddress);
+  const { data: memberNftData, isLoading: memberNftLoading, error: memberNftError } = useClubMemberNft(clubAddress);
   const { data: inviteData } = useInvites(clubAddress);
-  const { data: auctionData } = useClubAuction(clubAddress);
-  const { data: assetToken } = useErc20Token(clubData?.assetAddress);
-  const { data: prorataData } = useProrata(clubAddress);
-  const { data: authData } = useClubAuth(clubAddress);
+  const { data: auctionData, isLoading: auctionLoading, error: auctionError } = useClubAuction(clubAddress);
+  const { data: assetToken, isLoading: assetTokenLoading, error: assetTokenError } = useErc20Token(clubData?.assetAddress);
+  const { data: prorataData, loading: prorataLoading, error: prorataError } = useProrata(clubAddress);
+  const { data: authData, isLoading: authLoading, error: authError } = useClubAuth(clubAddress);
 
-  // Add loading check - if any critical data is missing, don't render
-  if (!clubData || !memberNftData || !inviteData || !auctionData || !assetToken || !prorataData || !authData) {
+  // Debug logging
+  console.log('ClubParametersModal Debug:', {
+    clubData: !!clubData,
+    memberNftData: !!memberNftData,
+    inviteData: !!inviteData,
+    auctionData: !!auctionData,
+    assetToken: !!assetToken,
+    prorataData: !!prorataData,
+    authData: !!authData,
+    clubDataLoading,
+    memberNftLoading,
+    auctionLoading,
+    assetTokenLoading,
+    prorataLoading,
+    authLoading,
+    errors: {
+      clubDataError,
+      memberNftError,
+      auctionError,
+      assetTokenError,
+      prorataError,
+      authError
+    }
+  });
+
+  // Check if we have the minimum required data to render
+  const hasMinimumData = clubData && memberNftData && inviteData && auctionData;
+  
+  // If we don't have minimum data, show loading
+  if (!hasMinimumData) {
     return (
       <>
         <ModalOverlay onClick={close} />
@@ -45,6 +73,15 @@ export const ClubParametersModal = ({
             <div className="ClubParametersModal__content">
               <div className="text-center py-8">
                 <p>Loading club parameters...</p>
+                <div className="mt-4 text-sm text-gray-500">
+                  <p>Club Data: {clubData ? '✓' : clubDataLoading ? '⏳' : '❌'}</p>
+                  <p>Member NFT: {memberNftData ? '✓' : memberNftLoading ? '⏳' : '❌'}</p>
+                  <p>Invite Data: {inviteData ? '✓' : '⏳'}</p>
+                  <p>Auction Data: {auctionData ? '✓' : auctionLoading ? '⏳' : '❌'}</p>
+                  <p>Asset Token: {assetToken ? '✓' : assetTokenLoading ? '⏳' : '❌'}</p>
+                  <p>Prorata Data: {prorataData ? '✓' : prorataLoading ? '⏳' : '❌'}</p>
+                  <p>Auth Data: {authData ? '✓' : authLoading ? '⏳' : '❌'}</p>
+                </div>
               </div>
             </div>
           </Modal.Body>
@@ -98,11 +135,11 @@ export const ClubParametersModal = ({
     assetRatio
   } = auctionData;
   const {
-    creditManagerAddress,
-    managerAddress,
-    feeManagerAddress
-  } = authData;
-  const { decimals: assetDecimals } = assetToken;
+    creditManagerAddress = zeroAddress,
+    managerAddress = zeroAddress,
+    feeManagerAddress = zeroAddress
+  } = authData || {};
+  const { decimals: assetDecimals = 18 } = assetToken || {};
 
   // Club Info & Metadata
   const clubInfoParams = [
