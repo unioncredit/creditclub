@@ -60,7 +60,8 @@ export const BuyRedeemPanel = ({
   // Drop symbol from button labels if it's too long to prevent layout issues
   const buyLabel = symbol && symbol.length > 8 ? "Buy" : `Buy $${symbol}`;
   const sellLabel = symbol && symbol.length > 8 ? "Sell" : `Sell $${symbol}`;
-  const redeemLabel = symbol && symbol.length > 8 ? "Redeem" : `Redeem $${symbol}`;
+  const redeemLabel = symbol && symbol.length > 20 ? "Redeem" : `Redeem $${symbol}`;
+  const addTokenLabel = symbol && symbol.length > 8 ? "" : `$${symbol}`;
 
   return (
     <div className="mb-4 p-4 border rounded-2xl">
@@ -92,7 +93,7 @@ export const BuyRedeemPanel = ({
               })}
             >
               <AddIcon width={24} />
-              ${symbol}
+              {addTokenLabel}
             </RoundedButton>
           )}
         </div>
