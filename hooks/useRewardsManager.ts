@@ -5,6 +5,7 @@ import { DEFAULT_CHAIN_ID } from "@/constants";
 import { useContract } from "@/hooks/useContract";
 import { useRewardsManagerContract } from "@/hooks/useRewardsManagerContract";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const useRewardsManager = (clubAddress: Address) => {
   const { address = zeroAddress } = useAccount();
 
