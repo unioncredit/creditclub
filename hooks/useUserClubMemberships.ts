@@ -2,8 +2,6 @@ import { Address, zeroAddress } from "viem";
 import { useAccount, useReadContracts } from "wagmi";
 
 import { DEFAULT_CHAIN_ID } from "@/constants";
-import { useClubData } from "@/hooks/useClubData";
-import { useMemberNftContract } from "@/hooks/useMemberNftContract";
 
 // List of known club addresses - you can expand this list or fetch from a registry
 const KNOWN_CLUB_ADDRESSES: Address[] = [
