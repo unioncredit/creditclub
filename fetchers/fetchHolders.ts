@@ -30,14 +30,31 @@ export const fetchHolders = async (clubAddress: Address) => {
     vaultAddress: clubAddress.toLowerCase(),
   };
 
-  // @ts-ignore
-  const resp: any = await request(process.env.NEXT_PUBLIC_PONDER_URL, query, variables);
+  console.log('fetchHolders - Request variables:', variables);
+  console.log('fetchHolders - Ponder URL:', process.env.NEXT_PUBLIC_PONDER_URL);
 
-  // @ts-ignore
-  const flattened: Holder[] = resp.vaultHolders.items.map(item => ({
-    address: item.address,
-    amount: BigInt(item.amount),
-  }));
+  try {
+    // @ts-ignore
+    const resp: any = await request(process.env.NEXT_PUBLIC_PONDER_URL, query, variables);
+    
+    console.log('fetchHolders - Raw response:', resp);
+    console.log('fetchHolders - vaultHolders in response:', resp.vaultHolders);
 
-  return flattened;
+    if (!resp.vaultHolders || !resp.vaultHolders.items) {
+      console.log('fetchHolders - No vaultHolders data found in response');
+      return [];
+    }
+
+    // @ts-ignore
+    const flattened: Holder[] = resp.vaultHolders.items.map(item => ({
+      address: item.address,
+      amount: BigInt(item.amount),
+    }));
+
+    console.log('fetchHolders - Processed holders:', flattened);
+    return flattened;
+  } catch (error) {
+    console.error('fetchHolders - Error:', error);
+    return [];
+  }
 }
