@@ -62,17 +62,17 @@ export const useClubMemberNft = (clubAddress: Address) => {
     }
   });
 
-  const [
-    contractURI = "",
-    membershipCost = 0n,
-    gatingTokenAddress = zeroAddress,
-    maxMembers = 0n,
-    isInviteEnabled = false,
-    minMembers = 0n,
-    gatingTokenAmount = 0n,
-    isSoulBound = false,
-    inviteCost = 0n,
-  ] = result.data?.map(d => d.result) || [];
+  const resultData = result.data?.map(d => d.result) || [];
+  
+  const contractURI = (resultData[0] as string) || "";
+  const membershipCost = (resultData[1] as bigint) || 0n;
+  const gatingTokenAddress = (resultData[2] as Address) || zeroAddress;
+  const maxMembers = (resultData[3] as bigint) || 0n;
+  const isInviteEnabled = (resultData[4] as boolean) || false;
+  const minMembers = (resultData[5] as bigint) || 0n;
+  const gatingTokenAmount = (resultData[6] as bigint) || 0n;
+  const isSoulBound = (resultData[7] as boolean) || false;
+  const inviteCost = (resultData[8] as bigint) || 0n;
 
   let contractMetadata: {
     name?: string;
@@ -98,14 +98,16 @@ export const useClubMemberNft = (clubAddress: Address) => {
     image = ""
   } = contractMetadata;
 
-  // Debug logging
-  console.log("Contract metadata:", {
-    contractURI,
-    contractMetadata,
-    name,
-    description,
-    image
-  });
+  // Debug logging - can be removed after testing
+  if (process.env.NODE_ENV === 'development') {
+    console.log("Contract metadata:", {
+      contractURI,
+      contractMetadata,
+      name,
+      description,
+      image
+    });
+  }
 
   const data = {
     name,
