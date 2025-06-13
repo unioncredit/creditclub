@@ -62,6 +62,18 @@ export const ClubParametersModal = ({
   // Check if we have the minimum required data to render
   const hasMinimumData = clubData && memberNftData && inviteData && auctionData;
   
+  console.log('hasMinimumData check:', {
+    hasMinimumData,
+    clubData: !!clubData,
+    memberNftData: !!memberNftData,
+    inviteData: !!inviteData,
+    auctionData: !!auctionData,
+    clubDataType: typeof clubData,
+    memberNftDataType: typeof memberNftData,
+    inviteDataType: typeof inviteData,
+    auctionDataType: typeof auctionData
+  });
+  
   // If we don't have minimum data, show loading
   if (!hasMinimumData) {
     return (
