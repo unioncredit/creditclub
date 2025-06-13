@@ -17,6 +17,7 @@ import { useClubAuction } from "@/hooks/useClubAuction";
 import { useErc20Token } from "@/hooks/useErc20Token";
 import { useProrata } from "@/hooks/useProrata";
 import { useClubAuth } from "@/hooks/useClubAuth";
+import { useRewardsManagerContract } from "@/hooks/useRewardsManagerContract";
 
 export const CLUB_PARAMETERS_MODAL = "club-parameters-modal";
 
@@ -33,6 +34,7 @@ export const ClubParametersModal = ({
   const { data: assetToken } = useErc20Token(clubData?.assetAddress);
   const { data: prorataData } = useProrata(clubAddress);
   const { data: authData } = useClubAuth(clubAddress);
+  const rewardsManagerContract = useRewardsManagerContract();
 
 
 
@@ -112,19 +114,29 @@ export const ClubParametersModal = ({
       ]
     },
     {
-      title: "Authorization & Roles",
+      title: "Ownership & Authorization",
       parameters: [
-        { label: "Auth Contract", value: clubData ? (authAddress === zeroAddress ? "None" : (
+        { label: "Vault Owner (Auth Contract)", value: clubData ? (authAddress === zeroAddress ? "None" : (
           <Link href={getEtherscanAddressLink(authAddress)} target="_blank" rel="noopener">
             {truncateAddress(authAddress)}
           </Link>
         )) : <LoadingPlaceholder /> },
+        { label: "Club Creator", value: clubData ? (creatorAddress === zeroAddress ? "None" : (
+          <Link href={getEtherscanAddressLink(creatorAddress)} target="_blank" rel="noopener">
+            {truncateAddress(creatorAddress)}
+          </Link>
+        )) : <LoadingPlaceholder /> },
+      ]
+    },
+    {
+      title: "Management Roles",
+      parameters: [
         { label: "Credit Manager", value: authData ? (creditManagerAddress === zeroAddress ? "None" : (
           <Link href={getEtherscanAddressLink(creditManagerAddress)} target="_blank" rel="noopener">
             {truncateAddress(creditManagerAddress)}
           </Link>
         )) : <LoadingPlaceholder /> },
-        { label: "Manager", value: authData ? (managerAddress === zeroAddress ? "None" : (
+        { label: "General Manager", value: authData ? (managerAddress === zeroAddress ? "None" : (
           <Link href={getEtherscanAddressLink(managerAddress)} target="_blank" rel="noopener">
             {truncateAddress(managerAddress)}
           </Link>
@@ -132,11 +144,6 @@ export const ClubParametersModal = ({
         { label: "Fee Manager", value: authData ? (feeManagerAddress === zeroAddress ? "None" : (
           <Link href={getEtherscanAddressLink(feeManagerAddress)} target="_blank" rel="noopener">
             {truncateAddress(feeManagerAddress)}
-          </Link>
-        )) : <LoadingPlaceholder /> },
-        { label: "Creator", value: clubData ? (creatorAddress === zeroAddress ? "None" : (
-          <Link href={getEtherscanAddressLink(creatorAddress)} target="_blank" rel="noopener">
-            {truncateAddress(creatorAddress)}
           </Link>
         )) : <LoadingPlaceholder /> },
       ]
@@ -212,7 +219,7 @@ export const ClubParametersModal = ({
       title: "Contract Addresses",
       parameters: [
         { label: "CreditVault", value: <AddressDisplay address={clubAddress} className="font-mono" /> },
-        { label: "Reward Manager", value: clubData ? <AddressDisplay address={rewardsManagerAddress} className="font-mono" /> : <LoadingPlaceholder /> },
+        { label: "Reward Manager", value: <AddressDisplay address={rewardsManagerContract.address} className="font-mono" /> },
         { label: "Membership NFT", value: <AddressDisplay address={memberNftAddress} className="font-mono" /> },
         { label: "Staking Contract", value: <AddressDisplay address={stakingAddress} className="font-mono" /> },
       ]
