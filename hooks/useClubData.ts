@@ -229,6 +229,15 @@ export const useClubData = (clubAddress: Address) => {
 
   const stakingWithdrawFeeBps = stakingResult.data?.[0]?.result as bigint || 0n;
 
+  // Debug logging - remove after debugging
+  console.log('Debug useClubData:', {
+    stakingAddress,
+    vaultWithdrawFeeBps: vaultWithdrawFeeBps?.toString(),
+    stakingWithdrawFeeBps: stakingWithdrawFeeBps?.toString(),
+    stakingResultStatus: stakingResult.status,
+    stakingResultError: stakingResult.error
+  });
+
   const data = {
     totalLockedStake,
     stakedBalance,
