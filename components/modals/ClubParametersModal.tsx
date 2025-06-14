@@ -65,12 +65,11 @@ export const ClubParametersModal = ({
     name: clubName,
     symbol: clubSymbol,
     image: clubImage,
-    description: vaultDescription,
+    description: clubDescription,
     ownerAddress
   } = clubData || {};
   const {
     name: membershipName,
-    description: clubDescription,
     gatingTokenAddress,
     gatingTokenAmount,
     membershipCost,
@@ -108,7 +107,7 @@ export const ClubParametersModal = ({
             </Link>
           </div>
         ) : "None") : <LoadingPlaceholder /> },
-        { label: "Description", value: memberNftData ? (clubDescription || "None") : <LoadingPlaceholder /> },
+        { label: "Description", value: clubData ? (clubDescription || "None") : <LoadingPlaceholder /> },
         { label: "Membership Name", value: memberNftData ? (membershipName || "None") : <LoadingPlaceholder /> },
       ]
     },
