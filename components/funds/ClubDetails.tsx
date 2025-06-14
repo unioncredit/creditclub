@@ -53,8 +53,7 @@ export const ClubDetails = ({
     shouldTruncate: true,
   });
 
-  const { name, image, symbol, creatorAddress } = clubData;
-  const { description } = clubMemberNftData;
+  const { name, image, symbol, creatorAddress, description } = clubData;
 
   const clubBadges = [
     {

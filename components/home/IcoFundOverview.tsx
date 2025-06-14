@@ -20,8 +20,8 @@ export const IcoFundOverview = ({
   const { data: clubContacts } = useClubContacts(clubAddress);
   const { activated, locked, remaining } = useClubActivation(clubAddress);
 
-  const { name, symbol, lockupPeriod } = clubData;
-  const { description, maxMembers } = clubMemberNftData;
+  const { name, symbol, lockupPeriod, description } = clubData;
+  const { maxMembers } = clubMemberNftData;
   const { current, goal } = icoStats;
 
   const rows: StatGridRow[] = [
