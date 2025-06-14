@@ -4,6 +4,7 @@ import { useReadContracts } from "wagmi";
 import { DEFAULT_CHAIN_ID, TOTAL_PERCENT } from "@/constants";
 import { useContract } from "@/hooks/useContract";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
+import { useStakingContract } from "@/hooks/useStakingContract";
 import { unionContract } from "@/contracts/base";
 
 export const useClubData = (clubAddress: Address) => {
@@ -143,19 +144,11 @@ export const useClubData = (clubAddress: Address) => {
     },
     {
       ...creditVaultContract,
-      functionName: "withdrawFeeBps",
-    },
-    {
-      ...creditVaultContract,
       functionName: "withdrawPeriod",
     },
     {
       ...creditVaultContract,
-      functionName: "vaultWithdrawFeeBps",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "stakingWithdrawFeeBps",
+      functionName: "withdrawFeeBps",
     },
     {
       ...creditVaultContract,
@@ -210,13 +203,31 @@ export const useClubData = (clubAddress: Address) => {
     stakingAddress = zeroAddress,
     feeRecipient = zeroAddress,
     isClosedEndFund = false,
-    withdrawFeeBps = 0n,
     withdrawPeriod = 0n,
     vaultWithdrawFeeBps = 0n,
-    stakingWithdrawFeeBps = 0n,
     isTiersEnabled = false,
     ownerAddress = zeroAddress,
   ] = result.data?.map(d => d.result as never) || [];
+
+  // Get staking withdraw fee from staking contract
+  const stakingContract = useStakingContract(stakingAddress);
+  const stakingResult = useReadContracts({
+    contracts: [
+      {
+        ...stakingContract,
+        functionName: "withdrawFeeBps",
+      }
+    ].map(c => ({
+      ...c,
+      chainId: DEFAULT_CHAIN_ID,
+    })),
+    query: {
+      enabled: !!stakingAddress && stakingAddress !== zeroAddress,
+      staleTime: Infinity,
+    }
+  });
+
+  const stakingWithdrawFeeBps = stakingResult.data?.[0]?.result as bigint || 0n;
 
   const data = {
     totalLockedStake,
@@ -251,7 +262,6 @@ export const useClubData = (clubAddress: Address) => {
     stakingAddress,
     feeRecipient,
     isClosedEndFund,
-    withdrawFeeBps,
     withdrawPeriod,
     vaultWithdrawFeeBps,
     stakingWithdrawFeeBps,

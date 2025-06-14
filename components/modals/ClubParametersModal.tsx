@@ -53,7 +53,6 @@ export const ClubParametersModal = ({
     fixedBidPrice,
     lockupPeriod,
     withdrawPeriod,
-    withdrawFeeBps,
     vaultWithdrawFeeBps,
     stakingWithdrawFeeBps,
     feeRecipient,
@@ -180,10 +179,9 @@ export const ClubParametersModal = ({
     {
       title: "Fees & Recipients",
       parameters: [
-        { label: "Withdraw Fee", value: clubData ? `${(Number(withdrawFeeBps) / 10000 * 100).toFixed(4)}%` : <LoadingPlaceholder /> },
         { label: "Vault Withdraw Fee", value: clubData ? `${(Number(vaultWithdrawFeeBps) / 10000 * 100).toFixed(4)}%` : <LoadingPlaceholder /> },
         { label: "Staking Withdraw Fee", value: clubData ? `${(Number(stakingWithdrawFeeBps) / 10000 * 100).toFixed(4)}%` : <LoadingPlaceholder /> },
-        { label: "Feeling Lucky Cost", value: clubData ? `${formatDecimals(costToCall, 18, 4, false, false, false)} ETH` : <LoadingPlaceholder /> },
+        { label: "Feeling Lucky Cost", value: clubData ? `${formatDecimals(costToCall, 18, 5, false, false, false)} ETH` : <LoadingPlaceholder /> },
         { label: "Reward Cooldown", value: clubData ? formatDuration(Number(rewardCooldown)) : <LoadingPlaceholder /> },
         { label: "Fee Recipient", value: clubData ? (feeRecipient === zeroAddress ? "None" : (
           <Link href={getEtherscanAddressLink(feeRecipient)} target="_blank" rel="noopener">
