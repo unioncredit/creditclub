@@ -132,6 +132,10 @@ export const useClubData = (clubAddress: Address) => {
     },
     {
       ...creditVaultContract,
+      functionName: "description",
+    },
+    {
+      ...creditVaultContract,
       functionName: "staking",
     },
     {
@@ -200,6 +204,7 @@ export const useClubData = (clubAddress: Address) => {
     rewardsManagerAddress = zeroAddress,
     auctionAddress = zeroAddress,
     image = "",
+    description = "",
     stakingAddress = zeroAddress,
     feeRecipient = zeroAddress,
     isClosedEndFund = false,
@@ -268,6 +273,7 @@ export const useClubData = (clubAddress: Address) => {
     rewardsManagerAddress,
     auctionAddress,
     image,
+    description,
     stakingAddress,
     feeRecipient,
     isClosedEndFund,

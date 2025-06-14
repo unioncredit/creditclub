@@ -65,6 +65,7 @@ export const ClubParametersModal = ({
     name: clubName,
     symbol: clubSymbol,
     image: clubImage,
+    description: vaultDescription,
     ownerAddress
   } = clubData || {};
   const {
