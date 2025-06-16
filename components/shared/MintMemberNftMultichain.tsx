@@ -188,7 +188,7 @@ export const MintMemberNftMultichain = ({
       onTxError={(error) => {
         console.error("Detailed transaction error:", {
           error,
-          errorMessage: error?.message || "Unknown error",
+          errorMessage: (error as any)?.message || error?.toString() || "Unknown error",
           needsApproval,
           isWaitingForApproval,
           membershipCost: membershipCost.toString(),
