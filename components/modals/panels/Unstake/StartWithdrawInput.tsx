@@ -87,7 +87,7 @@ export const StartWithdrawInput = ({
             className="border border-black"
           />
         )}
-        rightLabel={`Max. ${formatDecimals(stakedBalance, decimals, 2)}`}
+        rightLabel={`Max. ${formatDecimals(stakedBalance, decimals)} ${symbol} (raw: ${stakedBalance?.toString()})`}
         rightLabelAction={() => setRawValue("shares", stakedBalance)}
       />
 

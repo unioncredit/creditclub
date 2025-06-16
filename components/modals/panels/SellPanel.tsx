@@ -27,14 +27,26 @@ export const SellPanel = ({
   const { data: clubMemberData, refetch: refetchClubMember } = useClubMember(address, clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
 
+  // Debug logging
+  console.log("SellPanel Debug:", {
+    clubAddress,
+    userAddress: address,
+    clubTokenBalance: clubMemberData?.clubTokenBalance?.toString(),
+    clubData,
+    clubMemberData,
+  });
+
   const { image, decimals, symbol } = clubData;
   const { address: assetAddress, symbol: assetSymbol } = assetToken;
-  const { clubTokenBalance } = clubMemberData;
+  const { clubTokenBalance, stakedBalance } = clubMemberData;
+  
+  // Total available balance includes both unstaked and staked tokens
+  const totalAvailableBalance = clubTokenBalance + stakedBalance;
 
   const validate = (inputs: IFormValues) => {
     const amount = inputs.amount as IFormField;
 
-    if (amount.raw > clubTokenBalance) {
+    if (amount.raw > totalAvailableBalance) {
       return "Amount exceeds balance";
     }
   };
@@ -88,8 +100,8 @@ export const SellPanel = ({
         value={amount.formatted}
         onChange={register("amount")}
         error={errors.amount}
-        rightLabel={`Avail. ${formatDecimals(clubTokenBalance, decimals)} ${symbol} (raw: ${clubTokenBalance?.toString()})`}
-        rightLabelAction={() => setRawValue("amount", clubTokenBalance)}
+        rightLabel={`Avail. ${formatDecimals(totalAvailableBalance, decimals)} ${symbol} (raw: ${totalAvailableBalance?.toString()})`}
+        rightLabelAction={() => setRawValue("amount", totalAvailableBalance)}
       />
 
       <div className="flex gap-2 w-full">
