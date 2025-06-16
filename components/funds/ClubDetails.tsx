@@ -20,7 +20,6 @@ import { useTalentSocials } from "@/hooks/useTalentSocials";
 
 import { useClubData } from "@/hooks/useClubData";
 import { useClubContacts } from "@/hooks/useClubContacts";
-import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { RoundedButton } from "@/components/ui/RoundedButton";
 import { useNativeShare } from "@/hooks/useNativeShare";
@@ -46,7 +45,6 @@ export const ClubDetails = ({
   const { copy: copyCreatorAddr, copied: copiedCreatorAddr } = useCopyToClipboard();
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress)
-  const { data: clubMemberNftData } = useClubMemberNft(clubAddress);
   const { data: socials } = useTalentSocials(clubData.creatorAddress);
   const { data: deployerName } = usePrimaryLabel({
     address: clubData.creatorAddress,
