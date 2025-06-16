@@ -88,7 +88,7 @@ export const SellPanel = ({
         value={amount.formatted}
         onChange={register("amount")}
         error={errors.amount}
-        rightLabel={`Avail. ${formatDecimals(clubTokenBalance, decimals, 2, false, false, true)} ${symbol}`}
+        rightLabel={`Avail. ${formatDecimals(clubTokenBalance, decimals)} ${symbol} (raw: ${clubTokenBalance?.toString()})`}
         rightLabelAction={() => setRawValue("amount", clubTokenBalance)}
       />
 
