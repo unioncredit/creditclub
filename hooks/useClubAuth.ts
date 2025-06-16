@@ -91,62 +91,23 @@ export const useClubAuth = (clubAddress: Address) => {
     feeManagerRoleHash,
   ] = roleResult.data?.map(d => d.result as `0x${string}`) || [];
 
-  // First check if roles have any members
-  const roleCountContracts = [
-    {
-      ...authContract,
-      functionName: "getRoleMemberCount",
-      args: [creditManagerRoleHash],
-    },
-    {
-      ...authContract,
-      functionName: "getRoleMemberCount", 
-      args: [managerRoleHash],
-    },
-    {
-      ...authContract,
-      functionName: "getRoleMemberCount",
-      args: [feeManagerRoleHash],
-    },
-  ];
-
-  const roleCountResult = useReadContracts({
-    contracts: roleCountContracts.map(c => ({
-      ...c,
-      chainId: DEFAULT_CHAIN_ID,
-    })),
-    query: {
-      enabled: !!creditManagerRoleHash && !!managerRoleHash && !!feeManagerRoleHash,
-      staleTime: Infinity,
-    }
-  });
-
-  const [
-    creditManagerCount = BigInt(0),
-    managerCount = BigInt(0),
-    feeManagerCount = BigInt(0),
-  ] = roleCountResult.data?.map(d => {
-    const result = d.result;
-    return typeof result === 'bigint' ? result : BigInt(0);
-  }) || [];
-
-  // Then get the first member of each role (only if they have members)
+  // Directly try to get the first member of each role
   const memberContracts = [
-    ...(creditManagerCount > BigInt(0) ? [{
+    {
       ...authContract,
       functionName: "getRoleMember",
       args: [creditManagerRoleHash, 0],
-    }] : []),
-    ...(managerCount > BigInt(0) ? [{
+    },
+    {
       ...authContract,
       functionName: "getRoleMember", 
       args: [managerRoleHash, 0],
-    }] : []),
-    ...(feeManagerCount > BigInt(0) ? [{
+    },
+    {
       ...authContract,
       functionName: "getRoleMember",
       args: [feeManagerRoleHash, 0],
-    }] : []),
+    },
   ];
 
   const memberResult = useReadContracts({
@@ -155,7 +116,7 @@ export const useClubAuth = (clubAddress: Address) => {
       chainId: DEFAULT_CHAIN_ID,
     })),
     query: {
-      enabled: memberContracts.length > 0,
+      enabled: !!creditManagerRoleHash && !!managerRoleHash && !!feeManagerRoleHash,
       staleTime: Infinity,
     }
   });
@@ -171,22 +132,14 @@ export const useClubAuth = (clubAddress: Address) => {
       managerRoleHash,
       feeManagerRoleHash,
     },
-    roleCounts: {
-      creditManagerCount: Number(creditManagerCount),
-      managerCount: Number(managerCount),
-      feeManagerCount: Number(feeManagerCount),
-    },
     roleResult: {
       status: roleResult.status,
       data: roleResult.data,
     },
-    roleCountResult: {
-      status: roleCountResult.status,
-      data: roleCountResult.data,
-    },
     memberResult: {
       status: memberResult.status,
       data: memberResult.data,
+      errors: memberResult.data?.map(d => d.error),
     },
     memberContractsLength: memberContracts.length,
   });
