@@ -98,17 +98,7 @@ export const useClubMemberNft = (clubAddress: Address) => {
     image = ""
   } = contractMetadata;
 
-  // Debug logging - can be removed after testing
-  console.warn("useClubMemberNft DEBUG:", {
-    clubAddress,
-    contractURI,
-    contractMetadata,
-    name,
-    description,
-    image,
-    resultDataLength: resultData.length,
-    rawResults: resultData
-  });
+
 
   const data = {
     name,

@@ -163,33 +163,10 @@ export const useClubAuth = (clubAddress: Address) => {
     }
   });
 
-  // Debug logging
-  console.log('🔍 useClubAuth Debug (AccessControl with counts):', {
-    clubAddress,
-    ownerAddress: ownerAddress,
-    authAddress: ownerAddress, // Owner IS the auth contract
-    clubDataLoading,
-    roleHashes: {
-      creditManagerRoleHash,
-      managerRoleHash,
-      feeManagerRoleHash,
-    },
-    roleCounts: {
-      creditManagerCount: creditManagerCount.toString(),
-      managerCount: managerCount.toString(),
-      feeManagerCount: feeManagerCount.toString(),
-    },
-    memberContractsLength: memberContracts.length,
-    memberResult: {
-      status: memberResult.status,
-      data: memberResult.data,
-      errors: memberResult.data?.map(d => d.error),
-    },
-  });
+
 
   // If club data is still loading, return loading state
   if (clubDataLoading) {
-    console.log('📊 Club data still loading...');
     return {
       isLoading: true,
       data: {
@@ -203,7 +180,6 @@ export const useClubAuth = (clubAddress: Address) => {
 
   // If no auth contract exists, return immediately with zero addresses
   if (!ownerAddress || ownerAddress === zeroAddress) {
-    console.log('⚠️ No owner address found:', ownerAddress);
     return {
       isLoading: false,
       data: {
@@ -246,20 +222,12 @@ export const useClubAuth = (clubAddress: Address) => {
     feeManagerAddress = memberResult.data[memberIndex].result as Address;
   }
 
-  console.log('📋 Parsed management addresses (from AccessControl with counts):', {
-    creditManagerAddress,
-    managerAddress,
-    feeManagerAddress,
-  });
-
   const data = {
     authAddress: ownerAddress,
     creditManagerAddress,
     managerAddress,
     feeManagerAddress,
   };
-
-  console.log('✅ Final useClubAuth data:', data);
 
   return { 
     isLoading: roleResult.isLoading || countResult.isLoading || memberResult.isLoading,

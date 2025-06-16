@@ -36,8 +36,7 @@ export const ClubParametersModal = ({
   const { data: authData } = useClubAuth(clubAddress);
   const rewardsManagerContract = useRewardsManagerContract();
 
-  // Debug logging for auth data
-  console.log('🏛️ ClubParametersModal authData:', authData);
+
 
 
 
