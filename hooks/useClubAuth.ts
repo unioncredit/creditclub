@@ -205,24 +205,30 @@ export const useClubAuth = (clubAddress: Address) => {
   }
 
   // Parse member addresses based on which roles have members
-  let creditManagerAddress = zeroAddress;
-  let managerAddress = zeroAddress;
-  let feeManagerAddress = zeroAddress;
+  let creditManagerAddress: Address = zeroAddress;
+  let managerAddress: Address = zeroAddress;
+  let feeManagerAddress: Address = zeroAddress;
 
   let memberIndex = 0;
   if (creditManagerCount > BigInt(0) && memberResult.data?.[memberIndex]?.result) {
-    const result = memberResult.data?.[memberIndex]?.result;
-    if (result) creditManagerAddress = result as Address;
+    const result = memberResult.data[memberIndex]?.result;
+    if (result && typeof result === 'string') {
+      creditManagerAddress = result as Address;
+    }
     memberIndex++;
   }
   if (managerCount > BigInt(0) && memberResult.data?.[memberIndex]?.result) {
-    const result = memberResult.data?.[memberIndex]?.result;
-    if (result) managerAddress = result as Address;
+    const result = memberResult.data[memberIndex]?.result;
+    if (result && typeof result === 'string') {
+      managerAddress = result as Address;
+    }
     memberIndex++;
   }
   if (feeManagerCount > BigInt(0) && memberResult.data?.[memberIndex]?.result) {
-    const result = memberResult.data?.[memberIndex]?.result;
-    if (result) feeManagerAddress = result as Address;
+    const result = memberResult.data[memberIndex]?.result;
+    if (result && typeof result === 'string') {
+      feeManagerAddress = result as Address;
+    }
   }
 
   const data = {
