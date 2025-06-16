@@ -24,7 +24,14 @@ export const BuyPanel = ({
   const [token, setToken] = useState<UserTokenInfo | null>(null);
   const [swapData, setSwapData] = useState<any>(undefined);
 
-
+  // Debug token state
+  useEffect(() => {
+    console.log("BuyPanel token state:", { 
+      hasToken: !!token, 
+      tokenAddress: token?.address,
+      tokenSymbol: token?.symbol 
+    });
+  }, [token]);
 
   const { close } = useModals();
   const { address } = useAccount();
@@ -111,8 +118,12 @@ export const BuyPanel = ({
           <DecentTokenSelect
             initialToken={usdcContract.address}
             onChange={(token: UserTokenInfo) => {
-              console.log("Token selected:", token);
+              console.log("Token selected in DecentTokenSelect:", token);
               setToken(token);
+            }}
+            onReady={(token: UserTokenInfo) => {
+              console.log("Token ready in DecentTokenSelect:", token);
+              if (token) setToken(token);
             }}
           />
         )}
@@ -123,7 +134,7 @@ export const BuyPanel = ({
           rightLabel: `Avail. ${maxBalance} ${token.symbol}`,
           rightLabelAction: () => setRawValue("amount", token.balance)
         } : {})}
-        disabled={!token}
+        disabled={false}
       />
       {!token && (
         <div className="text-xs text-red-500 mt-1">
