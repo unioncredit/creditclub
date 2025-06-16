@@ -43,12 +43,13 @@ export const BuyPanel = ({
   const validate = (inputs: IFormValues) => {
     const amount = inputs.amount as IFormField;
 
-    if (!token) {
-      return "No token selected";
-    }
-    if (amount.raw > token.balance) {
+    // Allow input even without token, but show validation for actions
+    if (token && amount.raw > token.balance) {
       return "Amount exceeds balance";
     }
+    
+    // Don't block input, but we'll handle token validation at the button level
+    return undefined;
   };
 
   const {
@@ -110,6 +111,7 @@ export const BuyPanel = ({
           <DecentTokenSelect
             initialToken={usdcContract.address}
             onChange={(token: UserTokenInfo) => {
+              console.log("Token selected:", token);
               setToken(token);
             }}
           />
@@ -121,8 +123,13 @@ export const BuyPanel = ({
           rightLabel: `Avail. ${maxBalance} ${token.symbol}`,
           rightLabelAction: () => setRawValue("amount", token.balance)
         } : {})}
-        disabled={false}
+        disabled={!token}
       />
+      {!token && (
+        <div className="text-xs text-red-500 mt-1">
+          Please select a token to continue
+        </div>
+      )}
 
       
 
