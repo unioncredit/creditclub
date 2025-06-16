@@ -22,26 +22,12 @@ export const BuyPanel = ({
   clubAddress: Address;
 }) => {
   const [token, setToken] = useState<UserTokenInfo | null>(null);
-  const [swapData, setSwapData] = useState<any>(undefined);
-
-  // Debug logging
-  useEffect(() => {
-    console.log("BuyPanel Debug:", {
-      hasToken: !!token,
-      tokenAddress: token?.address,
-      tokenSymbol: token?.symbol,
-      tokenBalance: token?.balance?.toString(),
-    });
-  }, [token]);
+  const [amountOut, setAmountOut] = useState<any>(undefined);
 
   const { close } = useModals();
   const { address } = useAccount();
   const { data: clubData } = useClubData(clubAddress);
   const { refetch: refetchClubMember } = useClubMember(address, clubAddress);
-  
-  // Check if we have a routing error (token not available on DEX)
-  const hasRoutingError = swapData && swapData.error && swapData.error.code === 404;
-  const amountOut = swapData?.amountOut;
 
   const { symbol } = clubData;
 
@@ -66,20 +52,9 @@ export const BuyPanel = ({
     errors = {},
     empty,
     reset,
-  } = useForm({ validate, decimals: token?.decimals || 18 }); // Default to 18 decimals
+  } = useForm({ validate, decimals: token?.decimals || 0 });
 
   const amount = values.amount as IFormField || empty;
-
-  // Debug form state
-  useEffect(() => {
-    console.log("Form Debug:", {
-      amountFormatted: amount.formatted,
-      amountRaw: amount.raw?.toString(),
-      hasErrors: Object.keys(errors).length > 0,
-      errors,
-      tokenDecimals: token?.decimals,
-    });
-  }, [amount, errors, token?.decimals]);
 
   const percentages = [
     {
@@ -101,19 +76,7 @@ export const BuyPanel = ({
   ];
 
   // Reset input amount on token change
-  useEffect(() => {
-    if (token) {
-      reset();
-      setSwapData(undefined);
-    }
-  }, [token?.address, reset]); // Only reset when token address changes
-
-  // Clear swap data when amount is 0
-  useEffect(() => {
-    if (amount.raw <= 0n) {
-      setSwapData(undefined);
-    }
-  }, [amount.raw]);
+  useEffect(reset, [token]);
 
   return (
     <>
@@ -126,32 +89,18 @@ export const BuyPanel = ({
         suffix={(
           <DecentTokenSelect
             initialToken={usdcContract.address}
-            onChange={(token: UserTokenInfo) => {
-              console.log("Token selected in BuyPanel:", token);
-              setToken(token);
-            }}
-            onReady={(token: UserTokenInfo) => {
-              console.log("Token ready in DecentTokenSelect:", token);
-              if (token) setToken(token);
-            }}
+            onChange={(token: UserTokenInfo) => setToken(token)}
           />
         )}
         value={amount.formatted}
-        onChange={(e) => {
-          console.log("Input onChange called:", e);
-          register("amount")(e);
-        }}
+        onChange={register("amount")}
         error={errors.amount}
         {...(token ? {
           rightLabel: `Avail. ${maxBalance} ${token.symbol}`,
           rightLabelAction: () => setRawValue("amount", token.balance)
         } : {})}
-        disabled={false}
+        disabled={!token}
       />
-      <div className="text-xs text-gray-500 mt-1">
-        Debug: Token={!!token ? 'Yes' : 'No'}, Value="{amount.formatted}", Disabled=false
-      </div>
-      
 
       {token && (
         <>
@@ -168,26 +117,16 @@ export const BuyPanel = ({
             ))}
           </div>
 
-          {hasRoutingError ? (
-            <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-              <p className="text-amber-800 text-sm font-medium">Token not available on secondary markets</p>
-              <p className="text-amber-700 text-xs mt-1">
-                This token may only be available through direct minting. Check the main page for minting options.
-              </p>
+          <Modal.Container className="mt-4">
+            <div className="flex justify-between w-full">
+              <p className="font-medium text-lg">You receive</p>
+              <p className="font-mono text-xl">~{amountOut ? formatDecimals(amountOut.amount, amountOut.decimals) : "0.00"} ${symbol}</p>
             </div>
-          ) : (
-            <Modal.Container className="mt-4">
-              <div className="flex justify-between w-full">
-                <p className="font-medium text-lg">You receive</p>
-                <p className="font-mono text-xl">~{amountOut && !hasRoutingError ? formatDecimals(amountOut.amount || amountOut, amountOut.decimals || 18) : "0.00"} ${symbol}</p>
-
-              </div>
-            </Modal.Container>
-          )}
+          </Modal.Container>
         </>
       )}
 
-      {token && amount.raw > 0n && !hasRoutingError ? (
+      {token ? (
         <DecentSwapButton
           amount={amount.raw}
           srcToken={token.address as Address}
@@ -196,30 +135,12 @@ export const BuyPanel = ({
           dstChainId={DEFAULT_CHAIN_ID}
           label={`Buy $${symbol} Tokens`}
           onSwapPrepared={(swap) => {
-            setSwapData(swap);
+            setAmountOut(swap?.amountOut);
           }}
           onComplete={async (_: Hash) => {
             refetchClubMember();
             close();
           }}
-        />
-      ) : token && hasRoutingError ? (
-        <Button
-          fluid
-          className="mt-4"
-          color="secondary"
-          size="large"
-          label="Token not available on DEX"
-          disabled={true}
-        />
-      ) : token ? (
-        <Button
-          fluid
-          className="mt-4"
-          color="primary"
-          size="large"
-          label={amount.raw <= 0n ? "Enter an amount" : `Buy $${symbol} Tokens`}
-          disabled={true}
         />
       ) : (
         <Button
