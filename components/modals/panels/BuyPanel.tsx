@@ -22,17 +22,18 @@ export const BuyPanel = ({
   clubAddress: Address;
 }) => {
   const [token, setToken] = useState<UserTokenInfo | null>(null);
-  const [amountOut, setAmountOut] = useState<any>(undefined);
+  const [swapData, setSwapData] = useState<any>(undefined);
 
-  // Debug token state
-  useEffect(() => {
-    console.log("Token state changed:", { token, hasToken: !!token });
-  }, [token]);
+
 
   const { close } = useModals();
   const { address } = useAccount();
   const { data: clubData } = useClubData(clubAddress);
   const { refetch: refetchClubMember } = useClubMember(address, clubAddress);
+  
+  // Check if we have a routing error (token not available on DEX)
+  const hasRoutingError = swapData && swapData.error && swapData.error.code === 404;
+  const amountOut = swapData?.amountOut;
 
   const { symbol } = clubData;
 
@@ -84,14 +85,14 @@ export const BuyPanel = ({
   useEffect(() => {
     if (token) {
       reset();
-      setAmountOut(undefined);
+      setSwapData(undefined);
     }
   }, [token?.address, reset]); // Only reset when token address changes
 
-  // Clear amount out when amount is 0
+  // Clear swap data when amount is 0
   useEffect(() => {
     if (amount.raw <= 0n) {
-      setAmountOut(undefined);
+      setSwapData(undefined);
     }
   }, [amount.raw]);
 
@@ -107,7 +108,6 @@ export const BuyPanel = ({
           <DecentTokenSelect
             initialToken={usdcContract.address}
             onChange={(token: UserTokenInfo) => {
-              console.log("Token selected:", token);
               setToken(token);
             }}
           />
@@ -121,11 +121,7 @@ export const BuyPanel = ({
         } : {})}
         disabled={false}
       />
-      {process.env.NODE_ENV === "development" && (
-        <p className="text-xs text-gray-500 mt-1">
-          Debug: Token={!!token}, Disabled={!token}, Amount={amount.formatted}
-        </p>
-      )}
+      
 
       {token && (
         <>
@@ -142,19 +138,26 @@ export const BuyPanel = ({
             ))}
           </div>
 
-          <Modal.Container className="mt-4">
-            <div className="flex justify-between w-full">
-              <p className="font-medium text-lg">You receive</p>
-              <p className="font-mono text-xl">~{amountOut ? formatDecimals(amountOut.amount || amountOut, amountOut.decimals || 18) : "0.00"} ${symbol}</p>
-              {process.env.NODE_ENV === "development" && (
-                <p className="text-xs text-gray-500">Debug: {JSON.stringify(amountOut)}</p>
-              )}
+          {hasRoutingError ? (
+            <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <p className="text-amber-800 text-sm font-medium">Token not available on secondary markets</p>
+              <p className="text-amber-700 text-xs mt-1">
+                This token may only be available through direct minting. Check the main page for minting options.
+              </p>
             </div>
-          </Modal.Container>
+          ) : (
+            <Modal.Container className="mt-4">
+              <div className="flex justify-between w-full">
+                <p className="font-medium text-lg">You receive</p>
+                <p className="font-mono text-xl">~{amountOut && !hasRoutingError ? formatDecimals(amountOut.amount || amountOut, amountOut.decimals || 18) : "0.00"} ${symbol}</p>
+
+              </div>
+            </Modal.Container>
+          )}
         </>
       )}
 
-      {token && amount.raw > 0n ? (
+      {token && amount.raw > 0n && !hasRoutingError ? (
         <DecentSwapButton
           amount={amount.raw}
           srcToken={token.address as Address}
@@ -163,13 +166,21 @@ export const BuyPanel = ({
           dstChainId={DEFAULT_CHAIN_ID}
           label={`Buy $${symbol} Tokens`}
           onSwapPrepared={(swap) => {
-            console.log("Buy swap prepared:", swap);
-            setAmountOut(swap?.amountOut);
+            setSwapData(swap);
           }}
           onComplete={async (_: Hash) => {
             refetchClubMember();
             close();
           }}
+        />
+      ) : token && hasRoutingError ? (
+        <Button
+          fluid
+          className="mt-4"
+          color="secondary"
+          size="large"
+          label="Token not available on DEX"
+          disabled={true}
         />
       ) : token ? (
         <Button
