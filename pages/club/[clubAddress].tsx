@@ -19,7 +19,6 @@ import { ClubActions } from "@/components/funds/ClubActions";
 import { BuyRedeemPanel } from "@/components/funds/BuyRedeemPanel";
 import { useRouter } from "next/router";
 import { ClubActivity } from "@/components/funds/ClubActivity";
-import { ClubDebug } from "@/components/funds/ClubDebug";
 
 export default function FundSinglePage({
   clubAddress,
@@ -36,7 +35,7 @@ export default function FundSinglePage({
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
 
-  const { isPublic, isActivated, isTokenEnabled, stakedBalance } = clubData;
+  const { isPublic, isActivated, isTokenEnabled } = clubData;
   const { isMember } = clubMember;
 
   return (
@@ -49,7 +48,6 @@ export default function FundSinglePage({
         <Columned width={1020} className="py-8">
           <ClubHeader clubAddress={clubAddress} />
           {isQualified && !isMember && <BannerCta clubAddress={clubAddress} className="mt-4" />}
-          <ClubDebug clubAddress={clubAddress} />
 
           <Container className="mt-4">
             <div className="flex w-full md:flex-col">
