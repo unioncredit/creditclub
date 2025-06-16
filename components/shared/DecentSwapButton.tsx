@@ -49,9 +49,30 @@ export const DecentSwapButton = ({
     }
   });
 
+  // Debug logging for config
   useEffect(() => {
+    if (process.env.NODE_ENV === "development") {
+      console.log("DecentSwapButton config:", {
+        amount: amount.toString(),
+        srcToken,
+        dstToken,
+        srcChainId,
+        dstChainId,
+        hasAddress: !!address,
+        isValidAmount: amount > 0n,
+      });
+    }
+  }, [amount, srcToken, dstToken, srcChainId, dstChainId, address]);
+
+  useEffect(() => {
+    console.log("DecentSwapButton data changed:", {
+      data,
+      amountOut: data?.amountOut,
+      hasData: !!data,
+      hasAmountOut: !!data?.amountOut
+    });
     onSwapPrepared && onSwapPrepared(data as BoxActionResponse | undefined);
-  }, [data]);
+  }, [data, onSwapPrepared]);
 
   const { data: allowance = 0n, refetch: refetchAllowance, isLoading } = useReadContract({
     abi: erc20Abi,

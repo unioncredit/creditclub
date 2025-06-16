@@ -76,7 +76,17 @@ export const BuyPanel = ({
   ];
 
   // Reset input amount on token change
-  useEffect(reset, [token]);
+  useEffect(() => {
+    reset();
+    setAmountOut(undefined);
+  }, [token, reset]);
+
+  // Clear amount out when amount is 0
+  useEffect(() => {
+    if (amount.raw <= 0n) {
+      setAmountOut(undefined);
+    }
+  }, [amount.raw]);
 
   return (
     <>
@@ -120,13 +130,16 @@ export const BuyPanel = ({
           <Modal.Container className="mt-4">
             <div className="flex justify-between w-full">
               <p className="font-medium text-lg">You receive</p>
-              <p className="font-mono text-xl">~{amountOut ? formatDecimals(amountOut.amount, amountOut.decimals) : "0.00"} ${symbol}</p>
+              <p className="font-mono text-xl">~{amountOut ? formatDecimals(amountOut.amount || amountOut, amountOut.decimals || 18) : "0.00"} ${symbol}</p>
+              {process.env.NODE_ENV === "development" && (
+                <p className="text-xs text-gray-500">Debug: {JSON.stringify(amountOut)}</p>
+              )}
             </div>
           </Modal.Container>
         </>
       )}
 
-      {token ? (
+      {token && amount.raw > 0n ? (
         <DecentSwapButton
           amount={amount.raw}
           srcToken={token.address as Address}
@@ -135,12 +148,22 @@ export const BuyPanel = ({
           dstChainId={DEFAULT_CHAIN_ID}
           label={`Buy $${symbol} Tokens`}
           onSwapPrepared={(swap) => {
+            console.log("Buy swap prepared:", swap);
             setAmountOut(swap?.amountOut);
           }}
           onComplete={async (_: Hash) => {
             refetchClubMember();
             close();
           }}
+        />
+      ) : token ? (
+        <Button
+          fluid
+          className="mt-4"
+          color="primary"
+          size="large"
+          label={amount.raw <= 0n ? "Enter an amount" : `Buy $${symbol} Tokens`}
+          disabled={true}
         />
       ) : (
         <Button
