@@ -55,7 +55,7 @@ export default function FundSinglePage({
             <div className="flex w-full md:flex-col">
               <section className="flex flex-col flex-1 text-left">
                 <ClubDetails clubAddress={clubAddress} />
-                {stakedBalance > 0n && (
+                {isActivated && (
                   <ClubStats clubAddress={clubAddress} />
                 )}
                 <ClubActivity clubAddress={clubAddress} />

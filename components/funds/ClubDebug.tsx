@@ -84,9 +84,9 @@ export const ClubDebug = ({
             </span>
           </div>
           <div>
-            ClubStats shows when: <span className="font-mono">stakedBalance &gt; 0n</span>
-            <span className={stakedBalance > 0n ? "text-green-600" : "text-red-600"}>
-              {stakedBalance > 0n ? " ✅" : " ❌"}
+            ClubStats shows when: <span className="font-mono">isActivated</span>
+            <span className={isActivated ? "text-green-600" : "text-red-600"}>
+              {isActivated ? " ✅" : " ❌"}
             </span>
           </div>
         </div>
