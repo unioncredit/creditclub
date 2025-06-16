@@ -98,7 +98,8 @@ export const ClubParametersModal = ({
     creditManagerAddress,
     managerAddress,
     feeManagerAddress,
-    areAllZero: creditManagerAddress === zeroAddress && managerAddress === zeroAddress && feeManagerAddress === zeroAddress
+    areAllZero: creditManagerAddress === zeroAddress && managerAddress === zeroAddress && feeManagerAddress === zeroAddress,
+    authData: authData
   });
   const { decimals: assetDecimals = 18 } = assetToken || {};
 
