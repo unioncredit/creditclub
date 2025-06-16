@@ -62,7 +62,7 @@ export const MintMemberNftMultichain = ({
       refetchOnWindowFocus: false,
       refetchInterval: isWaitingForApproval ? 2000 : false, // Poll when waiting for approval
     }
-  });
+  }) as { data: bigint };
 
   const needsApproval = membershipCost > currentAllowance;
 

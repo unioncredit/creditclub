@@ -19,6 +19,7 @@ import { ClubActions } from "@/components/funds/ClubActions";
 import { BuyRedeemPanel } from "@/components/funds/BuyRedeemPanel";
 import { useRouter } from "next/router";
 import { ClubActivity } from "@/components/funds/ClubActivity";
+import { ClubDebug } from "@/components/funds/ClubDebug";
 
 export default function FundSinglePage({
   clubAddress,
