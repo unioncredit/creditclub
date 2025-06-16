@@ -210,15 +210,15 @@ export const useClubAuth = (clubAddress: Address) => {
   let feeManagerAddress = zeroAddress;
 
   let memberIndex = 0;
-  if (creditManagerCount > BigInt(0) && memberResult.data?.[memberIndex]) {
+  if (creditManagerCount > BigInt(0) && memberResult.data?.[memberIndex]?.result) {
     creditManagerAddress = memberResult.data[memberIndex].result as Address;
     memberIndex++;
   }
-  if (managerCount > BigInt(0) && memberResult.data?.[memberIndex]) {
+  if (managerCount > BigInt(0) && memberResult.data?.[memberIndex]?.result) {
     managerAddress = memberResult.data[memberIndex].result as Address;
     memberIndex++;
   }
-  if (feeManagerCount > BigInt(0) && memberResult.data?.[memberIndex]) {
+  if (feeManagerCount > BigInt(0) && memberResult.data?.[memberIndex]?.result) {
     feeManagerAddress = memberResult.data[memberIndex].result as Address;
   }
 
