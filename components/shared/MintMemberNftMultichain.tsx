@@ -110,7 +110,7 @@ export const MintMemberNftMultichain = ({
       actionType={ActionType.EvmFunction}
       paymentButtonText="Mint Member NFT"
       disableLoadingModals={true}
-      chains={[ChainId.OPTIMISM, ChainId.BASE]}
+      chains={[ChainId.BASE]}
       disableGuard={async () => {
         if (!isActivated) {
           return { disable: true, message: "Club not activated" }
@@ -185,7 +185,18 @@ export const MintMemberNftMultichain = ({
         }
         // If isWaitingForApproval is true, the approval completion will be handled by the useEffect
       }}
-      onTxError={() => {
+      onTxError={(error) => {
+        console.error("Detailed transaction error:", {
+          error,
+          errorMessage: error?.message || "Unknown error",
+          needsApproval,
+          isWaitingForApproval,
+          membershipCost: membershipCost.toString(),
+          currentAllowance: currentAllowance.toString(),
+          userAddress: address,
+          contractAddress: memberNftAddress,
+        });
+        
         if (toastId) {
           closeToast(toastId);
         }
