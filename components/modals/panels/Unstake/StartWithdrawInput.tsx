@@ -30,21 +30,7 @@ export const StartWithdrawInput = ({
 
   const stakingContract = useStakingContract(clubData.stakingAddress);
 
-  // Debug the actual values
-  console.log("Unstake Debug - Raw Values:", {
-    stakedBalance: stakedBalance?.toString(),
-    stakedBalanceFormatted: formatDecimals(stakedBalance || 0n, decimals),
-    decimals,
-    clubMember,
-  });
 
-  // Debug contract addresses
-  console.log("Unstake Debug - Contract Info:", {
-    clubAddress,
-    stakingAddress: clubData.stakingAddress,
-    connectedAddress,
-    stakingContract: stakingContract,
-  });
 
   const validate = (inputs: IFormValues) => {
     const shares = inputs.shares as IFormField;

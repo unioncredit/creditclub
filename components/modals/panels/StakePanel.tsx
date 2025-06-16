@@ -72,6 +72,10 @@ export const StakePanel = ({
     if (amount.raw > sendTokenBalance) {
       return `Only ${formatDecimals(sendTokenBalance, sendTokenDecimals)} ${sendTokenSymbol} Available`;
     }
+    // Check if the amount would result in 0 shares (prevent rounding to zero)
+    if (amount.raw > 0n && amountReceived === 0n) {
+      return "Amount too small - would result in 0 shares";
+    }
   };
 
   const {
@@ -145,7 +149,7 @@ export const StakePanel = ({
       <ApprovalButton
         owner={connectedAddress}
         amount={amountRaw}
-        disabled={!!inputError() || amountRaw < 0n || clubTokenBalance < amountRaw}
+        disabled={!!inputError() || amountRaw < 0n || clubTokenBalance < amountRaw || (amountRaw > 0n && amountReceived === 0n)}
         spender={stakingContract.address}
         tokenContract={{
           abi: erc20Abi,
@@ -161,7 +165,7 @@ export const StakePanel = ({
               : amountRaw > clubTokenBalance
                 ? "Insufficient balance"
                 : `Stake ${formatDecimals(amountRaw, sendTokenDecimals, 2)} ${sendTokenSymbol}`,
-          disabled: !!errors.amount || amountRaw < 0n || clubTokenBalance < amountRaw,
+          disabled: !!errors.amount || amountRaw < 0n || clubTokenBalance < amountRaw || (amountRaw > 0n && amountReceived === 0n),
           onComplete: async (hash: string) => {
             refetchClubData();
             refetchClubMember();
