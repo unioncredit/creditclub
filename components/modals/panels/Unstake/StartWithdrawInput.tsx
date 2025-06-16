@@ -28,6 +28,17 @@ export const StartWithdrawInput = ({
   const { image, decimals, symbol } = clubData;
   const { stakedBalance } = clubMember;
 
+  // Debug logging
+  console.log("StartWithdrawInput Debug:", {
+    clubAddress,
+    connectedAddress,
+    stakedBalance: stakedBalance?.toString(),
+    decimals,
+    symbol,
+    clubData,
+    clubMember,
+  });
+
   const stakingContract = useStakingContract(clubData.stakingAddress);
 
   const validate = (inputs: IFormValues) => {
