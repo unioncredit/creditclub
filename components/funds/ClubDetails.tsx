@@ -174,7 +174,7 @@ export const ClubDetails = ({
       </div>
 
       <p className="text-stone-500 font-light mt-6">
-        {description || <span className="text-red-500 text-xs">No description available - Debug: {JSON.stringify({description, hasData: !!clubMemberNftData})}</span>}
+        {description || "No description available"}
       </p>
     </div>
   )
