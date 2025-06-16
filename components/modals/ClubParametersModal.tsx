@@ -36,6 +36,9 @@ export const ClubParametersModal = ({
   const { data: authData } = useClubAuth(clubAddress);
   const rewardsManagerContract = useRewardsManagerContract();
 
+  // Debug logging for auth data
+  console.log('🏛️ ClubParametersModal authData:', authData);
+
 
 
   // Helper function to render loading placeholder
@@ -90,6 +93,14 @@ export const ClubParametersModal = ({
     managerAddress = zeroAddress,
     feeManagerAddress = zeroAddress
   } = authData || {};
+
+  // Debug logging for individual addresses
+  console.log('🔑 Individual management addresses:', {
+    creditManagerAddress,
+    managerAddress,
+    feeManagerAddress,
+    areAllZero: creditManagerAddress === zeroAddress && managerAddress === zeroAddress && feeManagerAddress === zeroAddress
+  });
   const { decimals: assetDecimals = 18 } = assetToken || {};
 
   // Organize parameters into sections

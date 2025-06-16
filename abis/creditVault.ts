@@ -171,19 +171,6 @@ export const creditVaultAbi = [
   },
   {
     "type": "function",
-    "name": "auth",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "name": "auction",
     "inputs": [],
     "outputs": [
