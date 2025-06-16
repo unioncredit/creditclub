@@ -203,12 +203,18 @@ export const MintMemberNftMultichain = ({
         console.error("Detailed transaction error:", {
           error,
           errorMessage: (error as any)?.message || error?.toString() || "Unknown error",
+          errorCode: (error as any)?.code,
+          errorData: (error as any)?.data,
+          errorReason: (error as any)?.reason,
           needsApproval,
           isWaitingForApproval,
           membershipCost: membershipCost.toString(),
           currentAllowance: currentAllowance.toString(),
           userAddress: address,
           contractAddress: memberNftAddress,
+          // Additional gas-related debugging
+          gasError: (error as any)?.message?.includes('gas') || (error as any)?.message?.includes('Gas'),
+          estimationError: (error as any)?.message?.includes('estimation') || (error as any)?.message?.includes('estimate'),
         });
         
         if (toastId) {
