@@ -3,38 +3,14 @@ import { useReadContracts } from "wagmi";
 
 import { DEFAULT_CHAIN_ID } from "@/constants";
 import { useClubData } from "@/hooks/useClubData";
-
-// Auth contract ABI for the specific functions we need
-const authAbi = [
-  {
-    "inputs": [],
-    "name": "creditManager",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "manager",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "feeManager",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  }
-] as const;
+import { authAbi } from "@/abis/auth";
 
 export const useClubAuth = (clubAddress: Address) => {
   const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
-  const { ownerAddress } = clubData || {};
+  const { authAddress } = clubData || {};
 
   const authContract = {
-    address: ownerAddress,
+    address: authAddress,
     abi: authAbi,
   };
 
@@ -59,7 +35,7 @@ export const useClubAuth = (clubAddress: Address) => {
       chainId: DEFAULT_CHAIN_ID,
     })),
     query: {
-      enabled: !!clubAddress && !!ownerAddress && ownerAddress !== zeroAddress,
+      enabled: !!clubAddress && !!authAddress && authAddress !== zeroAddress,
       staleTime: Infinity,
     }
   });
@@ -79,12 +55,12 @@ export const useClubAuth = (clubAddress: Address) => {
   }
 
   // If no auth contract exists, return immediately with zero addresses
-  if (!ownerAddress || ownerAddress === zeroAddress) {
+  if (!authAddress || authAddress === zeroAddress) {
     return {
       ...result,
       isLoading: false,
       data: {
-        authAddress: ownerAddress,
+        authAddress: authAddress,
         creditManagerAddress: zeroAddress,
         managerAddress: zeroAddress,
         feeManagerAddress: zeroAddress,
@@ -99,7 +75,7 @@ export const useClubAuth = (clubAddress: Address) => {
   ] = result.data?.map(d => d.result as never) || [];
 
   const data = {
-    authAddress: ownerAddress,
+    authAddress: authAddress,
     creditManagerAddress,
     managerAddress,
     feeManagerAddress,
