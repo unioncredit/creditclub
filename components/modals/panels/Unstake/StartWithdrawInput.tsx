@@ -28,14 +28,11 @@ export const StartWithdrawInput = ({
   const { image, decimals, symbol } = clubData;
   const { stakedBalance } = clubMember;
 
-  // Debug logging
-  console.log("StartWithdrawInput Debug:", {
-    clubAddress,
-    connectedAddress,
+  // Debug the actual values
+  console.log("Unstake Debug - Raw Values:", {
     stakedBalance: stakedBalance?.toString(),
+    stakedBalanceFormatted: formatDecimals(stakedBalance || 0n, decimals),
     decimals,
-    symbol,
-    clubData,
     clubMember,
   });
 
@@ -98,7 +95,7 @@ export const StartWithdrawInput = ({
             className="border border-black"
           />
         )}
-        rightLabel={`Max. ${formatDecimals(stakedBalance, decimals)} ${symbol} (raw: ${stakedBalance?.toString()})`}
+        rightLabel={`Max. ${formatDecimals(stakedBalance, decimals)} ${symbol}`}
         rightLabelAction={() => setRawValue("shares", stakedBalance)}
       />
 

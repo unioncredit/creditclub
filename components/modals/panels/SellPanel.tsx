@@ -27,15 +27,6 @@ export const SellPanel = ({
   const { data: clubMemberData, refetch: refetchClubMember } = useClubMember(address, clubAddress);
   const { data: assetToken } = useErc20Token(clubData.assetAddress);
 
-  // Debug logging
-  console.log("SellPanel Debug:", {
-    clubAddress,
-    userAddress: address,
-    clubTokenBalance: clubMemberData?.clubTokenBalance?.toString(),
-    clubData,
-    clubMemberData,
-  });
-
   const { image, decimals, symbol } = clubData;
   const { address: assetAddress, symbol: assetSymbol } = assetToken;
   const { clubTokenBalance, stakedBalance } = clubMemberData;
