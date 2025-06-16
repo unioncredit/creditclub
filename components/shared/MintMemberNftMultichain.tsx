@@ -82,6 +82,20 @@ export const MintMemberNftMultichain = ({
     isWaitingForApproval,
   });
 
+  // Add comprehensive gas debugging
+  console.log("Gas Debug Info:", {
+    chainId: ChainId.BASE,
+    contractAddress: memberNftAddress,
+    membershipCost: membershipCost.toString(),
+    tokenAddress: tokenContract.address,
+    hasDecentApiKey: !!process.env.NEXT_PUBLIC_DECENT_API_KEY,
+    isActivated,
+    isMember,
+    isQualified,
+    userAddress: address,
+    needsApproval,
+  });
+
   // Monitor allowance changes to detect approval completion
   useEffect(() => {
     const previousAllowance = previousAllowanceRef.current;
@@ -133,6 +147,8 @@ export const MintMemberNftMultichain = ({
         },
         signature: "function mint(address guy)",
         args: [address],
+        gasLimit: "300000",
+        gasPrice: undefined,
       }}
       onTxPending={() => {
         if (needsApproval && !hasShownApprovalToast) {
