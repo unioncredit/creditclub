@@ -211,18 +211,18 @@ export const useClubAuth = (clubAddress: Address) => {
 
   let memberIndex = 0;
   if (creditManagerCount > BigInt(0) && memberResult.data?.[memberIndex]?.result) {
-    const result = memberResult.data[memberIndex].result;
-    creditManagerAddress = result as Address;
+    const result = memberResult.data?.[memberIndex]?.result;
+    if (result) creditManagerAddress = result as Address;
     memberIndex++;
   }
   if (managerCount > BigInt(0) && memberResult.data?.[memberIndex]?.result) {
-    const result = memberResult.data[memberIndex].result;
-    managerAddress = result as Address;
+    const result = memberResult.data?.[memberIndex]?.result;
+    if (result) managerAddress = result as Address;
     memberIndex++;
   }
   if (feeManagerCount > BigInt(0) && memberResult.data?.[memberIndex]?.result) {
-    const result = memberResult.data[memberIndex].result;
-    feeManagerAddress = result as Address;
+    const result = memberResult.data?.[memberIndex]?.result;
+    if (result) feeManagerAddress = result as Address;
   }
 
   const data = {
