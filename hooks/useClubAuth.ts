@@ -125,7 +125,10 @@ export const useClubAuth = (clubAddress: Address) => {
     creditManagerCount = BigInt(0),
     managerCount = BigInt(0),
     feeManagerCount = BigInt(0),
-  ] = roleCountResult.data?.map(d => d.result as bigint) || [];
+  ] = roleCountResult.data?.map(d => {
+    const result = d.result;
+    return typeof result === 'bigint' ? result : BigInt(0);
+  }) || [];
 
   // Then get the first member of each role (only if they have members)
   const memberContracts = [
