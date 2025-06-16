@@ -4,26 +4,45 @@ import { useReadContracts } from "wagmi";
 import { DEFAULT_CHAIN_ID } from "@/constants";
 import { useClubData } from "@/hooks/useClubData";
 
-// Auth contract ABI for the specific functions we need
+// Auth contract ABI - uses AccessControl pattern with roles
 const authAbi = [
   {
     "inputs": [],
-    "name": "creditManager",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "CREDIT_MANAGER_ROLE",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "manager",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "MANAGER_ROLE", 
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "feeManager",
+    "name": "FEE_MANAGER_ROLE",
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "role", "type": "bytes32" },
+      { "internalType": "uint256", "name": "index", "type": "uint256" }
+    ],
+    "name": "getRoleMember",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "role", "type": "bytes32" }
+    ],
+    "name": "getRoleMemberCount",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   }
@@ -38,23 +57,24 @@ export const useClubAuth = (clubAddress: Address) => {
     abi: authAbi,
   };
 
-  const contracts = [
+  // First, get the role hashes
+  const roleContracts = [
     {
       ...authContract,
-      functionName: "creditManager",
+      functionName: "CREDIT_MANAGER_ROLE",
     },
     {
       ...authContract,
-      functionName: "manager",
+      functionName: "MANAGER_ROLE",
     },
     {
       ...authContract,
-      functionName: "feeManager",
+      functionName: "FEE_MANAGER_ROLE",
     },
   ];
 
-  const result = useReadContracts({
-    contracts: contracts.map(c => ({
+  const roleResult = useReadContracts({
+    contracts: roleContracts.map(c => ({
       ...c,
       chainId: DEFAULT_CHAIN_ID,
     })),
@@ -64,23 +84,68 @@ export const useClubAuth = (clubAddress: Address) => {
     }
   });
 
+  // Get the role hashes
+  const [
+    creditManagerRoleHash,
+    managerRoleHash,
+    feeManagerRoleHash,
+  ] = roleResult.data?.map(d => d.result as `0x${string}`) || [];
+
+  // Then get the first member of each role
+  const memberContracts = [
+    {
+      ...authContract,
+      functionName: "getRoleMember",
+      args: [creditManagerRoleHash, 0],
+    },
+    {
+      ...authContract,
+      functionName: "getRoleMember", 
+      args: [managerRoleHash, 0],
+    },
+    {
+      ...authContract,
+      functionName: "getRoleMember",
+      args: [feeManagerRoleHash, 0],
+    },
+  ];
+
+  const memberResult = useReadContracts({
+    contracts: memberContracts.map(c => ({
+      ...c,
+      chainId: DEFAULT_CHAIN_ID,
+    })),
+    query: {
+      enabled: !!creditManagerRoleHash && !!managerRoleHash && !!feeManagerRoleHash,
+      staleTime: Infinity,
+    }
+  });
+
   // Debug logging
-  console.log('🔍 useClubAuth Debug:', {
+  console.log('🔍 useClubAuth Debug (AccessControl):', {
     clubAddress,
-    ownerAddress,
+    ownerAddress: ownerAddress,
+    authAddress: ownerAddress, // Owner IS the auth contract
     clubDataLoading,
-    resultStatus: result.status,
-    resultError: result.error,
-    resultData: result.data,
-    rawResults: result.data?.map(d => ({ status: d.status, result: d.result, error: d.error })),
-    enabled: !!clubAddress && !!ownerAddress && ownerAddress !== zeroAddress,
+    roleHashes: {
+      creditManagerRoleHash,
+      managerRoleHash,
+      feeManagerRoleHash,
+    },
+    roleResult: {
+      status: roleResult.status,
+      data: roleResult.data,
+    },
+    memberResult: {
+      status: memberResult.status,
+      data: memberResult.data,
+    },
   });
 
   // If club data is still loading, return loading state
   if (clubDataLoading) {
     console.log('📊 Club data still loading...');
     return {
-      ...result,
       isLoading: true,
       data: {
         authAddress: zeroAddress,
@@ -95,8 +160,20 @@ export const useClubAuth = (clubAddress: Address) => {
   if (!ownerAddress || ownerAddress === zeroAddress) {
     console.log('⚠️ No owner address found:', ownerAddress);
     return {
-      ...result,
       isLoading: false,
+      data: {
+        authAddress: ownerAddress,
+        creditManagerAddress: zeroAddress,
+        managerAddress: zeroAddress,
+        feeManagerAddress: zeroAddress,
+      }
+    };
+  }
+
+  // If still loading role members, return loading state
+  if (roleResult.isLoading || memberResult.isLoading) {
+    return {
+      isLoading: true,
       data: {
         authAddress: ownerAddress,
         creditManagerAddress: zeroAddress,
@@ -110,9 +187,9 @@ export const useClubAuth = (clubAddress: Address) => {
     creditManagerAddress = zeroAddress,
     managerAddress = zeroAddress,
     feeManagerAddress = zeroAddress,
-  ] = result.data?.map(d => d.result as never) || [];
+  ] = memberResult.data?.map(d => d.result as Address) || [];
 
-  console.log('📋 Parsed management addresses:', {
+  console.log('📋 Parsed management addresses (from AccessControl):', {
     creditManagerAddress,
     managerAddress,
     feeManagerAddress,
@@ -127,5 +204,8 @@ export const useClubAuth = (clubAddress: Address) => {
 
   console.log('✅ Final useClubAuth data:', data);
 
-  return { ...result, data };
+  return { 
+    isLoading: roleResult.isLoading || memberResult.isLoading,
+    data 
+  };
 }; 
