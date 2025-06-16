@@ -147,8 +147,6 @@ export const MintMemberNftMultichain = ({
         },
         signature: "function mint(address guy)",
         args: [address],
-        gasLimit: "300000",
-        gasPrice: undefined,
       }}
       onTxPending={() => {
         if (needsApproval && !hasShownApprovalToast) {
