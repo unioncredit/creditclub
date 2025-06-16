@@ -24,7 +24,15 @@ export const BuyPanel = ({
   const [token, setToken] = useState<UserTokenInfo | null>(null);
   const [swapData, setSwapData] = useState<any>(undefined);
 
-
+  // Debug logging
+  useEffect(() => {
+    console.log("BuyPanel Debug:", {
+      hasToken: !!token,
+      tokenAddress: token?.address,
+      tokenSymbol: token?.symbol,
+      tokenBalance: token?.balance?.toString(),
+    });
+  }, [token]);
 
   const { close } = useModals();
   const { address } = useAccount();
@@ -61,6 +69,17 @@ export const BuyPanel = ({
   } = useForm({ validate, decimals: token?.decimals || 18 }); // Default to 18 decimals
 
   const amount = values.amount as IFormField || empty;
+
+  // Debug form state
+  useEffect(() => {
+    console.log("Form Debug:", {
+      amountFormatted: amount.formatted,
+      amountRaw: amount.raw?.toString(),
+      hasErrors: Object.keys(errors).length > 0,
+      errors,
+      tokenDecimals: token?.decimals,
+    });
+  }, [amount, errors, token?.decimals]);
 
   const percentages = [
     {
@@ -108,12 +127,16 @@ export const BuyPanel = ({
           <DecentTokenSelect
             initialToken={usdcContract.address}
             onChange={(token: UserTokenInfo) => {
+              console.log("Token selected in BuyPanel:", token);
               setToken(token);
             }}
           />
         )}
         value={amount.formatted}
-        onChange={register("amount")}
+        onChange={(e) => {
+          console.log("Input onChange called:", e);
+          register("amount")(e);
+        }}
         error={errors.amount}
         {...(token ? {
           rightLabel: `Avail. ${maxBalance} ${token.symbol}`,
@@ -121,6 +144,9 @@ export const BuyPanel = ({
         } : {})}
         disabled={false}
       />
+      <div className="text-xs text-gray-500 mt-1">
+        Debug: Token={!!token ? 'Yes' : 'No'}, Value="{amount.formatted}", Disabled=false
+      </div>
       
 
       {token && (
