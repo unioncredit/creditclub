@@ -24,6 +24,11 @@ export const BuyPanel = ({
   const [token, setToken] = useState<UserTokenInfo | null>(null);
   const [amountOut, setAmountOut] = useState<any>(undefined);
 
+  // Debug token state
+  useEffect(() => {
+    console.log("Token state changed:", { token, hasToken: !!token });
+  }, [token]);
+
   const { close } = useModals();
   const { address } = useAccount();
   const { data: clubData } = useClubData(clubAddress);
@@ -52,7 +57,7 @@ export const BuyPanel = ({
     errors = {},
     empty,
     reset,
-  } = useForm({ validate, decimals: token?.decimals || 0 });
+  } = useForm({ validate, decimals: token?.decimals || 18 }); // Default to 18 decimals
 
   const amount = values.amount as IFormField || empty;
 
@@ -77,9 +82,11 @@ export const BuyPanel = ({
 
   // Reset input amount on token change
   useEffect(() => {
-    reset();
-    setAmountOut(undefined);
-  }, [token, reset]);
+    if (token) {
+      reset();
+      setAmountOut(undefined);
+    }
+  }, [token?.address, reset]); // Only reset when token address changes
 
   // Clear amount out when amount is 0
   useEffect(() => {
@@ -99,7 +106,10 @@ export const BuyPanel = ({
         suffix={(
           <DecentTokenSelect
             initialToken={usdcContract.address}
-            onChange={(token: UserTokenInfo) => setToken(token)}
+            onChange={(token: UserTokenInfo) => {
+              console.log("Token selected:", token);
+              setToken(token);
+            }}
           />
         )}
         value={amount.formatted}
@@ -109,8 +119,13 @@ export const BuyPanel = ({
           rightLabel: `Avail. ${maxBalance} ${token.symbol}`,
           rightLabelAction: () => setRawValue("amount", token.balance)
         } : {})}
-        disabled={!token}
+        disabled={false}
       />
+      {process.env.NODE_ENV === "development" && (
+        <p className="text-xs text-gray-500 mt-1">
+          Debug: Token={!!token}, Disabled={!token}, Amount={amount.formatted}
+        </p>
+      )}
 
       {token && (
         <>
