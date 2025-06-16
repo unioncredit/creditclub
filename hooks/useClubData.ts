@@ -162,10 +162,6 @@ export const useClubData = (clubAddress: Address) => {
       ...creditVaultContract,
       functionName: "owner",
     },
-    {
-      ...creditVaultContract,
-      functionName: "auth",
-    },
   ];
 
   const result = useReadContracts({
@@ -216,7 +212,6 @@ export const useClubData = (clubAddress: Address) => {
     vaultWithdrawFeeBps = 0n,
     isTiersEnabled = false,
     ownerAddress = zeroAddress,
-    authAddress = zeroAddress,
   ] = result.data?.map(d => d.result as never) || [];
 
   // Get staking withdraw fee from staking contract
@@ -287,7 +282,6 @@ export const useClubData = (clubAddress: Address) => {
     stakingWithdrawFeeBps,
     isTiersEnabled,
     ownerAddress,
-    authAddress,
   };
 
   return { ...result, data };
