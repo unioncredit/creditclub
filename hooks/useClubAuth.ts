@@ -91,27 +91,27 @@ export const useClubAuth = (clubAddress: Address) => {
     feeManagerRoleHash,
   ] = roleResult.data?.map(d => d.result as `0x${string}`) || [];
 
-  // Directly try to get the first member of each role
-  const memberContracts = [
+  // Check role member counts first
+  const countContracts = [
     {
       ...authContract,
-      functionName: "getRoleMember",
-      args: [creditManagerRoleHash, 0],
+      functionName: "getRoleMemberCount",
+      args: [creditManagerRoleHash],
     },
     {
       ...authContract,
-      functionName: "getRoleMember", 
-      args: [managerRoleHash, 0],
+      functionName: "getRoleMemberCount", 
+      args: [managerRoleHash],
     },
     {
       ...authContract,
-      functionName: "getRoleMember",
-      args: [feeManagerRoleHash, 0],
+      functionName: "getRoleMemberCount",
+      args: [feeManagerRoleHash],
     },
   ];
 
-  const memberResult = useReadContracts({
-    contracts: memberContracts.map(c => ({
+  const countResult = useReadContracts({
+    contracts: countContracts.map(c => ({
       ...c,
       chainId: DEFAULT_CHAIN_ID,
     })),
@@ -121,8 +121,50 @@ export const useClubAuth = (clubAddress: Address) => {
     }
   });
 
+  // Get the role member counts
+  const [
+    creditManagerCount = BigInt(0),
+    managerCount = BigInt(0),
+    feeManagerCount = BigInt(0),
+  ] = countResult.data?.map(d => d.result as bigint) || [];
+
+  // Only get role members if there are any members assigned
+  const memberContracts = [];
+  if (creditManagerCount > BigInt(0)) {
+    memberContracts.push({
+      ...authContract,
+      functionName: "getRoleMember",
+      args: [creditManagerRoleHash, 0],
+    });
+  }
+  if (managerCount > BigInt(0)) {
+    memberContracts.push({
+      ...authContract,
+      functionName: "getRoleMember", 
+      args: [managerRoleHash, 0],
+    });
+  }
+  if (feeManagerCount > BigInt(0)) {
+    memberContracts.push({
+      ...authContract,
+      functionName: "getRoleMember",
+      args: [feeManagerRoleHash, 0],
+    });
+  }
+
+  const memberResult = useReadContracts({
+    contracts: memberContracts.map(c => ({
+      ...c,
+      chainId: DEFAULT_CHAIN_ID,
+    })),
+    query: {
+      enabled: memberContracts.length > 0,
+      staleTime: Infinity,
+    }
+  });
+
   // Debug logging
-  console.log('🔍 useClubAuth Debug (AccessControl):', {
+  console.log('🔍 useClubAuth Debug (AccessControl with counts):', {
     clubAddress,
     ownerAddress: ownerAddress,
     authAddress: ownerAddress, // Owner IS the auth contract
@@ -132,16 +174,17 @@ export const useClubAuth = (clubAddress: Address) => {
       managerRoleHash,
       feeManagerRoleHash,
     },
-    roleResult: {
-      status: roleResult.status,
-      data: roleResult.data,
+    roleCounts: {
+      creditManagerCount: creditManagerCount.toString(),
+      managerCount: managerCount.toString(),
+      feeManagerCount: feeManagerCount.toString(),
     },
+    memberContractsLength: memberContracts.length,
     memberResult: {
       status: memberResult.status,
       data: memberResult.data,
       errors: memberResult.data?.map(d => d.error),
     },
-    memberContractsLength: memberContracts.length,
   });
 
   // If club data is still loading, return loading state
@@ -172,8 +215,8 @@ export const useClubAuth = (clubAddress: Address) => {
     };
   }
 
-  // If still loading role members, return loading state
-  if (roleResult.isLoading || memberResult.isLoading) {
+  // If still loading role data, return loading state
+  if (roleResult.isLoading || countResult.isLoading || memberResult.isLoading) {
     return {
       isLoading: true,
       data: {
@@ -185,13 +228,25 @@ export const useClubAuth = (clubAddress: Address) => {
     };
   }
 
-  const [
-    creditManagerAddress = zeroAddress,
-    managerAddress = zeroAddress,
-    feeManagerAddress = zeroAddress,
-  ] = memberResult.data?.map(d => d.result as Address) || [];
+  // Parse member addresses based on which roles have members
+  let creditManagerAddress = zeroAddress;
+  let managerAddress = zeroAddress;
+  let feeManagerAddress = zeroAddress;
 
-  console.log('📋 Parsed management addresses (from AccessControl):', {
+  let memberIndex = 0;
+  if (creditManagerCount > BigInt(0) && memberResult.data?.[memberIndex]) {
+    creditManagerAddress = memberResult.data[memberIndex].result as Address;
+    memberIndex++;
+  }
+  if (managerCount > BigInt(0) && memberResult.data?.[memberIndex]) {
+    managerAddress = memberResult.data[memberIndex].result as Address;
+    memberIndex++;
+  }
+  if (feeManagerCount > BigInt(0) && memberResult.data?.[memberIndex]) {
+    feeManagerAddress = memberResult.data[memberIndex].result as Address;
+  }
+
+  console.log('📋 Parsed management addresses (from AccessControl with counts):', {
     creditManagerAddress,
     managerAddress,
     feeManagerAddress,
@@ -207,7 +262,7 @@ export const useClubAuth = (clubAddress: Address) => {
   console.log('✅ Final useClubAuth data:', data);
 
   return { 
-    isLoading: roleResult.isLoading || memberResult.isLoading,
+    isLoading: roleResult.isLoading || countResult.isLoading || memberResult.isLoading,
     data 
   };
 }; 
