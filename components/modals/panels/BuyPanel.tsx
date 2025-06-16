@@ -121,6 +121,10 @@ export const BuyPanel = ({
               console.log("Token selected in DecentTokenSelect:", token);
               setToken(token);
             }}
+            onReady={(token: UserTokenInfo) => {
+              console.log("Token ready in DecentTokenSelect:", token);
+              if (token) setToken(token);
+            }}
           />
         )}
         value={amount.formatted}
