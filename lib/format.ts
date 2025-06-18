@@ -28,14 +28,16 @@ export const formatDecimals = (
   formatDust = true
 ) => {
   if (!value) value = 0n;
-  // Calculate 10^(decimals - 2) for dust threshold (0.01 threshold)
-  let dustThreshold = BigInt(1);
-  const exponent = decimals - 2;
-  for (let i = 0; i < exponent; i++) {
-    dustThreshold *= BigInt(10);
+  
+  // Convert to actual decimal number first
+  const formattedValue = Number(formatUnits(value, decimals));
+  
+  // Only show dust if the actual formatted decimal value is less than 0.01
+  if (formatDust && value > BigInt(0) && formattedValue < 0.01) {
+    return "<0.01";
   }
-  if (formatDust && value < dustThreshold && value > BigInt(0)) return "<0.01";
-  return commify(Number(formatUnits(value, decimals)), digits, rounded, stripTrailingZeros);
+  
+  return commify(formattedValue, digits, rounded, stripTrailingZeros);
 };
 
 export function commify(value: number, digits: number, rounded = true, stripTrailingZeros = false) {

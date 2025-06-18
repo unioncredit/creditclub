@@ -106,10 +106,23 @@ export const PresalePanel = ({
   const amount = values.amount as IFormField || empty;
   const amountRaw = amount.raw || 0n;
 
-  const { data: amountReceived } = useMintRedeemPreview({
+  // During auction, tokens are minted 1:1 with USDC, not based on ERC4626 exchange rates
+  // The ERC4626 previewDeposit gives wrong results during auction phase
+  const amountReceived = amountRaw; // 1:1 ratio during auction
+
+  // Keep this for debugging - shows the broken ERC4626 calculation
+  const { data: erc4626Preview } = useMintRedeemPreview({
     action: "mint",
     shares: amountRaw,
     erc4626Address: stakingAddress,
+  });
+  
+  // Debug the difference
+  console.log("Auction Preview Debug:", {
+    inputAmount: amountRaw.toString(),
+    correctAuctionAmount: amountReceived.toString(),
+    brokenErc4626Amount: erc4626Preview?.toString(),
+    shouldBe1to1: "During auction, $1 USDC = 1 stk token"
   });
 
   const inputError = () => {
