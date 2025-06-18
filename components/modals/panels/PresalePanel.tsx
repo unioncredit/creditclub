@@ -41,7 +41,6 @@ export const PresalePanel = ({
   const { assetBalance } = clubMember;
   const {
     totalDeposits,
-    minTarget,
     maxTarget,
     end,
     hasMaxTarget,
