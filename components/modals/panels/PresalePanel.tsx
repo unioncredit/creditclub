@@ -90,7 +90,7 @@ export const PresalePanel = ({
       return `Only ${formatDecimals(sendTokenBalance, sendTokenDecimals)} ${sendTokenSymbol} Available`;
     }
     if (totalAssets + amount.raw > maxTarget) {
-      return `Maximum mint amount is ${formatDecimals(minTarget - totalAssets, sendTokenDecimals)} ${sendTokenSymbol}`;
+      return `Maximum mint amount is ${formatDecimals(maxTarget - totalAssets, sendTokenDecimals)} ${sendTokenSymbol}`;
     }
   };
 
