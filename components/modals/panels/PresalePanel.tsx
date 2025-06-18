@@ -108,7 +108,10 @@ export const PresalePanel = ({
 
   // During auction, tokens are minted 1:1 with USDC, not based on ERC4626 exchange rates
   // The ERC4626 previewDeposit gives wrong results during auction phase
-  const amountReceived = amountRaw; // 1:1 ratio during auction
+  // Convert USDC amount to staking token amount accounting for decimal differences
+  const amountReceived = assetTokenDecimals === stakingTokenDecimals 
+    ? amountRaw 
+    : amountRaw * BigInt(10 ** (stakingTokenDecimals - assetTokenDecimals));
 
   // Keep this for debugging - shows the broken ERC4626 calculation
   const { data: erc4626Preview } = useMintRedeemPreview({
