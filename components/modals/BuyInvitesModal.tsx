@@ -51,7 +51,7 @@ export const BuyInvitesModal = ({
   const buyInvitesButtonProps = useWrite({
     ...rewardsManagerContract,
     functionName: "claimRewardInvite",
-    args: [totalCost, connectedAddress, clubAddress],
+    args: [clubAddress, numInvites, connectedAddress],
     disabled: !connectedAddress || totalCost < invitePrice || totalCost > unionBalance,
     onComplete: async (hash: string) => {
       open(POST_TX_MODAL, {
