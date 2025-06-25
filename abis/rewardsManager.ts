@@ -38,7 +38,11 @@ export const rewardsManagerAbi = [{ "inputs": [], "stateMutability": "nonpayable
     "name": "slot",
     "type": "bytes32",
   }], "name": "UUPSUnsupportedProxiableUUID", "type": "error",
-}, {
+}, { "inputs": [], "name": "NotActive", "type": "error" }, {
+  "inputs": [],
+  "name": "NotMember",
+  "type": "error",
+}, { "inputs": [], "name": "AmountToRepayZero", "type": "error" }, {
   "anonymous": false,
   "inputs": [{ "indexed": false, "internalType": "uint64", "name": "version", "type": "uint64" }],
   "name": "Initialized",
@@ -105,7 +109,7 @@ export const rewardsManagerAbi = [{ "inputs": [], "stateMutability": "nonpayable
     "internalType": "uint256",
     "name": "amountToRepay",
     "type": "uint256",
-  }],
+  }, { "indexed": false, "internalType": "uint8", "name": "statementCredit", "type": "uint8" }],
   "name": "StatementCreditClaimed",
   "type": "event",
 }, {
@@ -162,7 +166,7 @@ export const rewardsManagerAbi = [{ "inputs": [], "stateMutability": "nonpayable
     "internalType": "address",
     "name": "to",
     "type": "address",
-  }, { "internalType": "address", "name": "clubPlugin", "type": "address" }],
+  }, { "internalType": "address", "name": "vault", "type": "address" }],
   "name": "claimStatementCredit",
   "outputs": [],
   "stateMutability": "nonpayable",

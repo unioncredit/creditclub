@@ -38,6 +38,6 @@ export const unionLensContract = {
 };
 
 export const rewardsManagerContract = {
-  address: "0xfd745A1e2A220C6aC327EC55d2Cb404CD939f56b" as Address,
+  address: "0xD12714D2525A4db5e350B19b4aeaF92708952DA8" as Address,
   abi: rewardsManagerAbi,
 };
