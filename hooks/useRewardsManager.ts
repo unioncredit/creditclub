@@ -23,7 +23,11 @@ export const useRewardsManager = (clubAddress: Address) => {
       },
       {
         ...rewardsManagerContract,
-        functionName: "unionPer",
+        functionName: "unitOfCreditPerUnionClub",
+      },
+      {
+        ...rewardsManagerContract,
+        functionName: "unitOfCreditPerUnionPublic",
       },
       {
         ...rewardsManagerContract,
@@ -42,7 +46,8 @@ export const useRewardsManager = (clubAddress: Address) => {
 
   const [
     allowance = 0n,
-    unionPer = 0n,
+    unitOfCreditPerUnionClub = 0n,
+    unitOfCreditPerUnionPublic = 0n,
     invitePrice = 0n,
     contractDaiBalance = 0n,
   ] = result.data?.map(d => d.result as never) || [];
@@ -50,7 +55,9 @@ export const useRewardsManager = (clubAddress: Address) => {
   const data = {
     address: rewardsManagerContract.address,
     allowance,
-    unionPer,
+    unionPer: unitOfCreditPerUnionClub, // Keep for backwards compatibility
+    unitOfCreditPerUnionClub,
+    unitOfCreditPerUnionPublic,
     invitePrice,
     contractDaiBalance,
   };
