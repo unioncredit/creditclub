@@ -96,7 +96,7 @@ export const MintPanel = ({
   const amount = values.amount as IFormField || empty;
   const amountRaw = amount.raw || 0n;
 
-  const { data: amountReceived } = useMintRedeemPreview({
+  const { data: amountReceived = 0n } = useMintRedeemPreview({
     action: "mint",
     shares: amountRaw,
     erc4626Address: clubAddress,
