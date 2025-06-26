@@ -52,6 +52,16 @@ export const useRewardsManager = (clubAddress: Address) => {
     contractDaiBalance = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 
+  // Debug logging
+  if (result.data && invitePrice === 0n) {
+    console.log("RewardsManager debug:", {
+      contractAddress: rewardsManagerContract.address,
+      rawResults: result.data,
+      invitePrice,
+      allData: result.data?.map(d => d.result),
+    });
+  }
+
   const data = {
     address: rewardsManagerContract.address,
     allowance,
