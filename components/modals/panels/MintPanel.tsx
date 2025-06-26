@@ -136,7 +136,7 @@ export const MintPanel = ({
       <div className="bg-stone-100 p-1 rounded-2xl">
         <Input
           disabled={true}
-          value={formatDecimals(amountReceived, receiveTokenDecimals, 2, false)}
+          value={formatDecimals(amountReceived as bigint, receiveTokenDecimals, 2, false)}
           suffix={(
             <img
               width={24}
@@ -181,7 +181,7 @@ export const MintPanel = ({
             ? "Enter an amount"
             : amountRaw > assetBalance
               ? "Insufficient balance"
-              : `Mint ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`,
+              : `Mint ${formatDecimals(amountReceived as bigint, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`,
           disabled: !!errors.amount || amountRaw < 0n || assetBalance < amountRaw,
           onComplete: async (hash: string) => {
             refetchClubData();
@@ -191,7 +191,7 @@ export const MintPanel = ({
               title: "Mint",
               content: (
                 <>
-                  <p className="font-mono mt-2">You successfully minted {formatDecimals(amountReceived, receiveTokenDecimals, 2, false)} {receiveTokenSymbol}</p>
+                  <p className="font-mono mt-2">You successfully minted {formatDecimals(amountReceived as bigint, receiveTokenDecimals, 2, false)} {receiveTokenSymbol}</p>
 
                   <div className="flex items-center gap-2 my-4 text-sm text-blue-600">
                     <CalendarIcon width={24} className="fill" />
