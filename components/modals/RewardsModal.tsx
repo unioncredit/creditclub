@@ -34,7 +34,7 @@ export const RewardsModal = ({
   const { data: rewards } = useRewardsManager(clubAddress);
 
   const { unionBalance } = member;
-  const { allowance, invitePrice } = rewards;
+  const { allowance } = rewards;
 
   const actions = [
     {
@@ -46,7 +46,7 @@ export const RewardsModal = ({
     },
     {
       title: "Buy an Invite",
-      subtitle: `${format(invitePrice, TOKENS.UNION, 0)} UNION`,
+      subtitle: `Club Specific Pricing`,
       icon: IncreaseVouchIcon,
       onClick: () => open(BUY_INVITES_MODAL),
       disabled: allowance <= 0n,

@@ -30,10 +30,6 @@ export const useRewardsManager = (clubAddress: Address) => {
         functionName: "unitOfCreditPerUnionPublic",
       },
       {
-        ...rewardsManagerContract,
-        functionName: "invitePrice",
-      },
-      {
         ...tokenContract,
         functionName: 'balanceOf',
         args: [rewardsManagerContract.address],
@@ -48,19 +44,17 @@ export const useRewardsManager = (clubAddress: Address) => {
     allowance = 0n,
     unitOfCreditPerUnionClub = 0n,
     unitOfCreditPerUnionPublic = 0n,
-    invitePrice = 0n,
     contractDaiBalance = 0n,
   ] = result.data?.map(d => d.result as never) || [];
 
-  // Debug logging
-  if (result.data && invitePrice === 0n) {
-    console.log("RewardsManager debug:", {
-      contractAddress: rewardsManagerContract.address,
-      rawResults: result.data,
-      invitePrice,
-      allData: result.data?.map(d => d.result),
-    });
-  }
+  // Debug logging can be removed since invitePrice no longer exists
+  // if (result.data) {
+  //   console.log("RewardsManager debug:", {
+  //     contractAddress: rewardsManagerContract.address,
+  //     rawResults: result.data,
+  //     allData: result.data?.map(d => d.result),
+  //   });
+  // }
 
   const data = {
     address: rewardsManagerContract.address,
@@ -68,7 +62,6 @@ export const useRewardsManager = (clubAddress: Address) => {
     unionPer: unitOfCreditPerUnionClub, // Keep for backwards compatibility
     unitOfCreditPerUnionClub,
     unitOfCreditPerUnionPublic,
-    invitePrice,
     contractDaiBalance,
   };
 

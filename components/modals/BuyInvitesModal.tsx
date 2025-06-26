@@ -22,9 +22,9 @@ import { POST_TX_MODAL } from "@/components/modals/PostTxModal";
 import { INVITE_MODAL } from "@/components/modals/InviteModal";
 import { useUnionMember } from "@/providers/UnionMemberProvider";
 import { useToken } from "@/hooks/useToken";
-import { useRewardsManager } from "@/hooks/useRewardsManager";
 import { Address } from "viem";
 import { useRewardsManagerContract } from "@/hooks/useRewardsManagerContract";
+import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 
 export const BUY_INVITES_MODAL = "buy-invites-modal";
 
@@ -38,21 +38,23 @@ export const BuyInvitesModal = ({
   const { token } = useToken();
   const { open, close } = useModals();
   const { address: connectedAddress } = useAccount();
-  const { data: rewards } = useRewardsManager(clubAddress);
   const { data: member } = useUnionMember();
+  const { data: memberNft } = useClubMemberNft(clubAddress);
 
-  const { invitePrice } = rewards;
   const { unionBalance } = member;
+  const { inviteCost = 0n } = memberNft;
 
   const rewardsManagerContract = useRewardsManagerContract();
 
-  const totalCost = invitePrice * BigInt(numInvites);
+  // Use the club-specific invite cost from the member NFT contract
+  const costPerInvite = inviteCost;
+  const totalCost = costPerInvite * BigInt(numInvites);
 
   const buyInvitesButtonProps = useWrite({
     ...rewardsManagerContract,
     functionName: "claimRewardInvite",
     args: [clubAddress, numInvites, connectedAddress],
-    disabled: !connectedAddress || totalCost < invitePrice || totalCost > unionBalance,
+    disabled: !connectedAddress || totalCost < costPerInvite || totalCost > unionBalance,
     onComplete: async (hash: string) => {
       open(POST_TX_MODAL, {
         header: "Your redeem was successful",
