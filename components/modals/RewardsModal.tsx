@@ -40,28 +40,28 @@ export const RewardsModal = ({
     {
       title: "Repay credit",
       subtitle: "Points for Repay",
-      icon: <RepayIcon width={24} height={24} />,
+      icon: RepayIcon,
       onClick: () => open(UNION_REPAY_MODAL),
       disabled: allowance <= 0n,
     },
     {
       title: "Buy an Invite",
       subtitle: `Club Specific Pricing`,
-      icon: <IncreaseVouchIcon width={24} height={24} />,
+      icon: IncreaseVouchIcon,
       onClick: () => open(BUY_INVITES_MODAL),
       disabled: allowance <= 0n,
     },
     {
       title: "Club Merch",
       subtitle: "Coming soon",
-      icon: <IncreaseVouchIcon width={24} height={24} />,
+      icon: IncreaseVouchIcon,
       onClick: () => console.log("repay"),
       disabled: true,
     },
     {
       title: "Cash Back",
       subtitle: "Coming soon",
-      icon: <IncreaseVouchIcon width={24} height={24} />,
+      icon: IncreaseVouchIcon,
       onClick: () => console.log("repay"),
       disabled: true,
     }
@@ -101,9 +101,10 @@ export const RewardsModal = ({
                   <Text m={0} grey={500} weight="medium">{subtitle}</Text>
                 </Box>
 
-                <div className="RewardsModal__icon">
-                  {icon}
-                </div>
+                <Button 
+                  icon={icon} 
+                  label=" "
+                />
               </Box>
             ))}
           </Box>
