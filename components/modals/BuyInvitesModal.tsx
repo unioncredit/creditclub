@@ -25,6 +25,7 @@ import { useToken } from "@/hooks/useToken";
 import { Address } from "viem";
 import { useRewardsManagerContract } from "@/hooks/useRewardsManagerContract";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
+import { TOKENS } from "@/constants";
 
 export const BUY_INVITES_MODAL = "buy-invites-modal";
 
@@ -61,7 +62,7 @@ export const BuyInvitesModal = ({
         title: numInvites > 1 ? "Invites Received" : "Invite Received",
         content: (
           <Text maxw="320px" grey={500} size="medium" weight="medium">
-            You successfully redeemed {format(totalCost, token, 0)} UNION for {numInvites} club {numInvites > 1 ? "invites" : "invite"}!
+            You successfully redeemed {format(totalCost, TOKENS.UNION, 0)} UNION for {numInvites} club {numInvites > 1 ? "invites" : "invite"}!
           </Text>
         ),
         action: {
@@ -93,7 +94,7 @@ export const BuyInvitesModal = ({
                 What you send
               </Text>
               <Text m={0} grey={900} size="large" weight="medium" className="flex items-center gap-1">
-                {format(totalCost, token, 0)}
+                {format(totalCost, TOKENS.UNION, 0)}
                 <Union />
               </Text>
             </Box>
@@ -139,7 +140,7 @@ export const BuyInvitesModal = ({
           <Button
             fluid
             size="large"
-            label={`Redeem ${format(totalCost, token, 0)} UNION`}
+            label={`Redeem ${format(totalCost, TOKENS.UNION, 0)} UNION`}
             {...buyInvitesButtonProps}
           />
         </Modal.Body>

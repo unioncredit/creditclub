@@ -40,28 +40,28 @@ export const RewardsModal = ({
     {
       title: "Repay credit",
       subtitle: "Points for Repay",
-      icon: RepayIcon,
+      icon: <RepayIcon width={24} height={24} />,
       onClick: () => open(UNION_REPAY_MODAL),
       disabled: allowance <= 0n,
     },
     {
       title: "Buy an Invite",
       subtitle: `Club Specific Pricing`,
-      icon: IncreaseVouchIcon,
+      icon: <IncreaseVouchIcon width={24} height={24} />,
       onClick: () => open(BUY_INVITES_MODAL),
       disabled: allowance <= 0n,
     },
     {
       title: "Club Merch",
       subtitle: "Coming soon",
-      icon: IncreaseVouchIcon,
+      icon: <IncreaseVouchIcon width={24} height={24} />,
       onClick: () => console.log("repay"),
       disabled: true,
     },
     {
       title: "Cash Back",
       subtitle: "Coming soon",
-      icon: IncreaseVouchIcon,
+      icon: <IncreaseVouchIcon width={24} height={24} />,
       onClick: () => console.log("repay"),
       disabled: true,
     }
@@ -88,6 +88,7 @@ export const RewardsModal = ({
           <Box className="RewardsModal__actions">
             {actions.map(({ title, subtitle, icon, disabled, onClick }) => (
               <Box
+                key={title}
                 align="center"
                 justify="space-between"
                 onClick={onClick}
@@ -100,7 +101,9 @@ export const RewardsModal = ({
                   <Text m={0} grey={500} weight="medium">{subtitle}</Text>
                 </Box>
 
-                <Button icon={icon} label="" />
+                <div className="RewardsModal__icon">
+                  {icon}
+                </div>
               </Box>
             ))}
           </Box>

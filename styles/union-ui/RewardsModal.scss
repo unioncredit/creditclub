@@ -40,4 +40,21 @@
       }
     }
   }
+
+  &__icon {
+    width: 48px;
+    height: 48px;
+    background: #F0F4FF;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    @media screen and (max-width: 420px) {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+    }
+  }
 }
