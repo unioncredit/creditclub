@@ -46,7 +46,7 @@ export const RewardsModal = ({
     },
     {
       title: "Buy an Invite",
-      subtitle: `Club Specific Pricing`,
+      subtitle: `Add a Friend`,
       icon: IncreaseVouchIcon,
       onClick: () => open(BUY_INVITES_MODAL),
       disabled: allowance <= 0n,
