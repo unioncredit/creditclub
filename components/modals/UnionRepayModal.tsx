@@ -39,7 +39,7 @@ export const UnionRepayModal = ({
 }) => {
   const { open, close } = useModals();
 
-  const { token, wad } = useToken();
+  const { token } = useToken();
   const { address: connectedAddress } = useAccount();
   const { data: member, refetch: refetchMember } = useUnionMember();
   const { data: rewards } = useRewardsManager(clubAddress);
