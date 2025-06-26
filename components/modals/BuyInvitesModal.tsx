@@ -24,6 +24,7 @@ import { useUnionMember } from "@/providers/UnionMemberProvider";
 import { Address } from "viem";
 import { useRewardsManagerContract } from "@/hooks/useRewardsManagerContract";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
+import { useClubMember } from "@/hooks/useClubMember";
 import { TOKENS } from "@/constants";
 
 export const BUY_INVITES_MODAL = "buy-invites-modal";
@@ -39,9 +40,11 @@ export const BuyInvitesModal = ({
   const { address: connectedAddress } = useAccount();
   const { data: member } = useUnionMember();
   const { data: memberNft } = useClubMemberNft(clubAddress);
+  const { data: clubMember } = useClubMember(connectedAddress, clubAddress);
 
   const { unionBalance } = member;
   const { inviteCost = 0n } = memberNft;
+  const { isMember } = clubMember;
 
   const rewardsManagerContract = useRewardsManagerContract();
 
@@ -49,10 +52,22 @@ export const BuyInvitesModal = ({
   const costPerInvite = inviteCost;
   const totalCost = costPerInvite * BigInt(numInvites);
 
+  // Debug logging
+  console.log("BuyInvitesModal debug:", {
+    clubAddress,
+    connectedAddress,
+    isMember,
+    inviteCost: inviteCost.toString(),
+    numInvites,
+    totalCost: totalCost.toString(),
+    unionBalance: unionBalance.toString(),
+    rewardsManagerAddress: rewardsManagerContract.address,
+  });
+
   const buyInvitesButtonProps = useWrite({
     ...rewardsManagerContract,
     functionName: "claimRewardInvite",
-    args: [clubAddress, numInvites, connectedAddress],
+    args: [clubAddress, BigInt(numInvites), connectedAddress],
     disabled: !connectedAddress || totalCost < costPerInvite || totalCost > unionBalance,
     onComplete: async (hash: string) => {
       open(POST_TX_MODAL, {
@@ -130,8 +145,20 @@ export const BuyInvitesModal = ({
           </Box>
 
           {totalCost > unionBalance && (
-            <Text color="red600">
+            <Text color="red600" mb="8px">
               Insufficient UNION balance
+            </Text>
+          )}
+
+          {!isMember && (
+            <Text color="red600" mb="8px">
+              You must be a member of this club to buy invites
+            </Text>
+          )}
+
+          {inviteCost === 0n && (
+            <Text color="orange600" mb="8px">
+              Invite cost is not set for this club
             </Text>
           )}
 
@@ -140,6 +167,7 @@ export const BuyInvitesModal = ({
             size="large"
             label={`Redeem ${format(totalCost, TOKENS.UNION, 0)} UNION`}
             {...buyInvitesButtonProps}
+            disabled={buyInvitesButtonProps.disabled || !isMember}
           />
         </Modal.Body>
       </Modal>

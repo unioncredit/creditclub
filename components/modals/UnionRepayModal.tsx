@@ -57,9 +57,21 @@ export const UnionRepayModal = ({
     if (amount.raw > unionBalance) {
       return `${format(unionBalance, token)} UNION Available`;
     }
-    const credit = amount.raw * unionPer / wad;
+    const credit = amount.raw * unionPer / WAD[TOKENS.UNION];
+    
+    // Check if the conversion rate is 0
+    if (unionPer === 0n) {
+      return "Statement credit redemption is not active";
+    }
+    
+    // Check if the credit amount is too small
+    if (amount.raw > 0n && credit < 10000n) { // Less than 0.01 USDC (with 6 decimals)
+      const minUnionNeeded = unionPer > 0n ? (10000n * WAD[TOKENS.UNION]) / unionPer : 0n;
+      return `Minimum redemption is ${format(minUnionNeeded, TOKENS.UNION, 0)} UNION ($0.01)`;
+    }
+    
     if (credit > contractDaiBalance) {
-      return `Only ${format(contractDaiBalance, token, 0)} ${token} available at this time`;
+      return `Only ${format(contractDaiBalance, token, 2)} ${token} available at this time`;
     }
   };
 
@@ -76,10 +88,21 @@ export const UnionRepayModal = ({
   const formattedAmount = format(amountRaw, TOKENS.UNION, 2, false);
 
   const creditRaw = amount.raw * unionPer / WAD[TOKENS.UNION];
-  const creditFormatted = format(creditRaw, TOKENS.UNION, 2, false);
+  const creditFormatted = creditRaw > 0n ? format(creditRaw, token, 4, false) : "0.00";
 
-  const maxAmountFromBalance = unionBalance * unionPer / wad;
-  const maxAvailable = maxAmountFromBalance <= contractDaiBalance ? maxAmountFromBalance : contractDaiBalance;
+  const maxAmountFromBalance = unionPer > 0n ? contractDaiBalance * WAD[TOKENS.UNION] / unionPer : 0n;
+  const maxAvailable = maxAmountFromBalance <= unionBalance ? maxAmountFromBalance : unionBalance;
+
+  // Debug logging
+  console.log("UnionRepayModal debug:", {
+    amountRaw: amount.raw?.toString(),
+    unionPer: unionPer?.toString(),
+    creditRaw: creditRaw?.toString(),
+    contractDaiBalance: contractDaiBalance?.toString(),
+    tokenDecimals: UNIT[token],
+    conversionRate: unionPer > 0n ? `1 UNION = $${format(unionPer, token, 6)}` : "Conversion not active",
+    minUnionFor1Cent: unionPer > 0n ? format((10000n * WAD[TOKENS.UNION]) / unionPer, TOKENS.UNION, 0) : "N/A",
+  });
 
   const repayCreditButtonProps = useWrite({
     ...rewardsManagerContract,
@@ -121,7 +144,7 @@ export const UnionRepayModal = ({
             m="12px 0 32px"
             maxw="300px"
             label="Amount"
-            caption={`${format(maxAvailable, token, 0)} ${token} available to redeem`}
+            caption={`Max. ${format(maxAvailable, TOKENS.UNION, 0)} UNION for $${format(contractDaiBalance, token, 2)}`}
             placeholder="0.0"
             suffix={<Union />}
             rightLabel={`Max. ${format(unionBalance, TOKENS.UNION, 0, false)} UNION`}
@@ -145,7 +168,7 @@ export const UnionRepayModal = ({
           <StatRow
             title="Statement Credit"
             content="What you receive"
-            amount={creditFormatted}
+            amount={creditRaw > 0n && creditRaw < 10000n ? "<0.01" : creditFormatted}
             color="#F59E0B"
             token={<Usdc />}
             className="w-full"
