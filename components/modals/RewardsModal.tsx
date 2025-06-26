@@ -100,7 +100,7 @@ export const RewardsModal = ({
                   <Text m={0} grey={500} weight="medium">{subtitle}</Text>
                 </Box>
 
-                <Button icon={icon} />
+                <Button icon={icon} label="" />
               </Box>
             ))}
           </Box>
