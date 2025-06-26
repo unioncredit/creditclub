@@ -21,7 +21,6 @@ import { useWrite } from "@/hooks/useWrite";
 import { POST_TX_MODAL } from "@/components/modals/PostTxModal";
 import { INVITE_MODAL } from "@/components/modals/InviteModal";
 import { useUnionMember } from "@/providers/UnionMemberProvider";
-import { useToken } from "@/hooks/useToken";
 import { Address } from "viem";
 import { useRewardsManagerContract } from "@/hooks/useRewardsManagerContract";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
@@ -36,7 +35,6 @@ export const BuyInvitesModal = ({
 }) => {
   const [numInvites, setNumInvites] = useState(1);
 
-  const { token } = useToken();
   const { open, close } = useModals();
   const { address: connectedAddress } = useAccount();
   const { data: member } = useUnionMember();

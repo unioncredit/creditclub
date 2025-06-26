@@ -29,13 +29,13 @@ export const BuyRedeemPanel = ({
 
   const {
     clubTokenBalance,
+    stakedBalance,
   } = clubMember;
 
   const {
     symbol,
     decimals,
     totalSupply,
-    stakedBalance,
   } = clubData;
 
   const { price: tokenPrice } = priceData;
