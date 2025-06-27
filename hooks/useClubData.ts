@@ -7,7 +7,56 @@ import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 import { useStakingContract } from "@/hooks/useStakingContract";
 import { unionContract } from "@/contracts/base";
 
-export const useClubData = (clubAddress: Address) => {
+interface ClubData {
+  totalLockedStake: bigint;
+  stakedBalance: bigint;
+  fixedBidPrice: bigint;
+  unionBalance: bigint;
+  callerPercent: number;
+  winnerPercent: number;
+  bidBucketPercent: number;
+  unclaimedRewards: bigint;
+  costToCall: bigint;
+  lastReward: bigint;
+  rewardCooldown: number;
+  name: string;
+  symbol: string;
+  memberNftAddress: Address;
+  isTokenEnabled: boolean;
+  totalAssets: bigint;
+  decimals: number;
+  lockupPeriod: bigint;
+  lockupEnd: bigint;
+  assetAddress: Address;
+  isPublic: boolean;
+  vestingDurationInSeconds: bigint;
+  startingPercentTrust: bigint;
+  totalSupply: bigint;
+  creatorAddress: Address;
+  isActivated: boolean;
+  rewardsManagerAddress: Address;
+  auctionAddress: Address;
+  image: string;
+  description: string;
+  stakingAddress: Address;
+  feeRecipient: Address;
+  isClosedEndFund: boolean;
+  withdrawPeriod: bigint;
+  vaultWithdrawFeeBps: bigint;
+  stakingWithdrawFeeBps: bigint;
+  isTiersEnabled: boolean;
+  ownerAddress: Address;
+  baseTrust: bigint;
+}
+
+interface UseClubDataReturn {
+  data: ClubData;
+  isLoading: boolean;
+  isRefetching: boolean;
+  refetch: () => Promise<void>;
+}
+
+export const useClubData = (clubAddress: Address): UseClubDataReturn => {
   const tokenContract = useContract("token");
   const userManagerContract = useContract("userManager");
   const comptrollerContract = useContract("comptroller");
@@ -351,7 +400,7 @@ export const useClubData = (clubAddress: Address) => {
     await Promise.all(queries.map(q => q.refetch()));
   };
 
-  const data = {
+  const data: ClubData = {
     totalLockedStake,
     stakedBalance,
     fixedBidPrice,

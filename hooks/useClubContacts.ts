@@ -8,7 +8,26 @@ import { usePopulateEns } from "@/hooks/usePopulateEns";
 import { useContract } from "@/hooks/useContract";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 
-export const useClubContacts = (clubAddress: Address) => {
+interface ClubContact {
+  address: Address;
+  locking: bigint;
+  trust: bigint;
+  vouch: bigint;
+  isMember: boolean;
+  isOverdue: boolean;
+  lastRepay: bigint;
+  numShares: bigint;
+  ens?: string | null;
+}
+
+interface UseClubContactsReturn {
+  data: ClubContact[];
+  refetch: () => Promise<void>;
+  isLoading?: boolean;
+  isError?: boolean;
+}
+
+export const useClubContacts = (clubAddress: Address): UseClubContactsReturn => {
   const creditVaultContract = useCreditVaultContract(clubAddress);
   const unionLensContract = useContract("unionLens");
   const userManagerContract = useContract("userManager");
@@ -65,7 +84,7 @@ export const useClubContacts = (clubAddress: Address) => {
   // note: make sure to update this when added a contract call
   const chunked = chunk(results, 5) as any[];
 
-  const data = chunked.map((d, i) => ({
+  const data: ClubContact[] = chunked.map((d, i) => ({
     address: borrowerAddresses[i]!,
     locking: d[0].voucher.locked,
     trust: d[0].voucher.trust,
@@ -86,6 +105,6 @@ export const useClubContacts = (clubAddress: Address) => {
   return {
     ...result,
     refetch,
-    data: ensPopulated
+    data: ensPopulated as ClubContact[]
   }
 }

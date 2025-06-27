@@ -28,7 +28,7 @@ export const ClubStats = ({
 
   const defaultedContacts = clubContacts.filter((v) => v.isOverdue);
   const defaultedAmount = defaultedContacts.reduce((acc, c) => acc + c.locking, 0n);
-  // Ensure safe BigInt subtraction
+  // Now TypeScript knows these are bigints
   const availableAmount = stakedBalance >= totalLockedStake ? stakedBalance - totalLockedStake : 0n;
 
   const barValues: DistributionBarItem[] = [
