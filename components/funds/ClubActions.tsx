@@ -39,6 +39,14 @@ export const ClubActions = ({
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
+  // Helper function to safely calculate claimable amount
+  const calculateClaimableAmount = (total: bigint, vouched: bigint): bigint => {
+    if (total > vouched) {
+      return total - vouched;
+    }
+    return 0n;
+  };
+
   const {
     name = "",
     isActivated = false,
@@ -51,7 +59,7 @@ export const ClubActions = ({
 
   // Ensure all bigint values have proper defaults
   const owed = clubMember?.owed ?? 0n;
-  const vouch = clubMember?.vouch ?? 0n;
+  const vouch: bigint = clubMember?.vouch ?? 0n;
   const tokenId = clubMember?.tokenId ?? 0n;
   const active = clubMember?.active ?? false;
   const isMember = clubMember?.isMember ?? false;
@@ -78,7 +86,8 @@ export const ClubActions = ({
     : 0n;
   
   const totalVested = startingAmount + additionalVested;
-  const claimableAmount = totalVested > vouch ? totalVested - vouch : 0n;
+  // Avoid direct comparison by using Math.max equivalent for bigints
+  const claimableAmount = calculateClaimableAmount(totalVested, vouch);
 
   // Debug logging
   console.log("ClubActions debug:", {
