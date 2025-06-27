@@ -13,7 +13,8 @@ export const useClubData = (clubAddress: Address) => {
   const comptrollerContract = useContract("comptroller");
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
-  const contracts = [
+  // Split into smaller contract groups to avoid TypeScript depth issues
+  const contractsGroup1 = [
     {
       ...userManagerContract,
       functionName: "getTotalLockedStake",
@@ -58,6 +59,9 @@ export const useClubData = (clubAddress: Address) => {
       ...creditVaultContract,
       functionName: "rewardCooldown",
     },
+  ];
+
+  const contractsGroup2 = [
     {
       ...creditVaultContract,
       functionName: "name",
@@ -98,6 +102,9 @@ export const useClubData = (clubAddress: Address) => {
       ...creditVaultContract,
       functionName: "isPublic",
     },
+  ];
+
+  const contractsGroup3 = [
     {
       ...creditVaultContract,
       functionName: "vestingDuration",
@@ -138,6 +145,9 @@ export const useClubData = (clubAddress: Address) => {
       ...creditVaultContract,
       functionName: "staking",
     },
+  ];
+
+  const contractsGroup4 = [
     {
       ...creditVaultContract,
       functionName: "feeRecipient",
@@ -162,10 +172,15 @@ export const useClubData = (clubAddress: Address) => {
       ...creditVaultContract,
       functionName: "owner",
     },
+    {
+      ...creditVaultContract,
+      functionName: "baseTrust",
+    },
   ];
 
-  const result = useReadContracts({
-    contracts: contracts.map(c => ({
+  const result1 = useReadContracts({
+    // @ts-ignore
+    contracts: contractsGroup1.map(c => ({
       ...c,
       chainId: DEFAULT_CHAIN_ID,
     })),
@@ -175,6 +190,43 @@ export const useClubData = (clubAddress: Address) => {
     }
   });
 
+  const result2 = useReadContracts({
+    // @ts-ignore
+    contracts: contractsGroup2.map(c => ({
+      ...c,
+      chainId: DEFAULT_CHAIN_ID,
+    })),
+    query: {
+      enabled: !!clubAddress,
+      staleTime: Infinity,
+    }
+  });
+
+  const result3 = useReadContracts({
+    // @ts-ignore
+    contracts: contractsGroup3.map(c => ({
+      ...c,
+      chainId: DEFAULT_CHAIN_ID,
+    })),
+    query: {
+      enabled: !!clubAddress,
+      staleTime: Infinity,
+    }
+  });
+
+  const result4 = useReadContracts({
+    // @ts-ignore
+    contracts: contractsGroup4.map(c => ({
+      ...c,
+      chainId: DEFAULT_CHAIN_ID,
+    })),
+    query: {
+      enabled: !!clubAddress,
+      staleTime: Infinity,
+    }
+  });
+
+  // Extract results from each group
   const [
     totalLockedStake = 0n,
     stakedBalance = 0n,
@@ -186,6 +238,9 @@ export const useClubData = (clubAddress: Address) => {
     costToCall = 0n,
     lastReward = 0n,
     rewardCooldown = 0,
+  ] = result1.data?.map(d => d.result as never) || [];
+
+  const [
     name = "",
     symbol = "",
     memberNftAddress = zeroAddress,
@@ -196,6 +251,9 @@ export const useClubData = (clubAddress: Address) => {
     lockupEnd = 0n,
     assetAddress = zeroAddress,
     isPublic = false,
+  ] = result2.data?.map(d => d.result as never) || [];
+
+  const [
     vestingDurationInSeconds = 0n,
     startingPercentTrust = 0n,
     totalSupply = 0n,
@@ -206,17 +264,22 @@ export const useClubData = (clubAddress: Address) => {
     image = "",
     description = "",
     stakingAddress = zeroAddress,
+  ] = result3.data?.map(d => d.result as never) || [];
+
+  const [
     feeRecipient = zeroAddress,
     isClosedEndFund = false,
     withdrawPeriod = 0n,
     vaultWithdrawFeeBps = 0n,
     isTiersEnabled = false,
     ownerAddress = zeroAddress,
-  ] = result.data?.map(d => d.result as never) || [];
+    baseTrust = 0n,
+  ] = result4.data?.map(d => d.result as never) || [];
 
   // Get staking withdraw fee from staking contract
   const stakingContract = useStakingContract(stakingAddress);
   const stakingResult = useReadContracts({
+    // @ts-ignore
     contracts: [
       {
         ...stakingContract,
@@ -234,7 +297,18 @@ export const useClubData = (clubAddress: Address) => {
 
   const stakingWithdrawFeeBps = stakingResult.data?.[0]?.result as bigint || 0n;
 
-
+  const isLoading = result1.isLoading || result2.isLoading || result3.isLoading || result4.isLoading || stakingResult.isLoading;
+  const isRefetching = result1.isRefetching || result2.isRefetching || result3.isRefetching || result4.isRefetching || stakingResult.isRefetching;
+  
+  const refetch = async () => {
+    await Promise.all([
+      result1.refetch(),
+      result2.refetch(),
+      result3.refetch(),
+      result4.refetch(),
+      stakingResult.refetch(),
+    ]);
+  };
 
   const data = {
     totalLockedStake,
@@ -275,7 +349,8 @@ export const useClubData = (clubAddress: Address) => {
     stakingWithdrawFeeBps,
     isTiersEnabled,
     ownerAddress,
+    baseTrust,
   };
 
-  return { ...result, data };
+  return { data, isLoading, isRefetching, refetch };
 };
