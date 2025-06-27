@@ -1,5 +1,5 @@
 import { Address, zeroAddress } from "viem";
-import { useReadContracts } from "wagmi";
+import { useReadContract } from "wagmi";
 
 import { DEFAULT_CHAIN_ID, TOTAL_PERCENT } from "@/constants";
 import { useContract } from "@/hooks/useContract";
@@ -13,301 +13,342 @@ export const useClubData = (clubAddress: Address) => {
   const comptrollerContract = useContract("comptroller");
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
-  // Split into smaller contract groups to avoid TypeScript depth issues
-  const contractsGroup1 = [
-    {
-      ...userManagerContract,
-      functionName: "getTotalLockedStake",
-      args: [clubAddress],
-    },
-    {
-      ...userManagerContract,
-      functionName: "getStakerBalance",
-      args: [clubAddress],
-    },
-    {
-      ...creditVaultContract,
-      functionName: "fixedBidPrice",
-    },
-    {
-      ...unionContract,
-      functionName: "balanceOf",
-      args: [clubAddress],
-    },
-    {
-      ...creditVaultContract,
-      functionName: "callerPercent",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "winnerPercent",
-    },
-    {
-      ...comptrollerContract,
-      functionName: "calculateRewards",
-      args: [clubAddress, tokenContract.address],
-    },
-    {
-      ...creditVaultContract,
-      functionName: "FEELING_LUCKY_COST",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "lastReward",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "rewardCooldown",
-    },
-  ];
-
-  const contractsGroup2 = [
-    {
-      ...creditVaultContract,
-      functionName: "name",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "symbol",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "nft",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "isTokenEnabled"
-    },
-    {
-      ...creditVaultContract,
-      functionName: "totalAssets"
-    },
-    {
-      ...creditVaultContract,
-      functionName: "decimals"
-    },
-    {
-      ...creditVaultContract,
-      functionName: "lockupPeriod"
-    },
-    {
-      ...creditVaultContract,
-      functionName: "lockupEnd"
-    },
-    {
-      ...creditVaultContract,
-      functionName: "asset",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "isPublic",
-    },
-  ];
-
-  const contractsGroup3 = [
-    {
-      ...creditVaultContract,
-      functionName: "vestingDuration",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "startingPercentTrust"
-    },
-    {
-      ...creditVaultContract,
-      functionName: "totalSupply",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "creator",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "isActivated",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "rewardManager",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "auction",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "image",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "description",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "staking",
-    },
-  ];
-
-  const contractsGroup4 = [
-    {
-      ...creditVaultContract,
-      functionName: "feeRecipient",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "isClosedEndFund",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "withdrawPeriod",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "withdrawFeeBps",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "isTiersEnabled",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "owner",
-    },
-    {
-      ...creditVaultContract,
-      functionName: "baseTrust",
-    },
-  ];
-
-  const result1 = useReadContracts({
-    // @ts-ignore
-    contracts: contractsGroup1.map(c => ({
-      ...c,
-      chainId: DEFAULT_CHAIN_ID,
-    })),
-    query: {
-      enabled: !!clubAddress,
-      staleTime: Infinity,
-    }
+  // Individual contract queries
+  const totalLockedStakeQuery = useReadContract({
+    ...userManagerContract,
+    functionName: "getTotalLockedStake",
+    args: [clubAddress],
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
   });
 
-  const result2 = useReadContracts({
-    // @ts-ignore
-    contracts: contractsGroup2.map(c => ({
-      ...c,
-      chainId: DEFAULT_CHAIN_ID,
-    })),
-    query: {
-      enabled: !!clubAddress,
-      staleTime: Infinity,
-    }
+  const stakedBalanceQuery = useReadContract({
+    ...userManagerContract,
+    functionName: "getStakerBalance",
+    args: [clubAddress],
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
   });
 
-  const result3 = useReadContracts({
-    // @ts-ignore
-    contracts: contractsGroup3.map(c => ({
-      ...c,
-      chainId: DEFAULT_CHAIN_ID,
-    })),
-    query: {
-      enabled: !!clubAddress,
-      staleTime: Infinity,
-    }
+  const fixedBidPriceQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "fixedBidPrice",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
   });
 
-  const result4 = useReadContracts({
-    // @ts-ignore
-    contracts: contractsGroup4.map(c => ({
-      ...c,
-      chainId: DEFAULT_CHAIN_ID,
-    })),
-    query: {
-      enabled: !!clubAddress,
-      staleTime: Infinity,
-    }
+  const unionBalanceQuery = useReadContract({
+    ...unionContract,
+    functionName: "balanceOf",
+    args: [clubAddress],
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
   });
 
-  // Extract results from each group
-  const [
-    totalLockedStake = 0n,
-    stakedBalance = 0n,
-    fixedBidPrice = 0n,
-    unionBalance = 0n,
-    callerPercent = 0n,
-    winnerPercent = 0n,
-    unclaimedRewards = 0n,
-    costToCall = 0n,
-    lastReward = 0n,
-    rewardCooldown = 0,
-  ] = result1.data?.map(d => d.result as never) || [];
+  const callerPercentQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "callerPercent",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
 
-  const [
-    name = "",
-    symbol = "",
-    memberNftAddress = zeroAddress,
-    isTokenEnabled = false,
-    totalAssets = 0n,
-    decimals = 0,
-    lockupPeriod = 0n,
-    lockupEnd = 0n,
-    assetAddress = zeroAddress,
-    isPublic = false,
-  ] = result2.data?.map(d => d.result as never) || [];
+  const winnerPercentQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "winnerPercent",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
 
-  const [
-    vestingDurationInSeconds = 0n,
-    startingPercentTrust = 0n,
-    totalSupply = 0n,
-    creatorAddress = zeroAddress,
-    isActivated = false,
-    rewardsManagerAddress = zeroAddress,
-    auctionAddress = zeroAddress,
-    image = "",
-    description = "",
-    stakingAddress = zeroAddress,
-  ] = result3.data?.map(d => d.result as never) || [];
+  const unclaimedRewardsQuery = useReadContract({
+    ...comptrollerContract,
+    functionName: "calculateRewards",
+    args: [clubAddress, tokenContract.address],
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
 
-  const [
-    feeRecipient = zeroAddress,
-    isClosedEndFund = false,
-    withdrawPeriod = 0n,
-    vaultWithdrawFeeBps = 0n,
-    isTiersEnabled = false,
-    ownerAddress = zeroAddress,
-    baseTrust = 0n,
-  ] = result4.data?.map(d => d.result as never) || [];
+  const costToCallQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "FEELING_LUCKY_COST",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const lastRewardQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "lastReward",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const rewardCooldownQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "rewardCooldown",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const nameQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "name",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const symbolQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "symbol",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const memberNftAddressQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "nft",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const isTokenEnabledQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "isTokenEnabled",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const totalAssetsQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "totalAssets",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const decimalsQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "decimals",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const lockupPeriodQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "lockupPeriod",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const lockupEndQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "lockupEnd",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const assetAddressQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "asset",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const isPublicQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "isPublic",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const vestingDurationQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "vestingDuration",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const startingPercentTrustQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "startingPercentTrust",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const totalSupplyQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "totalSupply",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const creatorAddressQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "creator",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const isActivatedQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "isActivated",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const rewardsManagerAddressQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "rewardManager",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const auctionAddressQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "auction",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const imageQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "image",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const descriptionQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "description",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const stakingAddressQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "staking",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const feeRecipientQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "feeRecipient",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const isClosedEndFundQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "isClosedEndFund",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const withdrawPeriodQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "withdrawPeriod",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const vaultWithdrawFeeBpsQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "withdrawFeeBps",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const isTiersEnabledQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "isTiersEnabled",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const ownerAddressQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "owner",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  const baseTrustQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "baseTrust",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { enabled: !!clubAddress, staleTime: Infinity }
+  });
+
+  // Get staking address first
+  const stakingAddress = stakingAddressQuery.data || zeroAddress;
 
   // Get staking withdraw fee from staking contract
   const stakingContract = useStakingContract(stakingAddress);
-  const stakingResult = useReadContracts({
-    // @ts-ignore
-    contracts: [
-      {
-        ...stakingContract,
-        functionName: "withdrawFeeBps",
-      }
-    ].map(c => ({
-      ...c,
-      chainId: DEFAULT_CHAIN_ID,
-    })),
-    query: {
-      enabled: !!stakingAddress && stakingAddress !== zeroAddress,
-      staleTime: Infinity,
+  const stakingWithdrawFeeBpsQuery = useReadContract({
+    ...stakingContract,
+    functionName: "withdrawFeeBps",
+    chainId: DEFAULT_CHAIN_ID,
+    query: { 
+      enabled: !!stakingAddress && stakingAddress !== zeroAddress, 
+      staleTime: Infinity 
     }
   });
 
-  const stakingWithdrawFeeBps = stakingResult.data?.[0]?.result as bigint || 0n;
+  // Extract values
+  const totalLockedStake = totalLockedStakeQuery.data || 0n;
+  const stakedBalance = stakedBalanceQuery.data || 0n;
+  const fixedBidPrice = fixedBidPriceQuery.data || 0n;
+  const unionBalance = unionBalanceQuery.data || 0n;
+  const callerPercent = callerPercentQuery.data || 0n;
+  const winnerPercent = winnerPercentQuery.data || 0n;
+  const unclaimedRewards = unclaimedRewardsQuery.data || 0n;
+  const costToCall = costToCallQuery.data || 0n;
+  const lastReward = lastRewardQuery.data || 0n;
+  const rewardCooldown = rewardCooldownQuery.data || 0;
+  const name = nameQuery.data || "";
+  const symbol = symbolQuery.data || "";
+  const memberNftAddress = memberNftAddressQuery.data || zeroAddress;
+  const isTokenEnabled = isTokenEnabledQuery.data || false;
+  const totalAssets = totalAssetsQuery.data || 0n;
+  const decimals = decimalsQuery.data || 0;
+  const lockupPeriod = lockupPeriodQuery.data || 0n;
+  const lockupEnd = lockupEndQuery.data || 0n;
+  const assetAddress = assetAddressQuery.data || zeroAddress;
+  const isPublic = isPublicQuery.data || false;
+  const vestingDurationInSeconds = vestingDurationQuery.data || 0n;
+  const startingPercentTrust = startingPercentTrustQuery.data || 0n;
+  const totalSupply = totalSupplyQuery.data || 0n;
+  const creatorAddress = creatorAddressQuery.data || zeroAddress;
+  const isActivated = isActivatedQuery.data || false;
+  const rewardsManagerAddress = rewardsManagerAddressQuery.data || zeroAddress;
+  const auctionAddress = auctionAddressQuery.data || zeroAddress;
+  const image = imageQuery.data || "";
+  const description = descriptionQuery.data || "";
+  const feeRecipient = feeRecipientQuery.data || zeroAddress;
+  const isClosedEndFund = isClosedEndFundQuery.data || false;
+  const withdrawPeriod = withdrawPeriodQuery.data || 0n;
+  const vaultWithdrawFeeBps = vaultWithdrawFeeBpsQuery.data || 0n;
+  const isTiersEnabled = isTiersEnabledQuery.data || false;
+  const ownerAddress = ownerAddressQuery.data || zeroAddress;
+  const baseTrust = baseTrustQuery.data || 0n;
+  const stakingWithdrawFeeBps = stakingWithdrawFeeBpsQuery.data || 0n;
 
-  const isLoading = result1.isLoading || result2.isLoading || result3.isLoading || result4.isLoading || stakingResult.isLoading;
-  const isRefetching = result1.isRefetching || result2.isRefetching || result3.isRefetching || result4.isRefetching || stakingResult.isRefetching;
+  // Check loading states
+  const queries = [
+    totalLockedStakeQuery, stakedBalanceQuery, fixedBidPriceQuery, unionBalanceQuery,
+    callerPercentQuery, winnerPercentQuery, unclaimedRewardsQuery, costToCallQuery,
+    lastRewardQuery, rewardCooldownQuery, nameQuery, symbolQuery, memberNftAddressQuery,
+    isTokenEnabledQuery, totalAssetsQuery, decimalsQuery, lockupPeriodQuery, lockupEndQuery,
+    assetAddressQuery, isPublicQuery, vestingDurationQuery, startingPercentTrustQuery,
+    totalSupplyQuery, creatorAddressQuery, isActivatedQuery, rewardsManagerAddressQuery,
+    auctionAddressQuery, imageQuery, descriptionQuery, stakingAddressQuery, feeRecipientQuery,
+    isClosedEndFundQuery, withdrawPeriodQuery, vaultWithdrawFeeBpsQuery, isTiersEnabledQuery,
+    ownerAddressQuery, baseTrustQuery, stakingWithdrawFeeBpsQuery
+  ];
+
+  const isLoading = queries.some(q => q.isLoading);
+  const isRefetching = queries.some(q => q.isRefetching);
   
   const refetch = async () => {
-    await Promise.all([
-      result1.refetch(),
-      result2.refetch(),
-      result3.refetch(),
-      result4.refetch(),
-      stakingResult.refetch(),
-    ]);
+    await Promise.all(queries.map(q => q.refetch()));
   };
 
   const data = {

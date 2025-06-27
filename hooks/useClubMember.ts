@@ -1,5 +1,5 @@
 import { Address, erc20Abi, zeroAddress } from "viem";
-import { useReadContracts, useReadContract } from "wagmi";
+import { useReadContract } from "wagmi";
 
 import { DEFAULT_CHAIN_ID } from "@/constants";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
@@ -22,77 +22,108 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const creditVaultContract = useCreditVaultContract(clubAddress);
   const stakingContract = useStakingContract(stakingAddress);
 
-  const contracts = [
-    {
-      ...creditVaultContract,
-      functionName: "balanceOf",
-      args: [memberAddress],
-    },
-    {
-      ...memberNftContract,
-      functionName: "balanceOf",
-      args: [memberAddress],
-    },
-    {
-      ...stakingContract,
-      functionName: "balanceOf",
-      args: [memberAddress],
-    },
-    {
-      abi: erc20Abi,
-      address: assetAddress,
-      functionName: "balanceOf",
-      args: [memberAddress],
-    },
-    {
-      ...userManagerContract,
-      functionName: "getLockedStake",
-      args: [clubAddress, memberAddress],
-    },
-    {
-      ...userManagerContract,
-      functionName: "getVouchingAmount",
-      args: [clubAddress, memberAddress],
-    },
-    {
-      ...memberNftContract,
-      functionName: "getMemberId",
-      args: [memberAddress],
-    },
-    {
-      ...memberNftContract,
-      functionName: "_invited",
-      args: [memberAddress],
-    },
-    {
-      ...memberNftContract,
-      functionName: "getInvites",
-      args: [memberAddress],
-    }
-  ];
-
-  const resultOne = useReadContracts({
-    // @ts-ignore
-    contracts: contracts.map(c => ({
-      ...c,
-      chainId: DEFAULT_CHAIN_ID,
-    })),
+  // Individual contract queries
+  const clubTokenBalanceQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "balanceOf",
+    args: [memberAddress],
+    chainId: DEFAULT_CHAIN_ID,
     query: {
       enabled: !!clubAddress && !!memberAddress,
     }
   });
 
-  const [
-    clubTokenBalance = 0n,
-    memberNftBalance = 0n,
-    stakedBalance = 0n,
-    assetBalance = 0n,
-    owed = 0n,
-    vouch = 0n,
-    tokenId = 0n,
-    invitedByAddress = zeroAddress,
-    inviteCount = 0n,
-  ] = resultOne.data?.map(d => d.result as never) || [];
+  const memberNftBalanceQuery = useReadContract({
+    ...memberNftContract,
+    functionName: "balanceOf",
+    args: [memberAddress],
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress && !!memberAddress,
+    }
+  });
+
+  const stakedBalanceQuery = useReadContract({
+    ...stakingContract,
+    functionName: "balanceOf",
+    args: [memberAddress],
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress && !!memberAddress,
+    }
+  });
+
+  const assetBalanceQuery = useReadContract({
+    abi: erc20Abi,
+    address: assetAddress,
+    functionName: "balanceOf",
+    args: [memberAddress],
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress && !!memberAddress && !!assetAddress,
+    }
+  });
+
+  const lockedStakeQuery = useReadContract({
+    ...userManagerContract,
+    functionName: "getLockedStake",
+    args: [clubAddress, memberAddress],
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress && !!memberAddress,
+    }
+  });
+
+  const vouchingAmountQuery = useReadContract({
+    ...userManagerContract,
+    functionName: "getVouchingAmount",
+    args: [clubAddress, memberAddress],
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress && !!memberAddress,
+    }
+  });
+
+  const memberIdQuery = useReadContract({
+    ...memberNftContract,
+    functionName: "getMemberId",
+    args: [memberAddress],
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress && !!memberAddress,
+    }
+  });
+
+  const invitedByQuery = useReadContract({
+    ...memberNftContract,
+    functionName: "_invited",
+    args: [memberAddress],
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress && !!memberAddress,
+    }
+  });
+
+  const inviteCountQuery = useReadContract({
+    ...memberNftContract,
+    functionName: "getInvites",
+    args: [memberAddress],
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress && !!memberAddress,
+    }
+  });
+
+  // Extract values
+  const clubTokenBalance = clubTokenBalanceQuery.data || 0n;
+  const memberNftBalance = memberNftBalanceQuery.data || 0n;
+  const stakedBalance = stakedBalanceQuery.data || 0n;
+  const assetBalance = assetBalanceQuery.data || 0n;
+  const owed = lockedStakeQuery.data || 0n;
+  const vouch = vouchingAmountQuery.data || 0n;
+  const tokenId = memberIdQuery.data || 0n;
+  const invitedByAddress = invitedByQuery.data || zeroAddress;
+  const inviteCount = inviteCountQuery.data || 0n;
 
   // Get member data from getMember function
   const memberDataQuery = useReadContract({
@@ -118,28 +149,18 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const tierLabel = memberDetails?.tierLabel || "";
 
   // Get percent vested based on updatedAt
-  const resultTwo = useReadContracts({
-    // @ts-ignore
-    contracts: [
-      {
-        ...creditVaultContract,
-        functionName: "_percentVested",
-        args: [updatedAt],
-      }
-    ].map(c => ({
-      ...c,
-      chainId: DEFAULT_CHAIN_ID,
-    })),
+  const percentVestedQuery = useReadContract({
+    ...creditVaultContract,
+    functionName: "_percentVested",
+    args: [updatedAt],
+    chainId: DEFAULT_CHAIN_ID,
     query: {
       enabled: updatedAt > 0n && !!creditVaultContract.address,
       staleTime: Infinity,
     }
   });
 
-  const [
-    percentVested = 0n,
-    // @ts-ignore
-  ] = resultTwo.data?.map(d => d.result as never) || [];
+  const percentVested = percentVestedQuery.data || 0n;
 
   // Debug the getMember response
   console.log("useClubMember debug:", {
@@ -174,33 +195,29 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     tierLabel,
   };
 
-  const {
-    refetch: refetchOne,
-    isLoading: isLoadingOne,
-    isRefetching: isRefetchingOne,
-  } = resultOne;
+  // Check loading states
+  const queries = [
+    clubTokenBalanceQuery,
+    memberNftBalanceQuery,
+    stakedBalanceQuery,
+    assetBalanceQuery,
+    lockedStakeQuery,
+    vouchingAmountQuery,
+    memberIdQuery,
+    invitedByQuery,
+    inviteCountQuery,
+    memberDataQuery,
+    percentVestedQuery,
+  ];
 
-  const {
-    refetch: refetchTwo,
-    isLoading: isLoadingTwo,
-    isRefetching: isRefetchingTwo,
-  } = resultTwo;
-
-  const {
-    refetch: refetchMember,
-    isLoading: isLoadingMember,
-    isRefetching: isRefetchingMember,
-  } = memberDataQuery;
-
+  const isLoading = queries.some(q => q.isLoading || q.isRefetching);
+  
   const refetch = async () => {
-    await refetchOne();
-    await refetchTwo();
-    await refetchMember();
+    await Promise.all(queries.map(q => q.refetch()));
   };
 
   return {
-    ...resultTwo,
-    isLoading: isLoadingOne || isLoadingTwo || isLoadingMember || isRefetchingOne || isRefetchingTwo || isRefetchingMember,
+    isLoading,
     refetch,
     data,
   };
