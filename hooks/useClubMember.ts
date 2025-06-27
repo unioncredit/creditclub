@@ -56,8 +56,8 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     },
     {
       ...memberNftContract,
-      functionName: "tokenOfOwnerByIndex",
-      args: [memberAddress, 0n],
+      functionName: "getMemberId",
+      args: [memberAddress],
     },
     {
       ...creditVaultContract,
@@ -118,7 +118,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
       chainId: DEFAULT_CHAIN_ID,
     })),
     query: {
-      enabled: tokenId !== undefined,
+      enabled: tokenId !== undefined && tokenId > 0n,
       staleTime: Infinity,
     }
   });

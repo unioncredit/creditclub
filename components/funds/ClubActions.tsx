@@ -41,7 +41,7 @@ export const ClubActions = ({
 
   const { name, isActivated } = clubData;
   const { isInviteEnabled } = memberNftData;
-  const { owed, vouch, tokenId, previewCreditClaim, active, isMember, badDebt } = clubMember;
+  const { owed, vouch, tokenId, previewCreditClaim, active, isMember, badDebt, memberNftBalance, percentVested } = clubMember;
   const {
     enabled: vestingEnabled,
     duration: vestingDuration,
@@ -51,15 +51,20 @@ export const ClubActions = ({
   // Debug logging
   console.log("ClubActions debug:", {
     tokenId: tokenId?.toString(),
+    memberNftBalance: memberNftBalance?.toString(),
     isMember,
     active,
     badDebt: badDebt?.toString(),
     owed: owed?.toString(),
     vouch: vouch?.toString(),
     previewCreditClaim: previewCreditClaim?.toString(),
+    percentVested: percentVested?.toString(),
+    claimableAmount: previewCreditClaim > vouch ? (previewCreditClaim - vouch).toString() : "0",
     clubAddress,
     userAddress: address,
     isVaultActivated: isActivated,
+    vestingEnabled,
+    vestedDays,
   });
 
   const claimCreditButtonProps = useWrite({
@@ -79,12 +84,15 @@ export const ClubActions = ({
   });
 
   // Determine if claim credit should be disabled and why
+  const claimableAmount = previewCreditClaim > vouch ? previewCreditClaim - vouch : 0n;
+  
   const cannotClaimReason = !isActivated ? "Vault is not activated"
     : !isMember ? "You must be a member to claim credit"
-    : !active ? "Your membership is not active"
+    : memberNftBalance === 0n ? "You don't own a member NFT"
+    : tokenId === 0n ? "Unable to find your member NFT token ID"
+    : !active ? "Your membership is not active - you may need to activate it first"
     : badDebt && badDebt > 0n ? "Cannot claim with outstanding bad debt"
-    : tokenId === 0n ? "Invalid member token ID"
-    : previewCreditClaim <= vouch ? "No additional credit to claim"
+    : claimableAmount === 0n ? "No credit available to claim (already claimed or not vested yet)"
     : null;
 
   return (
