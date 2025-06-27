@@ -39,21 +39,53 @@ export const ClubActions = ({
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
-  const { name } = clubData;
+  const { name, isActivated } = clubData;
   const { isInviteEnabled } = memberNftData;
-  const { owed, vouch, tokenId, previewCreditClaim } = clubMember;
+  const { owed, vouch, tokenId, previewCreditClaim, active, isMember, badDebt } = clubMember;
   const {
     enabled: vestingEnabled,
     duration: vestingDuration,
     vestedDays,
   } = vestingData;
 
+  // Debug logging
+  console.log("ClubActions debug:", {
+    tokenId: tokenId?.toString(),
+    isMember,
+    active,
+    badDebt: badDebt?.toString(),
+    owed: owed?.toString(),
+    vouch: vouch?.toString(),
+    previewCreditClaim: previewCreditClaim?.toString(),
+    clubAddress,
+    userAddress: address,
+    isVaultActivated: isActivated,
+  });
+
   const claimCreditButtonProps = useWrite({
     ...creditVaultContract,
     functionName: "claimCredit",
     args: [tokenId],
     onComplete: refetchClubMember,
+    onError: (error) => {
+      console.error("claimCredit failed:", error);
+      if (error.message) {
+        console.error("Error message:", error.message);
+      }
+      if (error.cause) {
+        console.error("Error cause:", error.cause);
+      }
+    },
   });
+
+  // Determine if claim credit should be disabled and why
+  const cannotClaimReason = !isActivated ? "Vault is not activated"
+    : !isMember ? "You must be a member to claim credit"
+    : !active ? "Your membership is not active"
+    : badDebt && badDebt > 0n ? "Cannot claim with outstanding bad debt"
+    : tokenId === 0n ? "Invalid member token ID"
+    : previewCreditClaim <= vouch ? "No additional credit to claim"
+    : null;
 
   return (
     <div className="p-4 border rounded-2xl bg-slate-50">
@@ -99,6 +131,7 @@ export const ClubActions = ({
 
           <RoundedButton
             {...claimCreditButtonProps}
+            disabled={!!cannotClaimReason}
             className="bg-[#E3F6EC] hover:bg-[#E3F6EC] hover:opacity-90 h-[54px] text-[#1C9451] w-[156px] justify-start"
             icon={(
               <IconCube
@@ -109,6 +142,7 @@ export const ClubActions = ({
                 className="p-1"
               />
             )}
+            title={cannotClaimReason || undefined}
           >
             Claim Credit
           </RoundedButton>
