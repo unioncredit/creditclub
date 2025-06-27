@@ -78,6 +78,13 @@ export const ClubActions = ({
     vestedDays = 0,
   } = vestingData || {};
 
+  // Ensure all bigint values are properly typed
+  const owedBigInt = BigInt(owed || 0n);
+  const vouchBigInt = BigInt(vouch || 0n);
+  const tokenIdBigInt = BigInt(tokenId || 0n);
+  const badDebtBigInt = BigInt(badDebt || 0n);
+  const memberNftBalanceBigInt = BigInt(memberNftBalance || 0n);
+
   // Calculate claimable credit amount
   const WAD = 10n ** 18n;
   
@@ -96,17 +103,17 @@ export const ClubActions = ({
   
   const totalVested = startingAmount + additionalVested;
   // Avoid direct comparison by using Math.max equivalent for bigints
-  const claimableAmount = calculateClaimableAmount(totalVested, vouch);
+  const claimableAmount = calculateClaimableAmount(totalVested, vouchBigInt);
 
   // Debug logging
   console.log("ClubActions debug:", {
-    tokenId: tokenId?.toString(),
-    memberNftBalance: memberNftBalance?.toString(),
+    tokenId: tokenIdBigInt?.toString(),
+    memberNftBalance: memberNftBalanceBigInt?.toString(),
     isMember,
     active,
-    badDebt: badDebt?.toString(),
-    owed: owed?.toString(),
-    vouch: vouch?.toString(),
+    badDebt: badDebtBigInt?.toString(),
+    owed: owedBigInt?.toString(),
+    vouch: vouchBigInt?.toString(),
     baseTrust: baseTrustBigInt?.toString(),
     startingPercentTrust: startingPercentTrustBigInt?.toString(),
     percentVested: percentVestedBigInt?.toString(),
@@ -124,17 +131,17 @@ export const ClubActions = ({
   const claimCreditButtonProps = useWrite({
     ...creditVaultContract,
     functionName: "claimCredit",
-    args: [tokenId || 0n],
+    args: [tokenIdBigInt],
     onComplete: refetchClubMember,
   });
 
   // Determine if claim credit should be disabled and why
   const cannotClaimReason = !isActivated ? "Vault is not activated"
     : !isMember ? "You must be a member to claim credit"
-    : (memberNftBalance || 0n) === 0n ? "You don't own a member NFT"
-    : (tokenId || 0n) === 0n ? "Unable to find your member NFT token ID"
+    : memberNftBalanceBigInt === 0n ? "You don't own a member NFT"
+    : tokenIdBigInt === 0n ? "Unable to find your member NFT token ID"
     : !active ? "Your membership is not active - you may need to activate it first"
-    : (badDebt || 0n) > 0n ? "Cannot claim with outstanding bad debt"
+    : badDebtBigInt > 0n ? "Cannot claim with outstanding bad debt"
     : claimableAmount === 0n ? "No credit available to claim (already claimed or not vested yet)"
     : null;
 
@@ -159,7 +166,7 @@ export const ClubActions = ({
         <TextCube width={48} height={48} background="#1F1D29" foreground="white">
           {getInitials(name || "")}
         </TextCube>
-        <p className="text-lg">{name || ""} Member #{(tokenId || 0n).toString()}</p>
+        <p className="text-lg">{name || ""} Member #{tokenIdBigInt.toString()}</p>
       </div>
 
       {vestingEnabled && (
@@ -175,8 +182,8 @@ export const ClubActions = ({
             <p>Club Credit</p>
 
             <div className="text-right">
-              <p className="text-sm font-medium">${format(vouch || 0n, token)}</p>
-              <p className="text-xs text-stone-400">+${format(claimableAmount || 0n, token)}</p>
+              <p className="text-sm font-medium">${format(vouchBigInt, token)}</p>
+              <p className="text-xs text-stone-400">+${format(claimableAmount, token)}</p>
             </div>
           </div>
 
@@ -204,12 +211,12 @@ export const ClubActions = ({
             <p>Club Debt</p>
 
             <div>
-              <p className="text-sm font-medium">${format(owed || 0n, token)}</p>
+              <p className="text-sm font-medium">${format(owedBigInt, token)}</p>
             </div>
           </div>
 
           <RoundedButton
-            disabled={(owed || 0n) === 0n}
+            disabled={owedBigInt === 0n}
             icon={(
               <IconCube
                 width={18}
