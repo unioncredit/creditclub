@@ -57,16 +57,17 @@ export const ClubActions = ({
     isInviteEnabled = false,
   } = memberNftData || {};
 
-  // Ensure all bigint values have proper defaults
-  const owed = clubMember?.owed ?? 0n;
-  const vouch: bigint = clubMember?.vouch ?? 0n;
-  const tokenId = clubMember?.tokenId ?? 0n;
-  const active = clubMember?.active ?? false;
-  const isMember = clubMember?.isMember ?? false;
-  const badDebt = clubMember?.badDebt ?? 0n;
-  const memberNftBalance = clubMember?.memberNftBalance ?? 0n;
-  const percentVested = clubMember?.percentVested ?? 0n;
-  const baseTrust = clubMember?.baseTrust ?? 0n;
+  const {
+    owed = 0n,
+    vouch = 0n,
+    tokenId = 0n,
+    active = false,
+    isMember = false,
+    badDebt = 0n,
+    memberNftBalance = 0n,
+    percentVested = 0n,
+    baseTrust = 0n,
+  } = clubMember || {};
 
   const {
     enabled: vestingEnabled = false,
