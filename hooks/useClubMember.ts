@@ -145,6 +145,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     isInvited: invitedByAddress !== zeroAddress,
     invitedByAddress,
     inviteCount,
+    memberNftBalance,
   };
 
   const {
