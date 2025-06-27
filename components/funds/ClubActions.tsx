@@ -59,11 +59,22 @@ export const ClubActions = ({
   } = vestingData || {};
 
   // Calculate claimable credit amount
-  const WAD = 10n ** 18n;
-  const startingAmount = baseTrust && startingPercentTrust ? (baseTrust * startingPercentTrust) / WAD : 0n;
-  const additionalVested = baseTrust && baseTrust > startingAmount ? ((baseTrust - startingAmount) * percentVested) / WAD : 0n;
-  const totalVested = startingAmount + additionalVested;
-  const claimableAmount = totalVested > vouch ? totalVested - vouch : 0n;
+  const WAD: bigint = 10n ** 18n;
+  const baseTrustBigInt: bigint = baseTrust || 0n;
+  const startingPercentTrustBigInt: bigint = startingPercentTrust || 0n;
+  const percentVestedBigInt: bigint = percentVested || 0n;
+  const vouchBigInt: bigint = vouch || 0n;
+  
+  const startingAmount: bigint = baseTrustBigInt && startingPercentTrustBigInt 
+    ? (baseTrustBigInt * startingPercentTrustBigInt) / WAD 
+    : 0n;
+  
+  const additionalVested: bigint = baseTrustBigInt && baseTrustBigInt > startingAmount 
+    ? ((baseTrustBigInt - startingAmount) * percentVestedBigInt) / WAD 
+    : 0n;
+  
+  const totalVested: bigint = startingAmount + additionalVested;
+  const claimableAmount: bigint = totalVested > vouchBigInt ? totalVested - vouchBigInt : 0n;
 
   // Debug logging
   console.log("ClubActions debug:", {
@@ -73,10 +84,10 @@ export const ClubActions = ({
     active,
     badDebt: badDebt?.toString(),
     owed: owed?.toString(),
-    vouch: vouch?.toString(),
-    baseTrust: baseTrust?.toString(),
-    startingPercentTrust: startingPercentTrust?.toString(),
-    percentVested: percentVested?.toString(),
+    vouch: vouchBigInt?.toString(),
+    baseTrust: baseTrustBigInt?.toString(),
+    startingPercentTrust: startingPercentTrustBigInt?.toString(),
+    percentVested: percentVestedBigInt?.toString(),
     startingAmount: startingAmount?.toString(),
     additionalVested: additionalVested?.toString(),
     totalVested: totalVested?.toString(),
