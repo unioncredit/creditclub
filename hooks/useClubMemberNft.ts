@@ -1,5 +1,5 @@
 import { Address, zeroAddress } from "viem";
-import { useReadContracts } from "wagmi";
+import { useReadContract } from "wagmi";
 
 import { DEFAULT_CHAIN_ID } from "@/constants";
 import { useClubData } from "@/hooks/useClubData";
@@ -11,68 +11,105 @@ export const useClubMemberNft = (clubAddress: Address) => {
 
   const memberNftContract = useMemberNftContract(memberNftAddress);
 
-  const contracts = [
-    {
-      ...memberNftContract,
-      functionName: "contractURI",
-    },
-    {
-      ...memberNftContract,
-      functionName: "membershipCost",
-    },
-    {
-      ...memberNftContract,
-      functionName: "gatingToken"
-    },
-    {
-      ...memberNftContract,
-      functionName: "maxMembers"
-    },
-    {
-      ...memberNftContract,
-      functionName: "isInviteEnabled"
-    },
-    {
-      ...memberNftContract,
-      functionName: "minMembers"
-    },
-    {
-      ...memberNftContract,
-      functionName: "gatingTokenAmount"
-    },
-    {
-      ...memberNftContract,
-      functionName: "isSoulBound"
-    },
-    {
-      ...memberNftContract,
-      functionName: "inviteCost"
-    },
-  ];
-
-  const result = useReadContracts({
-    // @ts-ignore
-    contracts: contracts.map(c => ({
-      ...c,
-      chainId: DEFAULT_CHAIN_ID,
-    })),
+  const contractURIQuery = useReadContract({
+    ...memberNftContract,
+    functionName: "contractURI",
+    chainId: DEFAULT_CHAIN_ID,
     query: {
       enabled: !!clubAddress,
       staleTime: Infinity,
     }
   });
 
-  const resultData = result.data?.map(d => d.result) || [];
+  const membershipCostQuery = useReadContract({
+    ...memberNftContract,
+    functionName: "membershipCost",
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress,
+      staleTime: Infinity,
+    }
+  });
+
+  const gatingTokenQuery = useReadContract({
+    ...memberNftContract,
+    functionName: "gatingToken",
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress,
+      staleTime: Infinity,
+    }
+  });
+
+  const maxMembersQuery = useReadContract({
+    ...memberNftContract,
+    functionName: "maxMembers",
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress,
+      staleTime: Infinity,
+    }
+  });
+
+  const isInviteEnabledQuery = useReadContract({
+    ...memberNftContract,
+    functionName: "isInviteEnabled",
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress,
+      staleTime: Infinity,
+    }
+  });
+
+  const minMembersQuery = useReadContract({
+    ...memberNftContract,
+    functionName: "minMembers",
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress,
+      staleTime: Infinity,
+    }
+  });
+
+  const gatingTokenAmountQuery = useReadContract({
+    ...memberNftContract,
+    functionName: "gatingTokenAmount",
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress,
+      staleTime: Infinity,
+    }
+  });
+
+  const isSoulBoundQuery = useReadContract({
+    ...memberNftContract,
+    functionName: "isSoulBound",
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress,
+      staleTime: Infinity,
+    }
+  });
+
+  const inviteCostQuery = useReadContract({
+    ...memberNftContract,
+    functionName: "inviteCost",
+    chainId: DEFAULT_CHAIN_ID,
+    query: {
+      enabled: !!clubAddress,
+      staleTime: Infinity,
+    }
+  });
   
-  const contractURI = (resultData[0] as string) || "";
-  const membershipCost = (resultData[1] as bigint) || 0n;
-  const gatingTokenAddress = (resultData[2] as Address) || zeroAddress;
-  const maxMembers = (resultData[3] as bigint) || 0n;
-  const isInviteEnabled = (resultData[4] as boolean) || false;
-  const minMembers = (resultData[5] as bigint) || 0n;
-  const gatingTokenAmount = (resultData[6] as bigint) || 0n;
-  const isSoulBound = (resultData[7] as boolean) || false;
-  const inviteCost = (resultData[8] as bigint) || 0n;
+  const contractURI = contractURIQuery.data || "";
+  const membershipCost = membershipCostQuery.data || 0n;
+  const gatingTokenAddress = gatingTokenQuery.data || zeroAddress;
+  const maxMembers = maxMembersQuery.data || 0n;
+  const isInviteEnabled = isInviteEnabledQuery.data || false;
+  const minMembers = minMembersQuery.data || 0n;
+  const gatingTokenAmount = gatingTokenAmountQuery.data || 0n;
+  const isSoulBound = isSoulBoundQuery.data || false;
+  const inviteCost = inviteCostQuery.data || 0n;
 
   let contractMetadata: {
     name?: string;
@@ -98,8 +135,6 @@ export const useClubMemberNft = (clubAddress: Address) => {
     image = ""
   } = contractMetadata;
 
-
-
   const data = {
     name,
     description,
@@ -114,5 +149,44 @@ export const useClubMemberNft = (clubAddress: Address) => {
     inviteCost,
   };
 
-  return { ...result, data };
+  const isLoading = contractURIQuery.isLoading || 
+    membershipCostQuery.isLoading || 
+    gatingTokenQuery.isLoading || 
+    maxMembersQuery.isLoading || 
+    isInviteEnabledQuery.isLoading || 
+    minMembersQuery.isLoading || 
+    gatingTokenAmountQuery.isLoading || 
+    isSoulBoundQuery.isLoading || 
+    inviteCostQuery.isLoading;
+
+  const isRefetching = contractURIQuery.isRefetching || 
+    membershipCostQuery.isRefetching || 
+    gatingTokenQuery.isRefetching || 
+    maxMembersQuery.isRefetching || 
+    isInviteEnabledQuery.isRefetching || 
+    minMembersQuery.isRefetching || 
+    gatingTokenAmountQuery.isRefetching || 
+    isSoulBoundQuery.isRefetching || 
+    inviteCostQuery.isRefetching;
+
+  const refetch = async () => {
+    await Promise.all([
+      contractURIQuery.refetch(),
+      membershipCostQuery.refetch(),
+      gatingTokenQuery.refetch(),
+      maxMembersQuery.refetch(),
+      isInviteEnabledQuery.refetch(),
+      minMembersQuery.refetch(),
+      gatingTokenAmountQuery.refetch(),
+      isSoulBoundQuery.refetch(),
+      inviteCostQuery.refetch(),
+    ]);
+  };
+
+  return { 
+    data, 
+    isLoading,
+    isRefetching,
+    refetch,
+  };
 };
