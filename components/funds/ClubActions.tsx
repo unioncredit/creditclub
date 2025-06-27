@@ -51,7 +51,7 @@ export const ClubActions = ({
   const claimCreditButtonProps = useWrite({
     ...creditVaultContract,
     functionName: "claimCredit",
-    args: [address],
+    args: [tokenId],
     onComplete: refetchClubMember,
   });
 
