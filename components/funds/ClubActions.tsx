@@ -40,9 +40,12 @@ export const ClubActions = ({
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
   // Helper function to safely calculate claimable amount
-  const calculateClaimableAmount = (total: bigint, vouched: bigint): bigint => {
-    if (total > vouched) {
-      return total - vouched;
+  const calculateClaimableAmount = (total: any, vouched: any): bigint => {
+    const totalBigInt = BigInt(total || 0n);
+    const vouchedBigInt = BigInt(vouched || 0n);
+    
+    if (totalBigInt > vouchedBigInt) {
+      return totalBigInt - vouchedBigInt;
     }
     return 0n;
   };
