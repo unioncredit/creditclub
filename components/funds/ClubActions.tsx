@@ -40,23 +40,23 @@ export const ClubActions = ({
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
   // Calculate claimable credit amount
-  const WAD: bigint = 10n ** 18n;
+  const WAD = 10n ** 18n;
   
-  const baseTrust: bigint = clubMember?.baseTrust || 0n;
-  const startingPercentTrust: bigint = clubData?.startingPercentTrust || 0n;
-  const percentVested: bigint = clubMember?.percentVested || 0n;
-  const vouch: bigint = clubMember?.vouch || 0n;
+  const baseTrust = (clubMember?.baseTrust || 0n) as bigint;
+  const startingPercentTrust = (clubData?.startingPercentTrust || 0n) as bigint;
+  const percentVested = (clubMember?.percentVested || 0n) as bigint;
+  const vouch = (clubMember?.vouch || 0n) as bigint;
   
-  const startingAmount: bigint = baseTrust && startingPercentTrust 
+  const startingAmount = baseTrust && startingPercentTrust 
     ? (baseTrust * startingPercentTrust) / WAD 
     : 0n;
   
-  const additionalVested: bigint = baseTrust && baseTrust > startingAmount 
+  const additionalVested = baseTrust && baseTrust > startingAmount 
     ? ((baseTrust - startingAmount) * percentVested) / WAD 
     : 0n;
   
-  const totalVested: bigint = startingAmount + additionalVested;
-  const claimableAmount: bigint = totalVested > vouch ? totalVested - vouch : 0n;
+  const totalVested = startingAmount + additionalVested;
+  const claimableAmount = totalVested > vouch ? totalVested - vouch : 0n;
 
   // Debug logging
   console.log("ClubActions debug:", {
