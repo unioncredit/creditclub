@@ -81,12 +81,17 @@ export const ClubActions = ({
   // Calculate claimable credit amount
   const WAD = 10n ** 18n;
   
-  const startingAmount = baseTrust && startingPercentTrust 
-    ? (baseTrust * startingPercentTrust) / WAD 
+  // Ensure all values are bigints
+  const baseTrustBigInt = BigInt(baseTrust || 0n);
+  const startingPercentTrustBigInt = BigInt(startingPercentTrust || 0n);
+  const percentVestedBigInt = BigInt(percentVested || 0n);
+  
+  const startingAmount = baseTrustBigInt && startingPercentTrustBigInt 
+    ? (baseTrustBigInt * startingPercentTrustBigInt) / WAD 
     : 0n;
   
-  const additionalVested = baseTrust && baseTrust > startingAmount 
-    ? ((baseTrust - startingAmount) * percentVested) / WAD 
+  const additionalVested = baseTrustBigInt && baseTrustBigInt > startingAmount 
+    ? ((baseTrustBigInt - startingAmount) * percentVestedBigInt) / WAD 
     : 0n;
   
   const totalVested = startingAmount + additionalVested;
@@ -102,9 +107,9 @@ export const ClubActions = ({
     badDebt: badDebt?.toString(),
     owed: owed?.toString(),
     vouch: vouch?.toString(),
-    baseTrust: baseTrust?.toString(),
-    startingPercentTrust: startingPercentTrust?.toString(),
-    percentVested: percentVested?.toString(),
+    baseTrust: baseTrustBigInt?.toString(),
+    startingPercentTrust: startingPercentTrustBigInt?.toString(),
+    percentVested: percentVestedBigInt?.toString(),
     startingAmount: startingAmount?.toString(),
     additionalVested: additionalVested?.toString(),
     totalVested: totalVested?.toString(),
@@ -129,7 +134,7 @@ export const ClubActions = ({
     : (memberNftBalance || 0n) === 0n ? "You don't own a member NFT"
     : (tokenId || 0n) === 0n ? "Unable to find your member NFT token ID"
     : !active ? "Your membership is not active - you may need to activate it first"
-    : badDebt && badDebt > 0n ? "Cannot claim with outstanding bad debt"
+    : (badDebt || 0n) > 0n ? "Cannot claim with outstanding bad debt"
     : claimableAmount === 0n ? "No credit available to claim (already claimed or not vested yet)"
     : null;
 
@@ -170,8 +175,8 @@ export const ClubActions = ({
             <p>Club Credit</p>
 
             <div className="text-right">
-              <p className="text-sm font-medium">${format(vouch, token)}</p>
-              <p className="text-xs text-stone-400">+${format(claimableAmount, token)}</p>
+              <p className="text-sm font-medium">${format(vouch || 0n, token)}</p>
+              <p className="text-xs text-stone-400">+${format(claimableAmount || 0n, token)}</p>
             </div>
           </div>
 
