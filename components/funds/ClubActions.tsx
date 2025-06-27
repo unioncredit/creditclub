@@ -39,13 +39,36 @@ export const ClubActions = ({
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
+  const {
+    name,
+    isActivated,
+    startingPercentTrust,
+  } = clubData;
+
+  const {
+    isInviteEnabled,
+  } = memberNftData;
+
+  const {
+    owed,
+    vouch,
+    tokenId,
+    active,
+    isMember,
+    badDebt,
+    memberNftBalance,
+    percentVested,
+    baseTrust,
+  } = clubMember;
+
+  const {
+    enabled: vestingEnabled,
+    duration: vestingDuration,
+    vestedDays,
+  } = vestingData;
+
   // Calculate claimable credit amount
   const WAD = 10n ** 18n;
-  
-  const baseTrust = (clubMember?.baseTrust || 0n) as bigint;
-  const startingPercentTrust = (clubData?.startingPercentTrust || 0n) as bigint;
-  const percentVested = (clubMember?.percentVested || 0n) as bigint;
-  const vouch = (clubMember?.vouch || 0n) as bigint;
   
   const startingAmount = baseTrust && startingPercentTrust 
     ? (baseTrust * startingPercentTrust) / WAD 
@@ -60,12 +83,12 @@ export const ClubActions = ({
 
   // Debug logging
   console.log("ClubActions debug:", {
-    tokenId: clubMember?.tokenId?.toString(),
-    memberNftBalance: clubMember?.memberNftBalance?.toString(),
-    isMember: clubMember?.isMember,
-    active: clubMember?.active,
-    badDebt: clubMember?.badDebt?.toString(),
-    owed: clubMember?.owed?.toString(),
+    tokenId: tokenId?.toString(),
+    memberNftBalance: memberNftBalance?.toString(),
+    isMember,
+    active,
+    badDebt: badDebt?.toString(),
+    owed: owed?.toString(),
     vouch: vouch?.toString(),
     baseTrust: baseTrust?.toString(),
     startingPercentTrust: startingPercentTrust?.toString(),
@@ -76,15 +99,15 @@ export const ClubActions = ({
     claimableAmount: claimableAmount?.toString(),
     clubAddress,
     userAddress: address,
-    isVaultActivated: clubData?.isActivated,
-    vestingEnabled: vestingData?.enabled,
-    vestedDays: vestingData?.vestedDays,
+    isVaultActivated: isActivated,
+    vestingEnabled,
+    vestedDays,
   });
 
   const claimCreditButtonProps = useWrite({
     ...creditVaultContract,
     functionName: "claimCredit",
-    args: [clubMember?.tokenId || 0n],
+    args: [tokenId || 0n],
     onComplete: refetchClubMember,
     onError: (error: any) => {
       console.error("claimCredit failed:", error);
@@ -98,12 +121,12 @@ export const ClubActions = ({
   });
 
   // Determine if claim credit should be disabled and why
-  const cannotClaimReason = !clubData?.isActivated ? "Vault is not activated"
-    : !clubMember?.isMember ? "You must be a member to claim credit"
-    : (clubMember?.memberNftBalance || 0n) === 0n ? "You don't own a member NFT"
-    : (clubMember?.tokenId || 0n) === 0n ? "Unable to find your member NFT token ID"
-    : !clubMember?.active ? "Your membership is not active - you may need to activate it first"
-    : clubMember?.badDebt && clubMember.badDebt > 0n ? "Cannot claim with outstanding bad debt"
+  const cannotClaimReason = !isActivated ? "Vault is not activated"
+    : !isMember ? "You must be a member to claim credit"
+    : (memberNftBalance || 0n) === 0n ? "You don't own a member NFT"
+    : (tokenId || 0n) === 0n ? "Unable to find your member NFT token ID"
+    : !active ? "Your membership is not active - you may need to activate it first"
+    : badDebt && badDebt > 0n ? "Cannot claim with outstanding bad debt"
     : claimableAmount === 0n ? "No credit available to claim (already claimed or not vested yet)"
     : null;
 
@@ -112,7 +135,7 @@ export const ClubActions = ({
       <header className="flex items-center justify-between gap-2 border-b pb-4">
         <h2 className="text-xl text-stone-500 font-medium">Club Member Actions</h2>
 
-        {memberNftData?.isInviteEnabled && (
+        {isInviteEnabled && (
           <RoundedButton
             size="small"
             className="p-3 h-10"
@@ -126,15 +149,15 @@ export const ClubActions = ({
 
       <div className="mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-slate-100 rounded-2xl border">
         <TextCube width={48} height={48} background="#1F1D29" foreground="white">
-          {getInitials(clubData?.name || "")}
+          {getInitials(name || "")}
         </TextCube>
-        <p className="text-lg">{clubData?.name || ""} Member #{(clubMember?.tokenId || 0n).toString()}</p>
+        <p className="text-lg">{name || ""} Member #{(tokenId || 0n).toString()}</p>
       </div>
 
-      {vestingData?.enabled && (
+      {vestingEnabled && (
         <div className="flex items-center justify-center gap-0.5 mt-2">
           <CalendarIcon width={24} height={24} />
-          <p className="text-xs text-blue-600">Vesting: {vestingData.vestedDays} of {vestingData.duration} days vested</p>
+          <p className="text-xs text-blue-600">Vesting: {vestedDays} of {vestingDuration} days vested</p>
         </div>
       )}
 
@@ -173,12 +196,12 @@ export const ClubActions = ({
             <p>Club Debt</p>
 
             <div>
-              <p className="text-sm font-medium">${format(clubMember?.owed || 0n, token)}</p>
+              <p className="text-sm font-medium">${format(owed || 0n, token)}</p>
             </div>
           </div>
 
           <RoundedButton
-            disabled={(clubMember?.owed || 0n) === 0n}
+            disabled={(owed || 0n) === 0n}
             icon={(
               <IconCube
                 width={18}
