@@ -110,7 +110,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
       },
       {
         ...memberNftContract,
-        functionName: "getMember",
+        functionName: "_members",
         args: [tokenId],
       }
     ].map(c => ({
@@ -118,7 +118,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
       chainId: DEFAULT_CHAIN_ID,
     })),
     query: {
-      enabled: tokenId !== undefined && tokenId > 0n,
+      enabled: tokenId > 0n,
       staleTime: Infinity,
     }
   });
@@ -128,6 +128,18 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     nftCreditStatus = undefined,
     // @ts-ignore
   ] = resultTwo.data?.map(d => d.result as never) || [];
+
+  // Debug the getMember response
+  console.log("useClubMember debug:", {
+    tokenId: tokenId?.toString(),
+    tokenIdType: typeof tokenId,
+    tokenIdGtZero: tokenId > 0n,
+    resultTwoData: resultTwo.data,
+    resultTwoError: resultTwo.error,
+    nftCreditStatus,
+    percentVested: percentVested?.toString(),
+    enabled: tokenId > 0n,
+  });
 
   const data = {
     isMember: memberNftBalance > 0n,

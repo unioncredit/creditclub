@@ -116,7 +116,7 @@ export const ClubActions = ({
         <TextCube width={48} height={48} background="#1F1D29" foreground="white">
           {getInitials(name)}
         </TextCube>
-        <p className="text-lg">{name} Member #{(tokenId + 1n).toString()}</p>
+        <p className="text-lg">{name} Member #{tokenId.toString()}</p>
       </div>
 
       {vestingEnabled && (
