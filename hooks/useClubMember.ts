@@ -60,11 +60,6 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
       args: [memberAddress],
     },
     {
-      ...creditVaultContract,
-      functionName: "previewCreditClaim",
-      args: [memberAddress],
-    },
-    {
       ...memberNftContract,
       functionName: "_invited",
       args: [memberAddress],
@@ -95,7 +90,6 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     owed = 0n,
     vouch = 0n,
     tokenId = 0n,
-    previewCreditClaim = 0n,
     invitedByAddress = zeroAddress,
     inviteCount = 0n,
   ] = resultOne.data?.map(d => d.result as never) || [];
@@ -165,7 +159,6 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     owed,
     vouch,
     tokenId,
-    previewCreditClaim,
     percentVested,
     baseTrust,
     badDebt,

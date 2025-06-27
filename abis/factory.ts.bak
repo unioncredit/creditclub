@@ -45,6 +45,19 @@ export const factoryAbi = [
   },
   {
     "type": "function",
+    "name": "REWARD_MANAGER",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "UNION_TOKEN",
     "inputs": [],
     "outputs": [
@@ -143,21 +156,6 @@ export const factoryAbi = [
             "internalType": "string"
           },
           {
-            "name": "vaultContractURI",
-            "type": "string",
-            "internalType": "string"
-          },
-          {
-            "name": "memberNFTContractURI",
-            "type": "string",
-            "internalType": "string"
-          },
-          {
-            "name": "memberNFTBaseURI",
-            "type": "string",
-            "internalType": "string"
-          },
-          {
             "name": "raiseMinTarget",
             "type": "uint256",
             "internalType": "uint256"
@@ -243,11 +241,6 @@ export const factoryAbi = [
             "internalType": "uint256"
           },
           {
-            "name": "creditMultiple",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
             "name": "gatingToken",
             "type": "address",
             "internalType": "address"
@@ -294,11 +287,6 @@ export const factoryAbi = [
         "type": "tuple",
         "internalType": "struct Factory.AuthParams",
         "components": [
-          {
-            "name": "rewardManager",
-            "type": "address",
-            "internalType": "address"
-          },
           {
             "name": "creditManager",
             "type": "address",
@@ -446,6 +434,11 @@ export const factoryAbi = [
         "name": "liquidityManager",
         "type": "address",
         "internalType": "address"
+      },
+      {
+        "name": "unitOfCreditPerUnion",
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "_createCost",
@@ -684,11 +677,6 @@ export const factoryAbi = [
   {
     "type": "error",
     "name": "InvalidParams",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "InvalidTokenAuctionConfig",
     "inputs": []
   },
   {

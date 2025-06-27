@@ -16,6 +16,9 @@ const createParamsInitialState = {
   image: "https://ipfs.io/ipfs/bafybeiddczx3dn6c7t2hitj55dc4mfjadaidxosbnhjzqb53fllp45hzam",
   description: "This is a test club description",
   membershipName: "TC NFT Name",
+  vaultContractURI: "https://example.com/vault-metadata.json",
+  memberNFTContractURI: "https://example.com/nft-metadata.json",
+  memberNFTBaseURI: "https://example.com/nft/",
   raiseMinTarget: "0",
   raiseMaxTarget: "10000000",
   raisePeriod: "86400",
@@ -33,6 +36,7 @@ const createParamsInitialState = {
   minMembers: "25",
   vestingDuration: "172800",
   startingPercentTrust: "50",
+  creditMultiple: "100",
   gatingToken: "0x0000000000000000000000000000000000000000",
   gatingTokenAmount: "0",
   isClosedEndFund: true,
@@ -72,9 +76,10 @@ export default function HomePage() {
 
   const createParams = Object.keys(createState).reduce((acc: any, curr: any) => [...acc, createState[curr]], []);
   const authParams = [
-    connectedAddress,
-    connectedAddress,
-    connectedAddress,
+    connectedAddress,  // rewardManager
+    connectedAddress,  // creditManager
+    connectedAddress,  // manager
+    connectedAddress,  // feeManager
   ];
   const inviteList: Address[] = inviteListText
     .split('\n')

@@ -39,14 +39,21 @@ export const ClubActions = ({
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
-  const { name, isActivated } = clubData;
+  const { name, isActivated, startingPercentTrust } = clubData;
   const { isInviteEnabled } = memberNftData;
-  const { owed, vouch, tokenId, previewCreditClaim, active, isMember, badDebt, memberNftBalance, percentVested } = clubMember;
+  const { owed, vouch, tokenId, active, isMember, badDebt, memberNftBalance, percentVested, baseTrust } = clubMember;
   const {
     enabled: vestingEnabled,
     duration: vestingDuration,
     vestedDays,
   } = vestingData;
+
+  // Calculate claimable credit amount
+  const WAD = 10n ** 18n;
+  const startingAmount = baseTrust && startingPercentTrust ? (baseTrust * startingPercentTrust) / WAD : 0n;
+  const additionalVested = baseTrust && baseTrust > startingAmount ? ((baseTrust - startingAmount) * percentVested) / WAD : 0n;
+  const totalVested = startingAmount + additionalVested;
+  const claimableAmount = totalVested > vouch ? totalVested - vouch : 0n;
 
   // Debug logging
   console.log("ClubActions debug:", {
@@ -57,9 +64,13 @@ export const ClubActions = ({
     badDebt: badDebt?.toString(),
     owed: owed?.toString(),
     vouch: vouch?.toString(),
-    previewCreditClaim: previewCreditClaim?.toString(),
+    baseTrust: baseTrust?.toString(),
+    startingPercentTrust: startingPercentTrust?.toString(),
     percentVested: percentVested?.toString(),
-    claimableAmount: previewCreditClaim > vouch ? (previewCreditClaim - vouch).toString() : "0",
+    startingAmount: startingAmount?.toString(),
+    additionalVested: additionalVested?.toString(),
+    totalVested: totalVested?.toString(),
+    claimableAmount: claimableAmount?.toString(),
     clubAddress,
     userAddress: address,
     isVaultActivated: isActivated,
@@ -84,8 +95,6 @@ export const ClubActions = ({
   });
 
   // Determine if claim credit should be disabled and why
-  const claimableAmount = previewCreditClaim > vouch ? previewCreditClaim - vouch : 0n;
-  
   const cannotClaimReason = !isActivated ? "Vault is not activated"
     : !isMember ? "You must be a member to claim credit"
     : memberNftBalance === 0n ? "You don't own a member NFT"
@@ -133,7 +142,7 @@ export const ClubActions = ({
 
             <div className="text-right">
               <p className="text-sm font-medium">${format(vouch, token)}</p>
-              <p className="text-xs text-stone-400">+${format(previewCreditClaim - vouch, token)}</p>
+              <p className="text-xs text-stone-400">+${format(claimableAmount, token)}</p>
             </div>
           </div>
 
