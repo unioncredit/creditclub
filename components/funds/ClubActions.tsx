@@ -39,14 +39,24 @@ export const ClubActions = ({
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
-  const { name, isActivated, startingPercentTrust } = clubData;
-  const { isInviteEnabled } = memberNftData;
-  const { owed, vouch, tokenId, active, isMember, badDebt, memberNftBalance, percentVested, baseTrust } = clubMember;
+  const { name = "", isActivated = false, startingPercentTrust = 0n } = clubData || {};
+  const { isInviteEnabled = false } = memberNftData || {};
+  const { 
+    owed = 0n, 
+    vouch = 0n, 
+    tokenId = 0n, 
+    active = false, 
+    isMember = false, 
+    badDebt = 0n, 
+    memberNftBalance = 0n, 
+    percentVested = 0n, 
+    baseTrust = 0n 
+  } = clubMember || {};
   const {
-    enabled: vestingEnabled,
-    duration: vestingDuration,
-    vestedDays,
-  } = vestingData;
+    enabled: vestingEnabled = false,
+    duration: vestingDuration = 0,
+    vestedDays = 0,
+  } = vestingData || {};
 
   // Calculate claimable credit amount
   const WAD = 10n ** 18n;
