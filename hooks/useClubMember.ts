@@ -8,7 +8,36 @@ import { useClubData } from "@/hooks/useClubData";
 import { useContract } from "@/hooks/useContract";
 import { useStakingContract } from "@/hooks/useStakingContract";
 
-export const useClubMember = (memberAddress: Address | undefined, clubAddress: Address) => {
+interface ClubMemberData {
+  isMember: boolean;
+  clubTokenBalance: bigint;
+  assetBalance: bigint;
+  stakedBalance: bigint;
+  owed: bigint;
+  vouch: bigint;
+  tokenId: bigint;
+  percentVested: bigint;
+  baseTrust: bigint;
+  badDebt: bigint;
+  active: boolean;
+  isInvited: boolean;
+  invitedByAddress: Address;
+  inviteCount: bigint;
+  memberNftBalance: bigint;
+  referrer: Address;
+  updatedAt: bigint;
+  tier: number;
+  tierPercentage: bigint;
+  tierLabel: string;
+}
+
+interface UseClubMemberReturn {
+  isLoading: boolean;
+  refetch: () => Promise<void>;
+  data: ClubMemberData;
+}
+
+export const useClubMember = (memberAddress: Address | undefined, clubAddress: Address): UseClubMemberReturn => {
   const { data: clubData } = useClubData(clubAddress);
 
   const {
@@ -172,7 +201,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     percentVested: percentVested?.toString(),
   });
 
-  const data = {
+  const data: ClubMemberData = {
     isMember: memberNftBalance > 0n,
     clubTokenBalance,
     assetBalance,

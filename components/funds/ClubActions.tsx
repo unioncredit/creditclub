@@ -60,16 +60,18 @@ export const ClubActions = ({
     isInviteEnabled = false,
   } = memberNftData || {};
 
-  // Access values directly with optional chaining for better type safety
-  const owed = clubMember?.owed ?? 0n;
-  const vouch = clubMember?.vouch ?? 0n;
-  const tokenId = clubMember?.tokenId ?? 0n;
-  const active = clubMember?.active ?? false;
-  const isMember = clubMember?.isMember ?? false;
-  const badDebt = clubMember?.badDebt ?? 0n;
-  const memberNftBalance = clubMember?.memberNftBalance ?? 0n;
-  const percentVested = clubMember?.percentVested ?? 0n;
-  const baseTrust = clubMember?.baseTrust ?? 0n;
+  // Now we can directly access values from clubMember since it's always defined
+  const {
+    owed,
+    vouch,
+    tokenId,
+    active,
+    isMember,
+    badDebt,
+    memberNftBalance,
+    percentVested,
+    baseTrust,
+  } = clubMember;
 
   const {
     enabled: vestingEnabled = false,
