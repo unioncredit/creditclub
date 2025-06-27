@@ -67,7 +67,7 @@ export const ClubActions = ({
     functionName: "claimCredit",
     args: [tokenId],
     onComplete: refetchClubMember,
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("claimCredit failed:", error);
       if (error.message) {
         console.error("Error message:", error.message);
