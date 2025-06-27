@@ -49,17 +49,16 @@ export const ClubActions = ({
     isInviteEnabled = false,
   } = memberNftData || {};
 
-  const {
-    owed = 0n,
-    vouch = 0n,
-    tokenId = 0n,
-    active = false,
-    isMember = false,
-    badDebt = 0n,
-    memberNftBalance = 0n,
-    percentVested = 0n,
-    baseTrust = 0n,
-  } = clubMember || {};
+  // Ensure all bigint values have proper defaults
+  const owed = clubMember?.owed ?? 0n;
+  const vouch = clubMember?.vouch ?? 0n;
+  const tokenId = clubMember?.tokenId ?? 0n;
+  const active = clubMember?.active ?? false;
+  const isMember = clubMember?.isMember ?? false;
+  const badDebt = clubMember?.badDebt ?? 0n;
+  const memberNftBalance = clubMember?.memberNftBalance ?? 0n;
+  const percentVested = clubMember?.percentVested ?? 0n;
+  const baseTrust = clubMember?.baseTrust ?? 0n;
 
   const {
     enabled: vestingEnabled = false,
@@ -109,15 +108,6 @@ export const ClubActions = ({
     functionName: "claimCredit",
     args: [tokenId || 0n],
     onComplete: refetchClubMember,
-    onError: (error: any) => {
-      console.error("claimCredit failed:", error);
-      if (error.message) {
-        console.error("Error message:", error.message);
-      }
-      if (error.cause) {
-        console.error("Error cause:", error.cause);
-      }
-    },
   });
 
   // Determine if claim credit should be disabled and why
