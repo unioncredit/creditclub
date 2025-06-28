@@ -120,7 +120,7 @@ export const PresalePanel = ({
   })();
 
   // Keep this for debugging - shows the broken ERC4626 calculation
-  const { data: erc4626Preview } = useMintRedeemPreview({
+  const { data: _erc4626Preview } = useMintRedeemPreview({
     action: "mint",
     shares: amountRaw,
     erc4626Address: stakingAddress,

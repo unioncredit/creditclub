@@ -49,7 +49,9 @@ export const DecentSwapButton = ({
     }
   });
 
-
+  useEffect(() => {
+    onSwapPrepared?.(data as BoxActionResponse | undefined);
+  }, [data, onSwapPrepared]);
 
   const { data: allowance = 0n, refetch: refetchAllowance, isLoading } = useReadContract({
     abi: erc20Abi,
