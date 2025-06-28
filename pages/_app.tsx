@@ -25,61 +25,59 @@ init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ErrorBoundary>
-      <>
-        <FathomAnalytics />
-        <Head>
-          <link
-            rel="preload"
-            href="/fonts/BerkeleyMono-Regular.otf"
-            as="font"
-            crossOrigin=""
-          />
-          <link
-            rel="preload"
-            href="/fonts/BerkeleyMono-Medium.otf"
-            as="font"
-            crossOrigin=""
-          />
+      <FathomAnalytics />
+      <Head>
+        <link
+          rel="preload"
+          href="/fonts/BerkeleyMono-Regular.otf"
+          as="font"
+          crossOrigin=""
+        />
+        <link
+          rel="preload"
+          href="/fonts/BerkeleyMono-Medium.otf"
+          as="font"
+          crossOrigin=""
+        />
 
-          <link rel="icon" type="image/png" href="/favicons/favicon.png" />
-          <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
-          <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png" />
-          <link rel="manifest" href="/favicons/manifest.json" />
+        <link rel="icon" type="image/png" href="/favicons/favicon.png" />
+        <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
+        <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png" />
+        <link rel="manifest" href="/favicons/manifest.json" />
 
-          <title>CreditClub</title>
-          <meta name="description" content="Credit Vaults are tokenized perpetual credit funds." />
-        </Head>
-        <PrivyProvider
-          appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
-          config={{
-            embeddedWallets: {
-              createOnLogin: "all-users",
-            },
-            defaultChain: base,
-            supportedChains: [base, baseSepolia]
-          }}
-        >
-          <QueryClientProvider client={queryClient}>
-            <Web3Provider>
-              <BoxHooksContextProvider apiKey={process.env.NEXT_PUBLIC_DECENT_API_KEY!}>
-                <ToastsProvider>
-                  <CacheProvider>
-                    <UnionDataProvider>
-                      <UnionMemberProvider>
-                        <ConnectedMemberProvider>
-                          <ModalManagerProvider>
-                            <Component {...pageProps} />
-                          </ModalManagerProvider>
-                        </ConnectedMemberProvider>
-                      </UnionMemberProvider>
-                    </UnionDataProvider>
-                  </CacheProvider>
-                </ToastsProvider>
-              </BoxHooksContextProvider>
-            </Web3Provider>
-          </QueryClientProvider>
-        </PrivyProvider>
-      </>
+        <title>CreditClub</title>
+        <meta name="description" content="Credit Vaults are tokenized perpetual credit funds." />
+      </Head>
+      <PrivyProvider
+        appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID || ""}
+        config={{
+          embeddedWallets: {
+            createOnLogin: "all-users",
+          },
+          defaultChain: base,
+          supportedChains: [base, baseSepolia]
+        }}
+      >
+        <QueryClientProvider client={queryClient}>
+          <Web3Provider>
+            <BoxHooksContextProvider apiKey={process.env.NEXT_PUBLIC_DECENT_API_KEY!}>
+              <ToastsProvider>
+                <CacheProvider>
+                  <UnionDataProvider>
+                    <UnionMemberProvider>
+                      <ConnectedMemberProvider>
+                        <ModalManagerProvider>
+                          <Component {...pageProps} />
+                        </ModalManagerProvider>
+                      </ConnectedMemberProvider>
+                    </UnionMemberProvider>
+                  </UnionDataProvider>
+                </CacheProvider>
+              </ToastsProvider>
+            </BoxHooksContextProvider>
+          </Web3Provider>
+        </QueryClientProvider>
+      </PrivyProvider>
     </ErrorBoundary>
   );
 }
