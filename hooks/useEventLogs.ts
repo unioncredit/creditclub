@@ -30,6 +30,7 @@ export const useEventLogs = <const abi extends Abi | readonly unknown[]>({
     isError: result.isError,
     isFetching: result.isFetching,
     isSuccess: result.isSuccess,
+    isFetched: result.isFetched,
     refetch: result.refetch,
   };
 }
