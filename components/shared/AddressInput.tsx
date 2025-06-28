@@ -97,7 +97,7 @@ export const AddressInput = ({
         ens || address ? (
           <span
             className="flex items-center gap-2 cursor-pointer"
-            onClick={() => onChange(address)}
+            onClick={() => onChange(address || null)}
           >
             {address && <Avatar size={16} address={address} />}
             {ens || address}
