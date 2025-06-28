@@ -5,13 +5,6 @@ import { IToastStatus } from "@/providers/types";
 export const DEFAULT_CHAIN = base;
 export const DEFAULT_CHAIN_ID = DEFAULT_CHAIN.id;
 
-console.log('📋 Constants loaded:', {
-  DEFAULT_CHAIN: DEFAULT_CHAIN.name,
-  DEFAULT_CHAIN_ID,
-  base: { name: base.name, id: base.id },
-  baseSepolia: { name: baseSepolia.name, id: baseSepolia.id },
-});
-
 export const BLOCKS_PER_YEAR = 31540000n;
 export const SECONDS_PER_DAY = 86400;
 export const WAD_1E18 = 1000000000000000000n;

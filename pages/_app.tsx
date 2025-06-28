@@ -23,11 +23,6 @@ const queryClient = new QueryClient();
 init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
 
 function MyApp({ Component, pageProps }: AppProps) {
-  console.log('🚀 App starting with chains:', {
-    base: base.id,
-    baseSepolia: baseSepolia.id,
-  });
-  
   return (
     <ErrorBoundary>
       <>

@@ -16,32 +16,11 @@ export const useUnionMember = () => useContext(UnionMemberContext);
 export const UnionMemberProvider = ({ children }: { children: React.ReactNode; }) => {
   const { address = zeroAddress, chain } = useAccount();
   
-  console.log('🔍 UnionMemberProvider Debug:', {
-    address,
-    chainId: chain?.id,
-    chainName: chain?.name,
-    DEFAULT_CHAIN_ID,
-  });
-  
   // Check if we're on a supported chain
   const isSupportedChain = chain?.id === base.id || chain?.id === baseSepolia.id;
   
-  console.log('🔍 Chain support check:', {
-    isSupportedChain,
-    baseId: base.id,
-    baseSepoliaId: baseSepolia.id,
-  });
-  
   // Always use DEFAULT_CHAIN_ID for token since all contracts use DEFAULT_CHAIN_ID
-  let token;
-  try {
-    const tokenData = useToken(DEFAULT_CHAIN_ID);
-    token = tokenData.token;
-    console.log('✅ Token loaded successfully:', token);
-  } catch (error) {
-    console.error('❌ Error loading token:', error);
-    throw error;
-  }
+  const { token } = useToken(DEFAULT_CHAIN_ID);
 
   const chainId = DEFAULT_CHAIN_ID;
   const uTokenContract = useContract("uToken");

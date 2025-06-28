@@ -10,17 +10,8 @@ export const useConnectedMember = () => useContext(ConnectedMemberContext);
 
 export const ConnectedMemberProvider = ({ children }: { children: React.ReactNode; }) => {
   const { address } = useAccount();
-  
-  console.log('🔍 ConnectedMemberProvider Debug:', {
-    address,
-  });
 
   const tokenContract = useContract("token");
-  
-  console.log('🔍 Token contract:', {
-    tokenContract,
-    address: tokenContract?.address,
-  });
 
   const contracts = [
     {
@@ -45,12 +36,6 @@ export const ConnectedMemberProvider = ({ children }: { children: React.ReactNod
   const data = {
     tokenBalance,
   };
-  
-  console.log('🔍 ConnectedMemberProvider data:', {
-    tokenBalance: tokenBalance.toString(),
-    isLoading: result.isLoading,
-    error: result.error,
-  });
 
   return (
     <ConnectedMemberContext.Provider value={{ ...result, data }}>
