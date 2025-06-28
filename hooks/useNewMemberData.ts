@@ -6,7 +6,7 @@ import { useClubData } from "@/hooks/useClubData";
 import { useMemberNftContract } from "@/hooks/useMemberNftContract";
 
 export const useNewMemberData = (_userAddress: Address | undefined, clubAddress: Address) => {
-  const { data: clubData } = useClubData(clubAddress);
+  const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
 
   const {
     memberNftAddress,
@@ -22,7 +22,7 @@ export const useNewMemberData = (_userAddress: Address | undefined, clubAddress:
     functionName: "totalSupply",
     chainId: DEFAULT_CHAIN_ID,
     query: {
-      enabled: !!clubAddress && memberNftAddress !== zeroAddress,
+      enabled: !!clubAddress && memberNftAddress !== zeroAddress && !clubDataLoading,
     }
   });
 
@@ -38,12 +38,12 @@ export const useNewMemberData = (_userAddress: Address | undefined, clubAddress:
   const data = {
     initialTrustAmount,
     totalTrustAmount,
-    vestingDurationInSeconds,
-    startingPercentTrust,
+    vestingDurationInSeconds: vestingDurationInSeconds || 0n,
+    startingPercentTrust: startingPercentTrust || 0n,
     tokenId: tokenId + 1n,
   };
 
-  const isLoading = totalSupplyQuery.isLoading;
+  const isLoading = clubDataLoading || totalSupplyQuery.isLoading;
   const isRefetching = totalSupplyQuery.isRefetching;
   const refetch = totalSupplyQuery.refetch;
 

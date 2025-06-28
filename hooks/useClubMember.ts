@@ -1,5 +1,5 @@
 import { Address, erc20Abi, zeroAddress } from "viem";
-import { useReadContract } from "wagmi";
+import { useReadContract, useReadContracts } from "wagmi";
 
 import { DEFAULT_CHAIN_ID } from "@/constants";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
@@ -46,12 +46,13 @@ interface UseClubMemberReturn {
 }
 
 export const useClubMember = (memberAddress: Address | undefined, clubAddress: Address): UseClubMemberReturn => {
-  const { data: clubData } = useClubData(clubAddress);
+  const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
 
   const {
     memberNftAddress,
     assetAddress,
     stakingAddress,
+    startingPercentTrust,
   } = clubData;
 
   const userManagerContract = useContract("userManager");
@@ -59,95 +60,80 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const creditVaultContract = useCreditVaultContract(clubAddress);
   const stakingContract = useStakingContract(stakingAddress);
 
-  // Individual contract queries
-  const clubTokenBalanceQuery = useReadContract({
-    ...creditVaultContract,
-    functionName: "balanceOf",
-    args: [memberAddress!],
-    chainId: DEFAULT_CHAIN_ID,
+  // Batch 1: Balance Information
+  const balanceContracts = [
+    {
+      ...creditVaultContract,
+      functionName: "balanceOf",
+      args: [memberAddress!],
+    },
+    {
+      ...memberNftContract,
+      functionName: "balanceOf",
+      args: [memberAddress!],
+    },
+    {
+      ...stakingContract,
+      functionName: "balanceOf",
+      args: [memberAddress!],
+    },
+    {
+      abi: erc20Abi,
+      address: assetAddress,
+      functionName: "balanceOf",
+      args: [memberAddress!],
+    },
+  ];
+
+  // Batch 2: UserManager & MemberNFT Basic Info
+  const memberInfoContracts = [
+    {
+      ...userManagerContract,
+      functionName: "getLockedStake",
+      args: [clubAddress, memberAddress!],
+    },
+    {
+      ...userManagerContract,
+      functionName: "getVouchingAmount",
+      args: [clubAddress, memberAddress!],
+    },
+    {
+      ...memberNftContract,
+      functionName: "getMemberId",
+      args: [memberAddress!],
+    },
+    {
+      ...memberNftContract,
+      functionName: "_invited",
+      args: [memberAddress!],
+    },
+    {
+      ...memberNftContract,
+      functionName: "getInvites",
+      args: [memberAddress!],
+    },
+  ];
+
+  // Execute balance and member info batches
+  const balanceResult = useReadContracts({
+    contracts: balanceContracts.map(c => ({
+      ...c,
+      chainId: DEFAULT_CHAIN_ID,
+    })) as any,
     query: {
-      enabled: !!clubAddress && !!memberAddress,
+      enabled: !!clubAddress && !!memberAddress && !clubDataLoading && !!assetAddress,
+      staleTime: Infinity,
     }
   });
 
-  const memberNftBalanceQuery = useReadContract({
-    ...memberNftContract,
-    functionName: "balanceOf",
-    args: [memberAddress!],
-    chainId: DEFAULT_CHAIN_ID,
+  const memberInfoResult = useReadContracts({
+    contracts: memberInfoContracts.map(c => ({
+      ...c,
+      chainId: DEFAULT_CHAIN_ID,
+    })) as any,
     query: {
-      enabled: !!clubAddress && !!memberAddress,
-    }
-  });
-
-  const stakedBalanceQuery = useReadContract({
-    ...stakingContract,
-    functionName: "balanceOf",
-    args: [memberAddress!],
-    chainId: DEFAULT_CHAIN_ID,
-    query: {
-      enabled: !!clubAddress && !!memberAddress,
-    }
-  });
-
-  const assetBalanceQuery = useReadContract({
-    abi: erc20Abi,
-    address: assetAddress,
-    functionName: "balanceOf",
-    args: [memberAddress!],
-    chainId: DEFAULT_CHAIN_ID,
-    query: {
-      enabled: !!clubAddress && !!memberAddress && !!assetAddress,
-    }
-  });
-
-  const lockedStakeQuery = useReadContract({
-    ...userManagerContract,
-    functionName: "getLockedStake",
-    args: [clubAddress, memberAddress!],
-    chainId: DEFAULT_CHAIN_ID,
-    query: {
-      enabled: !!clubAddress && !!memberAddress,
-    }
-  });
-
-  const vouchingAmountQuery = useReadContract({
-    ...userManagerContract,
-    functionName: "getVouchingAmount",
-    args: [clubAddress, memberAddress!],
-    chainId: DEFAULT_CHAIN_ID,
-    query: {
-      enabled: !!clubAddress && !!memberAddress,
-    }
-  });
-
-  const memberIdQuery = useReadContract({
-    ...memberNftContract,
-    functionName: "getMemberId",
-    args: [memberAddress!],
-    chainId: DEFAULT_CHAIN_ID,
-    query: {
-      enabled: !!clubAddress && !!memberAddress,
-    }
-  });
-
-  const invitedByQuery = useReadContract({
-    ...memberNftContract,
-    functionName: "_invited",
-    args: [memberAddress!],
-    chainId: DEFAULT_CHAIN_ID,
-    query: {
-      enabled: !!clubAddress && !!memberAddress,
-    }
-  });
-
-  const inviteCountQuery = useReadContract({
-    ...memberNftContract,
-    functionName: "getInvites",
-    args: [memberAddress!],
-    chainId: DEFAULT_CHAIN_ID,
-    query: {
-      enabled: !!clubAddress && !!memberAddress,
+      enabled: !!clubAddress && !!memberAddress && !clubDataLoading,
+      staleTime: Infinity,
     }
   });
 
@@ -159,30 +145,40 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     return 0n;
   };
 
-  const clubTokenBalance = safeBigInt(clubTokenBalanceQuery.data);
-  const memberNftBalance = safeBigInt(memberNftBalanceQuery.data);
-  const stakedBalance = safeBigInt(stakedBalanceQuery.data);
-  const assetBalance = safeBigInt(assetBalanceQuery.data);
-  const owed = safeBigInt(lockedStakeQuery.data);
-  const vouch = safeBigInt(vouchingAmountQuery.data);
-  const tokenId = safeBigInt(memberIdQuery.data);
-  const invitedByAddress = (invitedByQuery.data as Address) || zeroAddress;
-  const inviteCount = safeBigInt(inviteCountQuery.data);
+  // Extract balance data
+  const [
+    clubTokenBalance = 0n,
+    memberNftBalance = 0n,
+    stakedBalance = 0n,
+    assetBalance = 0n,
+  ] = balanceResult.data?.map(d => safeBigInt(d.result)) || [];
 
-  // Get member data from getMember function
+  // Extract member info data
+  const [
+    owed = 0n,
+    vouch = 0n,
+    tokenId = 0n,
+    invitedByAddress = zeroAddress,
+    inviteCount = 0n,
+  ] = memberInfoResult.data?.map((d, i) => {
+    if (i === 3) return (d.result as Address) || zeroAddress; // invitedByAddress
+    return safeBigInt(d.result);
+  }) || [];
+
+  // Get member details from getMember function (only if tokenId is available)
   const memberDataQuery = useReadContract({
     ...memberNftContract,
     functionName: "getMember",
     args: [tokenId],
     chainId: DEFAULT_CHAIN_ID,
     query: {
-      enabled: tokenId > 0n && !!memberNftContract.address,
+      enabled: tokenId > 0n && !!memberNftContract.address && !clubDataLoading,
       staleTime: Infinity,
     }
   });
 
   // Extract member data from the tuple
-  const memberDetails = memberDataQuery.data;
+  const memberDetails = memberDataQuery.data as any;
   const referrer = memberDetails?.referrer || zeroAddress;
   const baseTrust = safeBigInt(memberDetails?.baseTrust);
   const badDebt = safeBigInt(memberDetails?.badDebt);
@@ -199,7 +195,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     args: [updatedAt],
     chainId: DEFAULT_CHAIN_ID,
     query: {
-      enabled: updatedAt > 0n && !!creditVaultContract.address,
+      enabled: updatedAt > 0n && !!creditVaultContract.address && !clubDataLoading,
       staleTime: Infinity,
     }
   });
@@ -208,8 +204,8 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
 
   // Calculate values based on available data
   const WAD = 10n ** 18n;
-  const startingAmount = baseTrust > 0n && clubData?.startingPercentTrust > 0n
-    ? (baseTrust * clubData.startingPercentTrust) / WAD 
+  const startingAmount = baseTrust > 0n && startingPercentTrust > 0n
+    ? (baseTrust * startingPercentTrust) / WAD 
     : 0n;
   
   const additionalVested = baseTrust > startingAmount && percentVested > 0n
@@ -222,6 +218,14 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const canRepay = owed > 0n;
   const canBorrow = vouch > owed;
   const shares = 0n;  // Default value
+
+  // Check loading states
+  const isLoading = 
+    clubDataLoading ||
+    balanceResult.isLoading ||
+    memberInfoResult.isLoading ||
+    memberDataQuery.isLoading ||
+    percentVestedQuery.isLoading;
 
   const data: ClubMemberData = {
     isMember: memberNftBalance > 0n,
@@ -254,25 +258,13 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     shares,
   };
 
-  // Check loading states
-  const queries = [
-    clubTokenBalanceQuery,
-    memberNftBalanceQuery,
-    stakedBalanceQuery,
-    assetBalanceQuery,
-    lockedStakeQuery,
-    vouchingAmountQuery,
-    memberIdQuery,
-    invitedByQuery,
-    inviteCountQuery,
-    memberDataQuery,
-    percentVestedQuery,
-  ];
-
-  const isLoading = queries.some(q => q.isLoading || q.isRefetching);
-  
   const refetch = async () => {
-    await Promise.all(queries.map(q => q.refetch()));
+    await Promise.all([
+      balanceResult.refetch(),
+      memberInfoResult.refetch(),
+      memberDataQuery.refetch(),
+      percentVestedQuery.refetch(),
+    ]);
   };
 
   return {
