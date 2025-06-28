@@ -32,20 +32,33 @@ export const ClubActions = ({
   const { token } = useToken();
   const { address } = useAccount();
   const { open: openModal } = useModals();
-  const { data: clubData } = useClubData(clubAddress);
-  const { data: memberNftData } = useClubMemberNft(clubAddress);
-  const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
+  const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
+  const { data: memberNftData, isLoading: memberNftDataLoading } = useClubMemberNft(clubAddress);
+  const { data: clubMember, refetch: refetchClubMember, isLoading: clubMemberLoading } = useClubMember(address, clubAddress);
   const { data: vestingData } = useVesting(clubAddress);
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
+  // If any data is still loading, show loading state
+  if (clubDataLoading || memberNftDataLoading || clubMemberLoading) {
+    return (
+      <div className="p-4 border rounded-2xl bg-slate-50">
+        <div className="animate-pulse">
+          <div className="h-8 bg-slate-200 rounded w-1/3 mb-4"></div>
+          <div className="h-16 bg-slate-200 rounded mb-4"></div>
+          <div className="space-y-2">
+            <div className="h-14 bg-slate-200 rounded"></div>
+            <div className="h-14 bg-slate-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Helper function to safely calculate claimable amount
-  const calculateClaimableAmount = (total: any, vouched: any): bigint => {
-    const totalBigInt = BigInt(total || 0n);
-    const vouchedBigInt = BigInt(vouched || 0n);
-    
-    if (totalBigInt > vouchedBigInt) {
-      return totalBigInt - vouchedBigInt;
+  const calculateClaimableAmount = (total: bigint, vouched: bigint): bigint => {
+    if (total > vouched) {
+      return total - vouched;
     }
     return 0n;
   };
@@ -60,18 +73,18 @@ export const ClubActions = ({
     isInviteEnabled = false,
   } = memberNftData || {};
 
-  // Now we can directly access values from clubMember since it's always defined
+  // Safely extract values with defaults
   const {
-    owed,
-    vouch,
-    tokenId,
-    active,
-    isMember,
-    badDebt,
-    memberNftBalance,
-    percentVested,
-    baseTrust,
-  } = clubMember;
+    owed = 0n,
+    vouch = 0n,
+    tokenId = 0n,
+    active = false,
+    isMember = false,
+    badDebt = 0n,
+    memberNftBalance = 0n,
+    percentVested = 0n,
+    baseTrust = 0n,
+  } = clubMember || {};
 
   const {
     enabled: vestingEnabled = false,
@@ -82,17 +95,30 @@ export const ClubActions = ({
   // Calculate claimable credit amount
   const WAD = 10n ** 18n;
   
-  const startingAmount = baseTrust && startingPercentTrust 
-    ? (baseTrust * startingPercentTrust) / WAD 
+  // Ensure all values are bigints before calculations
+  const safeBigInt = (value: any): bigint => {
+    try {
+      return BigInt(value || 0);
+    } catch {
+      return 0n;
+    }
+  };
+  
+  const safeBaseTrust = safeBigInt(baseTrust);
+  const safeStartingPercentTrust = safeBigInt(startingPercentTrust);
+  const safePercentVested = safeBigInt(percentVested);
+  const safeVouch = safeBigInt(vouch);
+  
+  const startingAmount = safeBaseTrust > 0n && safeStartingPercentTrust > 0n
+    ? (safeBaseTrust * safeStartingPercentTrust) / WAD 
     : 0n;
   
-  const additionalVested = baseTrust && baseTrust > startingAmount 
-    ? ((baseTrust - startingAmount) * percentVested) / WAD 
+  const additionalVested = safeBaseTrust > startingAmount && safePercentVested > 0n
+    ? ((safeBaseTrust - startingAmount) * safePercentVested) / WAD 
     : 0n;
   
   const totalVested = startingAmount + additionalVested;
-  // Avoid direct comparison by using Math.max equivalent for bigints
-  const claimableAmount = calculateClaimableAmount(totalVested, vouch);
+  const claimableAmount = calculateClaimableAmount(totalVested, safeVouch);
 
   // Debug logging
   console.log("ClubActions debug:", {
