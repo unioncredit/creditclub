@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useAccount } from "wagmi";
-import { Address } from "viem";
+import { Address, zeroAddress } from "viem";
 import {
   Button,
   Modal,
@@ -36,14 +36,27 @@ export const InviteModal = ({
 
   const { open: openModal, close } = useModals();
   const { address: connectedAddress } = useAccount();
-  const { data: clubData } = useClubData(clubAddress);
+  const { data: clubData, isLoading: isClubDataLoading } = useClubData(clubAddress);
   const { data: member, refetch: refetchMember, isLoading: memberLoading } = useClubMember(connectedAddress, clubAddress);
   const { data: sentInvitations, addInvite, } = useSentInvitations({
     clubAddress,
     sender: connectedAddress,
   });
 
-  const memberNftContract = useMemberNftContract(clubData.memberNftAddress);
+  const memberNftContract = useMemberNftContract(isClubDataLoading ? zeroAddress : clubData.memberNftAddress);
+
+  if (isClubDataLoading) {
+    return (
+      <ModalOverlay onClick={close}>
+        <Modal className="InviteModal">
+          <Modal.Header title="Invite Club Members" onClose={close} />
+          <Modal.Body>
+            <div>Loading...</div>
+          </Modal.Body>
+        </Modal>
+      </ModalOverlay>
+    );
+  }
 
   const { inviteCount } = member;
 

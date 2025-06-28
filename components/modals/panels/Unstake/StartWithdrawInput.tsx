@@ -3,7 +3,7 @@ import {
   Input,
   // @ts-ignore
 } from "@unioncredit/ui";
-import { Address } from "viem";
+import { Address, zeroAddress } from "viem";
 import { useAccount } from "wagmi";
 
 import { formatDecimals } from "@/lib/format";
@@ -21,16 +21,18 @@ export const StartWithdrawInput = ({
   clubAddress: Address;
 }) => {
   const { address: connectedAddress } = useAccount();
-  const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress);
+  const { data: clubData, refetch: refetchClubData, isLoading: isClubDataLoading } = useClubData(clubAddress);
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(connectedAddress, clubAddress);
   const { refetch: refetchWithdrawBucket } = useClubWithdrawBucket(clubAddress);
 
+  const stakingContract = useStakingContract(isClubDataLoading ? zeroAddress : clubData.stakingAddress);
+
+  if (isClubDataLoading) {
+    return <div>Loading...</div>;
+  }
+
   const { image, decimals, symbol } = clubData;
   const { stakedBalance } = clubMember;
-
-  const stakingContract = useStakingContract(clubData.stakingAddress);
-
-
 
   const validate = (inputs: IFormValues) => {
     const shares = inputs.shares as IFormField;

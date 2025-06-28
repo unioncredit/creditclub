@@ -1,6 +1,6 @@
 // @ts-ignore
 import { WalletIcon, CalendarIcon, Input, Usdc, Modal, ModalOverlay, SegmentedControl } from "@unioncredit/ui";
-import { Address, erc20Abi } from "viem";
+import { Address, erc20Abi, zeroAddress } from "viem";
 import { useAccount, useWatchAsset } from "wagmi";
 
 import { useClubData } from "@/hooks/useClubData";
@@ -27,16 +27,20 @@ export const PresalePanel = ({
 }) => {
   const { open: openModal } = useModals();
   const { address } = useAccount();
-  const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress)
+  const { data: clubData, refetch: refetchClubData, isLoading: isClubDataLoading } = useClubData(clubAddress)
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
-  const { data: assetToken } = useErc20Token(clubData.assetAddress);
+  const { data: assetToken } = useErc20Token(isClubDataLoading ? zeroAddress : clubData.assetAddress);
   const { data: auctionData } = useClubAuction(clubAddress);
   const { data: stakingData } = useClubStaking(clubAddress);
   const { activated, locked, remaining } = useClubActivation(clubAddress);
   const { watchAsset } = useWatchAsset();
   const { hasPassed } = useCurrentTime();
 
-  const auctionContract = useAuctionContract(clubData.auctionAddress);
+  const auctionContract = useAuctionContract(isClubDataLoading ? zeroAddress : clubData.auctionAddress);
+
+  if (isClubDataLoading) {
+    return <div>Loading...</div>;
+  }
 
   const { assetBalance } = clubMember;
   const {

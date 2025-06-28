@@ -4,7 +4,7 @@ import {
   WalletIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
-import { Address, erc20Abi } from "viem";
+import { Address, erc20Abi, zeroAddress } from "viem";
 import { useAccount, useWatchAsset } from "wagmi";
 
 import { useModals } from "@/providers/ModalManagerProvider";
@@ -30,13 +30,17 @@ export const StakePanel = ({
 }) => {
   const { open: openModal } = useModals();
   const { address: connectedAddress } = useAccount();
-  const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress)
+  const { data: clubData, refetch: refetchClubData, isLoading: isClubDataLoading } = useClubData(clubAddress)
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(connectedAddress, clubAddress);
   const { data: stakingData } = useClubStaking(clubAddress);
   const { activated } = useClubActivation(clubAddress);
   const { watchAsset } = useWatchAsset();
 
-  const stakingContract = useStakingContract(clubData.stakingAddress);
+  const stakingContract = useStakingContract(isClubDataLoading ? zeroAddress : clubData.stakingAddress);
+
+  if (isClubDataLoading) {
+    return <div>Loading...</div>;
+  }
 
   const { clubTokenBalance } = clubMember;
 
