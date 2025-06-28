@@ -158,7 +158,7 @@ export const MintMemberNftMultichain = ({
         }
         // If isWaitingForApproval is true, the approval completion will be handled by the useEffect
       }}
-      onTxError={(error) => {
+      onTxError={(_error) => {
         if (toastId) {
           closeToast(toastId);
         }
