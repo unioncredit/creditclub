@@ -1,4 +1,4 @@
-import { Address } from "viem";
+import { Address, zeroAddress } from "viem";
 import { useClubData } from "@/hooks/useClubData";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { useClubContacts } from "@/hooks/useClubContacts";
@@ -29,13 +29,18 @@ export const useProrata = (clubAddress: Address) => {
   const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
   const { data: memberNftData, isLoading: memberNftLoading } = useClubMemberNft(clubAddress);
   const { data: clubContacts, isLoading: clubContactsLoading } = useClubContacts(clubAddress);
-  const { data: assetToken, isLoading: assetTokenLoading } = useErc20Token(clubData?.assetAddress);
+  
+  // Only call useErc20Token if we have an asset address
+  const { data: assetToken, isLoading: assetTokenLoading } = useErc20Token(
+    clubData?.assetAddress || zeroAddress
+  );
 
   // Check if any data is still loading
   const isLoading = clubDataLoading || memberNftLoading || clubContactsLoading || assetTokenLoading;
   
   // If data is not ready, return loading state
-  if (isLoading || !clubData || !memberNftData || !clubContacts || !assetToken) {
+  // Note: we need to check if the data properties exist and have valid values
+  if (isLoading || !clubData || !memberNftData || !clubContacts || !assetToken?.decimals) {
     return {
       data: null,
       isLoading,
