@@ -24,10 +24,10 @@ export const ClubStats = ({
   const { open: openModal } = useModals();
   const { token } = useToken();
 
-  const { stakedBalance, totalLockedStake, unclaimedRewards } = clubData;
+  const { stakedBalance = 0n, totalLockedStake = 0n, unclaimedRewards = 0n } = clubData || {};
 
-  const defaultedContacts = clubContacts.filter((v) => v.isOverdue);
-  const defaultedAmount = defaultedContacts.reduce((acc, c) => acc + c.locking, 0n);
+  const defaultedContacts = (clubContacts || []).filter((v) => v.isOverdue);
+  const defaultedAmount = defaultedContacts.reduce((acc, c) => acc + (c.locking || 0n), 0n);
   // Now TypeScript knows these are bigints
   const availableAmount = stakedBalance >= totalLockedStake ? stakedBalance - totalLockedStake : 0n;
 

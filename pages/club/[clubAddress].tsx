@@ -29,20 +29,23 @@ export default function FundSinglePage({
   const router = useRouter();
 
   // Use the router.query.clubAddress if clubAddress prop is not provided
-  clubAddress = (clubAddress || router.query.clubAddress) as Address
+  const resolvedClubAddress = (clubAddress || router.query.clubAddress) as Address;
 
   const { address } = useAccount();
 
-  if (!clubAddress || !isAddress(clubAddress)) {
+  if (!resolvedClubAddress || !isAddress(resolvedClubAddress)) {
     return <p>Invalid club address</p>;
   }
+
+  // Use the resolved address for all subsequent operations
+  clubAddress = resolvedClubAddress;
 
   const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
   const { data: clubMember, isLoading: clubMemberLoading } = useClubMember(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
 
-  const { isPublic, isActivated, isTokenEnabled } = clubData || {};
-  const { isMember } = clubMember || {};
+  const { isPublic = false, isActivated = false, isTokenEnabled = false } = clubData || {};
+  const { isMember = false } = clubMember || {};
 
   // Show loading state while initial data is fetching
   if (clubDataLoading || (address && clubMemberLoading)) {
@@ -67,24 +70,22 @@ export default function FundSinglePage({
       <main>
         <Columned width={1020} className="py-8">
           <ClubHeader clubAddress={clubAddress} />
-          {isQualified && !isMember ? <BannerCta clubAddress={clubAddress} className="mt-4" /> : null}
+          {isQualified && !isMember && <BannerCta clubAddress={clubAddress} className="mt-4" />}
 
           <Container className="mt-4">
             <div className="flex w-full md:flex-col">
               <section className="flex flex-col flex-1 text-left">
                 <ClubDetails clubAddress={clubAddress} />
-                {isActivated ? (
-                  <ClubStats clubAddress={clubAddress} />
-                ) : null}
+                {isActivated && <ClubStats clubAddress={clubAddress} />}
                 <ClubActivity clubAddress={clubAddress} />
               </section>
               <section className="flex-1 pl-6 flex flex-col justify-between max-w-[450px] md:pl-0 md:mt-4 md:max-w-none">
-                {isTokenEnabled ? (
+                {isTokenEnabled && (
                   <>
-                    {isPublic && !isActivated ? <RaisingStats clubAddress={clubAddress} /> : null}
-                    {isActivated ? <BuyRedeemPanel clubAddress={clubAddress} /> : null}
+                    {isPublic && !isActivated && <RaisingStats clubAddress={clubAddress} />}
+                    {isActivated && <BuyRedeemPanel clubAddress={clubAddress} />}
                   </>
-                ) : null}
+                )}
                 {isMember ? (
                   <ClubActions clubAddress={clubAddress} />
                 ) : (

@@ -7,17 +7,22 @@ export const useIsQualified = (clubAddress: Address) => {
   const { data: inviteData, refetch: refetchInvites } = useInvites(clubAddress);
 
   const {
-    enabled: inviteEnabled,
-    qualified: inviteQualified
-  } = inviteData;
+    enabled: inviteEnabled = false,
+    qualified: inviteQualified = false
+  } = inviteData || {};
 
   const {
-    enabled: tokenEnabled,
-    qualified: tokenQualified,
-  } = gatingTokenData;
+    enabled: tokenEnabled = false,
+    qualified: tokenQualified = false,
+  } = gatingTokenData || {};
+
+  // Ensure we return a boolean, not undefined
+  const isQualified = Boolean(
+    (inviteEnabled && inviteQualified) && (!tokenEnabled || tokenQualified)
+  );
 
   return {
-    data: (inviteEnabled && inviteQualified) && (!tokenEnabled || tokenQualified),
+    data: isQualified,
     refetch: () => {
       refetchGatingToken();
       refetchInvites();

@@ -15,7 +15,7 @@ export const BannerCta = ({
   const { open } = useModals();
   const { data: clubData } = useClubData(clubAddress);
 
-  const { name } = clubData;
+  const { name = "" } = clubData || {};
 
   return (
     <div className={cn("p-6 text-center bg-blue-50 rounded-xl", className)}>
@@ -25,7 +25,7 @@ export const BannerCta = ({
         variant="light"
         onClick={() => open(MINT_NFT_MODAL, { clubAddress })}
       >
-        Join {name}
+        Join {name || "this club"}
       </ShadowButton>
     </div>
   )
