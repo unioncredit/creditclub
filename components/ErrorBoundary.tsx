@@ -36,7 +36,6 @@ export class ErrorBoundary extends React.Component<
       
       // Try to extract more info from the error
       const errorString = error.toString();
-      const stackString = error.stack || '';
       
       // Look for object representations in the error
       const objectMatch = errorString.match(/object with keys \{([^}]+)\}/);
