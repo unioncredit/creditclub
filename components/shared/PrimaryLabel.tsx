@@ -17,5 +17,5 @@ export function PrimaryLabel({
     defaultValue,
   });
 
-  return <>{data}</>;
+  return <>{data || ""}</>;
 }
