@@ -77,7 +77,7 @@ export const SellPanel = ({
         type="number"
         name="amount"
         label="Sell amount:"
-        placeholder="0.0"
+        placeholder="0"
         className="mt-4 TokenSelectInput"
         suffix={(
           <img
@@ -89,8 +89,9 @@ export const SellPanel = ({
           />
         )}
         value={amount.formatted}
+        max={formatDecimals(totalAvailableBalance, decimals).toString()}
+        error={errors.amount || undefined}
         onChange={register("amount")}
-        error={errors.amount}
         rightLabel={`Avail. ${formatDecimals(totalAvailableBalance, decimals)} ${symbol}`}
         rightLabelAction={() => setRawValue("amount", totalAvailableBalance)}
       />

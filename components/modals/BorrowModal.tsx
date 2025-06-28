@@ -132,7 +132,7 @@ export const BorrowModal = () => {
               rightLabelAction={() => setRawValue("amount", maxBorrow, false)}
               suffix={<Usdc />}
               placeholder="0.0"
-              error={errors.amount}
+              error={errors.amount || undefined}
               value={amount.formatted}
               onChange={register("amount")}
             />

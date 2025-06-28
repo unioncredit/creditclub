@@ -94,7 +94,7 @@ export const BuyPanel = ({
         )}
         value={amount.formatted}
         onChange={register("amount")}
-        error={errors.amount}
+        error={errors.amount || undefined}
         {...(token ? {
           rightLabel: `Avail. ${maxBalance} ${token.symbol}`,
           rightLabelAction: () => setRawValue("amount", token.balance)

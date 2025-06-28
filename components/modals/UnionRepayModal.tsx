@@ -138,7 +138,7 @@ export const UnionRepayModal = ({
             suffix={<Union />}
             rightLabel={`Max. ${format(unionBalance, TOKENS.UNION, 0, false)} UNION`}
             rightLabelAction={() => setRawValue("amount", unionBalance, false)}
-            error={errors.amount}
+            error={errors.amount || undefined}
             value={amount.formatted}
             onChange={register("amount")}
           />
