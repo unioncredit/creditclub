@@ -11,11 +11,11 @@ export function PrimaryLabel({
   shouldTruncate?: boolean;
   defaultValue?: string;
 }) {
-  const { data: name } = usePrimaryLabel({
+  const { data } = usePrimaryLabel({
     address,
     shouldTruncate,
     defaultValue,
   });
 
-  return name;
+  return <>{data}</>;
 }

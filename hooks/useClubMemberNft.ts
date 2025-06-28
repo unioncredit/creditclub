@@ -125,7 +125,6 @@ export const useClubMemberNft = (clubAddress: Address) => {
     }
   } catch (error) {
     console.error("Failed to parse contract metadata:", error);
-    console.log("Raw contractURI:", contractURI);
     contractMetadata = {};
   }
 

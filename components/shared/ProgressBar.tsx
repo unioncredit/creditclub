@@ -13,9 +13,7 @@ export const ProgressBar = ({
   const [width, setWidth] = useState(0);
   const ref = createRef<HTMLDivElement>();
 
-  if (value < 0 || value > 100) {
-    throw "Invalid progress value, must be between 0-100: " + value;
-  }
+  const safeValue = Math.max(0, Math.min(100, value || 0));
 
   const getCharacterPixelSize = useCallback(() => {
     if (typeof window !== "undefined") {
@@ -51,9 +49,9 @@ export const ProgressBar = ({
 
   const totalCharacters = Math.max(Math.floor(width / getCharacterPixelSize()) - 2, 2);
 
-  const numBars = value > 0
-    ? Math.max(Math.round(totalCharacters * (value / 100)), 1)
-    : Math.round(totalCharacters * (value / 100));
+  const numBars = safeValue > 0
+    ? Math.max(Math.round(totalCharacters * (safeValue / 100)), 1)
+    : Math.round(totalCharacters * (safeValue / 100));
   const numEmpty = totalCharacters - numBars;
 
   const barString = Array(numBars).fill("|").join("");

@@ -11,13 +11,12 @@ export const useToken = (chainId?: number) => {
   const id = chainId || DEFAULT_CHAIN_ID;
   const token = tokens[id] || tokens[DEFAULT_CHAIN_ID];
 
-  if (!token) {
-    throw new Error(`Token not found in useToken hook for chainId: ${id}`);
-  }
+  // Return USDC as default if no token found
+  const safeToken = token || TOKENS.USDC;
 
   return {
-    token,
-    unit: UNIT[token],
-    wad: WAD[token],
+    token: safeToken,
+    unit: UNIT[safeToken],
+    wad: WAD[safeToken],
   };
 };
