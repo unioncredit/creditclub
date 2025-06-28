@@ -93,6 +93,18 @@ export const AddressInput = ({
           value?.endsWith(".eth") && <EnsIcon style={{ width: "20px" }} />
         )
       }
+      rightElement={
+        ens || address ? (
+          <span
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => onChange(address)}
+          >
+            {address && <Avatar size={16} address={address} />}
+            {ens || address}
+            {value?.endsWith(".eth") ? <EnsIcon style={{ width: "20px" }} /> : null}
+          </span>
+        ) : null
+      }
     />
   );
 }

@@ -71,7 +71,7 @@ export const MembershipClaim = ({
 
         <div className="flex items-center gap-1">
           <AddressBookIcon width={24} height={24} />
-          <p className="text-sm text-blue-600">{Number(maxMembers) - clubContacts.length} Remaining</p>
+          <p className="text-sm text-blue-600">{Number(maxMembers || 0) - clubContacts.length} Remaining</p>
         </div>
       </header>
 

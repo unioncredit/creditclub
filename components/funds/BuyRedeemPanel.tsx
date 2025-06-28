@@ -38,22 +38,22 @@ export const BuyRedeemPanel = ({
     totalSupply,
   } = clubData;
 
-  const { price: tokenPrice } = priceData;
+  const { price: tokenPrice = 0 } = priceData;
 
-  const totalSupplyFormatted = commify((tokenPrice * Number(formatUnits(totalSupply, decimals))), 0);
+  const totalSupplyFormatted = commify((tokenPrice * Number(formatUnits(totalSupply || 0n, decimals || 18))), 0);
 
   const footerStats = [
     {
       title: "Balance",
-      value: formatDecimals(clubTokenBalance, decimals, 2),
+      value: formatDecimals(clubTokenBalance || 0n, decimals || 18, 2),
     },
     {
       title: "Staked",
-      value: formatDecimals(stakedBalance, decimals, 2),
+      value: formatDecimals(stakedBalance || 0n, decimals || 18, 2),
     },
     {
       title: "Market value",
-      value: `~$${commify((Number(formatUnits(clubTokenBalance, decimals)) * tokenPrice), 2)}`
+      value: `~$${commify((Number(formatUnits(clubTokenBalance || 0n, decimals || 18)) * tokenPrice), 2)}`
     },
   ];
 

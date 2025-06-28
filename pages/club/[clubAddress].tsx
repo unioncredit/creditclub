@@ -47,24 +47,24 @@ export default function FundSinglePage({
       <main>
         <Columned width={1020} className="py-8">
           <ClubHeader clubAddress={clubAddress} />
-          {isQualified && !isMember && <BannerCta clubAddress={clubAddress} className="mt-4" />}
+          {isQualified && !isMember ? <BannerCta clubAddress={clubAddress} className="mt-4" /> : null}
 
           <Container className="mt-4">
             <div className="flex w-full md:flex-col">
               <section className="flex flex-col flex-1 text-left">
                 <ClubDetails clubAddress={clubAddress} />
-                {isActivated && (
+                {isActivated ? (
                   <ClubStats clubAddress={clubAddress} />
-                )}
+                ) : null}
                 <ClubActivity clubAddress={clubAddress} />
               </section>
               <section className="flex-1 pl-6 flex flex-col justify-between max-w-[450px] md:pl-0 md:mt-4 md:max-w-none">
-                {isTokenEnabled && (
+                {isTokenEnabled ? (
                   <>
-                    {isPublic && !isActivated && <RaisingStats clubAddress={clubAddress} />}
-                    {isActivated && <BuyRedeemPanel clubAddress={clubAddress} />}
+                    {isPublic && !isActivated ? <RaisingStats clubAddress={clubAddress} /> : null}
+                    {isActivated ? <BuyRedeemPanel clubAddress={clubAddress} /> : null}
                   </>
-                )}
+                ) : null}
                 {isMember ? (
                   <ClubActions clubAddress={clubAddress} />
                 ) : (
