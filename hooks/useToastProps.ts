@@ -6,7 +6,7 @@ import { IToast, IToastStatus } from "@/providers/types";
 import { useContract } from "@/hooks/useContract";
 import { useToken } from "@/hooks/useToken";
 
-export const useToastProps = (functionName: string, contract: Address, args: any) => {
+export const useToastProps = (functionName: string, contract: Address, _args: any) => {
   const { token } = useToken();
 
   const unionContract = useContract("union");
