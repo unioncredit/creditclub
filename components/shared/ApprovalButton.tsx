@@ -65,7 +65,7 @@ export const ApprovalButton = ({
         await refetchAllowance();
         setHasApprovalError(false);
       } catch (error) {
-        console.error("Error refetching allowance:", error);
+        // Silently handle error and set error state
         setHasApprovalError(true);
       }
     }, [refetchAllowance]),
