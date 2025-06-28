@@ -138,7 +138,7 @@ export const RewardsRaffleModal = ({
             label={
               complete
                 ? `Trigger the Raffle (${format(costToCall, TOKENS.UNION, 5, false, false, false)} ETH)`
-                : `Callable in ${hours}h:${minutes}m:${seconds}s`
+                : `Callable in ${hours || "0"}h:${minutes || "0"}m:${seconds || "0"}s`
             }
             fluid
             className="mt-4"

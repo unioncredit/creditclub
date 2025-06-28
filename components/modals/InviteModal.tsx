@@ -97,7 +97,7 @@ export const InviteModal = ({
               <Skeleton width={125} height={25} shimmer />
             ) : (
               <>
-                {inviteCount === 1n ? "1 invite" : `${inviteCount} invites`} remaining
+                {inviteCount === 1n ? "1 invite" : `${inviteCount.toString()} invites`} remaining
 
                 <RoundedButton
                   size="pill"
