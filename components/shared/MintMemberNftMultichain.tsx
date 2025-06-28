@@ -70,31 +70,7 @@ export const MintMemberNftMultichain = ({
   const createApprovalToast = useToastProps("approve", tokenContract.address, [address]);
   const createMintToast = useToastProps("mintMemberNFT", creditVaultContract.address, [address]);
 
-  // Add trust console logging for mint process
-  console.log("Mint Process - Trust Data:", {
-    initialTrustAmount: initialTrustAmount.toString(),
-    tokenId: tokenId.toString(),
-    membershipCost: membershipCost.toString(),
-    clubAddress,
-    userAddress: address,
-    needsApproval,
-    currentAllowance: currentAllowance.toString(),
-    isWaitingForApproval,
-  });
 
-  // Add comprehensive gas debugging
-  console.log("Gas Debug Info:", {
-    chainId: ChainId.BASE,
-    contractAddress: memberNftAddress,
-    membershipCost: membershipCost.toString(),
-    tokenAddress: tokenContract.address,
-    hasDecentApiKey: !!process.env.NEXT_PUBLIC_DECENT_API_KEY,
-    isActivated,
-    isMember,
-    isQualified,
-    userAddress: address,
-    needsApproval,
-  });
 
   // Monitor allowance changes to detect approval completion
   useEffect(() => {
@@ -102,12 +78,6 @@ export const MintMemberNftMultichain = ({
     
     if (isWaitingForApproval && previousAllowance < membershipCost && currentAllowance >= membershipCost) {
       // Approval just completed!
-      console.log("Approval detected:", {
-        previousAllowance: previousAllowance.toString(),
-        currentAllowance: currentAllowance.toString(),
-        membershipCost: membershipCost.toString()
-      });
-      
       setIsWaitingForApproval(false);
       if (toastId) {
         closeToast(toastId);
@@ -151,13 +121,11 @@ export const MintMemberNftMultichain = ({
       onTxPending={() => {
         if (needsApproval && !hasShownApprovalToast) {
           // This is the approval transaction
-          console.log("Approval transaction pending");
           setIsWaitingForApproval(true);
           setHasShownApprovalToast(true);
           setToastId(addToast(createApprovalToast(ToastStatus.PENDING), false));
         } else {
           // This is the mint transaction
-          console.log("Mint transaction pending");
           if (toastId) {
             closeToast(toastId);
           }
@@ -166,15 +134,6 @@ export const MintMemberNftMultichain = ({
       }}
       // @ts-ignore
       onTxReceipt={(r: TransactionReceipt) => {
-        console.log("Transaction Receipt:", {
-          startingCredit: initialTrustAmount.toString(),
-          tokenId: tokenId.toString(),
-          transactionHash: r.transactionHash,
-          clubName: name,
-          needsApproval,
-          isWaitingForApproval
-        });
-
         if (!isWaitingForApproval) {
           // This is the mint transaction completion
           if (toastId) {
@@ -200,23 +159,6 @@ export const MintMemberNftMultichain = ({
         // If isWaitingForApproval is true, the approval completion will be handled by the useEffect
       }}
       onTxError={(error) => {
-        console.error("Detailed transaction error:", {
-          error,
-          errorMessage: (error as any)?.message || error?.toString() || "Unknown error",
-          errorCode: (error as any)?.code,
-          errorData: (error as any)?.data,
-          errorReason: (error as any)?.reason,
-          needsApproval,
-          isWaitingForApproval,
-          membershipCost: membershipCost.toString(),
-          currentAllowance: currentAllowance.toString(),
-          userAddress: address,
-          contractAddress: memberNftAddress,
-          // Additional gas-related debugging
-          gasError: (error as any)?.message?.includes('gas') || (error as any)?.message?.includes('Gas'),
-          estimationError: (error as any)?.message?.includes('estimation') || (error as any)?.message?.includes('estimate'),
-        });
-        
         if (toastId) {
           closeToast(toastId);
         }

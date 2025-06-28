@@ -100,8 +100,6 @@ export const useDecentSwap = ({
         content: "Sorry, an unknown error occurred.",
       };
 
-      console.log({ error });
-
       addToast({
         link: null,
         variant: ToastStatus.FAILED,

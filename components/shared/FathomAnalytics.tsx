@@ -17,8 +17,11 @@ function TrackPageView() {
   useEffect(() => {
     if (!pathname) return;
 
+    const search = searchParams?.toString();
+    const url = search ? `${pathname}?${search}` : pathname;
+    
     trackPageview({
-      url: pathname + searchParams?.toString(),
+      url: url,
       referrer: document.referrer
     });
   }, [pathname, searchParams]);

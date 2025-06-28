@@ -49,30 +49,7 @@ export const DecentSwapButton = ({
     }
   });
 
-  // Debug logging for config
-  useEffect(() => {
-    if (process.env.NODE_ENV === "development") {
-      console.log("DecentSwapButton config:", {
-        amount: amount.toString(),
-        srcToken,
-        dstToken,
-        srcChainId,
-        dstChainId,
-        hasAddress: !!address,
-        isValidAmount: amount > 0n,
-      });
-    }
-  }, [amount, srcToken, dstToken, srcChainId, dstChainId, address]);
 
-  useEffect(() => {
-    console.log("DecentSwapButton data changed:", {
-      data,
-      amountOut: data?.amountOut,
-      hasData: !!data,
-      hasAmountOut: !!data?.amountOut
-    });
-    onSwapPrepared && onSwapPrepared(data as BoxActionResponse | undefined);
-  }, [data, onSwapPrepared]);
 
   const { data: allowance = 0n, refetch: refetchAllowance, isLoading } = useReadContract({
     abi: erc20Abi,
@@ -109,7 +86,7 @@ export const DecentSwapButton = ({
         await new Promise(resolve => setTimeout(resolve, 1000));
         await refetchAllowance();
       } catch (error) {
-        console.error("Error refetching allowance:", error);
+        // Silently handle error during polling
       }
     },
   });
@@ -120,24 +97,7 @@ export const DecentSwapButton = ({
                         allowance < amount && 
                         amount > 0n;
 
-  // Debug logging
-  useEffect(() => {
-    if (process.env.NODE_ENV === "development") {
-      console.log("DecentSwapButton Debug:", {
-        amount: amount.toString(),
-        allowance: allowance.toString(),
-        tokenBalance: tokenBalance.toString(),
-        needsApproval,
-        hasSwapData: !!data?.tx?.to,
-        spender: data?.tx?.to,
-        srcToken,
-        isLoading,
-        hasValidAmount: amount > 0n,
-        hasSufficientBalance: tokenBalance >= amount,
-        buttonState: needsApproval ? "APPROVE" : "SWAP",
-      });
-    }
-  }, [amount, allowance, tokenBalance, needsApproval, data?.tx?.to, srcToken, isLoading]);
+
 
   // Enhanced button props with better error handling
   const enhancedButtonProps = {

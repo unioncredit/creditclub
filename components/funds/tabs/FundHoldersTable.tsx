@@ -10,8 +10,6 @@ import { useTokenPriceData } from "@/hooks/useTokenPriceData";
 import { useClubData } from "@/hooks/useClubData";
 import { Avatar } from "@/components/shared/Avatar";
 import { useHolders } from "@/hooks/useHolders";
-import { usePopulateEns } from "@/hooks/usePopulateEns";
-import { usePopulateFnames } from "@/hooks/usePopulateFnames";
 
 interface FundHolderRow {
   id: number;
@@ -74,10 +72,7 @@ export const FundHoldersTable = ({
   const { decimals, totalSupply } = clubData;
   const { price: tokenPrice } = priceData;
 
-  const holdersWithEns = usePopulateEns(holders);
-  const enrichedHolders = usePopulateFnames(holdersWithEns);
-
-  const rows: FundHolderRow[] = enrichedHolders.map(({ address, amount }, index) => ({
+  const rows: FundHolderRow[] = holders.map(({ address, amount }, index) => ({
     id: index,
     address,
     shares: formatDecimals(amount, decimals),
