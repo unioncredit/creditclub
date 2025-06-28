@@ -6,9 +6,7 @@ export type IConnectedMemberContext = {
     tokenBalance: bigint;
   };
   isLoading: boolean;
-  isError: boolean;
-  isFetching: boolean;
-  isSuccess: boolean;
+  isRefetching: boolean;
   refetch: UseReadContractsReturnType['refetch'];
 }
 
@@ -23,9 +21,7 @@ export type IUnionMemberContext = {
     unionBalance: bigint;
   };
   isLoading: boolean;
-  isError: boolean;
-  isFetching: boolean;
-  isSuccess: boolean;
+  isRefetching: boolean;
   refetch: UseReadContractsReturnType['refetch'];
 }
 
@@ -37,9 +33,7 @@ export type IUnionDataContext = {
     borrowRatePerSecond: bigint;
   };
   isLoading: boolean;
-  isError: boolean;
-  isFetching: boolean;
-  isSuccess: boolean;
+  isRefetching: boolean;
   refetch: UseReadContractsReturnType['refetch'];
 }
 
