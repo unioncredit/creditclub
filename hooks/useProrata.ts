@@ -26,23 +26,20 @@ export interface ProrataData {
 }
 
 export const useProrata = (clubAddress: Address) => {
-  const { data: clubData, isLoading: clubDataLoading, error: clubDataError } = useClubData(clubAddress);
-  const { data: memberNftData, isLoading: memberNftLoading, error: memberNftError } = useClubMemberNft(clubAddress);
-  const { data: clubContacts, isLoading: clubContactsLoading, error: clubContactsError } = useClubContacts(clubAddress);
-  const { data: assetToken, isLoading: assetTokenLoading, error: assetTokenError } = useErc20Token(clubData?.assetAddress);
+  const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
+  const { data: memberNftData, isLoading: memberNftLoading } = useClubMemberNft(clubAddress);
+  const { data: clubContacts, isLoading: clubContactsLoading } = useClubContacts(clubAddress);
+  const { data: assetToken, isLoading: assetTokenLoading } = useErc20Token(clubData?.assetAddress);
 
   // Check if any data is still loading
   const isLoading = clubDataLoading || memberNftLoading || clubContactsLoading || assetTokenLoading;
   
-  // Check for errors
-  const error = clubDataError || memberNftError || clubContactsError || assetTokenError;
-
   // If data is not ready, return loading state
   if (isLoading || !clubData || !memberNftData || !clubContacts || !assetToken) {
     return {
       data: null,
       isLoading,
-      error,
+      error: null,
     };
   }
 
