@@ -51,15 +51,9 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const creditVaultContract = useCreditVaultContract(clubAddress);
   const stakingContract = useStakingContract(stakingAddress);
 
-  // Type guard to ensure contract has required properties
-  const hasContractProperties = (contract: any): contract is { address: Address; abi: any } => {
-    return contract && contract.address && contract.abi;
-  };
-
   // Individual contract queries
   const clubTokenBalanceQuery = useReadContract({
-    address: creditVaultContract.address,
-    abi: creditVaultContract.abi,
+    ...creditVaultContract,
     functionName: "balanceOf",
     args: [memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
@@ -69,8 +63,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   });
 
   const memberNftBalanceQuery = useReadContract({
-    address: memberNftContract.address,
-    abi: memberNftContract.abi,
+    ...memberNftContract,
     functionName: "balanceOf",
     args: [memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
@@ -80,8 +73,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   });
 
   const stakedBalanceQuery = useReadContract({
-    address: stakingContract.address,
-    abi: stakingContract.abi,
+    ...stakingContract,
     functionName: "balanceOf",
     args: [memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
@@ -102,30 +94,27 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   });
 
   const lockedStakeQuery = useReadContract({
-    address: userManagerContract.address,
-    abi: userManagerContract.abi,
+    ...userManagerContract,
     functionName: "getLockedStake",
     args: [clubAddress, memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
     query: {
-      enabled: !!clubAddress && !!memberAddress && hasContractProperties(userManagerContract),
+      enabled: !!clubAddress && !!memberAddress,
     }
   });
 
   const vouchingAmountQuery = useReadContract({
-    address: userManagerContract.address,
-    abi: userManagerContract.abi,
+    ...userManagerContract,
     functionName: "getVouchingAmount",
     args: [clubAddress, memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
     query: {
-      enabled: !!clubAddress && !!memberAddress && hasContractProperties(userManagerContract),
+      enabled: !!clubAddress && !!memberAddress,
     }
   });
 
   const memberIdQuery = useReadContract({
-    address: memberNftContract.address,
-    abi: memberNftContract.abi,
+    ...memberNftContract,
     functionName: "getMemberId",
     args: [memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
@@ -135,8 +124,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   });
 
   const invitedByQuery = useReadContract({
-    address: memberNftContract.address,
-    abi: memberNftContract.abi,
+    ...memberNftContract,
     functionName: "_invited",
     args: [memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
@@ -146,8 +134,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   });
 
   const inviteCountQuery = useReadContract({
-    address: memberNftContract.address,
-    abi: memberNftContract.abi,
+    ...memberNftContract,
     functionName: "getInvites",
     args: [memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
@@ -176,8 +163,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
 
   // Get member data from getMember function
   const memberDataQuery = useReadContract({
-    address: memberNftContract.address,
-    abi: memberNftContract.abi,
+    ...memberNftContract,
     functionName: "getMember",
     args: [tokenId],
     chainId: DEFAULT_CHAIN_ID,
@@ -200,8 +186,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
 
   // Get percent vested based on updatedAt
   const percentVestedQuery = useReadContract({
-    address: creditVaultContract.address,
-    abi: creditVaultContract.abi,
+    ...creditVaultContract,
     functionName: "_percentVested",
     args: [updatedAt],
     chainId: DEFAULT_CHAIN_ID,
