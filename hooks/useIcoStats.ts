@@ -20,11 +20,15 @@ export const useIcoStats = (clubAddress: Address) => {
     : 0;
 
   return {
-    ...result,
     data: {
       current: formatDecimals(totalAssets, decimals),
       goal: formatDecimals(minTarget, decimals),
       percentage,
     },
+    isLoading: result.isLoading,
+    isError: result.isError,
+    isFetching: result.isFetching,
+    isSuccess: result.isSuccess,
+    refetch: result.refetch,
   }
 }
