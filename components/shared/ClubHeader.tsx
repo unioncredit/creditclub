@@ -26,7 +26,7 @@ export const ClubHeader = ({
   const { data: unionMember } = useUnionMember();
   const { open: openModal } = useModals();
 
-  const { creditLimit = 0n, owed = 0n } = unionMember?.data || {};
+  const { creditLimit = 0n, owed = 0n } = unionMember || {};
 
   return (
     <header className="w-full items-center flex flex-col">

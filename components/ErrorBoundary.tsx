@@ -55,10 +55,36 @@ export class ErrorBoundary extends React.Component<
 
   override render() {
     if (this.state.hasError) {
-      // Ensure we only render strings
-      const errorMessage = this.state.error?.message || 'Unknown error';
-      const errorStack = this.state.error?.stack || 'No stack trace available';
-      const componentStack = this.state.errorInfo?.componentStack || 'No component stack available';
+      const { error, errorInfo } = this.state;
+      
+      let errorMessage = "An unexpected error occurred";
+      let errorStack = "";
+      let componentStack = "";
+      
+      if (error) {
+        errorMessage = error.toString();
+        errorStack = error.stack || "";
+        
+        // Check for React Error #310
+        if (errorMessage.includes("Minified React error #310")) {
+          errorMessage = "React Error #310: Objects are not valid as a React child. This error occurs when trying to render an object, array, or other non-renderable value directly in JSX.";
+          
+          // Try to extract more context from the error
+          const stackLines = errorStack.split('\n');
+          const relevantLine = stackLines.find(line => 
+            line.includes('components/') && 
+            !line.includes('ErrorBoundary')
+          );
+          
+          if (relevantLine) {
+            errorMessage += `\n\nLikely source: ${relevantLine.trim()}`;
+          }
+        }
+      }
+      
+      if (errorInfo && errorInfo.componentStack) {
+        componentStack = errorInfo.componentStack;
+      }
       
       return (
         <div style={{ padding: '20px', backgroundColor: '#fff', color: '#000' }}>

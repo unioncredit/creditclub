@@ -25,11 +25,11 @@ export const IcoCreditTrustees = ({
   const { data: isQualified } = useIsQualified(clubAddress);
   const { data: memberNftData } = useClubMemberNft(clubAddress);
   const { data: clubData } = useClubData(clubAddress);
-  const { data: assetToken } = useErc20Token(clubData.assetAddress);
+  const { data: assetToken } = useErc20Token(clubData?.assetAddress);
 
-  const { initialTrustAmount } = newMemberData;
-  const { membershipCost, maxMembers } = memberNftData;
-  const { decimals: assetTokenDecimals } = assetToken;
+  const { initialTrustAmount } = newMemberData || {};
+  const { membershipCost, maxMembers } = memberNftData || {};
+  const { decimals: assetTokenDecimals } = assetToken || {};
 
   const rows: StatGridRow[] = [
     {
