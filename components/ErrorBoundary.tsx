@@ -28,7 +28,7 @@ export class ErrorBoundary extends React.Component<
     });
   }
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       return (
         <div style={{ padding: '20px', color: 'red' }}>
