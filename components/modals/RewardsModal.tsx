@@ -55,14 +55,14 @@ export const RewardsModal = ({
       title: "Club Merch",
       subtitle: "Coming soon",
       icon: IncreaseVouchIcon,
-      onClick: () => console.log("repay"),
+      onClick: () => {},
       disabled: true,
     },
     {
       title: "Cash Back",
       subtitle: "Coming soon",
       icon: IncreaseVouchIcon,
-      onClick: () => console.log("repay"),
+      onClick: () => {},
       disabled: true,
     }
   ];

@@ -93,17 +93,6 @@ export const UnionRepayModal = ({
   const maxAmountFromBalance = unionPer > 0n ? contractDaiBalance * WAD[TOKENS.UNION] / unionPer : 0n;
   const maxAvailable = maxAmountFromBalance <= unionBalance ? maxAmountFromBalance : unionBalance;
 
-  // Debug logging
-  console.log("UnionRepayModal debug:", {
-    amountRaw: amount.raw?.toString(),
-    unionPer: unionPer?.toString(),
-    creditRaw: creditRaw?.toString(),
-    contractDaiBalance: contractDaiBalance?.toString(),
-    tokenDecimals: UNIT[token],
-    conversionRate: unionPer > 0n ? `1 UNION = $${format(unionPer, token, 6)}` : "Conversion not active",
-    minUnionFor1Cent: unionPer > 0n ? format((10000n * WAD[TOKENS.UNION]) / unionPer, TOKENS.UNION, 0) : "N/A",
-  });
-
   const repayCreditButtonProps = useWrite({
     ...rewardsManagerContract,
     functionName: "claimStatementCredit",

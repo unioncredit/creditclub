@@ -33,11 +33,11 @@ export class ErrorBoundary extends React.Component<
       return (
         <div style={{ padding: '20px', color: 'red' }}>
           <h1>Something went wrong.</h1>
-          <details style={{ whiteSpace: 'pre-wrap' }}>
-            <summary>Error details</summary>
-            {this.state.error ? String(this.state.error) : 'Unknown error'}
-            <br />
-            {this.state.error?.stack ? String(this.state.error.stack) : 'No stack trace'}
+                  <details style={{ whiteSpace: 'pre-wrap' }}>
+          <summary>Error details</summary>
+          {this.state.error && this.state.error.message ? this.state.error.message : 'Unknown error'}
+          <br />
+          {this.state.error && this.state.error.stack ? this.state.error.stack : 'No stack trace'}
           </details>
         </div>
       );

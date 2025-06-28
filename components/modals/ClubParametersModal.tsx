@@ -93,14 +93,6 @@ export const ClubParametersModal = ({
     feeManagerAddress = zeroAddress
   } = authData || {};
 
-  // Debug logging for individual addresses
-  console.log('🔑 Individual management addresses:', {
-    creditManagerAddress,
-    managerAddress,
-    feeManagerAddress,
-    areAllZero: creditManagerAddress === zeroAddress && managerAddress === zeroAddress && feeManagerAddress === zeroAddress,
-    authData: authData
-  });
   const { decimals: assetDecimals = 18 } = assetToken || {};
 
   // Organize parameters into sections

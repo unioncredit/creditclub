@@ -80,9 +80,6 @@ export const PresalePanel = ({
     receiveTokenAddress: auctionAddress,
   };
 
-  console.log({ sendTokenBalance, sendTokenDecimals })
-  console.log(`Max. ${formatDecimals(maxTarget - totalAssets < sendTokenBalance ? maxTarget - totalAssets : sendTokenBalance, sendTokenDecimals, 2)} ${sendTokenSymbol}`);
-
   const validate = (inputs: IFormValues) => {
     const amount = inputs.amount as IFormField;
     if (amount.raw > sendTokenBalance) {
@@ -127,14 +124,6 @@ export const PresalePanel = ({
     action: "mint",
     shares: amountRaw,
     erc4626Address: stakingAddress,
-  });
-  
-  // Debug the difference
-  console.log("Auction Preview Debug:", {
-    inputAmount: amountRaw.toString(),
-    correctAuctionAmount: amountReceived.toString(),
-    brokenErc4626Amount: erc4626Preview?.toString(),
-    shouldBe1to1: "During auction, $1 USDC = 1 stk token"
   });
 
   const inputError = () => {

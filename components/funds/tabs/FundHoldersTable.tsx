@@ -10,6 +10,8 @@ import { useTokenPriceData } from "@/hooks/useTokenPriceData";
 import { useClubData } from "@/hooks/useClubData";
 import { Avatar } from "@/components/shared/Avatar";
 import { useHolders } from "@/hooks/useHolders";
+import { usePopulateEns } from "@/hooks/usePopulateEns";
+import { usePopulateFnames } from "@/hooks/usePopulateFnames";
 
 interface FundHolderRow {
   id: number;
@@ -68,32 +70,20 @@ export const FundHoldersTable = ({
   const { data: holders, loading } = useHolders(clubAddress);
   const { data: clubData } = useClubData(clubAddress);
   const { data: priceData }  = useTokenPriceData(clubAddress);
+  const { populateEns } = usePopulateEns();
+  const { populateFnames } = usePopulateFnames();
 
   const { decimals, totalSupply } = clubData;
   const { price: tokenPrice } = priceData;
 
-  // Debug logging
-  console.log('FundHoldersTable - Debug info:', {
-    clubAddress,
-    holdersCount: holders.length,
-    totalSupply: totalSupply.toString(),
-    totalSupplyFormatted: formatDecimals(totalSupply, decimals),
-    loading,
-    decimals,
-    tokenPrice,
-  });
+  const enrichedHolders = populateFnames(populateEns(holders));
 
-  const rows: FundHolderRow[] = holders.map(({ address, amount }, index) => ({
+  const rows: FundHolderRow[] = enrichedHolders.map(({ address, amount }, index) => ({
     id: index,
     address,
     shares: formatDecimals(amount, decimals),
     marketValue: `$${(parseFloat(formatDecimals(amount, decimals)) * tokenPrice).toFixed(2)}`,
   }));
-
-  // If total supply > 0 but no holders, show a debug message
-  if (totalSupply > 0n && holders.length === 0 && !loading) {
-    console.warn('FundHoldersTable - Potential issue: Total supply is greater than 0 but no holders found in Ponder database');
-  }
 
   // @ts-ignore
   return (

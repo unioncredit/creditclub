@@ -52,18 +52,6 @@ export const BuyInvitesModal = ({
   const costPerInvite = inviteCost;
   const totalCost = costPerInvite * BigInt(numInvites);
 
-  // Debug logging
-  console.log("BuyInvitesModal debug:", {
-    clubAddress,
-    connectedAddress,
-    isMember,
-    inviteCost: inviteCost.toString(),
-    numInvites,
-    totalCost: totalCost.toString(),
-    unionBalance: unionBalance.toString(),
-    rewardsManagerAddress: rewardsManagerContract.address,
-  });
-
   const buyInvitesButtonProps = useWrite({
     ...rewardsManagerContract,
     functionName: "claimRewardInvite",

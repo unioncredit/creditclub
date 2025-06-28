@@ -53,19 +53,6 @@ export const MintNftModal = ({
     tokenId,
   } = newMemberData;
 
-  // Debug trust amount formatting
-  console.log("Trust Amount Debug:", {
-    initialTrustAmount: initialTrustAmount.toString(),
-    totalTrustAmount: totalTrustAmount.toString(),
-    token,
-    assetTokenDecimals,
-    formattedInitialOld: format(initialTrustAmount, token),
-    formattedTotalOld: format(totalTrustAmount, token),
-    formattedInitialNew: formatDecimals(initialTrustAmount, assetTokenDecimals),
-    formattedTotalNew: formatDecimals(totalTrustAmount, assetTokenDecimals),
-    dustThreshold: initialTrustAmount > BigInt(0) && initialTrustAmount < BigInt("10000000000000000") ? "Below dust threshold" : "Above dust threshold"
-  });
-
   const rows: StatGridRow[] = [
     {
       name: "Cost to join",
