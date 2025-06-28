@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -34,15 +34,40 @@ export class ErrorBoundary extends React.Component<
 
   override render() {
     if (this.state.hasError) {
+      // Ensure we only render strings
+      const errorMessage = this.state.error?.message || 'Unknown error';
+      const errorStack = this.state.error?.stack || 'No stack trace available';
+      
       return (
-        <div style={{ padding: '20px', color: 'red' }}>
-          <h1>Something went wrong.</h1>
-                  <details style={{ whiteSpace: 'pre-wrap' }}>
-          <summary>Error details</summary>
-          {this.state.error && this.state.error.message ? this.state.error.message : 'Unknown error'}
-          <br />
-          {this.state.error && this.state.error.stack ? this.state.error.stack : 'No stack trace'}
+        <div style={{ padding: '20px', backgroundColor: '#fff', color: '#000' }}>
+          <h1 style={{ color: 'red' }}>Something went wrong.</h1>
+          <details style={{ whiteSpace: 'pre-wrap', marginTop: '20px' }}>
+            <summary style={{ cursor: 'pointer', marginBottom: '10px' }}>
+              Error details
+            </summary>
+            <div style={{ fontFamily: 'monospace', fontSize: '12px' }}>
+              <strong>Error:</strong> {String(errorMessage)}
+              <br />
+              <br />
+              <strong>Stack trace:</strong>
+              <br />
+              {String(errorStack)}
+            </div>
           </details>
+          <button 
+            onClick={() => window.location.reload()} 
+            style={{
+              marginTop: '20px',
+              padding: '10px 20px',
+              backgroundColor: '#0070f3',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}
+          >
+            Reload Page
+          </button>
         </div>
       );
     }

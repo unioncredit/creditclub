@@ -86,7 +86,7 @@ export const FundHoldersTable = ({
       {process.env.NODE_ENV === 'development' && (
                  <div className="mb-4 p-2 bg-blue-50 border border-blue-200 rounded text-xs font-mono">
            <div className="font-bold mb-1">Debug Info:</div>
-           <div>Club Address: {clubAddress}</div>
+           <div>Club Address: {String(clubAddress)}</div>
            <div>Total Supply: {formatDecimals(totalSupply, decimals)} tokens</div>
            <div>Holders Found: {holders.length}</div>
            <div>Loading: {loading ? 'Yes' : 'No'}</div>
