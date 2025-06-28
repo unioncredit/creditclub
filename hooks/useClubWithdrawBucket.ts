@@ -32,8 +32,6 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
     args: [connectedAddress, i],
   }));
 
-  console.log(contracts);
-
   const result = useReadContracts({
     // @ts-ignore
     contracts: contracts.map(c => ({
