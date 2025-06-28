@@ -1,7 +1,6 @@
 import { Address, zeroAddress } from "viem";
 import { useReadContract } from "wagmi";
 
-import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 import { DEFAULT_CHAIN_ID } from "@/constants";
 import { useClubData } from "@/hooks/useClubData";
 import { useMemberNftContract } from "@/hooks/useMemberNftContract";
@@ -17,7 +16,6 @@ export const useNewMemberData = (_userAddress: Address | undefined, clubAddress:
   } = clubData;
 
   const memberNftContract = useMemberNftContract(memberNftAddress);
-  const creditVaultContract = useCreditVaultContract(clubAddress);
 
   const totalSupplyQuery = useReadContract({
     ...memberNftContract,
