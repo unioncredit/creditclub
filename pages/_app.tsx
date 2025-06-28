@@ -15,7 +15,7 @@ import { UnionDataProvider } from "@/providers/UnionDataProvider";
 import { CacheProvider } from "@/providers/CacheProvider";
 import { FathomAnalytics } from "@/components/shared/FathomAnalytics";
 import { BoxHooksContextProvider } from "@decent.xyz/box-hooks";
-import { base, mainnet, optimism } from "viem/chains";
+import { base, baseSepolia } from "viem/chains";
 
 const queryClient = new QueryClient();
 
@@ -54,7 +54,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             createOnLogin: "all-users",
           },
           defaultChain: base,
-          supportedChains: [base, mainnet, optimism]
+          supportedChains: [base, baseSepolia]
         }}
       >
         <QueryClientProvider client={queryClient}>

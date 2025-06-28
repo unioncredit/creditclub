@@ -1,4 +1,4 @@
-import { base, Chain, mainnet, optimism } from "viem/chains";
+import { base, baseSepolia, Chain } from "viem/chains";
 
 import { IToastStatus } from "@/providers/types";
 
@@ -9,12 +9,11 @@ export const SECONDS_PER_DAY = 86400;
 export const WAD_1E18 = 1000000000000000000n;
 export const BLOCK_SPEED = 1e3;
 
-export const rpcChains: readonly [Chain, ...Chain[]] = [base, mainnet, optimism];
+export const rpcChains: readonly [Chain, ...Chain[]] = [base, baseSepolia];
 
 const RPCS: Record<number, string> = {
   [base.id]: "https://base-mainnet.g.alchemy.com/v2",
-  [mainnet.id]: "https://eth-mainnet.g.alchemy.com/v2",
-  [optimism.id]: "https://opt-mainnet.g.alchemy.com/v2",
+  [baseSepolia.id]: "https://base-sepolia.g.alchemy.com/v2",
 };
 
 export const RPC_URL = (chainId: number) =>
