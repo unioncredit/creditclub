@@ -34,10 +34,12 @@ export const StatRow = ({
         {content && <p className="text-sm text-stone-500 -mt-0.5">{content}</p>}
       </div>
 
-      <Text m="0 4px 0 0" className="flex items-center gap-2 font-medium" size="large" weight="medium">
-        {amount}
+      <div className="flex items-center gap-2">
+        <Text m="0 4px 0 0" className="font-medium" size="large" weight="medium">
+          {amount}
+        </Text>
         {token}
-      </Text>
+      </div>
     </div>
   );
 };
