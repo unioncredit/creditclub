@@ -57,8 +57,6 @@ export const DecentTokenSelect = ({
           if (token) {
             // @ts-ignore
             onChange(token);
-          } else {
-            throw new Error("Invalid token selected");
           }
         }}
         menuPlacement="auto"

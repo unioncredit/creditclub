@@ -9,21 +9,27 @@ function TrackPageView() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    load(process.env.NEXT_PUBLIC_FATHOM_ID!, {
-      auto: false
-    });
+    if (process.env.NEXT_PUBLIC_FATHOM_ID) {
+      load(process.env.NEXT_PUBLIC_FATHOM_ID, {
+        auto: false
+      });
+    }
   }, []);
 
   useEffect(() => {
     if (!pathname) return;
 
-    const search = searchParams?.toString();
-    const url = search ? `${pathname}?${search}` : pathname;
-    
-    trackPageview({
-      url: url,
-      referrer: document.referrer
-    });
+    try {
+      const search = searchParams ? searchParams.toString() : '';
+      const url = search ? `${pathname}?${search}` : pathname;
+      
+      trackPageview({
+        url: url,
+        referrer: document.referrer
+      });
+    } catch (error) {
+      // Silently ignore tracking errors
+    }
   }, [pathname, searchParams]);
 
   return null;

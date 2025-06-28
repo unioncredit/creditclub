@@ -38,7 +38,14 @@ export const ConnectedMemberProvider = ({ children }: { children: React.ReactNod
   };
 
   return (
-    <ConnectedMemberContext.Provider value={{ ...result, data }}>
+    <ConnectedMemberContext.Provider value={{ 
+      data,
+      isLoading: result.isLoading,
+      isError: result.isError,
+      isFetching: result.isFetching,
+      isSuccess: result.isSuccess,
+      refetch: result.refetch,
+    }}>
       {children}
     </ConnectedMemberContext.Provider>
   );
