@@ -51,7 +51,14 @@ export const UnionDataProvider = ({ children }: { children: React.ReactNode; }) 
   };
 
   return (
-    <UnionDataContext.Provider value={{ ...result, data }}>
+    <UnionDataContext.Provider value={{
+      data,
+      isLoading: result.isLoading,
+      isError: result.isError,
+      isFetching: result.isFetching,
+      isSuccess: result.isSuccess,
+      refetch: result.refetch,
+    }}>
       {children}
     </UnionDataContext.Provider>
   )
