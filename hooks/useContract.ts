@@ -28,6 +28,11 @@ type ContractName = "userManager"
   | "unionLens";
 
 export const useContract = (contract: ContractName) => {
+  console.log('🔍 useContract called:', {
+    contract,
+    DEFAULT_CHAIN_ID,
+  });
+  
   const contracts: Record<number, any> = {
     [baseSepolia.id]: {
       userManager: BaseSepoliaUserManagerContract,
@@ -47,5 +52,13 @@ export const useContract = (contract: ContractName) => {
     }
   };
 
-  return contracts[DEFAULT_CHAIN_ID]?.[contract] || {};
+  const result = contracts[DEFAULT_CHAIN_ID]?.[contract] || {};
+  
+  console.log('🔍 useContract returning:', {
+    contract,
+    hasContract: !!result.address,
+    address: result.address,
+  });
+  
+  return result;
 };
