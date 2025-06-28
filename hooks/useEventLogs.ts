@@ -27,10 +27,8 @@ export const useEventLogs = <const abi extends Abi | readonly unknown[]>({
   return { 
     data,
     isLoading: result.isLoading,
-    isError: result.isError,
-    isFetching: result.isFetching,
-    isSuccess: result.isSuccess,
-    refetch: result.refetch,
+    isRefetching: result.isRefetching,
     isFetched: result.isFetched,
+    refetch: result.refetch,
   };
 }

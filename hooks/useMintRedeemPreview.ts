@@ -23,9 +23,7 @@ export const useMintRedeemPreview = ({
   return {
     data: result?.data || 0n,
     isLoading: result.isLoading,
-    isError: result.isError,
-    isFetching: result.isFetching,
-    isSuccess: result.isSuccess,
+    isRefetching: result.isRefetching,
     refetch: result.refetch,
   }
 };

@@ -87,9 +87,7 @@ export const useClubContacts = (clubAddress: Address) => {
   return {
     data: ensPopulated as IContact[],
     isLoading: result.isLoading,
-    isError: result.isError,
-    isFetching: result.isFetching,
-    isSuccess: result.isSuccess,
+    isRefetching: result.isRefetching,
     refetch,
   }
 }
