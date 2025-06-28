@@ -82,7 +82,7 @@ export const StartWithdrawInput = ({
         placeholder="0.0"
         value={shares.formatted}
         onChange={register("shares")}
-        error={inputError()}
+        error={inputError() || undefined}
         suffix={(
           <img
             width={24}

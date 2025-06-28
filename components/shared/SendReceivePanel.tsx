@@ -27,7 +27,7 @@ export const SendReceivePanel = ({
         <p className="text-stone-600 text-center">{leftTitle}</p>
         <p className="font-medium flex items-center gap-1">
           {leftValue}
-          {leftIcon && leftIcon}
+          {leftIcon}
         </p>
       </div>
 
@@ -37,7 +37,7 @@ export const SendReceivePanel = ({
         <p className="text-stone-600 text-center">{rightTitle}</p>
         <p className="font-medium flex items-center gap-1">
           {rightValue}
-          {rightIcon && rightIcon}
+          {rightIcon}
         </p>
       </div>
     </div>

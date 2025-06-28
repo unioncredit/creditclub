@@ -170,7 +170,7 @@ export const PresalePanel = ({
         placeholder="0.0"
         value={amount.formatted}
         onChange={register("amount")}
-        error={inputError()}
+        error={inputError() || undefined}
       />
 
       <div className="p-4 my-4 rounded-xl border bg-zinc-100">

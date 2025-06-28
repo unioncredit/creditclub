@@ -136,7 +136,7 @@ export const StakePanel = ({
         className="mt-4"
         value={amount.formatted}
         onChange={register("amount")}
-        error={inputError()}
+        error={inputError() || undefined}
       />
 
       <ul className="my-2 flex flex-col items-center justify-between">

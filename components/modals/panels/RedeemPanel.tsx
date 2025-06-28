@@ -148,7 +148,7 @@ export const RedeemPanel = ({
         className="mt-4"
         value={shares.formatted}
         onChange={register("shares")}
-        error={inputError()}
+        error={inputError() || undefined}
         suffix={(
           <img
             width={24}

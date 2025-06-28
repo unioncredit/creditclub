@@ -52,7 +52,7 @@ export const RoundedButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {icon && icon}
+        {icon}
         {children}
       </Comp>
     )

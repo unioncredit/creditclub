@@ -129,7 +129,7 @@ export const MintPanel = ({
         className="mt-4"
         value={amount.formatted}
         onChange={register("amount")}
-        error={inputError()}
+        error={inputError() || undefined}
       />
 
       <h2 className="mt-4 mb-0.5">You receive:</h2>

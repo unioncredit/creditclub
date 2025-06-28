@@ -83,7 +83,7 @@ export const FixedBidModal = ({
               ...creditVaultContract,
               functionName: "fixedBid",
               label: canBid ? "Place Bid" : "Insufficient funds",
-              icon: canBid && CheckIcon,
+              icon: canBid ? CheckIcon : undefined,
               disabled: !canBid,
               onComplete: async (hash: string) => {
                 refetchClubData();

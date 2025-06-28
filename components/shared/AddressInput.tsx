@@ -10,6 +10,7 @@ import { Avatar } from "@/components/shared/Avatar";
 export const AddressInput = ({
   onChange,
   defaultValue = "",
+  error: errorProp,
   ...props
 }: {
   onChange: (address: Address | null) => void;
@@ -74,7 +75,7 @@ export const AddressInput = ({
   return (
     <Input
       {...props}
-      error={error}
+      error={error || errorProp || undefined}
       onChange={handleChange}
       caption={
         (ens || address) && (
