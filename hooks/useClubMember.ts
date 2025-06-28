@@ -206,14 +206,22 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
 
   const percentVested = safeBigInt(percentVestedQuery.data);
 
-  const locking = safeBigInt(memberDetails?.locking);
-  const membershipStart = safeBigInt(memberDetails?.membershipStart);
-  const totalVested = safeBigInt(memberDetails?.totalVested);
+  // Calculate values based on available data
+  const WAD = 10n ** 18n;
+  const startingAmount = baseTrust > 0n && clubData?.startingPercentTrust > 0n
+    ? (baseTrust * clubData.startingPercentTrust) / WAD 
+    : 0n;
+  
+  const additionalVested = baseTrust > startingAmount && percentVested > 0n
+    ? ((baseTrust - startingAmount) * percentVested) / WAD 
+    : 0n;
+  
+  const totalVested = startingAmount + additionalVested;
   const claimableCredit = totalVested > vouch ? totalVested - vouch : 0n;
 
-  const canRepay = memberDetails?.canRepay || false;
-  const canBorrow = memberDetails?.canBorrow || false;
-  const shares = safeBigInt(memberDetails?.shares);
+  const canRepay = owed > 0n;
+  const canBorrow = vouch > owed;
+  const shares = 0n;  // Default value
 
   const data: ClubMemberData = {
     isMember: memberNftBalance > 0n,
@@ -236,8 +244,8 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     tier,
     tierPercentage,
     tierLabel,
-    locking,
-    membershipStart,
+    locking: 0n,  // Default values for properties not in memberDetails
+    membershipStart: updatedAt,  // Use updatedAt as a proxy for membership start
     totalVested,
     claimableCredit,
     tokenAddress: assetAddress,
