@@ -15,7 +15,6 @@ export const ToastsProvider = ({ children }: { children: React.ReactNode; }) => 
   const timers = useRef<any[]>([]);
 
   const addToast = ({ content, link, variant, title, id }: IToast, autoClear = true) => {
-    console.log("addToast()", content, link, variant, title, id);
     setToasts((x) => [...x, { id, content, link, variant, title }]);
 
     if (autoClear) {

@@ -120,29 +120,6 @@ export const ClubActions = ({
   const totalVested = startingAmount + additionalVested;
   const claimableAmount = calculateClaimableAmount(totalVested, safeVouch);
 
-  // Debug logging
-  console.log("ClubActions debug:", {
-    tokenId: tokenId?.toString(),
-    memberNftBalance: memberNftBalance?.toString(),
-    isMember,
-    active,
-    badDebt: badDebt?.toString(),
-    owed: owed?.toString(),
-    vouch: vouch?.toString(),
-    baseTrust: baseTrust?.toString(),
-    startingPercentTrust: startingPercentTrust?.toString(),
-    percentVested: percentVested?.toString(),
-    startingAmount: startingAmount?.toString(),
-    additionalVested: additionalVested?.toString(),
-    totalVested: totalVested?.toString(),
-    claimableAmount: claimableAmount?.toString(),
-    clubAddress,
-    userAddress: address,
-    isVaultActivated: isActivated,
-    vestingEnabled,
-    vestedDays,
-  });
-
   const claimCreditButtonProps = useWrite({
     ...creditVaultContract,
     functionName: "claimCredit",

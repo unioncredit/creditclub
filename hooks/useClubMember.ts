@@ -29,6 +29,14 @@ interface ClubMemberData {
   tier: number;
   tierPercentage: bigint;
   tierLabel: string;
+  locking: bigint;
+  membershipStart: bigint;
+  totalVested: bigint;
+  claimableCredit: bigint;
+  tokenAddress: Address;
+  canRepay: boolean;
+  canBorrow: boolean;
+  shares: bigint;
 }
 
 interface UseClubMemberReturn {
@@ -198,15 +206,14 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
 
   const percentVested = safeBigInt(percentVestedQuery.data);
 
-  // Debug the getMember response
-  console.log("useClubMember debug:", {
-    tokenId: tokenId?.toString(),
-    memberDetails,
-    baseTrust: baseTrust?.toString(),
-    updatedAt: updatedAt?.toString(),
-    active,
-    percentVested: percentVested?.toString(),
-  });
+  const locking = safeBigInt(memberDetails?.locking);
+  const membershipStart = safeBigInt(memberDetails?.membershipStart);
+  const totalVested = safeBigInt(memberDetails?.totalVested);
+  const claimableCredit = totalVested > vouch ? totalVested - vouch : 0n;
+
+  const canRepay = memberDetails?.canRepay || false;
+  const canBorrow = memberDetails?.canBorrow || false;
+  const shares = safeBigInt(memberDetails?.shares);
 
   const data: ClubMemberData = {
     isMember: memberNftBalance > 0n,
@@ -229,6 +236,14 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     tier,
     tierPercentage,
     tierLabel,
+    locking,
+    membershipStart,
+    totalVested,
+    claimableCredit,
+    tokenAddress: assetAddress,
+    canRepay,
+    canBorrow,
+    shares,
   };
 
   // Check loading states
