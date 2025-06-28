@@ -1,13 +1,18 @@
 import { UseReadContractsReturnType } from "wagmi";
 import { Address } from "viem";
 
-export type IConnectedMemberContext = Omit<UseReadContractsReturnType, "data"> & {
+export type IConnectedMemberContext = {
   data: {
     tokenBalance: bigint;
-  }
+  };
+  isLoading: boolean;
+  isError: boolean;
+  isFetching: boolean;
+  isSuccess: boolean;
+  refetch: UseReadContractsReturnType['refetch'];
 }
 
-export type IUnionMemberContext = Omit<UseReadContractsReturnType, "data"> & {
+export type IUnionMemberContext = {
   data: {
     isOverdue: boolean;
     creditLimit: bigint;
@@ -16,16 +21,26 @@ export type IUnionMemberContext = Omit<UseReadContractsReturnType, "data"> & {
     interest: bigint;
     minPayment: bigint;
     unionBalance: bigint;
-  },
+  };
+  isLoading: boolean;
+  isError: boolean;
+  isFetching: boolean;
+  isSuccess: boolean;
+  refetch: UseReadContractsReturnType['refetch'];
 }
 
-export type IUnionDataContext = Omit<UseReadContractsReturnType, "data"> & {
+export type IUnionDataContext = {
   data: {
     minBorrow: bigint;
     originationFee: bigint;
     overdueTime: bigint;
     borrowRatePerSecond: bigint;
-  },
+  };
+  isLoading: boolean;
+  isError: boolean;
+  isFetching: boolean;
+  isSuccess: boolean;
+  refetch: UseReadContractsReturnType['refetch'];
 }
 
 export type IToastStatus = "error" | "success" | "pending";
