@@ -6,7 +6,7 @@ export const useDebugRender = (componentName: string, props: any) => {
     
     // Check for non-primitive values in props
     Object.entries(props).forEach(([key, value]) => {
-      if (value && typeof value === 'object' && !Array.isArray(value) && !value.$$typeof) {
+      if (value && typeof value === 'object' && !Array.isArray(value) && !(value as any).$$typeof) {
         console.warn(`[${componentName}] Prop "${key}" is an object:`, value);
       }
       if (typeof value === 'boolean') {
