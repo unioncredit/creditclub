@@ -7,14 +7,20 @@ import { calculateMinPayment } from "@/lib/utils";
 import { useContract } from "@/hooks/useContract";
 import { useToken } from "@/hooks/useToken";
 import { DEFAULT_CHAIN_ID } from "@/constants";
+import { base, baseSepolia } from "viem/chains";
 
 const UnionMemberContext = createContext({} as IUnionMemberContext);
 
 export const useUnionMember = () => useContext(UnionMemberContext);
 
 export const UnionMemberProvider = ({ children }: { children: React.ReactNode; }) => {
-  const { address = zeroAddress } = useAccount();
-  const { token } = useToken();
+  const { address = zeroAddress, chain } = useAccount();
+  
+  // Check if we're on a supported chain
+  const isSupportedChain = chain?.id === base.id || chain?.id === baseSepolia.id;
+  
+  // Always use DEFAULT_CHAIN_ID for token since all contracts use DEFAULT_CHAIN_ID
+  const { token } = useToken(DEFAULT_CHAIN_ID);
 
   const chainId = DEFAULT_CHAIN_ID;
   const uTokenContract = useContract("uToken");
@@ -55,6 +61,10 @@ export const UnionMemberProvider = ({ children }: { children: React.ReactNode; }
         args: [address],
       }
     ].map(c => ({ ...c, chainId })),
+    query: {
+      // Only enable queries if on supported chain and address is connected
+      enabled: isSupportedChain && !!address && address !== zeroAddress,
+    }
   });
 
   const [
