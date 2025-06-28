@@ -55,7 +55,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const clubTokenBalanceQuery = useReadContract({
     ...creditVaultContract,
     functionName: "balanceOf",
-    args: [memberAddress],
+    args: [memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
     query: {
       enabled: !!clubAddress && !!memberAddress,
@@ -65,7 +65,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const memberNftBalanceQuery = useReadContract({
     ...memberNftContract,
     functionName: "balanceOf",
-    args: [memberAddress],
+    args: [memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
     query: {
       enabled: !!clubAddress && !!memberAddress,
@@ -75,7 +75,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const stakedBalanceQuery = useReadContract({
     ...stakingContract,
     functionName: "balanceOf",
-    args: [memberAddress],
+    args: [memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
     query: {
       enabled: !!clubAddress && !!memberAddress,
@@ -86,7 +86,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     abi: erc20Abi,
     address: assetAddress,
     functionName: "balanceOf",
-    args: [memberAddress],
+    args: [memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
     query: {
       enabled: !!clubAddress && !!memberAddress && !!assetAddress,
@@ -96,7 +96,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const lockedStakeQuery = useReadContract({
     ...userManagerContract,
     functionName: "getLockedStake",
-    args: [clubAddress, memberAddress],
+    args: [clubAddress, memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
     query: {
       enabled: !!clubAddress && !!memberAddress,
@@ -106,7 +106,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const vouchingAmountQuery = useReadContract({
     ...userManagerContract,
     functionName: "getVouchingAmount",
-    args: [clubAddress, memberAddress],
+    args: [clubAddress, memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
     query: {
       enabled: !!clubAddress && !!memberAddress,
@@ -116,7 +116,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const memberIdQuery = useReadContract({
     ...memberNftContract,
     functionName: "getMemberId",
-    args: [memberAddress],
+    args: [memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
     query: {
       enabled: !!clubAddress && !!memberAddress,
@@ -126,7 +126,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const invitedByQuery = useReadContract({
     ...memberNftContract,
     functionName: "_invited",
-    args: [memberAddress],
+    args: [memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
     query: {
       enabled: !!clubAddress && !!memberAddress,
@@ -136,7 +136,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const inviteCountQuery = useReadContract({
     ...memberNftContract,
     functionName: "getInvites",
-    args: [memberAddress],
+    args: [memberAddress!],
     chainId: DEFAULT_CHAIN_ID,
     query: {
       enabled: !!clubAddress && !!memberAddress,
