@@ -16,7 +16,6 @@ export const useToastProps = (functionName: string, contract: Address, args: any
       link: txHash ? `https://basescan.org/tx/${txHash}` : null,
       variant: status,
       id: `${status}__${functionName}__${Date.now()}`,
-      args,
     };
 
     if (status === ToastStatus.PENDING) {

@@ -24,6 +24,12 @@ export class ErrorBoundary extends React.Component<
     console.error('🔴 ErrorBoundary caught error:', error.message);
     console.error('🔴 Error stack:', error.stack);
     console.error('🔴 Component stack:', errorInfo.componentStack);
+    
+    // Additional debugging for React Error #310
+    if (error.message?.includes('Objects are not valid as a React child')) {
+      console.error('🔴 This is React Error #310 - attempting to render a non-primitive value');
+      console.error('🔴 Check the component stack above to identify the problematic component');
+    }
   }
 
   override render() {
