@@ -1,6 +1,7 @@
 import Head from "next/head";
-import { Address } from "viem";
+import { Address, isAddress } from "viem";
 import { useAccount } from "wagmi";
+import { useRouter } from "next/router";
 
 import { Columned } from "@/components/shared/Columned";
 import { ClubHeader } from "@/components/shared/ClubHeader";
@@ -17,8 +18,8 @@ import { useClubMember } from "@/hooks/useClubMember";
 import { useClubData } from "@/hooks/useClubData";
 import { ClubActions } from "@/components/funds/ClubActions";
 import { BuyRedeemPanel } from "@/components/funds/BuyRedeemPanel";
-import { useRouter } from "next/router";
 import { ClubActivity } from "@/components/funds/ClubActivity";
+import { useDebugRender } from "@/hooks/useDebugRender";
 
 export default function FundSinglePage({
   clubAddress,
@@ -31,9 +32,27 @@ export default function FundSinglePage({
   clubAddress = (clubAddress || router.query.clubAddress) as Address
 
   const { address } = useAccount();
+
+  // Debug what we're passing to hooks
+  useDebugRender('FundSinglePage', { clubAddress, address });
+
+  if (!clubAddress || !isAddress(clubAddress)) {
+    return <p>Invalid club address</p>;
+  }
+
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
+
+  // Debug hook results
+  useDebugRender('FundSinglePage-HookResults', { 
+    clubData: clubData ? 'loaded' : 'loading',
+    clubMember: clubMember ? 'loaded' : 'loading',
+    isQualified: typeof isQualified,
+    isMember: clubMember?.isMember,
+    isPublic: clubData?.isPublic,
+    isActivated: clubData?.isActivated
+  });
 
   const { isPublic, isActivated, isTokenEnabled } = clubData;
   const { isMember } = clubMember;

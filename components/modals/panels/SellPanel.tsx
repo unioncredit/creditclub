@@ -29,7 +29,7 @@ export const SellPanel = ({
 
   const { image, decimals, symbol } = clubData;
   const { address: assetAddress, symbol: assetSymbol } = assetToken;
-  const { clubTokenBalance, stakedBalance } = clubMemberData;
+  const { clubTokenBalance = 0n, stakedBalance = 0n } = clubMemberData;
   
   // Total available balance includes both unstaked and staked tokens
   const totalAvailableBalance = clubTokenBalance + stakedBalance;
@@ -91,7 +91,7 @@ export const SellPanel = ({
         value={amount.formatted}
         onChange={register("amount")}
         error={errors.amount}
-        rightLabel={`Avail. ${formatDecimals(totalAvailableBalance, decimals)} ${symbol} (raw: ${totalAvailableBalance?.toString()})`}
+        rightLabel={`Avail. ${formatDecimals(totalAvailableBalance, decimals)} ${symbol}`}
         rightLabelAction={() => setRawValue("amount", totalAvailableBalance)}
       />
 
