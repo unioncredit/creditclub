@@ -6,7 +6,7 @@ import { DEFAULT_CHAIN_ID } from "@/constants";
 import { useClubData } from "@/hooks/useClubData";
 import { useMemberNftContract } from "@/hooks/useMemberNftContract";
 
-export const useNewMemberData = (userAddress: Address | undefined, clubAddress: Address) => {
+export const useNewMemberData = (_userAddress: Address | undefined, clubAddress: Address) => {
   const { data: clubData } = useClubData(clubAddress);
 
   const {
