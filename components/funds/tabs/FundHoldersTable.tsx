@@ -70,13 +70,12 @@ export const FundHoldersTable = ({
   const { data: holders, loading } = useHolders(clubAddress);
   const { data: clubData } = useClubData(clubAddress);
   const { data: priceData }  = useTokenPriceData(clubAddress);
-  const { populateEns } = usePopulateEns();
-  const { populateFnames } = usePopulateFnames();
 
   const { decimals, totalSupply } = clubData;
   const { price: tokenPrice } = priceData;
 
-  const enrichedHolders = populateFnames(populateEns(holders));
+  const holdersWithEns = usePopulateEns(holders);
+  const enrichedHolders = usePopulateFnames(holdersWithEns);
 
   const rows: FundHolderRow[] = enrichedHolders.map(({ address, amount }, index) => ({
     id: index,
