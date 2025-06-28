@@ -276,8 +276,8 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   };
 
   return {
+    data,
     isLoading,
     refetch,
-    data,
   };
 };
