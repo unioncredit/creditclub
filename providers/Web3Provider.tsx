@@ -1,5 +1,5 @@
 import { createConfig, WagmiProvider } from "@privy-io/wagmi";
-import { base, baseSepolia, Chain } from "viem/chains";
+import { base, baseSepolia } from "viem/chains";
 import { http } from "viem";
 import React from "react";
 import { cookieStorage, createStorage } from "wagmi";
