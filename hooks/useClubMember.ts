@@ -154,16 +154,12 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   ] = balanceResult.data?.map(d => safeBigInt(d.result)) || [];
 
   // Extract member info data
-  const [
-    owed = 0n,
-    vouch = 0n,
-    tokenId = 0n,
-    invitedByAddress = zeroAddress,
-    inviteCount = 0n,
-  ] = memberInfoResult.data?.map((d, i) => {
-    if (i === 3) return (d.result as Address) || zeroAddress; // invitedByAddress
-    return safeBigInt(d.result);
-  }) || [];
+  const memberInfoData = memberInfoResult.data || [];
+  const owed = safeBigInt(memberInfoData[0]?.result);
+  const vouch = safeBigInt(memberInfoData[1]?.result);
+  const tokenId = safeBigInt(memberInfoData[2]?.result);
+  const invitedByAddress = (memberInfoData[3]?.result as Address) || zeroAddress;
+  const inviteCount = safeBigInt(memberInfoData[4]?.result);
 
   // Get member details from getMember function (only if tokenId is available)
   const memberDataQuery = useReadContract({
