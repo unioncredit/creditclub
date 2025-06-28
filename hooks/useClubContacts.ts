@@ -9,16 +9,7 @@ import { useContract } from "@/hooks/useContract";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
 import { IContact } from "@/providers/types";
 
-interface UseClubContactsReturn {
-  data: IContact[];
-  refetch: () => Promise<void>;
-  isLoading?: boolean;
-  isError?: boolean;
-  isFetching: boolean;
-  isSuccess: boolean;
-}
-
-export const useClubContacts = (clubAddress: Address): UseClubContactsReturn => {
+export const useClubContacts = (clubAddress: Address) => {
   const creditVaultContract = useCreditVaultContract(clubAddress);
   const unionLensContract = useContract("unionLens");
   const userManagerContract = useContract("userManager");
@@ -94,11 +85,8 @@ export const useClubContacts = (clubAddress: Address): UseClubContactsReturn => 
   const ensPopulated = usePopulateEns(data);
 
   return {
-    data: ensPopulated as IContact[],
-    isLoading: result.isLoading,
-    isError: result.isError,
-    isFetching: result.isFetching,
-    isSuccess: result.isSuccess,
+    ...result,
     refetch,
+    data: ensPopulated as IContact[]
   }
 }

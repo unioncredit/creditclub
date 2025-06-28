@@ -57,12 +57,5 @@ export const useGatingToken = (clubAddress: Address) => {
     qualified: balance > 0n,
   };
 
-  return { 
-    data,
-    isLoading: result.isLoading,
-    isError: result.isError,
-    isFetching: result.isFetching,
-    isSuccess: result.isSuccess,
-    refetch: result.refetch,
-  };
+  return { ...result, data };
 };

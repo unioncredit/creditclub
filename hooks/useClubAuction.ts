@@ -88,12 +88,5 @@ export const useClubAuction = (clubAddress: Address) => {
     assetRatio,
   };
 
-  return { 
-    data,
-    isLoading: result.isLoading,
-    isError: result.isError,
-    isFetching: result.isFetching,
-    isSuccess: result.isSuccess,
-    refetch: result.refetch,
-  };
+  return { ...result, data };
 };

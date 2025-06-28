@@ -87,14 +87,7 @@ export const UnionMemberProvider = ({ children }: { children: React.ReactNode; }
   };
 
   return (
-    <UnionMemberContext.Provider value={{ 
-      data,
-      isLoading: result.isLoading,
-      isError: result.isError,
-      isFetching: result.isFetching,
-      isSuccess: result.isSuccess,
-      refetch: result.refetch,
-    }}>
+    <UnionMemberContext.Provider value={{ ...result, data }}>
       {children}
     </UnionMemberContext.Provider>
   )
