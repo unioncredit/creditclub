@@ -23,7 +23,7 @@ export const ConnectButton = () => {
           ? () => openModal(ACCOUNT_MODAL, { address })
           : connectWallet
       }
-      icon={!isConnected && <WalletIcon width={24} className="fill fill-white" />}
+      icon={!isConnected ? <WalletIcon width={24} className="fill fill-white" /> : undefined}
     >
       {!address ? (
         "Connect"

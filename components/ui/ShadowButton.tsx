@@ -52,7 +52,7 @@ export const ShadowButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {icon}
+        {icon || null}
 
         {children}
       </Comp>
