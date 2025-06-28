@@ -15,17 +15,15 @@ export class ErrorBoundary extends React.Component<
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    console.error('🔴 ErrorBoundary caught error:', error);
-    console.error('🔴 Error stack:', error.stack);
+    // Don't log in getDerivedStateFromError as it runs during render
     return { hasError: true, error };
   }
 
   override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('🔴 ErrorBoundary componentDidCatch:', {
-      error,
-      errorInfo,
-      componentStack: errorInfo.componentStack,
-    });
+    // Log errors after render phase is complete
+    console.error('🔴 ErrorBoundary caught error:', error.message);
+    console.error('🔴 Error stack:', error.stack);
+    console.error('🔴 Component stack:', errorInfo.componentStack);
   }
 
   override render() {
