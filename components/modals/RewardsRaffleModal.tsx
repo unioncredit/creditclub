@@ -107,28 +107,28 @@ export const RewardsRaffleModal = ({
           />
 
           <StatRow
-            percentage={`${(winnerPercentage || 0).toFixed(1)}%`}
+            percentage={`${winnerPercentage.toFixed(1)}%`}
             title="Random Trustee"
             content="Registered & Not Overdue"
-            amount={(winnerBalance || 0).toFixed(2)}
+            amount={winnerBalance.toFixed(2)}
             color="#F4F4F6"
             token={<Union />}
             className="mt-12 sm:mt-16"
           />
           <StatRow
-            percentage={`${(bidBucketPercentage || 0).toFixed(1)}%`}
+            percentage={`${bidBucketPercentage.toFixed(1)}%`}
             title="Credit Vault"
             content="Saved for a rainy day"
-            amount={(bidBucketBalance || 0).toFixed(2)}
+            amount={bidBucketBalance.toFixed(2)}
             color="#F4F4F6"
             token={<Union />}
             className="mt-2"
           />
           <StatRow
-            percentage={`${(callerPercentage || 0).toFixed(1)}%`}
+            percentage={`${callerPercentage.toFixed(1)}%`}
             title="Caller Reward"
             content="This goes to you"
-            amount={(callerBalance || 0).toFixed(2)}
+            amount={callerBalance.toFixed(2)}
             color="#F4F4F6"
             token={<Union />}
             className="mt-2"

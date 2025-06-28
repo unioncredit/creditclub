@@ -23,7 +23,7 @@ import { useModals } from "@/providers/ModalManagerProvider";
 import { REPAY_MODAL } from "@/components/modals/RepayModal";
 import { INVITE_MODAL } from "@/components/modals/InviteModal";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
-import { useDebugRender } from "@/hooks/useDebugRender";
+
 
 export const ClubActions = ({
   clubAddress,
@@ -37,19 +37,6 @@ export const ClubActions = ({
   const { data: memberNftData, isLoading: memberNftDataLoading } = useClubMemberNft(clubAddress);
   const { data: clubMember, refetch: refetchClubMember, isLoading: clubMemberLoading } = useClubMember(address, clubAddress);
   const { data: vestingData } = useVesting(clubAddress);
-
-  // Debug component props and state
-  useDebugRender('ClubActions', {
-    clubAddress,
-    address,
-    clubDataLoading,
-    memberNftDataLoading,
-    clubMemberLoading,
-    hasClubData: !!clubData,
-    hasMemberNftData: !!memberNftData,
-    hasClubMember: !!clubMember,
-    hasVestingData: !!vestingData
-  });
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 

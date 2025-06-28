@@ -39,7 +39,7 @@ export const RewardsRaffleWinnerModal = ({
   const { address } = useAccount();
   const { data: clubData } = useClubData(clubAddress);
 
-  const { symbol } = clubData;
+  const { symbol = "" } = clubData || {};
 
   const {
     bidBucketPercentage,
@@ -72,16 +72,16 @@ export const RewardsRaffleWinnerModal = ({
 
   const statRows: StatGridRow[] = [
     {
-      name: "Prize",
-      value: `${(winnerBalance || 0).toFixed(2)} UNION to ${winnerName}`,
+      name: `Winner [${winnerPercentage}%]`,
+      value: `${winnerBalance.toFixed(2)} UNION to ${winnerName}`,
     },
     {
-      name: "Credit Vault Fee",
-      value: `${(bidBucketBalance || 0).toFixed(2)} UNION to $${symbol}`,
+      name: `Vault [${bidBucketPercentage}%]`,
+      value: `${bidBucketBalance.toFixed(2)} UNION to $${symbol}`,
     },
     {
-      name: "Caller Fee",
-      value: `${(callerBalance || 0).toFixed(2)} UNION to ${callerName}`
+      name: `Caller [${callerPercentage}%]`,
+      value: `${callerBalance.toFixed(2)} UNION to ${callerName}`
     }
   ];
 
@@ -107,7 +107,7 @@ export const RewardsRaffleWinnerModal = ({
               align="left"
               variant="warning"
               className="font-mono text-xs p-3 bg-blue-50 text-blue-600 mb-4"
-              label={`Sadly, ${winnerName} is currently not a member or overdue so they missed out on ${(winnerBalance || 0).toFixed(2)} of UNION.`}
+              label={`Sadly, ${winnerName} is currently not a member or overdue so they missed out on ${winnerBalance.toFixed(2)} of UNION.`}
 
             />
           )}

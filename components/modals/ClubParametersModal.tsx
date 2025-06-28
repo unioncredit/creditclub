@@ -182,8 +182,8 @@ export const ClubParametersModal = ({
     {
       title: "Fees & Recipients",
       parameters: [
-        { label: "Vault Withdraw Fee", value: clubData ? `${((Number(vaultWithdrawFeeBps) || 0) / 10000 * 100).toFixed(2)}%` : <LoadingPlaceholder /> },
-        { label: "Staking Withdraw Fee", value: clubData ? `${((Number(stakingWithdrawFeeBps) || 0) / 10000 * 100).toFixed(2)}%` : <LoadingPlaceholder /> },
+        { label: "Vault Withdraw Fee", value: clubData ? `${(Number(vaultWithdrawFeeBps) / 10000 * 100).toFixed(2)}%` : <LoadingPlaceholder /> },
+        { label: "Staking Withdraw Fee", value: clubData ? `${(Number(stakingWithdrawFeeBps) / 10000 * 100).toFixed(2)}%` : <LoadingPlaceholder /> },
         { label: "Feeling Lucky Cost", value: clubData ? `${formatDecimals(costToCall, 18, 5, false, false, false)} ETH` : <LoadingPlaceholder /> },
         { label: "Reward Cooldown", value: clubData ? formatDuration(Number(rewardCooldown)) : <LoadingPlaceholder /> },
         { label: "Fee Recipient", value: clubData ? (feeRecipient === zeroAddress ? "None" : (

@@ -25,7 +25,7 @@ function TrackPageView() {
       
       trackPageview({
         url: url,
-        referrer: document.referrer
+        referrer: typeof document !== 'undefined' ? document.referrer : ''
       });
     } catch (error) {
       // Silently ignore tracking errors

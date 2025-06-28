@@ -31,8 +31,8 @@ export const UniswapSwapWidget = ({
   const { data: clubToken } = useErc20Token(outputTokenAddress);
   const { data: assetToken } = useErc20Token(inputTokenAddress);
 
-  const { name: clubName = "", symbol: clubSymbol = "", decimals: clubDecimals = 18 } = clubToken || {};
-  const { name: assetName = "", symbol: assetSymbol = "", decimals: assetDecimals = 18 } = assetToken || {};
+  const { name: clubName, symbol: clubSymbol, decimals: clubDecimals } = clubToken;
+  const { name: assetName, symbol: assetSymbol, decimals: assetDecimals } = assetToken;
 
   const tokenList = [
     {

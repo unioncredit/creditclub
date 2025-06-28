@@ -72,8 +72,7 @@ export const ModalManagerProvider = ({ children }: { children: React.ReactNode; 
     document.body.classList.add("no-scroll");
     document.body.style.top = `-${scrollPosition}px`;
     setModal(key);
-    // Ensure props is always an object
-    setProps(props && typeof props === 'object' && !Array.isArray(props) ? props : {});
+    if (props) setProps(props);
   };
 
   const Modal = modals[modal];
@@ -81,7 +80,7 @@ export const ModalManagerProvider = ({ children }: { children: React.ReactNode; 
   return (
     <ModalContext.Provider value={{ close, open }}>
       {children}
-      {Modal && <Modal {...(props || {})} />}
+      {Modal && <Modal {...props} />}
     </ModalContext.Provider>
   );
 }
