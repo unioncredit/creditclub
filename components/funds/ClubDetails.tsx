@@ -45,13 +45,13 @@ export const ClubDetails = ({
   const { copy: copyCreatorAddr, copied: copiedCreatorAddr } = useCopyToClipboard();
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress)
-  const { data: socials } = useTalentSocials(clubData.creatorAddress);
+  const { data: socials } = useTalentSocials(clubData?.creatorAddress);
   const { data: deployerName } = usePrimaryLabel({
-    address: clubData.creatorAddress,
+    address: clubData?.creatorAddress,
     shouldTruncate: true,
   });
 
-  const { name, image, symbol, creatorAddress, description } = clubData;
+  const { name = "", image = "", symbol = "", creatorAddress, description = "" } = clubData || {};
 
   const clubBadges = [
     {
@@ -73,13 +73,13 @@ export const ClubDetails = ({
   ];
 
   const detailBadges = [
-    ...socials.filter(s => DISPLAYED_SOCIALS.includes(s.source)).map((social) => ({
+    ...(socials || []).filter(s => DISPLAYED_SOCIALS.includes(s.source)).map((social) => ({
       label: social.profile_display_name,
       url: social.profile_url,
       icon: SocialIcons[social.source],
     })),
     {
-      label: `${clubContacts.length} Members`,
+      label: `${clubContacts?.length || 0} Members`,
       icon: DelegateIcon,
       url: null,
     }

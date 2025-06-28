@@ -30,20 +30,20 @@ export const MembershipClaim = ({
   const { data: memberNftdata } = useClubMemberNft(clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
 
-  const { name, image, isActivated } = clubData;
-  const { maxMembers } = memberNftdata;
+  const { name = "", image = "", isActivated = false } = clubData || {};
+  const { maxMembers = 0n } = memberNftdata || {};
 
   const {
-    memberInvitesEnabled,
-    qualified: inviteQualified
-  } = inviteData;
+    memberInvitesEnabled = false,
+    qualified: inviteQualified = false
+  } = inviteData || {};
 
   const {
-    enabled: tokenEnabled,
-    qualified: tokenQualified,
-    symbol,
-    name: tokenName
-  } = gatingTokenData;
+    enabled: tokenEnabled = false,
+    qualified: tokenQualified = false,
+    symbol = "",
+    name: tokenName = ""
+  } = gatingTokenData || {};
 
   const requirementRows = [
     {
@@ -71,7 +71,7 @@ export const MembershipClaim = ({
 
         <div className="flex items-center gap-1">
           <AddressBookIcon width={24} height={24} />
-          <p className="text-sm text-blue-600">{Number(maxMembers || 0) - clubContacts.length} Remaining</p>
+          <p className="text-sm text-blue-600">{Number(maxMembers || 0) - (clubContacts?.length || 0)} Remaining</p>
         </div>
       </header>
 

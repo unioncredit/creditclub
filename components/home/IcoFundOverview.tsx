@@ -39,7 +39,7 @@ export const IcoFundOverview = ({
     // },
     {
       name: "Trustees",
-      value: `${clubContacts?.length || 0} claimed / ${maxMembers} available`
+      value: `${clubContacts?.length || 0} claimed / ${Number(maxMembers)} available`
     },
     {
       name: "Initial Raise",

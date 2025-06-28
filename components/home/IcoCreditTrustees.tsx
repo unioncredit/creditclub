@@ -31,6 +31,19 @@ export const IcoCreditTrustees = ({
   const { membershipCost = 0n, maxMembers = 0n } = memberNftData || {};
   const { decimals: assetTokenDecimals = 18 } = assetToken || {};
 
+  // Debug logging
+  if (typeof window !== 'undefined' && isConnected) {
+    console.log('🔍 IcoCreditTrustees Debug:', {
+      isConnected,
+      address,
+      clubContacts: typeof clubContacts,
+      clubContactsLength: clubContacts?.length,
+      newMemberData: typeof newMemberData,
+      isQualified: typeof isQualified,
+      isQualifiedValue: isQualified,
+    });
+  }
+
   const rows: StatGridRow[] = [
     {
       name: "Who can mint?",
@@ -38,7 +51,7 @@ export const IcoCreditTrustees = ({
     },
     {
       name: "Trustees",
-      value: `${clubContacts?.length || 0} claimed of ${maxMembers} available`
+      value: `${clubContacts?.length || 0} claimed of ${Number(maxMembers)} available`
     },
     {
       name: "Cost to mint",

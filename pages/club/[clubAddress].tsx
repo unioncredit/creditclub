@@ -37,12 +37,38 @@ export default function FundSinglePage({
     return <p>Invalid club address</p>;
   }
 
-  const { data: clubData } = useClubData(clubAddress);
-  const { data: clubMember } = useClubMember(address, clubAddress);
+  const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
+  const { data: clubMember, isLoading: clubMemberLoading } = useClubMember(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
+
+  // Debug logging
+  if (typeof window !== 'undefined') {
+    console.log('🔍 Club Page Debug:', {
+      clubAddress,
+      address,
+      clubData: typeof clubData,
+      clubMember: typeof clubMember,
+      isQualified: typeof isQualified,
+      isQualifiedValue: isQualified,
+    });
+  }
 
   const { isPublic, isActivated, isTokenEnabled } = clubData || {};
   const { isMember } = clubMember || {};
+
+  // Show loading state while initial data is fetching
+  if (clubDataLoading || (address && clubMemberLoading)) {
+    return (
+      <main>
+        <Columned width={1020} className="py-8">
+          <div className="animate-pulse">
+            <div className="h-20 bg-gray-200 rounded mb-4"></div>
+            <div className="h-96 bg-gray-200 rounded"></div>
+          </div>
+        </Columned>
+      </main>
+    );
+  }
 
   return (
     <>
