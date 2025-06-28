@@ -22,16 +22,6 @@ const queryClient = new QueryClient();
 
 init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
 
-// Debug wrapper to catch rendering errors
-const DebugWrapper = ({ children, name }: { children: React.ReactNode; name: string }) => {
-  try {
-    return <>{children}</>;
-  } catch (error) {
-    console.error(`Error in ${name}:`, error);
-    throw error;
-  }
-};
-
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ErrorBoundary>

@@ -41,18 +41,6 @@ export default function FundSinglePage({
   const { data: clubMember, isLoading: clubMemberLoading } = useClubMember(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
 
-  // Debug logging
-  if (typeof window !== 'undefined') {
-    console.log('🔍 Club Page Debug:', {
-      clubAddress,
-      address,
-      clubData: typeof clubData,
-      clubMember: typeof clubMember,
-      isQualified: typeof isQualified,
-      isQualifiedValue: isQualified,
-    });
-  }
-
   const { isPublic, isActivated, isTokenEnabled } = clubData || {};
   const { isMember } = clubMember || {};
 
