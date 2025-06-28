@@ -20,9 +20,9 @@ export const IcoFundOverview = ({
   const { data: clubContacts } = useClubContacts(clubAddress);
   const { activated, locked, remaining } = useClubActivation(clubAddress);
 
-  const { name, symbol, lockupPeriod, description } = clubData;
-  const { maxMembers } = clubMemberNftData;
-  const { current, goal } = icoStats;
+  const { name = "", symbol = "", lockupPeriod = 0n, description = "" } = clubData || {};
+  const { maxMembers = 0n } = clubMemberNftData || {};
+  const { current = "0", goal = "0" } = icoStats || {};
 
   const rows: StatGridRow[] = [
     {
@@ -39,7 +39,7 @@ export const IcoFundOverview = ({
     // },
     {
       name: "Trustees",
-      value: `${clubContacts.length} claimed / ${maxMembers} available`
+      value: `${clubContacts?.length || 0} claimed / ${maxMembers} available`
     },
     {
       name: "Initial Raise",

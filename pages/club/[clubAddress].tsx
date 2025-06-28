@@ -41,8 +41,8 @@ export default function FundSinglePage({
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
 
-  const { isPublic, isActivated, isTokenEnabled } = clubData;
-  const { isMember } = clubMember;
+  const { isPublic, isActivated, isTokenEnabled } = clubData || {};
+  const { isMember } = clubMember || {};
 
   return (
     <>

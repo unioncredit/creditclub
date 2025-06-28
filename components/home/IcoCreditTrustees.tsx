@@ -27,9 +27,9 @@ export const IcoCreditTrustees = ({
   const { data: clubData } = useClubData(clubAddress);
   const { data: assetToken } = useErc20Token(clubData?.assetAddress);
 
-  const { initialTrustAmount } = newMemberData || {};
-  const { membershipCost, maxMembers } = memberNftData || {};
-  const { decimals: assetTokenDecimals } = assetToken || {};
+  const { initialTrustAmount = 0n } = newMemberData || {};
+  const { membershipCost = 0n, maxMembers = 0n } = memberNftData || {};
+  const { decimals: assetTokenDecimals = 18 } = assetToken || {};
 
   const rows: StatGridRow[] = [
     {
@@ -38,7 +38,7 @@ export const IcoCreditTrustees = ({
     },
     {
       name: "Trustees",
-      value: `${clubContacts.length} claimed of ${maxMembers} available`
+      value: `${clubContacts?.length || 0} claimed of ${maxMembers} available`
     },
     {
       name: "Cost to mint",
