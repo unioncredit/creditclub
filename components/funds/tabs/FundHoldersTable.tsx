@@ -70,13 +70,13 @@ export const FundHoldersTable = ({
   const { data: priceData }  = useTokenPriceData(clubAddress);
 
   const { decimals, totalSupply } = clubData;
-  const { price: tokenPrice } = priceData;
+  const { price: tokenPrice = 0 } = priceData || {};
 
   const rows: FundHolderRow[] = holders.map(({ address, amount }, index) => ({
     id: index,
     address,
     shares: formatDecimals(amount, decimals),
-    marketValue: `$${(parseFloat(formatDecimals(amount, decimals)) * tokenPrice).toFixed(2)}`,
+    marketValue: `$${(parseFloat(formatDecimals(amount, decimals)) * (tokenPrice || 0)).toFixed(2)}`,
   }));
 
   // @ts-ignore

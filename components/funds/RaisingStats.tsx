@@ -58,7 +58,7 @@ export const RaisingStats = ({
     hasMaxTarget,
   } = auctionData;
 
-  const { price: tokenPrice = 0 } = priceData;
+  const { price: tokenPrice = 0 } = priceData || {};
 
   const { decimals: assetDecimals = 18 } = assetToken;
 
@@ -129,7 +129,7 @@ export const RaisingStats = ({
     },
     {
       title: "Market value",
-      value: `~$${(Number(formatUnits(clubTokenBalance + stakedBalance, decimals || 18)) * tokenPrice).toFixed(2)}`
+      value: `~$${(Number(formatUnits(clubTokenBalance + stakedBalance, decimals || 18)) * (tokenPrice || 0)).toFixed(2)}`
     },
   ];
 

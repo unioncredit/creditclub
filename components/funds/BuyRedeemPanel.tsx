@@ -38,7 +38,7 @@ export const BuyRedeemPanel = ({
     totalSupply,
   } = clubData;
 
-  const { price: tokenPrice = 0 } = priceData;
+  const { price: tokenPrice = 0 } = priceData || {};
 
   const totalSupplyFormatted = commify((tokenPrice * Number(formatUnits(totalSupply || 0n, decimals || 18))), 0);
 
@@ -53,7 +53,7 @@ export const BuyRedeemPanel = ({
     },
     {
       title: "Market value",
-      value: `~$${commify((Number(formatUnits(clubTokenBalance || 0n, decimals || 18)) * tokenPrice), 2)}`
+      value: `~$${commify((Number(formatUnits(clubTokenBalance || 0n, decimals || 18)) * (tokenPrice || 0)), 2)}`
     },
   ];
 

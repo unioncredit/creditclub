@@ -3,6 +3,7 @@ import * as React from 'react';
 interface ErrorBoundaryState {
   hasError: boolean;
   error: Error | null;
+  errorInfo: React.ErrorInfo | null;
 }
 
 export class ErrorBoundary extends React.Component<
@@ -11,10 +12,10 @@ export class ErrorBoundary extends React.Component<
 > {
   constructor(props: { children: React.ReactNode }) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, error: null, errorInfo: null };
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     // Don't log in getDerivedStateFromError as it runs during render
     return { hasError: true, error };
   }
@@ -25,10 +26,31 @@ export class ErrorBoundary extends React.Component<
     console.error('🔴 Error stack:', error.stack);
     console.error('🔴 Component stack:', errorInfo.componentStack);
     
+    // Store errorInfo for display
+    this.setState({ errorInfo });
+    
     // Additional debugging for React Error #310
     if (error.message?.includes('Objects are not valid as a React child')) {
       console.error('🔴 This is React Error #310 - attempting to render a non-primitive value');
       console.error('🔴 Check the component stack above to identify the problematic component');
+      
+      // Try to extract more info from the error
+      const errorString = error.toString();
+      const stackString = error.stack || '';
+      
+      // Look for object representations in the error
+      const objectMatch = errorString.match(/object with keys \{([^}]+)\}/);
+      if (objectMatch) {
+        console.error('🔴 Attempted to render object with keys:', objectMatch[1]);
+      }
+      
+      // Log any found numbers that might be NaN or Infinity
+      if (errorString.includes('NaN')) {
+        console.error('🔴 Error involves NaN value');
+      }
+      if (errorString.includes('Infinity')) {
+        console.error('🔴 Error involves Infinity value');
+      }
     }
   }
 
@@ -37,6 +59,7 @@ export class ErrorBoundary extends React.Component<
       // Ensure we only render strings
       const errorMessage = this.state.error?.message || 'Unknown error';
       const errorStack = this.state.error?.stack || 'No stack trace available';
+      const componentStack = this.state.errorInfo?.componentStack || 'No component stack available';
       
       return (
         <div style={{ padding: '20px', backgroundColor: '#fff', color: '#000' }}>
@@ -49,7 +72,12 @@ export class ErrorBoundary extends React.Component<
               <strong>Error:</strong> {String(errorMessage)}
               <br />
               <br />
-              <strong>Stack trace:</strong>
+              <strong>Component Stack:</strong>
+              <br />
+              {String(componentStack)}
+              <br />
+              <br />
+              <strong>Error Stack:</strong>
               <br />
               {String(errorStack)}
             </div>

@@ -54,9 +54,9 @@ export const ApprovalDebug = ({
   return (
     <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs font-mono">
       <div className="font-bold mb-1">Approval Debug Info:</div>
-      <div>Owner: {owner?.slice(0, 8)}...{owner?.slice(-6)}</div>
-      <div>Spender: {spender?.slice(0, 8)}...{spender?.slice(-6)}</div>
-      <div>Token: {tokenAddress?.slice(0, 8)}...{tokenAddress?.slice(-6)} ({token?.symbol})</div>
+      <div>Owner: {owner ? `${owner.slice(0, 8)}...${owner.slice(-6)}` : 'Not connected'}</div>
+      <div>Spender: {spender ? `${spender.slice(0, 8)}...${spender.slice(-6)}` : 'Not set'}</div>
+      <div>Token: {tokenAddress ? `${tokenAddress.slice(0, 8)}...${tokenAddress.slice(-6)}` : 'Not set'} ({token?.symbol || 'Unknown'})</div>
       <div>Amount: {token?.decimals ? formatUnits(amount, token.decimals) : amount.toString()}</div>
       <div>Current Allowance: {token?.decimals ? formatUnits(allowance, token.decimals) : allowance.toString()}</div>
       <div>Balance: {token?.decimals ? formatUnits(balance, token.decimals) : balance.toString()}</div>
