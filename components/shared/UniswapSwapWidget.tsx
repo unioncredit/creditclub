@@ -59,7 +59,7 @@ export const UniswapSwapWidget = ({
       provider={signer?.provider}
       routerUrl="https://api.uniswap.org/v1/"
       tokenList={tokenList}
-              onError={(error) => {}}
+              onError={(_error) => {}}
       hideConnectionUI={false}
       // defaultInputTokenAddress={inputTokenAddress}
       defaultOutputTokenAddress={outputTokenAddress}
