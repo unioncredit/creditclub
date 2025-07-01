@@ -1,9 +1,10 @@
 import { Address } from "viem";
 import { creditVaultAbi } from "@/abis/creditVault";
+import { useMemo } from "react";
 
 export const useCreditVaultContract = (address: Address) => {
-  return {
+  return useMemo(() => ({
     address,
-    abi: creditVaultAbi
-  }
+    abi: creditVaultAbi,
+  }), [address]);
 };

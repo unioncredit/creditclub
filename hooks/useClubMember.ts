@@ -1,5 +1,6 @@
 import { Address, erc20Abi, zeroAddress } from "viem";
 import { useReadContract, useReadContracts } from "wagmi";
+import { useMemo } from "react";
 
 import { DEFAULT_CHAIN_ID } from "@/constants";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
@@ -61,7 +62,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const stakingContract = useStakingContract(stakingAddress);
 
   // Batch 1: Balance Information
-  const balanceContracts = [
+  const balanceContracts = useMemo(() => ([
     {
       ...creditVaultContract,
       functionName: "balanceOf",
@@ -83,10 +84,10 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
       functionName: "balanceOf",
       args: [memberAddress!],
     },
-  ];
+  ]), [creditVaultContract, memberNftContract, stakingContract, assetAddress, memberAddress]);
 
   // Batch 2: UserManager & MemberNFT Basic Info
-  const memberInfoContracts = [
+  const memberInfoContracts = useMemo(() => ([
     {
       ...userManagerContract,
       functionName: "getLockedStake",
@@ -112,7 +113,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
       functionName: "getInvites",
       args: [memberAddress!],
     },
-  ];
+  ]), [userManagerContract, memberNftContract, clubAddress, memberAddress]);
 
   // Execute balance and member info batches
   const balanceResult = useReadContracts({
