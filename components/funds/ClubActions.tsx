@@ -224,6 +224,18 @@ export const ClubActions = ({
     onComplete: refetchClubMember,
   });
 
+  // Debug button props for problematic club
+  if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
+    console.log("=== claimCreditButtonProps Debug ===");
+    console.log("Props keys:", Object.keys(claimCreditButtonProps));
+    Object.entries(claimCreditButtonProps).forEach(([key, value]) => {
+      console.log(`Prop ${key}:`, typeof value, value);
+      if (typeof value === 'object' && value !== null && key !== 'onClick') {
+        console.warn(`Button prop ${key} is an object!`, value);
+      }
+    });
+  }
+
   // Determine if claim credit should be disabled and why
   const cannotClaimReason = !isActivated ? "Vault is not activated"
     : !isMember ? "You must be a member to claim credit"
