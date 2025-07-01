@@ -20,7 +20,24 @@ export class ErrorBoundary extends React.Component<
     return { hasError: true, error };
   }
 
-  override componentDidCatch(_error: Error, errorInfo: React.ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    // Enhanced logging for React Error #310
+    if (error.message.includes('310') || error.message.includes('Objects are not valid as a React child')) {
+      console.log('🔴 ERROR BOUNDARY CAUGHT REACT 310:', {
+        error: error.message,
+        stack: error.stack,
+        componentStack: errorInfo.componentStack,
+        timestamp: new Date().toISOString()
+      });
+      
+      // Try to identify the problematic component
+      const componentMatch = errorInfo.componentStack.match(/at (\w+)/);
+      if (componentMatch) {
+        console.log('🎯 LIKELY PROBLEMATIC COMPONENT:', componentMatch[1]);
+      }
+    }
+
+    console.error("Error caught by boundary:", error, errorInfo);
     // Store errorInfo for display
     this.setState({ errorInfo });
   }

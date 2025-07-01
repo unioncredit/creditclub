@@ -309,6 +309,9 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     ]);
   };
 
+      // Debug logging for React Error #310 - log raw member data
+    console.log('🔍 useClubMember raw contract data:', data);
+
   return {
     data,
     isLoading,

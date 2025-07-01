@@ -158,11 +158,10 @@ const ActivityRow = ({
   );
 };
 
-export const ClubActivity = ({
-  clubAddress,
-}: {
-  clubAddress: Address;
-}) => {
+export function ClubActivity({ clubAddress }: { clubAddress: Address }) {
+  // Debug logging for React Error #310
+  console.log('🔍 ClubActivity render data:', { clubAddress, typeof: typeof clubAddress });
+  
   const { token } = useToken();
   const { data: activity } = useClubActivity(clubAddress);
 
@@ -195,4 +194,4 @@ export const ClubActivity = ({
       </div>
     </div>
   );
-};
+}

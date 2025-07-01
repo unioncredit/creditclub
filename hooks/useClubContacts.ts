@@ -95,7 +95,7 @@ export const useClubContacts = (clubAddress: Address) => {
     }
 
     // Safety check: ensure voucher object exists
-    const voucherData = d[0] && typeof d[0] === 'object' && d[0].voucher ? d[0].voucher : {};
+    const voucherData = d[0] && typeof d[0] === 'object' && (d[0] as any).voucher ? (d[0] as any).voucher : {};
 
     return {
       address: borrowerAddresses[i]!,
