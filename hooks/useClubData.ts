@@ -1,5 +1,6 @@
 import { Address, zeroAddress } from "viem";
 import { useReadContract, useReadContracts } from "wagmi";
+import { useMemo } from "react";
 
 import { DEFAULT_CHAIN_ID, TOTAL_PERCENT } from "@/constants";
 import { useContract } from "@/hooks/useContract";
@@ -63,7 +64,7 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
   // Batch 1: Basic Information (name, symbol, addresses, etc.)
-  const basicInfoContracts = [
+  const basicInfoContracts = useMemo(() => ([
     {
       ...creditVaultContract,
       functionName: "name",
@@ -112,10 +113,10 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
       ...creditVaultContract,
       functionName: "description",
     },
-  ];
+  ]), [creditVaultContract]);
 
   // Batch 2: Financial Information
-  const financialInfoContracts = [
+  const financialInfoContracts = useMemo(() => ([
     {
       ...userManagerContract,
       functionName: "getTotalLockedStake",
@@ -156,10 +157,10 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
       functionName: "calculateRewards",
       args: [clubAddress, tokenContract.address],
     },
-  ];
+  ]), [userManagerContract, creditVaultContract, unionContract, comptrollerContract, clubAddress, tokenContract.address]);
 
   // Batch 3: Configuration & Settings
-  const configurationContracts = [
+  const configurationContracts = useMemo(() => ([
     {
       ...creditVaultContract,
       functionName: "isPublic",
@@ -204,10 +205,10 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
       ...creditVaultContract,
       functionName: "baseTrust",
     },
-  ];
+  ]), [creditVaultContract]);
 
   // Batch 4: Rewards & Game Mechanics
-  const rewardsContracts = [
+  const rewardsContracts = useMemo(() => ([
     {
       ...creditVaultContract,
       functionName: "callerPercent",
@@ -228,7 +229,7 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
       ...creditVaultContract,
       functionName: "rewardCooldown",
     },
-  ];
+  ]), [creditVaultContract]);
 
   // Execute all batches with proper typing
   const basicInfoResult = useReadContracts({
