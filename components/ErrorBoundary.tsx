@@ -99,7 +99,7 @@ export class ErrorBoundary extends React.Component<
               <br />
               <strong>Component Stack:</strong>
               <br />
-              {String(componentStack)}
+              {componentStack ? String(componentStack) : ''}
               <br />
               <br />
               <strong>Error Stack:</strong>
