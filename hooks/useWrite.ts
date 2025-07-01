@@ -35,17 +35,31 @@ export const useWrite = ({
   // Don't stringify the entire props object - extract what we need
   const { abi, address: contractAddress, ...otherProps } = props;
   
+  // Debug for problematic contract
+  if (contractAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
+    console.log("=== useWrite Debug ===");
+    console.log("ABI is array:", Array.isArray(abi));
+    console.log("ABI length:", abi?.length);
+    console.log("otherProps keys:", Object.keys(otherProps));
+    console.log("About to create memoizedProps...");
+  }
+  
   const createToast = useToastProps(functionName, contractAddress, args);
 
   const memoizedArgs = useMemo(() => args, [
     JSON.stringify(args, (_, value) => (typeof value === "bigint" ? value.toString() : value))
   ]);
   
-  const memoizedProps = useMemo(() => ({
-    abi,
-    address: contractAddress,
-    ...otherProps
-  }), [
+  const memoizedProps = useMemo(() => {
+    if (contractAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
+      console.log("Creating memoizedProps...");
+    }
+    return {
+      abi,
+      address: contractAddress,
+      ...otherProps
+    };
+  }, [
     // Use a stable reference for ABI (array reference comparison)
     abi,
     contractAddress,
@@ -156,18 +170,29 @@ export const useWrite = ({
    --------------------------------------------------------------*/
 
   return useMemo(
-    () => ({
-      disabled: disabled || loading,
-      loading,
-      ...(!isConnected ? {
-        icon: undefined,
-        label : "Connect Wallet",
-        onClick: connectWallet,
-      } : {
-        icon,
-        onClick,
-      })
-    }),
+    () => {
+      const result = {
+        disabled: disabled || loading,
+        loading,
+        ...(!isConnected ? {
+          icon: undefined,
+          label : "Connect Wallet",
+          onClick: connectWallet,
+        } : {
+          icon,
+          onClick,
+        })
+      };
+      
+      if (contractAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
+        console.log("=== useWrite return value ===");
+        console.log("Result keys:", Object.keys(result));
+        console.log("icon type:", typeof result.icon);
+        console.log("icon value:", result.icon);
+      }
+      
+      return result;
+    },
     [icon, disabled, loading, isConnected, onClick, connectWallet]
   );
 }
