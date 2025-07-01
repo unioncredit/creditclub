@@ -173,16 +173,30 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     }
   });
 
-  // Extract member data from the tuple
-  const memberDetails = memberDataQuery.data as any;
-  const referrer = memberDetails?.referrer || zeroAddress;
-  const baseTrust = safeBigInt(memberDetails?.baseTrust);
-  const badDebt = safeBigInt(memberDetails?.badDebt);
-  const updatedAt = safeBigInt(memberDetails?.updatedAt);
-  const active = memberDetails?.isActive || false;
-  const tier = memberDetails?.tier || 0;
-  const tierPercentage = safeBigInt(memberDetails?.tierPercentage);
-  const tierLabel = memberDetails?.tierLabel || "";
+  // Safely extract member data from the tuple
+  let referrer = zeroAddress;
+  let baseTrust = 0n;
+  let badDebt = 0n;
+  let updatedAt = 0n;
+  let active = false;
+  let tier = 0;
+  let tierPercentage = 0n;
+  let tierLabel = "";
+
+  if (memberDataQuery.data && typeof memberDataQuery.data === 'object') {
+    const memberDetails = memberDataQuery.data as any;
+    // Only access properties if memberDetails is a valid object
+    if (memberDetails && !memberDetails.error) {
+      referrer = memberDetails.referrer || zeroAddress;
+      baseTrust = safeBigInt(memberDetails.baseTrust);
+      badDebt = safeBigInt(memberDetails.badDebt);
+      updatedAt = safeBigInt(memberDetails.updatedAt);
+      active = memberDetails.isActive === true;
+      tier = typeof memberDetails.tier === 'number' ? memberDetails.tier : 0;
+      tierPercentage = safeBigInt(memberDetails.tierPercentage);
+      tierLabel = typeof memberDetails.tierLabel === 'string' ? memberDetails.tierLabel : "";
+    }
+  }
 
   // Get percent vested based on updatedAt
   const percentVestedQuery = useReadContract({

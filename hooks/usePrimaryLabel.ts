@@ -18,7 +18,10 @@ export const usePrimaryLabel = ({
   const { name: fname } = farcasterData;
 
   const formattedEns = ens && shouldTruncate ? truncateEns(ens) : ens;
-  const formattedAddress = address && shouldTruncate ? truncateAddress(address) : address;
+  const formattedAddress = address ? (shouldTruncate ? truncateAddress(address) : address) : undefined;
 
-  return { data: formattedEns || fname || formattedAddress || defaultValue };
+  // Ensure we always return a string, not an Address object
+  const label = formattedEns || fname || (formattedAddress ? String(formattedAddress) : defaultValue);
+  
+  return { data: label };
 }
