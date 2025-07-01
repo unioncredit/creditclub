@@ -174,7 +174,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   });
 
   // Safely extract member data from the tuple
-  let referrer = zeroAddress;
+  let referrer: Address = zeroAddress;
   let baseTrust = 0n;
   let badDebt = 0n;
   let updatedAt = 0n;
@@ -186,23 +186,38 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   if (memberDataQuery.data && typeof memberDataQuery.data === 'object') {
     const memberDetails = memberDataQuery.data as any;
     
-
-    
     // Only access properties if memberDetails is a valid object
     if (memberDetails && !memberDetails.error && !Array.isArray(memberDetails)) {
-      referrer = memberDetails.referrer || zeroAddress;
+      // Safely extract referrer address
+      if (typeof memberDetails.referrer === 'string' && memberDetails.referrer.startsWith('0x')) {
+        referrer = memberDetails.referrer as Address;
+      } else {
+        referrer = zeroAddress;
+      }
+      
       baseTrust = safeBigInt(memberDetails.baseTrust);
       badDebt = safeBigInt(memberDetails.badDebt);
       updatedAt = safeBigInt(memberDetails.updatedAt);
-      active = memberDetails.isActive === true;
-      tier = typeof memberDetails.tier === 'number' ? memberDetails.tier : 0;
+      active = Boolean(memberDetails.isActive);
+      
+      // Safely extract tier as number
+      tier = (typeof memberDetails.tier === 'number') ? memberDetails.tier : 0;
       tierPercentage = safeBigInt(memberDetails.tierPercentage);
+      
       // Ensure tierLabel is always a string, even if it's an object or other type
       if (typeof memberDetails.tierLabel === 'string') {
         tierLabel = memberDetails.tierLabel;
-      } else if (memberDetails.tierLabel && typeof memberDetails.tierLabel === 'object') {
-        // If it's an object, try to convert it to string
-        tierLabel = String(memberDetails.tierLabel);
+      } else if (memberDetails.tierLabel !== null && memberDetails.tierLabel !== undefined) {
+        // Convert any non-null/undefined value to string safely
+        try {
+          if (typeof memberDetails.tierLabel === 'object') {
+            tierLabel = JSON.stringify(memberDetails.tierLabel);
+          } else {
+            tierLabel = String(memberDetails.tierLabel);
+          }
+        } catch {
+          tierLabel = "";
+        }
       } else {
         tierLabel = "";
       }
