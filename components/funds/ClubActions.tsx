@@ -193,14 +193,6 @@ export const ClubActions = ({
     : claimableAmount === 0n ? "No credit available to claim (already claimed or not vested yet)"
     : null;
 
-  if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
-    console.log("=== ClubActions about to render ===");
-    console.log("isInviteEnabled:", isInviteEnabled);
-    console.log("name:", name, typeof name);
-    console.log("tokenId:", tokenId, typeof tokenId);
-    console.log("vestingEnabled:", vestingEnabled);
-  }
-
   return (
     <div className="p-4 border rounded-2xl bg-slate-50">
       <header className="flex items-center justify-between gap-2 border-b pb-4">
@@ -238,22 +230,8 @@ export const ClubActions = ({
             <p>Club Credit</p>
 
             <div className="text-right">
-              <p className="text-sm font-medium">${(() => {
-                if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
-                  console.log("=== Before format() call (vouch) ===");
-                  console.log("vouch:", vouch, typeof vouch);
-                  console.log("token:", token, typeof token);
-                }
-                return format(vouch, token);
-              })()}</p>
-              <p className="text-xs text-stone-400">+${(() => {
-                if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
-                  console.log("=== Before format() call (claimableAmount) ===");
-                  console.log("claimableAmount:", claimableAmount, typeof claimableAmount);
-                  console.log("token:", token, typeof token);
-                }
-                return format(claimableAmount, token);
-              })()}</p>
+              <p className="text-sm font-medium">${format(vouch, token)}</p>
+              <p className="text-xs text-stone-400">+${format(claimableAmount, token)}</p>
             </div>
           </div>
 
@@ -261,35 +239,18 @@ export const ClubActions = ({
             onClick={claimCreditButtonProps.onClick}
             disabled={claimCreditButtonProps.disabled || !!cannotClaimReason}
             className="bg-[#E3F6EC] hover:bg-[#E3F6EC] hover:opacity-90 h-[54px] text-[#1C9451] w-[156px] justify-start"
-            icon={(() => {
-              if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
-                console.log("=== Icon being passed to RoundedButton ===");
-                const iconElement = (
-                  <IconCube
-                    width={18}
-                    height={18}
-                    icon={ClaimIcon}
-                    color="#C4EBD5"
-                    className="p-1"
-                  />
-                );
-                console.log("Icon element type:", typeof iconElement);
-                console.log("Icon element:", iconElement);
-                return iconElement;
-              }
-              return (
-                <IconCube
-                  width={18}
-                  height={18}
-                  icon={ClaimIcon}
-                  color="#C4EBD5"
-                  className="p-1"
-                />
-              );
-            })()}
+            icon={(
+              <IconCube
+                width={18}
+                height={18}
+                icon={ClaimIcon}
+                color="#C4EBD5"
+                className="p-1"
+              />
+            )}
             title={cannotClaimReason || undefined}
           >
-            Claim Credit
+            {claimCreditButtonProps.loading ? "Claiming..." : "Claim Credit"}
           </RoundedButton>
         </div>
 
@@ -303,6 +264,7 @@ export const ClubActions = ({
           </div>
 
           <RoundedButton
+            onClick={() => openModal(REPAY_MODAL)}
             disabled={owed === 0n}
             icon={(
               <IconCube
@@ -314,7 +276,6 @@ export const ClubActions = ({
               />
             )}
             className="bg-[#EEF2FF] hover:bg-[#EEF2FF] hover:opacity-90 h-[54px] text-[#5F85FF] w-[156px] justify-start"
-            onClick={() => openModal(REPAY_MODAL)}
           >
             Repay
           </RoundedButton>

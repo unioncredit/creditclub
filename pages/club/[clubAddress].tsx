@@ -21,23 +21,31 @@ import { useRouter } from "next/router";
 import { ClubActivity } from "@/components/funds/ClubActivity";
 
 export default function FundSinglePage() {
+  if (typeof window !== 'undefined') {
+    console.log("=== FundSinglePage render start ===");
+  }
+  
   const router = useRouter();
   
-  // Get clubAddress from router query
-  const clubAddress = router.query.clubAddress as Address;
+  // Get clubAddress from router query - ensure it's a string
+  const rawClubAddress = router.query.clubAddress;
+  const clubAddress = (Array.isArray(rawClubAddress) ? rawClubAddress[0] : rawClubAddress) as Address | undefined;
+
+  console.log("=== Club address ===", clubAddress);
 
   const { address } = useAccount();
   
   // Only run hooks when router is ready and we have a valid clubAddress
-  const { data: clubData } = useClubData(clubAddress);
-  const { data: clubMember } = useClubMember(address, clubAddress);
-  const { data: isQualified } = useIsQualified(clubAddress);
+  const { data: clubData } = useClubData(clubAddress || "0x0");
+  const { data: clubMember } = useClubMember(address, clubAddress || "0x0");
+  const { data: isQualified } = useIsQualified(clubAddress || "0x0");
 
   const { isPublic, isActivated, isTokenEnabled } = clubData || {};
   const { isMember } = clubMember || {};
 
-  // Wait for router to be ready
-  if (!router.isReady) {
+  // Wait for router to be ready or invalid address
+  if (!router.isReady || !clubAddress) {
+    console.log("=== Returning null - router not ready or no address ===");
     return null;
   }
 
