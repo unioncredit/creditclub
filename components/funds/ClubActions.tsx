@@ -92,6 +92,10 @@ export const ClubActions = ({
     duration: vestingDuration = 0,
     vestedDays = 0,
   } = vestingData || {};
+  
+  // Ensure vesting values are primitives
+  const safeVestingDuration = typeof vestingDuration === 'number' ? vestingDuration : 0;
+  const safeVestedDays = typeof vestedDays === 'number' ? vestedDays : 0;
 
   // Calculate claimable credit amount
   const WAD = 10n ** 18n;
@@ -157,15 +161,15 @@ export const ClubActions = ({
 
       <div className="mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-slate-100 rounded-2xl border">
         <TextCube width={48} height={48} background="#1F1D29" foreground="white">
-          {getInitials(name || "")}
+          {getInitials(String(name || ""))}
         </TextCube>
-        <p className="text-lg">{name || ""} Member #{tokenId?.toString() || "0"}</p>
+        <p className="text-lg">{String(name || "")} Member #{tokenId?.toString() || "0"}</p>
       </div>
 
       {vestingEnabled && (
         <div className="flex items-center justify-center gap-0.5 mt-2">
           <CalendarIcon width={24} height={24} />
-          <p className="text-xs text-blue-600">Vesting: {vestedDays} of {vestingDuration} days vested</p>
+          <p className="text-xs text-blue-600">Vesting: {safeVestedDays} of {safeVestingDuration} days vested</p>
         </div>
       )}
 
@@ -181,8 +185,8 @@ export const ClubActions = ({
           </div>
 
           <RoundedButton
-            {...claimCreditButtonProps}
-            disabled={!!cannotClaimReason}
+            onClick={claimCreditButtonProps.onClick}
+            disabled={claimCreditButtonProps.disabled || !!cannotClaimReason}
             className="bg-[#E3F6EC] hover:bg-[#E3F6EC] hover:opacity-90 h-[54px] text-[#1C9451] w-[156px] justify-start"
             icon={(
               <IconCube
@@ -195,7 +199,7 @@ export const ClubActions = ({
             )}
             title={cannotClaimReason || undefined}
           >
-            Claim Credit
+            {"label" in claimCreditButtonProps ? claimCreditButtonProps.label : "Claim Credit"}
           </RoundedButton>
         </div>
 
