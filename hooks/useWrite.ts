@@ -147,16 +147,13 @@ export const useWrite = ({
   return useMemo(
     () => ({
       disabled: disabled || loading,
-      loading,
       ...(!isConnected ? {
-        icon: undefined,
         label : "Connect Wallet",
         onClick: connectWallet,
       } : {
-        icon,
         onClick,
       })
     }),
-    [icon, disabled, loading, isConnected, onClick, connectWallet]
+    [disabled, loading, isConnected, onClick, connectWallet]
   );
 }
