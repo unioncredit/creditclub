@@ -62,17 +62,29 @@ export const useClubAuction = (clubAddress: Address) => {
     }
   });
 
-  const [
-    minTarget = 0n,
-    maxTarget = 0n,
-    totalDeposits = 0n,
-    end = 0n,
-    isKilled = false,
-    isFailed = false,
-    period = 0n,
-    vaultRatio = 0n,
-    assetRatio = 0n,
-  ] = result.data?.map(d => d.result as never) || [];
+  // Helper functions for safe data extraction
+  const safeBigInt = (value: any): bigint => {
+    if (typeof value === 'bigint') return value;
+    if (typeof value === 'number') return BigInt(value);
+    if (typeof value === 'string') return BigInt(value || 0);
+    return 0n;
+  };
+
+  const safeBoolean = (value: any): boolean => {
+    if (typeof value === 'boolean') return value;
+    return Boolean(value);
+  };
+
+  const auctionData = result.data?.map(d => d.result) || [];
+  const minTarget = safeBigInt(auctionData[0]);
+  const maxTarget = safeBigInt(auctionData[1]);
+  const totalDeposits = safeBigInt(auctionData[2]);
+  const end = safeBigInt(auctionData[3]);
+  const isKilled = safeBoolean(auctionData[4]);
+  const isFailed = safeBoolean(auctionData[5]);
+  const period = safeBigInt(auctionData[6]);
+  const vaultRatio = safeBigInt(auctionData[7]);
+  const assetRatio = safeBigInt(auctionData[8]);
 
   const data = {
     minTarget,

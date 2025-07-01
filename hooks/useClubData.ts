@@ -277,54 +277,81 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
   });
 
   // Extract data from batch results
-  const [
-    name = "",
-    symbol = "",
-    decimals = 0,
-    memberNftAddress = zeroAddress,
-    assetAddress = zeroAddress,
-    stakingAddress = zeroAddress,
-    auctionAddress = zeroAddress,
-    rewardsManagerAddress = zeroAddress,
-    creatorAddress = zeroAddress,
-    ownerAddress = zeroAddress,
-    image = "",
-    description = "",
-  ] = basicInfoResult.data?.map(d => d.result as never) || [];
+  // Helper function to safely extract primitive values
+  const safeString = (value: any): string => {
+    if (typeof value === 'string') return value;
+    if (value === null || value === undefined) return "";
+    return String(value);
+  };
 
-  const [
-    totalLockedStake = 0n,
-    stakedBalance = 0n,
-    totalAssets = 0n,
-    totalSupply = 0n,
-    fixedBidPrice = 0n,
-    vaultWithdrawFeeBps = 0n,
-    feeRecipient = zeroAddress,
-    unionBalance = 0n,
-    unclaimedRewards = 0n,
-  ] = financialInfoResult.data?.map(d => d.result as never) || [];
+  const safeNumber = (value: any): number => {
+    if (typeof value === 'number') return value;
+    if (typeof value === 'bigint') return Number(value);
+    if (typeof value === 'string') return parseInt(value) || 0;
+    return 0;
+  };
 
-  const [
-    isPublic = false,
-    isActivated = false,
-    isTokenEnabled = false,
-    isClosedEndFund = false,
-    isTiersEnabled = false,
-    lockupPeriod = 0n,
-    lockupEnd = 0n,
-    withdrawPeriod = 0n,
-    vestingDurationInSeconds = 0n,
-    startingPercentTrust = 0n,
-    baseTrust = 0n,
-  ] = configurationResult.data?.map(d => d.result as never) || [];
+  const safeBigInt = (value: any): bigint => {
+    if (typeof value === 'bigint') return value;
+    if (typeof value === 'number') return BigInt(value);
+    if (typeof value === 'string') return BigInt(value || 0);
+    return 0n;
+  };
 
-  const [
-    callerPercent = 0n,
-    winnerPercent = 0n,
-    costToCall = 0n,
-    lastReward = 0n,
-    rewardCooldown = 0,
-  ] = rewardsResult.data?.map(d => d.result as never) || [];
+  const safeBoolean = (value: any): boolean => {
+    if (typeof value === 'boolean') return value;
+    return Boolean(value);
+  };
+
+  const safeAddress = (value: any): Address => {
+    if (typeof value === 'string' && value.startsWith('0x')) return value as Address;
+    return zeroAddress;
+  };
+
+  const basicInfoData = basicInfoResult.data?.map(d => d.result) || [];
+  const name = safeString(basicInfoData[0]);
+  const symbol = safeString(basicInfoData[1]);
+  const decimals = safeNumber(basicInfoData[2]);
+  const memberNftAddress = safeAddress(basicInfoData[3]);
+  const assetAddress = safeAddress(basicInfoData[4]);
+  const stakingAddress = safeAddress(basicInfoData[5]);
+  const auctionAddress = safeAddress(basicInfoData[6]);
+  const rewardsManagerAddress = safeAddress(basicInfoData[7]);
+  const creatorAddress = safeAddress(basicInfoData[8]);
+  const ownerAddress = safeAddress(basicInfoData[9]);
+  const image = safeString(basicInfoData[10]);
+  const description = safeString(basicInfoData[11]);
+
+  const financialInfoData = financialInfoResult.data?.map(d => d.result) || [];
+  const totalLockedStake = safeBigInt(financialInfoData[0]);
+  const stakedBalance = safeBigInt(financialInfoData[1]);
+  const totalAssets = safeBigInt(financialInfoData[2]);
+  const totalSupply = safeBigInt(financialInfoData[3]);
+  const fixedBidPrice = safeBigInt(financialInfoData[4]);
+  const vaultWithdrawFeeBps = safeBigInt(financialInfoData[5]);
+  const feeRecipient = safeAddress(financialInfoData[6]);
+  const unionBalance = safeBigInt(financialInfoData[7]);
+  const unclaimedRewards = safeBigInt(financialInfoData[8]);
+
+  const configurationData = configurationResult.data?.map(d => d.result) || [];
+  const isPublic = safeBoolean(configurationData[0]);
+  const isActivated = safeBoolean(configurationData[1]);
+  const isTokenEnabled = safeBoolean(configurationData[2]);
+  const isClosedEndFund = safeBoolean(configurationData[3]);
+  const isTiersEnabled = safeBoolean(configurationData[4]);
+  const lockupPeriod = safeBigInt(configurationData[5]);
+  const lockupEnd = safeBigInt(configurationData[6]);
+  const withdrawPeriod = safeBigInt(configurationData[7]);
+  const vestingDurationInSeconds = safeBigInt(configurationData[8]);
+  const startingPercentTrust = safeBigInt(configurationData[9]);
+  const baseTrust = safeBigInt(configurationData[10]);
+
+  const rewardsData = rewardsResult.data?.map(d => d.result) || [];
+  const callerPercent = safeBigInt(rewardsData[0]);
+  const winnerPercent = safeBigInt(rewardsData[1]);
+  const costToCall = safeBigInt(rewardsData[2]);
+  const lastReward = safeBigInt(rewardsData[3]);
+  const rewardCooldown = safeNumber(rewardsData[4]);
 
   // Get staking withdraw fee from staking contract (kept as separate call)
   const stakingContract = useStakingContract(stakingAddress);
@@ -338,7 +365,7 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
     }
   });
 
-  const stakingWithdrawFeeBps = stakingWithdrawFeeBpsQuery.data || 0n;
+  const stakingWithdrawFeeBps = safeBigInt(stakingWithdrawFeeBpsQuery.data);
 
   // Check if all data is loading
   const isLoading = 

@@ -64,18 +64,50 @@ export const useClubContacts = (clubAddress: Address) => {
   const results = result.data?.map(d => d.result) || [];
 
   // note: make sure to update this when added a contract call
-  const chunked = chunk(results, 5) as any[];
+  const chunked = chunk(results, 5);
 
-  const data: IContact[] = chunked.map((d, i) => ({
-    address: borrowerAddresses[i]!,
-    locking: d[0].voucher.locked,
-    trust: d[0].voucher.trust,
-    vouch: d[0].voucher.vouch,
-    isMember: d[1],
-    isOverdue: d[2],
-    lastRepay: d[3],
-    numShares: d[4],
-  }));
+  // Helper functions for safe data extraction
+  const safeBigInt = (value: any): bigint => {
+    if (typeof value === 'bigint') return value;
+    if (typeof value === 'number') return BigInt(value);
+    if (typeof value === 'string') return BigInt(value || 0);
+    return 0n;
+  };
+
+  const safeBoolean = (value: any): boolean => {
+    if (typeof value === 'boolean') return value;
+    return Boolean(value);
+  };
+
+  const data: IContact[] = chunked.map((d, i) => {
+    // Safety check: ensure d is an array with expected length
+    if (!Array.isArray(d) || d.length < 5) {
+      return {
+        address: borrowerAddresses[i]!,
+        locking: 0n,
+        trust: 0n,
+        vouch: 0n,
+        isMember: false,
+        isOverdue: false,
+        lastRepay: 0n,
+        numShares: 0n,
+      };
+    }
+
+    // Safety check: ensure voucher object exists
+    const voucherData = d[0] && typeof d[0] === 'object' && d[0].voucher ? d[0].voucher : {};
+
+    return {
+      address: borrowerAddresses[i]!,
+      locking: safeBigInt(voucherData.locked),
+      trust: safeBigInt(voucherData.trust),
+      vouch: safeBigInt(voucherData.vouch),
+      isMember: safeBoolean(d[1]),
+      isOverdue: safeBoolean(d[2]),
+      lastRepay: safeBigInt(d[3]),
+      numShares: safeBigInt(d[4]),
+    };
+  });
 
   const refetch = async () => {
     await refetchAddresses();

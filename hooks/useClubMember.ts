@@ -146,6 +146,11 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     return 0n;
   };
 
+  const safeAddress = (value: any): Address => {
+    if (typeof value === 'string' && value.startsWith('0x')) return value as Address;
+    return zeroAddress;
+  };
+
   // Extract balance data
   const [
     clubTokenBalance = 0n,
@@ -159,7 +164,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   const owed = safeBigInt(memberInfoData[0]?.result);
   const vouch = safeBigInt(memberInfoData[1]?.result);
   const tokenId = safeBigInt(memberInfoData[2]?.result);
-  const invitedByAddress = (memberInfoData[3]?.result as Address) || zeroAddress;
+  const invitedByAddress = safeAddress(memberInfoData[3]?.result);
   const inviteCount = safeBigInt(memberInfoData[4]?.result);
 
   // Get member details from getMember function (only if tokenId is available)
