@@ -197,7 +197,15 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
       active = memberDetails.isActive === true;
       tier = typeof memberDetails.tier === 'number' ? memberDetails.tier : 0;
       tierPercentage = safeBigInt(memberDetails.tierPercentage);
-      tierLabel = typeof memberDetails.tierLabel === 'string' ? memberDetails.tierLabel : "";
+      // Ensure tierLabel is always a string, even if it's an object or other type
+      if (typeof memberDetails.tierLabel === 'string') {
+        tierLabel = memberDetails.tierLabel;
+      } else if (memberDetails.tierLabel && typeof memberDetails.tierLabel === 'object') {
+        // If it's an object, try to convert it to string
+        tierLabel = String(memberDetails.tierLabel);
+      } else {
+        tierLabel = "";
+      }
     }
   }
 
