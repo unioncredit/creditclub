@@ -23,8 +23,6 @@ module.exports = {
     '@uniswap/conedison',
     '@uniswap/widgets',
     'viem',
-    '@safe-global/safe-apps-sdk',
-    '@safe-global/safe-apps-provider',
   ],
   webpack(config) {
     // Grab the existing rule that handles SVG imports
@@ -53,15 +51,11 @@ module.exports = {
       },
     });
 
-    // Define import.meta properties globally to prevent webpack errors
-    const webpack = require('webpack');
-    config.plugins = config.plugins || [];
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'import.meta.webpackHot': 'undefined',
-        'import.meta.hot': 'undefined',
-      })
-    );
+    // Ignore webpack import.meta warnings for Safe Global SDK
+    config.ignoreWarnings = [
+      /Module parse failed.*import\.meta/,
+      /Cannot use 'import\.meta' outside a module/,
+    ];
 
     // Fix import.meta issues by treating as external expressions
     config.module.rules.push({
