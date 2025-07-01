@@ -38,6 +38,8 @@ export const ClubActions = ({
   const { data: clubMember, refetch: refetchClubMember, isLoading: clubMemberLoading } = useClubMember(address, clubAddress);
   const { data: vestingData } = useVesting(clubAddress);
 
+  const creditVaultContract = useCreditVaultContract(clubAddress);
+
   // Debug problematic club
   if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74" && !clubDataLoading && !clubMemberLoading) {
     console.log("=== ClubActions Debug ===");
@@ -49,9 +51,24 @@ export const ClubActions = ({
       percentVested: clubMember?.percentVested,
       vouch: clubMember?.vouch
     });
+    
+    // Check what's being passed to format functions
+    console.log("format() calls will receive:");
+    console.log("- vouch:", clubMember?.vouch, typeof clubMember?.vouch);
+    console.log("- token:", token, typeof token);
+    
+    // Check button props
+    const testButtonProps = useWrite({
+      ...creditVaultContract,
+      functionName: "claimCredit",
+      args: [clubMember?.tokenId || 0n],
+      onComplete: () => Promise.resolve(),
+    });
+    console.log("Button props from useWrite:", Object.keys(testButtonProps));
+    Object.entries(testButtonProps).forEach(([key, value]) => {
+      console.log(`- ${key}:`, typeof value, value);
+    });
   }
-
-  const creditVaultContract = useCreditVaultContract(clubAddress);
 
   // If any data is still loading, show loading state
   if (clubDataLoading || memberNftDataLoading || clubMemberLoading) {
@@ -77,34 +94,84 @@ export const ClubActions = ({
     return 0n;
   };
 
-  const {
-    name = "",
-    isActivated = false,
-    startingPercentTrust = 0n,
-  } = clubData || {};
+  // Create clean objects without prototype pollution
+  const cleanClubData = clubData ? {
+    name: clubData.name || "",
+    isActivated: clubData.isActivated || false,
+    startingPercentTrust: clubData.startingPercentTrust || 0n,
+  } : {
+    name: "",
+    isActivated: false,
+    startingPercentTrust: 0n,
+  };
+
+  const cleanMemberNftData = memberNftData ? {
+    isInviteEnabled: memberNftData.isInviteEnabled || false,
+  } : {
+    isInviteEnabled: false,
+  };
+
+  // Safely extract values with defaults - use Object.create(null) to avoid prototype
+  const cleanClubMember = Object.create(null);
+  if (clubMember) {
+    cleanClubMember.owed = clubMember.owed || 0n;
+    cleanClubMember.vouch = clubMember.vouch || 0n;
+    cleanClubMember.tokenId = clubMember.tokenId || 0n;
+    cleanClubMember.active = clubMember.active || false;
+    cleanClubMember.isMember = clubMember.isMember || false;
+    cleanClubMember.badDebt = clubMember.badDebt || 0n;
+    cleanClubMember.memberNftBalance = clubMember.memberNftBalance || 0n;
+    cleanClubMember.percentVested = clubMember.percentVested || 0n;
+    cleanClubMember.baseTrust = clubMember.baseTrust || 0n;
+  } else {
+    cleanClubMember.owed = 0n;
+    cleanClubMember.vouch = 0n;
+    cleanClubMember.tokenId = 0n;
+    cleanClubMember.active = false;
+    cleanClubMember.isMember = false;
+    cleanClubMember.badDebt = 0n;
+    cleanClubMember.memberNftBalance = 0n;
+    cleanClubMember.percentVested = 0n;
+    cleanClubMember.baseTrust = 0n;
+  }
 
   const {
-    isInviteEnabled = false,
-  } = memberNftData || {};
-
-  // Safely extract values with defaults
-  const {
-    owed = 0n,
-    vouch = 0n,
-    tokenId = 0n,
-    active = false,
-    isMember = false,
-    badDebt = 0n,
-    memberNftBalance = 0n,
-    percentVested = 0n,
-    baseTrust = 0n,
-  } = clubMember || {};
+    name,
+    isActivated,
+    startingPercentTrust,
+  } = cleanClubData;
 
   const {
-    enabled: vestingEnabled = false,
-    duration: vestingDuration = 0,
-    vestedDays = 0,
-  } = vestingData || {};
+    isInviteEnabled,
+  } = cleanMemberNftData;
+
+  const {
+    owed,
+    vouch,
+    tokenId,
+    active,
+    isMember,
+    badDebt,
+    memberNftBalance,
+    percentVested,
+    baseTrust,
+  } = cleanClubMember;
+
+  const cleanVestingData = vestingData ? {
+    enabled: vestingData.enabled || false,
+    duration: vestingData.duration || 0,
+    vestedDays: vestingData.vestedDays || 0,
+  } : {
+    enabled: false,
+    duration: 0,
+    vestedDays: 0,
+  };
+
+  const {
+    enabled: vestingEnabled,
+    duration: vestingDuration,
+    vestedDays,
+  } = cleanVestingData;
   
   // Ensure vesting values are primitives
   const safeVestingDuration = typeof vestingDuration === 'number' ? vestingDuration : 0;
