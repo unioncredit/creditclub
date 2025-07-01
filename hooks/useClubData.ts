@@ -293,37 +293,82 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
 
   const safeString = (value: any): string => {
     const extracted = extractResult(value);
-    if (typeof extracted === 'string') return extracted;
-    if (extracted === null || extracted === undefined) return "";
-    return String(extracted);
+    const result = (() => {
+      if (typeof extracted === 'string') return extracted;
+      if (extracted === null || extracted === undefined) return "";
+      return String(extracted);
+    })();
+    
+    // Debug logging for React Error #310
+    if (typeof result === 'object' && result !== null) {
+      console.error('🔴 safeString returning object:', { input: value, extracted, result });
+    }
+    
+    return result;
   };
 
   const safeNumber = (value: any): number => {
     const extracted = extractResult(value);
-    if (typeof extracted === 'number') return extracted;
-    if (typeof extracted === 'bigint') return Number(extracted);
-    if (typeof extracted === 'string') return parseInt(extracted) || 0;
-    return 0;
+    const result = (() => {
+      if (typeof extracted === 'number') return extracted;
+      if (typeof extracted === 'bigint') return Number(extracted);
+      if (typeof extracted === 'string') return parseInt(extracted) || 0;
+      return 0;
+    })();
+    
+    // Debug logging for React Error #310
+    if (typeof result === 'object' && result !== null) {
+      console.error('🔴 safeNumber returning object:', { input: value, extracted, result });
+    }
+    
+    return result;
   };
 
   const safeBigInt = (value: any): bigint => {
     const extracted = extractResult(value);
-    if (typeof extracted === 'bigint') return extracted;
-    if (typeof extracted === 'number') return BigInt(extracted);
-    if (typeof extracted === 'string') return BigInt(extracted || 0);
-    return 0n;
+    const result = (() => {
+      if (typeof extracted === 'bigint') return extracted;
+      if (typeof extracted === 'number') return BigInt(extracted);
+      if (typeof extracted === 'string') return BigInt(extracted || 0);
+      return 0n;
+    })();
+    
+    // Debug logging for React Error #310
+    if (typeof result === 'object' && result !== null) {
+      console.error('🔴 safeBigInt returning object:', { input: value, extracted, result });
+    }
+    
+    return result;
   };
 
   const safeBoolean = (value: any): boolean => {
     const extracted = extractResult(value);
-    if (typeof extracted === 'boolean') return extracted;
-    return Boolean(extracted);
+    const result = (() => {
+      if (typeof extracted === 'boolean') return extracted;
+      return Boolean(extracted);
+    })();
+    
+    // Debug logging for React Error #310
+    if (typeof result === 'object' && result !== null) {
+      console.error('🔴 safeBoolean returning object:', { input: value, extracted, result });
+    }
+    
+    return result;
   };
 
   const safeAddress = (value: any): Address => {
     const extracted = extractResult(value);
-    if (typeof extracted === 'string' && extracted.startsWith('0x')) return extracted as Address;
-    return zeroAddress;
+    const result = (() => {
+      if (typeof extracted === 'string' && extracted.startsWith('0x')) return extracted as Address;
+      return zeroAddress;
+    })();
+    
+    // Debug logging for React Error #310
+    if (typeof result === 'object' && result !== null && result !== zeroAddress) {
+      console.error('🔴 safeAddress returning object:', { input: value, extracted, result });
+    }
+    
+    return result;
   };
 
   const basicInfoData = basicInfoResult.data || [];
@@ -451,8 +496,6 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
       stakingWithdrawFeeBpsQuery.refetch(),
     ]);
   };
-
-
 
   return { 
     data, 

@@ -17,12 +17,52 @@ import { FathomAnalytics } from "@/components/shared/FathomAnalytics";
 import { BoxHooksContextProvider } from "@decent.xyz/box-hooks";
 import { base, baseSepolia } from "viem/chains";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { useEffect } from "react";
 
 const queryClient = new QueryClient();
 
 init(process.env.NEXT_PUBLIC_AIRSTACK_KEY!);
 
 function MyApp({ Component, pageProps }: AppProps) {
+  // Global error handlers for React Error #310 debugging
+  useEffect(() => {
+    // Handle unhandled promise rejections
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      if (event.reason?.message?.includes('310') || event.reason?.message?.includes('Objects are not valid as a React child')) {
+        console.group('🔴 UNHANDLED PROMISE REJECTION - REACT 310');
+        console.log('🕐 Timestamp:', new Date().toISOString());
+        console.log('📝 Reason:', event.reason);
+        console.log('🌐 URL:', window.location.href);
+        console.groupEnd();
+      }
+    };
+
+    // Handle general errors
+    const handleError = (event: ErrorEvent) => {
+      if (event.message?.includes('310') || event.message?.includes('Objects are not valid as a React child')) {
+        console.group('🔴 GLOBAL ERROR - REACT 310');
+        console.log('🕐 Timestamp:', new Date().toISOString());
+        console.log('📝 Message:', event.message);
+        console.log('📍 Filename:', event.filename);
+        console.log('🔢 Line:', event.lineno);
+        console.log('🔢 Column:', event.colno);
+        console.log('📊 Error Object:', event.error);
+        console.log('🌐 URL:', window.location.href);
+        console.groupEnd();
+      }
+    };
+
+    // Add listeners
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+    window.addEventListener('error', handleError);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+      window.removeEventListener('error', handleError);
+    };
+  }, []);
+
   return (
     <ErrorBoundary>
       <FathomAnalytics />

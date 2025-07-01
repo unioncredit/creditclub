@@ -151,16 +151,34 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
 
   const safeBigInt = (value: any): bigint => {
     const extracted = extractResult(value);
-    if (typeof extracted === 'bigint') return extracted;
-    if (typeof extracted === 'number') return BigInt(extracted);
-    if (typeof extracted === 'string') return BigInt(extracted);
-    return 0n;
+    const result = (() => {
+      if (typeof extracted === 'bigint') return extracted;
+      if (typeof extracted === 'number') return BigInt(extracted);
+      if (typeof extracted === 'string') return BigInt(extracted);
+      return 0n;
+    })();
+    
+    // Debug logging for React Error #310
+    if (typeof result === 'object' && result !== null) {
+      console.error('🔴 useClubMember safeBigInt returning object:', { input: value, extracted, result });
+    }
+    
+    return result;
   };
 
   const safeAddress = (value: any): Address => {
     const extracted = extractResult(value);
-    if (typeof extracted === 'string' && extracted.startsWith('0x')) return extracted as Address;
-    return zeroAddress;
+    const result = (() => {
+      if (typeof extracted === 'string' && extracted.startsWith('0x')) return extracted as Address;
+      return zeroAddress;
+    })();
+    
+    // Debug logging for React Error #310
+    if (typeof result === 'object' && result !== null && result !== zeroAddress) {
+      console.error('🔴 useClubMember safeAddress returning object:', { input: value, extracted, result });
+    }
+    
+    return result;
   };
 
   // Extract balance data

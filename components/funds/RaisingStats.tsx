@@ -62,6 +62,31 @@ export const RaisingStats = ({
 
   const { decimals: assetDecimals = 18 } = assetToken;
 
+  // Debug logging for React Error #310
+  const debugValues = {
+    stakedBalance,
+    clubTokenBalance,
+    symbol,
+    decimals,
+    isPublic,
+    minTarget,
+    maxTarget,
+    totalDeposits,
+    end,
+    isKilled,
+    isFailed,
+    hasMaxTarget,
+    tokenPrice,
+    assetDecimals
+  };
+
+  // Check for objects being passed to render
+  Object.entries(debugValues).forEach(([key, value]) => {
+    if (value !== null && value !== undefined && typeof value === 'object' && typeof value !== 'bigint') {
+      console.error(`🔴 RaisingStats object detected for ${key}:`, value);
+    }
+  });
+
   const markValue = (minTarget && minTarget > 0n) && (maxTarget && maxTarget == maxUint256) ? Number(minTarget) : undefined;
 
   const activateClubButtonProps = useWrite({
