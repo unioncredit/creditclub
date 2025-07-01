@@ -248,7 +248,7 @@ export const ClubActions = ({
     abi: clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74" ? minimalAbi : creditVaultContract.abi,
     functionName: "claimCredit",
     args: [tokenId],
-    onComplete: refetchClubMember,
+    onComplete: clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74" ? undefined : refetchClubMember,
   });
 
   // Debug button props for problematic club
