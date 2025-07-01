@@ -186,13 +186,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   if (memberDataQuery.data && typeof memberDataQuery.data === 'object') {
     const memberDetails = memberDataQuery.data as any;
     
-    // Temporary debug: log the structure without rendering
-    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-      console.log('getMember response type:', typeof memberDetails);
-      console.log('getMember response keys:', memberDetails ? Object.keys(memberDetails) : 'null');
-      console.log('tierLabel type:', typeof memberDetails?.tierLabel);
-      console.log('tierLabel value:', memberDetails?.tierLabel);
-    }
+
     
     // Only access properties if memberDetails is a valid object
     if (memberDetails && !memberDetails.error && !Array.isArray(memberDetails)) {

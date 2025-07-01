@@ -21,24 +21,18 @@ import { BuyRedeemPanel } from "@/components/funds/BuyRedeemPanel";
 import { ClubActivity } from "@/components/funds/ClubActivity";
 
 
-export default function FundSinglePage({
-  clubAddress,
-}: {
-  clubAddress: Address;
-}) {
+export default function FundSinglePage() {
   const router = useRouter();
 
-  // Use the router.query.clubAddress if clubAddress prop is not provided
-  const resolvedClubAddress = (clubAddress || router.query.clubAddress) as Address;
+  // Get the clubAddress from the router query
+  const queryClubAddress = router.query.clubAddress;
+  const clubAddress = (typeof queryClubAddress === 'string' ? queryClubAddress : undefined) as Address | undefined;
 
   const { address } = useAccount();
 
-  if (!resolvedClubAddress || !isAddress(resolvedClubAddress)) {
+  if (!clubAddress || !isAddress(clubAddress)) {
     return <p>Invalid club address</p>;
   }
-
-  // Use the resolved address for all subsequent operations
-  clubAddress = resolvedClubAddress;
 
   const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
   const { data: clubMember, isLoading: clubMemberLoading } = useClubMember(address, clubAddress);

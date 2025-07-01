@@ -21,36 +21,8 @@ export class ErrorBoundary extends React.Component<
   }
 
   override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Log errors after render phase is complete
-    console.error('🔴 ErrorBoundary caught error:', error.message);
-    console.error('🔴 Error stack:', error.stack);
-    console.error('🔴 Component stack:', errorInfo.componentStack);
-    
     // Store errorInfo for display
     this.setState({ errorInfo });
-    
-    // Additional debugging for React Error #310
-    if (error.message?.includes('Objects are not valid as a React child')) {
-      console.error('🔴 This is React Error #310 - attempting to render a non-primitive value');
-      console.error('🔴 Check the component stack above to identify the problematic component');
-      
-      // Try to extract more info from the error
-      const errorString = error.toString();
-      
-      // Look for object representations in the error
-      const objectMatch = errorString.match(/object with keys \{([^}]+)\}/);
-      if (objectMatch) {
-        console.error('🔴 Attempted to render object with keys:', objectMatch[1]);
-      }
-      
-      // Log any found numbers that might be NaN or Infinity
-      if (errorString.includes('NaN')) {
-        console.error('🔴 Error involves NaN value');
-      }
-      if (errorString.includes('Infinity')) {
-        console.error('🔴 Error involves Infinity value');
-      }
-    }
   }
 
   override render() {
