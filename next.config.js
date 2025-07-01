@@ -63,6 +63,20 @@ module.exports = {
       },
     });
 
+    // Additional fix for import.meta.webpackHot specifically
+    config.module.rules.push({
+      test: /\.m?js$/,
+      include: /node_modules\/@safe-global/,
+      use: {
+        loader: 'string-replace-loader',
+        options: {
+          search: 'import\\.meta\\.webpackHot',
+          replace: 'false',
+          flags: 'g',
+        },
+      },
+    });
+
     config.module.rules.push(
       // Reapply the existing rule, but only for svg imports ending in ?url
       {
