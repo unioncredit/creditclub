@@ -1,4 +1,4 @@
-import { Address } from "viem";
+import { Address, zeroAddress } from "viem";
 import { useReadContracts } from "wagmi";
 
 import { useContactCounts } from "@/hooks/useContactCounts";
@@ -32,11 +32,25 @@ export default function useRelatedAddresses(address: Address) {
       })),
   });
 
-  // @ts-ignore
-  const stakerAddresses: Address[] = voucherData?.map(d => d.result[0].toLowerCase()) || [];
+  const extractResult = (contractResult: any): any => {
+    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    if (contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    return null;
+  };
 
-  // @ts-ignore
-  const borrowerAddresses: Address[] = voucheeData?.map(d => d.result[0].toLowerCase()) || [];
+  const stakerAddresses: Address[] = voucherData?.map(d => {
+    const result = extractResult(d);
+    return result?.[0]?.toLowerCase() || zeroAddress;
+  }) || [];
+
+  const borrowerAddresses: Address[] = voucheeData?.map(d => {
+    const result = extractResult(d);
+    return result?.[0]?.toLowerCase() || zeroAddress;
+  }) || [];
 
   return {
     stakerAddresses,

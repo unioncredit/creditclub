@@ -139,15 +139,27 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   });
 
   // Extract values with proper type handling
+  const extractResult = (contractResult: any): any => {
+    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    if (contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    return null;
+  };
+
   const safeBigInt = (value: any): bigint => {
-    if (typeof value === 'bigint') return value;
-    if (typeof value === 'number') return BigInt(value);
-    if (typeof value === 'string') return BigInt(value);
+    const extracted = extractResult(value);
+    if (typeof extracted === 'bigint') return extracted;
+    if (typeof extracted === 'number') return BigInt(extracted);
+    if (typeof extracted === 'string') return BigInt(extracted);
     return 0n;
   };
 
   const safeAddress = (value: any): Address => {
-    if (typeof value === 'string' && value.startsWith('0x')) return value as Address;
+    const extracted = extractResult(value);
+    if (typeof extracted === 'string' && extracted.startsWith('0x')) return extracted as Address;
     return zeroAddress;
   };
 
@@ -157,15 +169,15 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     memberNftBalance = 0n,
     stakedBalance = 0n,
     assetBalance = 0n,
-  ] = balanceResult.data?.map(d => safeBigInt(d.result)) || [];
+  ] = balanceResult.data?.map(d => safeBigInt(d)) || [];
 
   // Extract member info data
   const memberInfoData = memberInfoResult.data || [];
-  const owed = safeBigInt(memberInfoData[0]?.result);
-  const vouch = safeBigInt(memberInfoData[1]?.result);
-  const tokenId = safeBigInt(memberInfoData[2]?.result);
-  const invitedByAddress = safeAddress(memberInfoData[3]?.result);
-  const inviteCount = safeBigInt(memberInfoData[4]?.result);
+  const owed = safeBigInt(memberInfoData[0]);
+  const vouch = safeBigInt(memberInfoData[1]);
+  const tokenId = safeBigInt(memberInfoData[2]);
+  const invitedByAddress = safeAddress(memberInfoData[3]);
+  const inviteCount = safeBigInt(memberInfoData[4]);
 
   // Get member details from getMember function (only if tokenId is available)
   const memberDataQuery = useReadContract({

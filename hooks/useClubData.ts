@@ -277,38 +277,56 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
   });
 
   // Extract data from batch results
-  // Helper function to safely extract primitive values
+  // Helper function to safely extract contract result values
+  const extractResult = (contractResult: any): any => {
+    // If the result is successful and has a result property, return it
+    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    // If it's a direct result (for backwards compatibility), return it
+    if (contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    // Otherwise return null for failed/missing results
+    return null;
+  };
+
   const safeString = (value: any): string => {
-    if (typeof value === 'string') return value;
-    if (value === null || value === undefined) return "";
-    return String(value);
+    const extracted = extractResult(value);
+    if (typeof extracted === 'string') return extracted;
+    if (extracted === null || extracted === undefined) return "";
+    return String(extracted);
   };
 
   const safeNumber = (value: any): number => {
-    if (typeof value === 'number') return value;
-    if (typeof value === 'bigint') return Number(value);
-    if (typeof value === 'string') return parseInt(value) || 0;
+    const extracted = extractResult(value);
+    if (typeof extracted === 'number') return extracted;
+    if (typeof extracted === 'bigint') return Number(extracted);
+    if (typeof extracted === 'string') return parseInt(extracted) || 0;
     return 0;
   };
 
   const safeBigInt = (value: any): bigint => {
-    if (typeof value === 'bigint') return value;
-    if (typeof value === 'number') return BigInt(value);
-    if (typeof value === 'string') return BigInt(value || 0);
+    const extracted = extractResult(value);
+    if (typeof extracted === 'bigint') return extracted;
+    if (typeof extracted === 'number') return BigInt(extracted);
+    if (typeof extracted === 'string') return BigInt(extracted || 0);
     return 0n;
   };
 
   const safeBoolean = (value: any): boolean => {
-    if (typeof value === 'boolean') return value;
-    return Boolean(value);
+    const extracted = extractResult(value);
+    if (typeof extracted === 'boolean') return extracted;
+    return Boolean(extracted);
   };
 
   const safeAddress = (value: any): Address => {
-    if (typeof value === 'string' && value.startsWith('0x')) return value as Address;
+    const extracted = extractResult(value);
+    if (typeof extracted === 'string' && extracted.startsWith('0x')) return extracted as Address;
     return zeroAddress;
   };
 
-  const basicInfoData = basicInfoResult.data?.map(d => d.result as never) || [];
+  const basicInfoData = basicInfoResult.data || [];
   const name = safeString(basicInfoData[0]);
   const symbol = safeString(basicInfoData[1]);
   const decimals = safeNumber(basicInfoData[2]);
@@ -322,7 +340,7 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
   const image = safeString(basicInfoData[10]);
   const description = safeString(basicInfoData[11]);
 
-  const financialInfoData = financialInfoResult.data?.map(d => d.result as never) || [];
+  const financialInfoData = financialInfoResult.data || [];
   const totalLockedStake = safeBigInt(financialInfoData[0]);
   const stakedBalance = safeBigInt(financialInfoData[1]);
   const totalAssets = safeBigInt(financialInfoData[2]);
@@ -333,7 +351,7 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
   const unionBalance = safeBigInt(financialInfoData[7]);
   const unclaimedRewards = safeBigInt(financialInfoData[8]);
 
-  const configurationData = configurationResult.data?.map(d => d.result as never) || [];
+  const configurationData = configurationResult.data || [];
   const isPublic = safeBoolean(configurationData[0]);
   const isActivated = safeBoolean(configurationData[1]);
   const isTokenEnabled = safeBoolean(configurationData[2]);
@@ -346,7 +364,7 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
   const startingPercentTrust = safeBigInt(configurationData[9]);
   const baseTrust = safeBigInt(configurationData[10]);
 
-  const rewardsData = rewardsResult.data?.map(d => d.result as never) || [];
+  const rewardsData = rewardsResult.data || [];
   const callerPercent = safeBigInt(rewardsData[0]);
   const winnerPercent = safeBigInt(rewardsData[1]);
   const costToCall = safeBigInt(rewardsData[2]);
