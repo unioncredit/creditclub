@@ -64,14 +64,12 @@ export const ClubActions = ({
     // Test what happens when we try to use the contract
     console.log("About to test useWrite with contract...");
     try {
-      // Only pass required properties
-      const minimalContract = {
-        address: creditVaultContract.address,
-        abi: creditVaultContract.abi
-      };
-      console.log("Minimal contract created successfully");
+      // Test that we can access the properties
+      console.log("Contract address accessible:", !!creditVaultContract.address);
+      console.log("Contract ABI accessible:", !!creditVaultContract.abi);
+      console.log("Minimal contract test passed");
     } catch (error) {
-      console.error("Error creating minimal contract:", error);
+      console.error("Error accessing contract properties:", error);
     }
   }
 
