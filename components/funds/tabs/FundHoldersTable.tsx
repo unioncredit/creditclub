@@ -90,7 +90,7 @@ export const FundHoldersTable = ({
            <div>Total Supply: {formatDecimals(totalSupply, decimals)} tokens</div>
            <div>Holders Found: {holders.length}</div>
            <div>Loading: {loading ? 'Yes' : 'No'}</div>
-           <div>Factory Address: {process.env.NEXT_PUBLIC_FACTORY_ADDRESS || 'Not set'}</div>
+           <div>Factory Address: {String(process.env.NEXT_PUBLIC_FACTORY_ADDRESS || 'Not set')}</div>
           {totalSupply > 0n && holders.length === 0 && !loading && (
             <div className="text-red-600 font-bold mt-2">
               ⚠️ Issue: Token has supply but no holders in database

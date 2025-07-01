@@ -99,7 +99,7 @@ export const ClubDetails = ({
             size="pill"
             className="font-mono hidden sm:flex"
             onClick={() => share({
-              url: process.env.NEXT_PUBLIC_URL!,
+              url: String(process.env.NEXT_PUBLIC_URL || window.location.origin),
               title: `Join me in ${name}`,
               text: description,
             })}
@@ -117,7 +117,7 @@ export const ClubDetails = ({
               size="pill"
               className="font-mono sm:hidden"
               onClick={() => share({
-                url: process.env.NEXT_PUBLIC_URL!,
+                url: String(process.env.NEXT_PUBLIC_URL || window.location.origin),
                 title: `Join me in ${name}`,
                 text: description,
               })}
