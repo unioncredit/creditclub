@@ -151,9 +151,9 @@ const ActivityRow = ({
   return (
     <div className="flex items-center gap-1">
       {Icon ? <Icon width={24} height={24} className="fill text-blue-600" /> : null}
-      <p className="text-lg font-medium text-gray-800">
+      <div className="text-lg font-medium text-gray-800">
         {text}
-      </p>
+      </div>
     </div>
   );
 };

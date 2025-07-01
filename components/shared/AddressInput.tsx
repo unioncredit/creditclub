@@ -1,5 +1,5 @@
 // @ts-ignore
-import { Box, EnsIcon, Input, LoadingSpinner, Text } from "@unioncredit/ui";
+import { EnsIcon, Input, LoadingSpinner } from "@unioncredit/ui";
 import { Address, isAddress } from "viem";
 import React, { useEffect, useState } from "react";
 import { useEnsAddress, useEnsName } from "wagmi";
@@ -77,16 +77,7 @@ export const AddressInput = ({
       {...props}
       error={error || errorProp || undefined}
       onChange={handleChange}
-      caption={
-        (ens || address) && (
-          <Box direction="horizontal" align="center" mt="4px">
-            {address && <Avatar size={16} address={address} />}
-            <Text m={0} ml="4px" size="small">
-              {ens || address}
-            </Text>
-          </Box>
-        )
-      }
+      caption={ens || address ? String(ens || address) : undefined}
       suffix={
         isLoadingName || isLoadingAddress ? (
           <LoadingSpinner />
