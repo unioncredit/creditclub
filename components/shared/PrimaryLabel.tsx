@@ -10,7 +10,7 @@ export function PrimaryLabel({
   address: Address;
   shouldTruncate?: boolean;
   defaultValue?: string;
-}) => {
+}): JSX.Element {
   const { data } = usePrimaryLabel({
     address,
     shouldTruncate,
