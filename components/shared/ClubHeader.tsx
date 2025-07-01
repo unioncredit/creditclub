@@ -16,6 +16,8 @@ import { REPAY_MODAL } from "@/components/modals/RepayModal";
 import { REWARDS_MODAL } from "@/components/modals/RewardsModal";
 import { Address } from "viem";
 
+import { useDebugReactError } from "@/hooks/useDebugReactError";
+
 export const ClubHeader = ({
   clubAddress,
 }: {
@@ -25,6 +27,9 @@ export const ClubHeader = ({
   const { isConnected } = useAccount();
   const { data: unionMember } = useUnionMember();
   const { open: openModal } = useModals();
+  
+  // Debug logging
+  useDebugReactError('ClubHeader', { clubAddress, token, wad, unionMember });
 
   const { creditLimit = 0n, owed = 0n } = unionMember || {};
 
