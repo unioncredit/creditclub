@@ -39,17 +39,27 @@ module.exports = {
       Browser: false,
     };
 
-    // Fix viem import.meta issue
+    // Fix viem and Safe Global SDK import.meta issues
     config.resolve.alias = {
       ...config.resolve.alias,
       'viem/_cjs': 'viem',
     };
 
-    // Handle import.meta in viem
+    // Handle import.meta in modules
     config.module.rules.push({
       test: /\.m?js$/,
       resolve: {
         fullySpecified: false,
+      },
+    });
+
+    // Fix import.meta issues by treating as external expressions
+    config.module.rules.push({
+      test: /node_modules\/(@safe-global|viem)\/.*\.(js|mjs)$/,
+      parser: {
+        javascript: {
+          importMeta: false,
+        },
       },
     });
 
