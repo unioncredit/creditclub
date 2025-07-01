@@ -24,10 +24,7 @@ export const useWrite = ({
   icon?: string;
   [_: string]: any;
 }) => {
-  const { address: contract } = props;
   const config = useConfig();
-  const createToast = useToastProps(functionName, contract, args);
-
   const { switchChainAsync } = useSwitchChain();
   const { connectWallet } = usePrivy();
   const { chain: connectedChain, isConnected } = useAccount();
@@ -35,11 +32,25 @@ export const useWrite = ({
 
   const [loading, setLoading] = useState(false);
 
+  // Don't stringify the entire props object - extract what we need
+  const { abi, address: contractAddress, ...otherProps } = props;
+  
+  const createToast = useToastProps(functionName, contractAddress, args);
+
   const memoizedArgs = useMemo(() => args, [
     JSON.stringify(args, (_, value) => (typeof value === "bigint" ? value.toString() : value))
   ]);
-  const memoizedProps = useMemo(() => props, [
-    JSON.stringify(props, (_, value) => (typeof value === "bigint" ? value.toString() : value))
+  
+  const memoizedProps = useMemo(() => ({
+    abi,
+    address: contractAddress,
+    ...otherProps
+  }), [
+    // Use a stable reference for ABI (array reference comparison)
+    abi,
+    contractAddress,
+    // Only stringify the other props (without abi)
+    JSON.stringify(otherProps, (_, value) => (typeof value === "bigint" ? value.toString() : value))
   ]);
 
   /**

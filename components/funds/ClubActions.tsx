@@ -40,47 +40,6 @@ export const ClubActions = ({
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
-  // Debug problematic club
-  if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74" && !clubDataLoading && !clubMemberLoading) {
-    console.log("=== ClubActions Debug ===");
-    console.log("name type:", typeof clubData?.name, clubData?.name);
-    console.log("vouch type:", typeof clubMember?.vouch, clubMember?.vouch);
-    
-    // Check what token is
-    console.log("token value:", token);
-    console.log("token type:", typeof token);
-    console.log("Is token an object?", typeof token === 'object');
-    if (typeof token === 'object' && token !== null) {
-      console.log("token keys:", Object.keys(token));
-    }
-    
-    // Check creditVaultContract structure
-    console.log("creditVaultContract keys:", Object.keys(creditVaultContract));
-    console.log("creditVaultContract.address:", creditVaultContract.address);
-    console.log("creditVaultContract.abi type:", typeof creditVaultContract.abi);
-    console.log("creditVaultContract.abi is array:", Array.isArray(creditVaultContract.abi));
-    
-    // Check if ABI contains non-serializable values
-    if (Array.isArray(creditVaultContract.abi)) {
-      creditVaultContract.abi.forEach((item, index) => {
-        if (typeof item !== 'object' || item === null) {
-          console.warn(`ABI[${index}] is not an object:`, typeof item);
-        }
-      });
-    }
-    
-    // Test what happens when we try to use the contract
-    console.log("About to test useWrite with contract...");
-    try {
-      // Test that we can access the properties
-      console.log("Contract address accessible:", !!creditVaultContract.address);
-      console.log("Contract ABI accessible:", !!creditVaultContract.abi);
-      console.log("Minimal contract test passed");
-    } catch (error) {
-      console.error("Error accessing contract properties:", error);
-    }
-  }
-
   // If any data is still loading, show loading state
   if (clubDataLoading || memberNftDataLoading || clubMemberLoading) {
     return (
@@ -216,52 +175,13 @@ export const ClubActions = ({
   const totalVested = startingAmount + additionalVested;
   const claimableAmount = calculateClaimableAmount(totalVested, safeVouch);
 
-  // Debug what we're passing to useWrite
-  if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
-    console.log("=== Before useWrite call ===");
-    console.log("address type:", typeof creditVaultContract.address);
-    console.log("abi type:", typeof creditVaultContract.abi);
-    console.log("abi length:", Array.isArray(creditVaultContract.abi) ? creditVaultContract.abi.length : 'not array');
-    console.log("tokenId:", tokenId);
-    console.log("refetchClubMember type:", typeof refetchClubMember);
-    
-    // Try to stringify the abi to see if it causes issues
-    try {
-      const testStringify = JSON.stringify(creditVaultContract.abi);
-      console.log("ABI stringify successful, length:", testStringify.length);
-    } catch (e) {
-      console.error("ABI stringify failed:", e);
-    }
-  }
-
-  // TEMPORARY: Use minimal ABI for testing
-  const minimalAbi = [{
-    name: "claimCredit",
-    type: "function",
-    inputs: [{ name: "tokenId", type: "uint256" }],
-    outputs: [],
-    stateMutability: "nonpayable"
-  }];
-
   const claimCreditButtonProps = useWrite({
     address: creditVaultContract.address,
-    abi: clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74" ? minimalAbi : creditVaultContract.abi,
+    abi: creditVaultContract.abi,
     functionName: "claimCredit",
     args: [tokenId],
-    onComplete: clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74" ? undefined : refetchClubMember,
+    onComplete: refetchClubMember,
   });
-
-  // Debug button props for problematic club
-  if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
-    console.log("=== claimCreditButtonProps Debug ===");
-    console.log("Props keys:", Object.keys(claimCreditButtonProps));
-    Object.entries(claimCreditButtonProps).forEach(([key, value]) => {
-      console.log(`Prop ${key}:`, typeof value, value);
-      if (typeof value === 'object' && value !== null && key !== 'onClick') {
-        console.warn(`Button prop ${key} is an object!`, value);
-      }
-    });
-  }
 
   // Determine if claim credit should be disabled and why
   const cannotClaimReason = !isActivated ? "Vault is not activated"
@@ -272,11 +192,6 @@ export const ClubActions = ({
     : badDebt > 0n ? "Cannot claim with outstanding bad debt"
     : claimableAmount === 0n ? "No credit available to claim (already claimed or not vested yet)"
     : null;
-
-  // Debug to see if we reach the render
-  if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
-    console.log("=== ClubActions about to render JSX ===");
-  }
 
   return (
     <div className="p-4 border rounded-2xl bg-slate-50">
