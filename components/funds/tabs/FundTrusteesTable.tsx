@@ -86,6 +86,11 @@ export const FundTrusteesTable = ({
   const { token } = useToken();
   const { data: clubContacts } = useClubContacts(clubAddress);
 
+  // Safety guard: ensure clubContacts is a valid array
+  if (!Array.isArray(clubContacts)) {
+    return <div>Loading trustees...</div>;
+  }
+
   const rows: FundTrusteeRow[] = clubContacts.map((contact) => ({
     address: contact.address,
     trust: format(contact.trust, token),

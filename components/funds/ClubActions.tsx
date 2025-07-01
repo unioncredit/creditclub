@@ -81,29 +81,28 @@ export const ClubActions = ({
     isInviteEnabled: false,
   };
 
-  // Safely extract values with defaults - use Object.create(null) to avoid prototype
-  const cleanClubMember = Object.create(null);
-  if (clubMember) {
-    cleanClubMember.owed = clubMember.owed || 0n;
-    cleanClubMember.vouch = clubMember.vouch || 0n;
-    cleanClubMember.tokenId = clubMember.tokenId || 0n;
-    cleanClubMember.active = clubMember.active || false;
-    cleanClubMember.isMember = clubMember.isMember || false;
-    cleanClubMember.badDebt = clubMember.badDebt || 0n;
-    cleanClubMember.memberNftBalance = clubMember.memberNftBalance || 0n;
-    cleanClubMember.percentVested = clubMember.percentVested || 0n;
-    cleanClubMember.baseTrust = clubMember.baseTrust || 0n;
-  } else {
-    cleanClubMember.owed = 0n;
-    cleanClubMember.vouch = 0n;
-    cleanClubMember.tokenId = 0n;
-    cleanClubMember.active = false;
-    cleanClubMember.isMember = false;
-    cleanClubMember.badDebt = 0n;
-    cleanClubMember.memberNftBalance = 0n;
-    cleanClubMember.percentVested = 0n;
-    cleanClubMember.baseTrust = 0n;
-  }
+  // Safely extract values with defaults
+  const cleanClubMember = clubMember ? {
+    owed: clubMember.owed || 0n,
+    vouch: clubMember.vouch || 0n,
+    tokenId: clubMember.tokenId || 0n,
+    active: clubMember.active || false,
+    isMember: clubMember.isMember || false,
+    badDebt: clubMember.badDebt || 0n,
+    memberNftBalance: clubMember.memberNftBalance || 0n,
+    percentVested: clubMember.percentVested || 0n,
+    baseTrust: clubMember.baseTrust || 0n,
+  } : {
+    owed: 0n,
+    vouch: 0n,
+    tokenId: 0n,
+    active: false,
+    isMember: false,
+    badDebt: 0n,
+    memberNftBalance: 0n,
+    percentVested: 0n,
+    baseTrust: 0n,
+  };
 
   const {
     name,
@@ -214,7 +213,7 @@ export const ClubActions = ({
         <TextCube width={48} height={48} background="#1F1D29" foreground="white">
           {getInitials(String(name || ""))}
         </TextCube>
-        <p className="text-lg">{String(name || "")} Member #{tokenId?.toString() || "0"}</p>
+        <p className="text-lg">{String(name || "")} Member #{tokenId ? tokenId.toString() : "0"}</p>
       </div>
 
       {vestingEnabled && (

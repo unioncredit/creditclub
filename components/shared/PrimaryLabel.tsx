@@ -10,12 +10,12 @@ export function PrimaryLabel({
   address: Address;
   shouldTruncate?: boolean;
   defaultValue?: string;
-}) {
+}) => {
   const { data } = usePrimaryLabel({
     address,
     shouldTruncate,
     defaultValue,
   });
 
-  return <>{data || ""}</>;
+  return <>{String(data || "")}</>;
 }
