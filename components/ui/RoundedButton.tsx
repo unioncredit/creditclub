@@ -46,14 +46,18 @@ export const RoundedButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ...props
   }, ref) => {
     const Comp = asChild ? Slot : "button"
+    
+    // Filter out non-DOM props that might cause React errors
+    const { loading, label, ...domProps } = props as any;
+    
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        {...props}
+        {...domProps}
       >
         {icon || null}
-        {children}
+        {label || children}
       </Comp>
     )
   }
