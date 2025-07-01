@@ -234,9 +234,18 @@ export const ClubActions = ({
     }
   }
 
+  // TEMPORARY: Use minimal ABI for testing
+  const minimalAbi = [{
+    name: "claimCredit",
+    type: "function",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [],
+    stateMutability: "nonpayable"
+  }];
+
   const claimCreditButtonProps = useWrite({
     address: creditVaultContract.address,
-    abi: creditVaultContract.abi,
+    abi: clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74" ? minimalAbi : creditVaultContract.abi,
     functionName: "claimCredit",
     args: [tokenId],
     onComplete: refetchClubMember,
