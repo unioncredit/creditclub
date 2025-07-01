@@ -46,6 +46,14 @@ export const ClubActions = ({
     console.log("name type:", typeof clubData?.name, clubData?.name);
     console.log("vouch type:", typeof clubMember?.vouch, clubMember?.vouch);
     
+    // Check what token is
+    console.log("token value:", token);
+    console.log("token type:", typeof token);
+    console.log("Is token an object?", typeof token === 'object');
+    if (typeof token === 'object' && token !== null) {
+      console.log("token keys:", Object.keys(token));
+    }
+    
     // Check creditVaultContract structure
     console.log("creditVaultContract keys:", Object.keys(creditVaultContract));
     console.log("creditVaultContract.address:", creditVaultContract.address);

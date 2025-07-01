@@ -110,6 +110,10 @@ export default function FundSinglePage() {
               </section>
             </div>
 
+            {clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74" && (() => {
+              console.log("=== About to render FundTables ===");
+              return null;
+            })()}
             <FundTables
               clubAddress={clubAddress}
               className="mt-8"
