@@ -83,7 +83,7 @@ export const useClubMemberNft = (clubAddress: Address) => {
   
   try {
     if (contractURI && typeof contractURI === 'string') {
-      const cleanedURI = contractURI.replace("data:application/json;utf8,", "");
+      const cleanedURI = (contractURI as string).replace("data:application/json;utf8,", "");
       const decodedURI = decodeURIComponent(cleanedURI);
       contractMetadata = JSON.parse(decodedURI || "{}");
     }
