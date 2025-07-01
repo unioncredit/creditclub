@@ -33,6 +33,40 @@ export default function FundSinglePage() {
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
 
+  // Debug problematic club - check for non-renderable values
+  if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
+    console.log("=== DEBUGGING PROBLEMATIC CLUB ===");
+    console.log("Is Connected:", !!address);
+    
+    // Check club data for objects/arrays that might be rendered
+    if (clubData) {
+      Object.entries(clubData).forEach(([key, value]) => {
+        const valueType = typeof value;
+        if (value && valueType === 'object' && !Array.isArray(value)) {
+          console.warn(`clubData.${key} is an object:`, value);
+        } else if (Array.isArray(value)) {
+          console.warn(`clubData.${key} is an array:`, value);
+        } else if (valueType === 'symbol' || valueType === 'function') {
+          console.error(`clubData.${key} is ${valueType} - this will cause React Error #310!`);
+        }
+      });
+    }
+    
+    // Check member data
+    if (clubMember) {
+      Object.entries(clubMember).forEach(([key, value]) => {
+        const valueType = typeof value;
+        if (value && valueType === 'object' && !Array.isArray(value)) {
+          console.warn(`clubMember.${key} is an object:`, value);
+        } else if (Array.isArray(value)) {
+          console.warn(`clubMember.${key} is an array:`, value);
+        } else if (valueType === 'symbol' || valueType === 'function') {
+          console.error(`clubMember.${key} is ${valueType} - this will cause React Error #310!`);
+        }
+      });
+    }
+  }
+
   const { isPublic, isActivated, isTokenEnabled } = clubData || {};
   const { isMember } = clubMember || {};
 

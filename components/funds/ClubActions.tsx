@@ -38,6 +38,19 @@ export const ClubActions = ({
   const { data: clubMember, refetch: refetchClubMember, isLoading: clubMemberLoading } = useClubMember(address, clubAddress);
   const { data: vestingData } = useVesting(clubAddress);
 
+  // Debug problematic club
+  if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74" && !clubDataLoading && !clubMemberLoading) {
+    console.log("=== ClubActions Debug ===");
+    console.log("name type:", typeof clubData?.name, clubData?.name);
+    console.log("vouch type:", typeof clubMember?.vouch, clubMember?.vouch);
+    console.log("claimableAmount calculation inputs:", {
+      baseTrust: clubMember?.baseTrust,
+      startingPercentTrust: clubData?.startingPercentTrust,
+      percentVested: clubMember?.percentVested,
+      vouch: clubMember?.vouch
+    });
+  }
+
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
   // If any data is still loading, show loading state
