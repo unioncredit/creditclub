@@ -45,29 +45,34 @@ export const ClubActions = ({
     console.log("=== ClubActions Debug ===");
     console.log("name type:", typeof clubData?.name, clubData?.name);
     console.log("vouch type:", typeof clubMember?.vouch, clubMember?.vouch);
-    console.log("claimableAmount calculation inputs:", {
-      baseTrust: clubMember?.baseTrust,
-      startingPercentTrust: clubData?.startingPercentTrust,
-      percentVested: clubMember?.percentVested,
-      vouch: clubMember?.vouch
-    });
     
-    // Check what's being passed to format functions
-    console.log("format() calls will receive:");
-    console.log("- vouch:", clubMember?.vouch, typeof clubMember?.vouch);
-    console.log("- token:", token, typeof token);
+    // Check creditVaultContract structure
+    console.log("creditVaultContract keys:", Object.keys(creditVaultContract));
+    console.log("creditVaultContract.address:", creditVaultContract.address);
+    console.log("creditVaultContract.abi type:", typeof creditVaultContract.abi);
+    console.log("creditVaultContract.abi is array:", Array.isArray(creditVaultContract.abi));
     
-    // Check button props
-    const testButtonProps = useWrite({
-      ...creditVaultContract,
-      functionName: "claimCredit",
-      args: [clubMember?.tokenId || 0n],
-      onComplete: () => Promise.resolve(),
-    });
-    console.log("Button props from useWrite:", Object.keys(testButtonProps));
-    Object.entries(testButtonProps).forEach(([key, value]) => {
-      console.log(`- ${key}:`, typeof value, value);
-    });
+    // Check if ABI contains non-serializable values
+    if (Array.isArray(creditVaultContract.abi)) {
+      creditVaultContract.abi.forEach((item, index) => {
+        if (typeof item !== 'object' || item === null) {
+          console.warn(`ABI[${index}] is not an object:`, typeof item);
+        }
+      });
+    }
+    
+    // Test what happens when we try to use the contract
+    console.log("About to test useWrite with contract...");
+    try {
+      // Only pass required properties
+      const minimalContract = {
+        address: creditVaultContract.address,
+        abi: creditVaultContract.abi
+      };
+      console.log("Minimal contract created successfully");
+    } catch (error) {
+      console.error("Error creating minimal contract:", error);
+    }
   }
 
   // If any data is still loading, show loading state
@@ -206,7 +211,8 @@ export const ClubActions = ({
   const claimableAmount = calculateClaimableAmount(totalVested, safeVouch);
 
   const claimCreditButtonProps = useWrite({
-    ...creditVaultContract,
+    address: creditVaultContract.address,
+    abi: creditVaultContract.abi,
     functionName: "claimCredit",
     args: [tokenId],
     onComplete: refetchClubMember,

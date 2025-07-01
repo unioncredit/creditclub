@@ -39,7 +39,7 @@ export const useWrite = ({
     JSON.stringify(args, (_, value) => (typeof value === "bigint" ? value.toString() : value))
   ]);
   const memoizedProps = useMemo(() => props, [
-    JSON.stringify(args, (_, value) => (typeof value === "bigint" ? value.toString() : value))
+    JSON.stringify(props, (_, value) => (typeof value === "bigint" ? value.toString() : value))
   ]);
 
   /**
