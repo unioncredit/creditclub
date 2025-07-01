@@ -84,7 +84,7 @@ export const MembershipClaim = ({
               "opacity-20": !isQualified,
             })}
           />
-          <p className="text-lg">You are {!isQualified && "not"} qualified</p>
+          <p className="text-lg">You are {!isQualified ? "not " : ""}qualified</p>
         </div>
       )}
 

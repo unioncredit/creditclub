@@ -12,6 +12,16 @@ import { Address } from "viem";
 export default function HomePage() {
   const clubAddress = process.env.NEXT_PUBLIC_CLUB_PROMO_ADDRESS! as Address;
 
+  if (!clubAddress) {
+    return (
+      <main>
+        <div className="p-8 text-center">
+          <p>Configuration error: Club address not set</p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <>
       <Head>
