@@ -20,7 +20,7 @@ export class ErrorBoundary extends React.Component<
     return { hasError: true, error };
   }
 
-  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  override componentDidCatch(_error: Error, errorInfo: React.ErrorInfo) {
     // Store errorInfo for display
     this.setState({ errorInfo });
   }
