@@ -434,13 +434,7 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
     ]);
   };
 
-  // Debug logging for React Error #310
-  console.log('🔍 useClubData final data:', { 
-    name: typeof name, 
-    symbol: typeof symbol, 
-    decimals: typeof decimals,
-    isActivated: typeof isActivated 
-  });
+
 
   return { 
     data, 

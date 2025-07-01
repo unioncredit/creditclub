@@ -213,7 +213,7 @@ export const ClubActions = ({
         <TextCube width={48} height={48} background="#1F1D29" foreground="white">
           {getInitials(String(name || ""))}
         </TextCube>
-        <p className="text-lg">{String(name || "")} Member #{tokenId ? tokenId.toString() : "0"}</p>
+        <p className="text-lg">{String(name || "")} Member #{String(tokenId || 0)}</p>
       </div>
 
       {vestingEnabled && (

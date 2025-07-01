@@ -90,7 +90,7 @@ export const MintNftModal = ({
           </div>
 
           <StatGrid
-            title={`${name} Member #${tokenId.toString()}`}
+            title={`${name} Member #${String(tokenId || 0)}`}
             className="my-4"
             size="small"
             rows={rows}

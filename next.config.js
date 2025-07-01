@@ -9,7 +9,7 @@ module.exports = {
     silenceDeprecations: ['legacy-js-api'],
   },
   experimental: {
-    optimizePackageImports: ["lodash", "viem", "wagmi"]
+    optimizePackageImports: ["lodash"]
   },
   images: {
     remotePatterns: [
@@ -19,17 +19,12 @@ module.exports = {
       }
     ],
   },
-  modularizeImports: {
-    "viem": {
-      transform: "viem/{{member}}",
-    },
-    "wagmi": {
-      transform: "wagmi/{{member}}",
-    },
-  },
   transpilePackages: [
     '@uniswap/conedison',
     '@uniswap/widgets',
+    'viem',
+    '@safe-global/safe-apps-sdk',
+    '@safe-global/safe-apps-provider',
   ],
   webpack(config) {
     // Grab the existing rule that handles SVG imports
@@ -43,6 +38,20 @@ module.exports = {
       path: false,
       Browser: false,
     };
+
+    // Fix viem import.meta issue
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'viem/_cjs': 'viem',
+    };
+
+    // Handle import.meta in viem
+    config.module.rules.push({
+      test: /\.m?js$/,
+      resolve: {
+        fullySpecified: false,
+      },
+    });
 
     config.module.rules.push(
       // Reapply the existing rule, but only for svg imports ending in ?url

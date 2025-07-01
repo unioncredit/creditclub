@@ -38,14 +38,14 @@ export const PostMintNftModal = ({
       <Modal>
         <Modal.Header
           onClose={close}
-          title={`Congrats Member #${tokenId.toString()}`}
+          title={`Congrats Member #${String(tokenId || 0)}`}
           className="bg-blue-600 text-white"
         />
         <Modal.Body>
           <InfoBanner
             align="left"
             variant="warning"
-            label={`Welcome Member #${tokenId.toString()}! You are now an official member of ${clubName}. You now have $${format(startingCredit, token)} in credit from ${clubName} on the Union credit network.`}
+            label={`Welcome Member #${String(tokenId || 0)}! You are now an official member of ${clubName}. You now have $${format(startingCredit, token)} in credit from ${clubName} on the Union credit network.`}
             className="font-mono border-b border-black text-xs p-3 bg-slate-100 text-black absolute top-[80px] left-0 right-0"
           />
 
@@ -60,7 +60,7 @@ export const PostMintNftModal = ({
           </div>
 
           <StatGrid
-            title={`${clubName} Member #${tokenId.toString()}`}
+            title={`${clubName} Member #${String(tokenId || 0)}`}
             className="my-4"
             size="small"
             rows={rows}
