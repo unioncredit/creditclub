@@ -185,8 +185,20 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
 
   if (memberDataQuery.data && typeof memberDataQuery.data === 'object') {
     const memberDetails = memberDataQuery.data as any;
+    
+    // Debug logging to help identify React Error #310
+    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+      console.log('🔍 getMember data:', {
+        type: typeof memberDetails,
+        isArray: Array.isArray(memberDetails),
+        hasError: !!memberDetails?.error,
+        keys: memberDetails ? Object.keys(memberDetails) : [],
+        raw: memberDetails
+      });
+    }
+    
     // Only access properties if memberDetails is a valid object
-    if (memberDetails && !memberDetails.error) {
+    if (memberDetails && !memberDetails.error && !Array.isArray(memberDetails)) {
       referrer = memberDetails.referrer || zeroAddress;
       baseTrust = safeBigInt(memberDetails.baseTrust);
       badDebt = safeBigInt(memberDetails.badDebt);
