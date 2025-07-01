@@ -31,7 +31,11 @@ export default function FundSinglePage() {
   const rawClubAddress = router.query.clubAddress;
   const clubAddress = (Array.isArray(rawClubAddress) ? rawClubAddress[0] : rawClubAddress) as Address | undefined;
 
-  console.log("=== Club address ===", clubAddress);
+  if (typeof window !== 'undefined' && clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
+    console.log("=== Problematic club address detected ===");
+    console.log("Router ready:", router.isReady);
+    console.log("Club address type:", typeof clubAddress);
+  }
 
   const { address } = useAccount();
   

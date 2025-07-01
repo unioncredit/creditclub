@@ -13,7 +13,7 @@ export const useWrite = ({
   disabled = false,
   onComplete = undefined,
   value = undefined,
-  icon = undefined,
+  icon: passedIcon = undefined,
   ...props
 }: {
   functionName: string;
@@ -21,7 +21,7 @@ export const useWrite = ({
   disabled?: boolean;
   onComplete?: (hash: string) => Promise<void>;
   value?: bigint;
-  icon?: string;
+  icon?: string | React.ReactNode;
   [_: string]: any;
 }) => {
   const config = useConfig();
@@ -163,17 +163,15 @@ export const useWrite = ({
         disabled: disabled || loading,
         loading,
         ...(!isConnected ? {
-          icon: undefined,
           label : "Connect Wallet",
           onClick: connectWallet,
         } : {
-          icon,
           onClick,
         })
       };
       
       return result;
     },
-    [icon, disabled, loading, isConnected, onClick, connectWallet]
+    [disabled, loading, isConnected, onClick, connectWallet]
   );
 }
