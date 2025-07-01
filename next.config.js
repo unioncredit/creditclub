@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
+  // Generate separate source-map files so stack traces point to real code
+  productionBrowserSourceMaps: true,
+  // Disable JavaScript minification so React error messages stay readable
+  swcMinify: false,
   sassOptions: {
     silenceDeprecations: ['legacy-js-api'],
   },
