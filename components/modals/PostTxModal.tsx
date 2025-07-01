@@ -43,7 +43,11 @@ export const PostTxModal = ({
                 mt="24px"
                 size="large"
                 className="min-h-[64px]"
-                {...action}
+                label={action.label || ""}
+                onClick={action.onClick}
+                disabled={action.disabled}
+                variant={action.variant}
+                color={action.color}
               />
             )}
 

@@ -182,7 +182,14 @@ export const ClubActivity = ({
             if (tx.type === ActivityTypes.LOADING) {
               return <ActivityRow key={index} token={token} type={tx.type} amount={0n} address="0x0" hash="0x0" />
             }
-            return <ActivityRow key={index} token={token} {...tx} />
+            return <ActivityRow 
+              key={index} 
+              token={token} 
+              type={tx.type}
+              amount={tx.amount || 0n}
+              address={tx.address || "0x0"}
+              hash={tx.hash || "0x0"}
+            />
           })
         )}
       </div>
