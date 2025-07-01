@@ -40,12 +40,23 @@ export const useRewardsManager = (clubAddress: Address) => {
     }
   });
 
-  const [
-    allowance = 0n,
-    unitOfCreditPerUnionClub = 0n,
-    unitOfCreditPerUnionPublic = 0n,
-    contractDaiBalance = 0n,
-  ] = result.data?.map(d => d.result as never) || [];
+  const safeBigInt = (value: any): bigint => {
+    if (typeof value === 'bigint') return value;
+    if (typeof value === 'number') return BigInt(value);
+    if (typeof value === 'string') return BigInt(value || 0);
+    return 0n;
+  };
+
+  const extractedResults = result.data?.map((d: any) => {
+    if (d?.status === 'success' && d?.result !== undefined) return d.result;
+    if (d?.result !== undefined) return d.result;
+    return null;
+  }) || [];
+
+  const allowance = safeBigInt(extractedResults[0]);
+  const unitOfCreditPerUnionClub = safeBigInt(extractedResults[1]);
+  const unitOfCreditPerUnionPublic = safeBigInt(extractedResults[2]);
+  const contractDaiBalance = safeBigInt(extractedResults[3]);
 
   // Debug logging can be removed since invitePrice no longer exists
   // if (result.data) {

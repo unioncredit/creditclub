@@ -187,10 +187,10 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     memberNftBalance = 0n,
     stakedBalance = 0n,
     assetBalance = 0n,
-  ] = balanceResult.data?.map(d => safeBigInt(d)) || [];
+  ] = balanceResult.data?.map((d: any) => safeBigInt(d)) || [];
 
   // Extract member info data
-  const memberInfoData = memberInfoResult.data || [];
+  const memberInfoData = memberInfoResult.data?.map((d: any) => extractResult(d)) || [];
   const owed = safeBigInt(memberInfoData[0]);
   const vouch = safeBigInt(memberInfoData[1]);
   const tokenId = safeBigInt(memberInfoData[2]);

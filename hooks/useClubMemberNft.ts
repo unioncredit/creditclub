@@ -62,7 +62,17 @@ export const useClubMemberNft = (clubAddress: Address) => {
     }
   });
 
-  // Extract values with defaults
+  // Extract data using safe extraction
+  const extractResult = (contractResult: any): any => {
+    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    if (contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    return null;
+  };
+
   const [
     contractURI = "",
     membershipCost = 0n,
@@ -73,7 +83,7 @@ export const useClubMemberNft = (clubAddress: Address) => {
     gatingTokenAmount = 0n,
     isSoulBound = false,
     inviteCost = 0n,
-  ] = result.data?.map(d => d.result as never) || [];
+  ] = result.data?.map((d: any) => extractResult(d)) || [];
 
   let contractMetadata: {
     name?: string;

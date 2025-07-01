@@ -36,7 +36,11 @@ export const useErc20Token = (tokenAddress: Address) => {
     name = "",
     symbol = "",
     decimals = 0,
-  ] = result.data?.map(d => d.result as never) || [];
+  ] = result.data?.map((d: any) => {
+    if (d?.status === 'success' && d?.result !== undefined) return d.result;
+    if (d?.result !== undefined) return d.result;
+    return null;
+  }) || [];
 
   const data = {
     address: tokenAddress,

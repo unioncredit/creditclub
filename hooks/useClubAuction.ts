@@ -75,7 +75,11 @@ export const useClubAuction = (clubAddress: Address) => {
     return Boolean(value);
   };
 
-  const auctionData = result.data?.map(d => d.result as never) || [];
+  const auctionData = result.data?.map((d: any) => {
+    if (d?.status === 'success' && d?.result !== undefined) return d.result;
+    if (d?.result !== undefined) return d.result;
+    return null;
+  }) || [];
   const minTarget = safeBigInt(auctionData[0]);
   const maxTarget = safeBigInt(auctionData[1]);
   const totalDeposits = safeBigInt(auctionData[2]);

@@ -28,7 +28,11 @@ export const useContactCounts = (address: Address) => {
   const [
     voucherCount= 0,
     voucheeCount = 0n,
-  ] = result.data?.map(d => d.result as never) || [];
+  ] = result.data?.map((d: any) => {
+    if (d?.status === 'success' && d?.result !== undefined) return d.result;
+    if (d?.result !== undefined) return d.result;
+    return null;
+  }) || [];
 
   return {
     voucherCount,

@@ -61,7 +61,18 @@ export const useClubContacts = (clubAddress: Address) => {
     }
   }));
 
-  const results = result.data?.map(d => d.result as never) || [];
+  // Helper function to safely extract contract result values
+  const extractResult = (contractResult: any): any => {
+    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    if (contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    return null;
+  };
+
+  const results = result.data?.map((d: any) => extractResult(d)) || [];
 
   // note: make sure to update this when added a contract call
   const chunked = chunk(results, 5);
