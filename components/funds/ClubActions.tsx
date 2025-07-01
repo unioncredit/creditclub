@@ -216,6 +216,24 @@ export const ClubActions = ({
   const totalVested = startingAmount + additionalVested;
   const claimableAmount = calculateClaimableAmount(totalVested, safeVouch);
 
+  // Debug what we're passing to useWrite
+  if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
+    console.log("=== Before useWrite call ===");
+    console.log("address type:", typeof creditVaultContract.address);
+    console.log("abi type:", typeof creditVaultContract.abi);
+    console.log("abi length:", Array.isArray(creditVaultContract.abi) ? creditVaultContract.abi.length : 'not array');
+    console.log("tokenId:", tokenId);
+    console.log("refetchClubMember type:", typeof refetchClubMember);
+    
+    // Try to stringify the abi to see if it causes issues
+    try {
+      const testStringify = JSON.stringify(creditVaultContract.abi);
+      console.log("ABI stringify successful, length:", testStringify.length);
+    } catch (e) {
+      console.error("ABI stringify failed:", e);
+    }
+  }
+
   const claimCreditButtonProps = useWrite({
     address: creditVaultContract.address,
     abi: creditVaultContract.abi,
@@ -245,6 +263,11 @@ export const ClubActions = ({
     : badDebt > 0n ? "Cannot claim with outstanding bad debt"
     : claimableAmount === 0n ? "No credit available to claim (already claimed or not vested yet)"
     : null;
+
+  // Debug to see if we reach the render
+  if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
+    console.log("=== ClubActions about to render JSX ===");
+  }
 
   return (
     <div className="p-4 border rounded-2xl bg-slate-50">

@@ -12,6 +12,11 @@ export const FundTables = ({
   clubAddress: Address;
   className?: string;
 }) => {
+  // Debug for problematic club
+  if (clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
+    console.log("=== FundTables rendering ===");
+  }
+
   return (
     <Tabs className={cn("border border-black font-mono rounded-lg overflow-hidden", className)} defaultValue="stats">
       <TabsList>
