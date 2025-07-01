@@ -53,26 +53,22 @@ module.exports = {
       },
     });
 
+    // Define import.meta properties globally to prevent webpack errors
+    const webpack = require('webpack');
+    config.plugins = config.plugins || [];
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'import.meta.webpackHot': 'undefined',
+        'import.meta.hot': 'undefined',
+      })
+    );
+
     // Fix import.meta issues by treating as external expressions
     config.module.rules.push({
       test: /node_modules\/(@safe-global|viem)\/.*\.(js|mjs)$/,
       parser: {
         javascript: {
           importMeta: false,
-        },
-      },
-    });
-
-    // Additional fix for import.meta.webpackHot specifically
-    config.module.rules.push({
-      test: /\.m?js$/,
-      include: /node_modules\/@safe-global/,
-      use: {
-        loader: 'string-replace-loader',
-        options: {
-          search: 'import\\.meta\\.webpackHot',
-          replace: 'false',
-          flags: 'g',
         },
       },
     });
