@@ -20,23 +20,26 @@ import { BuyRedeemPanel } from "@/components/funds/BuyRedeemPanel";
 import { useRouter } from "next/router";
 import { ClubActivity } from "@/components/funds/ClubActivity";
 
-export default function FundSinglePage({
-  clubAddress,
-}: {
-  clubAddress: Address;
-}) {
+export default function FundSinglePage() {
   const router = useRouter();
-
-  // Use the router.query.clubAddress if clubAddress prop is not provided
-  clubAddress = (clubAddress || router.query.clubAddress) as Address
+  
+  // Get clubAddress from router query
+  const clubAddress = router.query.clubAddress as Address;
 
   const { address } = useAccount();
+  
+  // Only run hooks when router is ready and we have a valid clubAddress
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
 
-  const { isPublic, isActivated, isTokenEnabled } = clubData;
-  const { isMember } = clubMember;
+  const { isPublic, isActivated, isTokenEnabled } = clubData || {};
+  const { isMember } = clubMember || {};
+
+  // Wait for router to be ready
+  if (!router.isReady) {
+    return null;
+  }
 
   return (
     <>
