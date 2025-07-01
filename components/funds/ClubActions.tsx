@@ -199,7 +199,7 @@ export const ClubActions = ({
             )}
             title={cannotClaimReason || undefined}
           >
-            {"label" in claimCreditButtonProps ? claimCreditButtonProps.label : "Claim Credit"}
+            Claim Credit
           </RoundedButton>
         </div>
 

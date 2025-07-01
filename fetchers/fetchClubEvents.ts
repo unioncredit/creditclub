@@ -17,6 +17,12 @@ export const fetchClubEvents = async (vaultAddress: Address) =>{
     return [];
   }
 
+  const ponderUrl = process.env.NEXT_PUBLIC_PONDER_URL;
+  if (!ponderUrl) {
+    console.error("NEXT_PUBLIC_PONDER_URL is not defined");
+    return [];
+  }
+
   const query = gql`
       query ($vaultAddress: String!, $limit: Int!) {
           events (
@@ -41,15 +47,25 @@ export const fetchClubEvents = async (vaultAddress: Address) =>{
     vaultAddress: vaultAddress.toLowerCase(),
   };
 
-  // @ts-ignore
-  const resp: any = await request(process.env.NEXT_PUBLIC_PONDER_URL, query, variables);
+  try {
+    // @ts-ignore
+    const resp: any = await request(ponderUrl, query, variables);
 
-  const flattened: IClubEvent[] = resp.events.items.map((item: any) => ({
-    type: item.type,
-    amount: item.amount,
-    address: item.account,
-    hash: item.hash,
-  }));
+    if (!resp?.events?.items) {
+      console.error("Invalid response structure from Ponder API");
+      return [];
+    }
 
-  return flattened;
+    const flattened: IClubEvent[] = resp.events.items.map((item: any) => ({
+      type: item.type || ActivityTypes.LOADING,
+      amount: BigInt(item.amount || 0),
+      address: item.account || "0x0",
+      hash: item.hash || "0x0",
+    }));
+
+    return flattened;
+  } catch (error) {
+    console.error("Error fetching club events:", error);
+    return [];
+  }
 }
