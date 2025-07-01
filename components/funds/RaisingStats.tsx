@@ -40,13 +40,13 @@ export const RaisingStats = ({
   const {
     stakedBalance,
     clubTokenBalance,
-  } = clubMember;
+  } = clubMember || {};
 
   const {
     symbol,
     decimals,
     isPublic,
-  } = clubData;
+  } = clubData || {};
 
   const {
     minTarget,
@@ -56,13 +56,13 @@ export const RaisingStats = ({
     isKilled,
     isFailed,
     hasMaxTarget,
-  } = auctionData;
+  } = auctionData || {};
 
   const { price: tokenPrice = 0 } = priceData || {};
 
   const { decimals: assetDecimals = 18 } = assetToken;
 
-  const markValue = minTarget > 0n && maxTarget == maxUint256 ? Number(minTarget) : undefined;
+  const markValue = (minTarget && minTarget > 0n) && (maxTarget && maxTarget == maxUint256) ? Number(minTarget) : undefined;
 
   const activateClubButtonProps = useWrite({
     ...auctionContract,
@@ -74,44 +74,44 @@ export const RaisingStats = ({
   });
 
   const barValues: DistributionBarItem[] = [
-    ...(minTarget > 0n && !hasMaxTarget ? [
+    ...((minTarget && minTarget > 0n) && !hasMaxTarget ? [
       {
-        value: Number(totalDeposits),
-        label: `$${formatDecimals(totalDeposits, assetDecimals, 2)}`,
+        value: Number(totalDeposits || 0n),
+        label: `$${formatDecimals(totalDeposits || 0n, assetDecimals, 2)}`,
         color: "green600",
         title: "Min",
       },
       {
-        value: Number(totalDeposits),
-        label: `$${formatDecimals(totalDeposits, assetDecimals, 2)}`,
+        value: Number(totalDeposits || 0n),
+        label: `$${formatDecimals(totalDeposits || 0n, assetDecimals, 2)}`,
         color: "green600",
         title: "Raised",
       },
     ] : []),
-    ...(minTarget == 0n && hasMaxTarget && maxTarget > 0n ? [
+    ...((minTarget && minTarget == 0n) && hasMaxTarget && (maxTarget && maxTarget > 0n) ? [
       {
-        value: Number(totalDeposits),
-        label: `$${formatDecimals(totalDeposits, assetDecimals, 2)}`,
+        value: Number(totalDeposits || 0n),
+        label: `$${formatDecimals(totalDeposits || 0n, assetDecimals, 2)}`,
         color: "green600",
         title: "Raised",
       },
       {
-        value: Number(maxTarget - totalDeposits),
-        label: `$${formatDecimals(maxTarget, assetDecimals, 2)}`,
+        value: Number((maxTarget || 0n) - (totalDeposits || 0n)),
+        label: `$${formatDecimals(maxTarget || 0n, assetDecimals, 2)}`,
         color: "blue50",
         title: "Max",
       }
     ] : []),
-    ...(minTarget > 0n && hasMaxTarget && maxTarget > 0n ? [
+    ...((minTarget && minTarget > 0n) && hasMaxTarget && (maxTarget && maxTarget > 0n) ? [
       {
-        value: Number(totalDeposits),
-        label: `$${formatDecimals(totalDeposits, assetDecimals, 2)}`,
+        value: Number(totalDeposits || 0n),
+        label: `$${formatDecimals(totalDeposits || 0n, assetDecimals, 2)}`,
         color: "green600",
         title: "Min",
       },
       {
-        value: Number(maxTarget - totalDeposits),
-        label: `$${formatDecimals(maxTarget, assetDecimals, 2)}`,
+        value: Number((maxTarget || 0n) - (totalDeposits || 0n)),
+        label: `$${formatDecimals(maxTarget || 0n, assetDecimals, 2)}`,
         color: "blue50",
         title: "Max",
       }
@@ -138,7 +138,7 @@ export const RaisingStats = ({
       <header className="flex items-start justify-between">
         <div>
           <h3 className="font-medium text-sm text-zinc-500">Amount raised</h3>
-          <p className="text-3xl font-mono">${formatDecimals(totalDeposits, assetDecimals, 2)}</p>
+          <p className="text-3xl font-mono">${formatDecimals(totalDeposits || 0n, assetDecimals, 2)}</p>
         </div>
 
         <div className="flex items-center gap-2 sm:flex-col">

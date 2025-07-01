@@ -73,7 +73,7 @@ export const useClubMemberNft = (clubAddress: Address) => {
     gatingTokenAmount = 0n,
     isSoulBound = false,
     inviteCost = 0n,
-  ] = result.data?.map(d => d.result) || [];
+  ] = result.data?.map(d => d.result as never) || [];
 
   let contractMetadata: {
     name?: string;

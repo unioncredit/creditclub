@@ -61,7 +61,7 @@ export const useClubContacts = (clubAddress: Address) => {
     }
   }));
 
-  const results = result.data?.map(d => d.result) || [];
+  const results = result.data?.map(d => d.result as never) || [];
 
   // note: make sure to update this when added a contract call
   const chunked = chunk(results, 5);
