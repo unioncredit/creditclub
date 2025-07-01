@@ -44,18 +44,27 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
     }
   });
 
-  const withdrawals = result.data?.map((d: any) => {
-    if (d?.status === 'success' && d?.result !== undefined) return d.result;
-    if (d?.result !== undefined) return d.result;
+  const extractResult = (contractResult: any): any => {
+    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    if (contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
     return null;
-  }) || [];
+  };
 
-  const typedWithdrawals = withdrawals.map((w, id) => ({
-    id,
-    amount: w[0] as bigint,
-    end: w[1] as bigint,
-    isComplete: w[2] as boolean,
-  }))
+  const withdrawals = result.data || [];
+
+  const typedWithdrawals = withdrawals.map((w, id) => {
+    const extracted = extractResult(w);
+    return {
+      id,
+      amount: (extracted?.[0] as bigint) || 0n,
+      end: (extracted?.[1] as bigint) || 0n,
+      isComplete: (extracted?.[2] as boolean) || false,
+    };
+  })
 
   const data = {
     withdrawBucketAddress,

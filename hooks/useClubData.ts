@@ -371,7 +371,7 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
     return result;
   };
 
-  const basicInfoData = basicInfoResult.data?.map((d: any) => extractResult(d)) || [];
+  const basicInfoData = basicInfoResult.data || [];
   const name = safeString(basicInfoData[0]);
   const symbol = safeString(basicInfoData[1]);
   const decimals = safeNumber(basicInfoData[2]);
@@ -385,7 +385,7 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
   const image = safeString(basicInfoData[10]);
   const description = safeString(basicInfoData[11]);
 
-  const financialInfoData = financialInfoResult.data?.map((d: any) => extractResult(d)) || [];
+  const financialInfoData = financialInfoResult.data || [];
   const totalLockedStake = safeBigInt(financialInfoData[0]);
   const stakedBalance = safeBigInt(financialInfoData[1]);
   const totalAssets = safeBigInt(financialInfoData[2]);
@@ -396,7 +396,7 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
   const unionBalance = safeBigInt(financialInfoData[7]);
   const unclaimedRewards = safeBigInt(financialInfoData[8]);
 
-  const configurationData = configurationResult.data?.map((d: any) => extractResult(d)) || [];
+  const configurationData = configurationResult.data || [];
   const isPublic = safeBoolean(configurationData[0]);
   const isActivated = safeBoolean(configurationData[1]);
   const isTokenEnabled = safeBoolean(configurationData[2]);
@@ -409,7 +409,7 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
   const startingPercentTrust = safeBigInt(configurationData[9]);
   const baseTrust = safeBigInt(configurationData[10]);
 
-  const rewardsData = rewardsResult.data?.map((d: any) => extractResult(d)) || [];
+  const rewardsData = rewardsResult.data || [];
   const callerPercent = safeBigInt(rewardsData[0]);
   const winnerPercent = safeBigInt(rewardsData[1]);
   const costToCall = safeBigInt(rewardsData[2]);

@@ -72,11 +72,7 @@ export const useClubStaking = (clubAddress: Address) => {
     return zeroAddress;
   };
 
-  const stakingData = result.data?.map((d: any) => {
-    if (d?.status === 'success' && d?.result !== undefined) return d.result;
-    if (d?.result !== undefined) return d.result;
-    return null;
-  }) || [];
+  const stakingData = result.data || [];
   const name = safeString(stakingData[0]);
   const decimals = safeNumber(stakingData[1]);
   const symbol = safeString(stakingData[2]);

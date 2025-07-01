@@ -47,11 +47,7 @@ export const useRewardsManager = (clubAddress: Address) => {
     return 0n;
   };
 
-  const extractedResults = result.data?.map((d: any) => {
-    if (d?.status === 'success' && d?.result !== undefined) return d.result;
-    if (d?.result !== undefined) return d.result;
-    return null;
-  }) || [];
+  const extractedResults = result.data || [];
 
   const allowance = safeBigInt(extractedResults[0]);
   const unitOfCreditPerUnionClub = safeBigInt(extractedResults[1]);

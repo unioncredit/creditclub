@@ -32,15 +32,36 @@ export const useErc20Token = (tokenAddress: Address) => {
     }
   });
 
-  const [
-    name = "",
-    symbol = "",
-    decimals = 0,
-  ] = result.data?.map((d: any) => {
-    if (d?.status === 'success' && d?.result !== undefined) return d.result;
-    if (d?.result !== undefined) return d.result;
+  // Helper function to safely extract contract result values
+  const extractResult = (contractResult: any): any => {
+    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    if (contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
     return null;
-  }) || [];
+  };
+
+  const safeString = (value: any): string => {
+    const extracted = extractResult(value);
+    if (typeof extracted === 'string') return extracted;
+    if (extracted === null || extracted === undefined) return "";
+    return String(extracted);
+  };
+
+  const safeNumber = (value: any): number => {
+    const extracted = extractResult(value);
+    if (typeof extracted === 'number') return extracted;
+    if (typeof extracted === 'bigint') return Number(extracted);
+    if (typeof extracted === 'string') return parseInt(extracted) || 0;
+    return 0;
+  };
+
+  const resultData = result.data || [];
+  const name = safeString(resultData[0]);
+  const symbol = safeString(resultData[1]);
+  const decimals = safeNumber(resultData[2]);
 
   const data = {
     address: tokenAddress,

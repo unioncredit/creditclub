@@ -190,7 +190,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
   ] = balanceResult.data?.map((d: any) => safeBigInt(d)) || [];
 
   // Extract member info data
-  const memberInfoData = memberInfoResult.data?.map((d: any) => extractResult(d)) || [];
+  const memberInfoData = memberInfoResult.data || [];
   const owed = safeBigInt(memberInfoData[0]);
   const vouch = safeBigInt(memberInfoData[1]);
   const tokenId = safeBigInt(memberInfoData[2]);
