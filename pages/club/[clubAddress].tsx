@@ -100,6 +100,9 @@ export default function FundSinglePage() {
     console.log("isActivated:", isActivated, typeof isActivated);
     console.log("isTokenEnabled:", isTokenEnabled, typeof isTokenEnabled);
     console.log("isMember:", isMember, typeof isMember);
+    console.log("memberNftBalance:", clubMember?.memberNftBalance?.toString());
+    console.log("Connected address:", address);
+    console.log("Club memberNftAddress:", clubData?.memberNftAddress);
   }
 
   return (

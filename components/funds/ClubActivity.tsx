@@ -142,6 +142,17 @@ const ActivityRow = ({
   };
 
   // @ts-ignore
+  // Handle loading state specially to avoid React Error #310
+  if (type === ActivityTypes.LOADING) {
+    return (
+      <div className="flex items-center gap-1">
+        <div className="text-lg font-medium text-gray-800">
+          <Skeleton width={320} height={28} shimmer />
+        </div>
+      </div>
+    );
+  }
+
   const textFunction = texts[type];
   const text = textFunction ? textFunction({ type, amount, address, hash }, token) : null;
   const Icon = icons[type];
@@ -175,9 +186,6 @@ export function ClubActivity({ clubAddress }: { clubAddress: Address }) {
           </Card.Body>
         ) : (
           activity.slice(0, 4).map((tx: any, index) => {
-            if (tx.type === ActivityTypes.LOADING) {
-              return <ActivityRow key={index} token={token} type={tx.type} amount={0n} address="0x0" hash="0x0" />
-            }
             return <ActivityRow 
               key={index} 
               token={token} 
