@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { fetchClubEvents, IClubEvent } from "@/fetchers/fetchClubEvents";
-import { Address } from "viem";
+import { Address, Hash } from "viem";
 
 export const useClubActivity = (clubAddress: Address) => {
   const [data, setData] = useState<IClubEvent[]>([]);
@@ -16,8 +16,14 @@ export const useClubActivity = (clubAddress: Address) => {
 
   const refetch = (delay = 0) => {
     if (delay > 0) {
-      // @ts-ignore
-      setData(d => [{ type: "LOADING" }, ...d]);
+      // Create a proper IClubEvent object for loading state
+      const loadingEvent: IClubEvent = {
+        type: "LOADING",
+        amount: 0n,
+        address: "0x0" as Address,
+        hash: "0x0" as Hash,
+      };
+      setData(d => [loadingEvent, ...d]);
       setTimeout(fetch, delay);
     } else {
       fetch();
