@@ -40,8 +40,11 @@ export const ClubActions = ({
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
+  // Track if any data is still loading
+  const isDataLoading = clubDataLoading || memberNftDataLoading || clubMemberLoading;
+  
   // If any data is still loading, show loading state
-  if (clubDataLoading || memberNftDataLoading || clubMemberLoading) {
+  if (isDataLoading) {
     return (
       <div className="p-4 border rounded-2xl bg-slate-50">
         <div className="animate-pulse">
@@ -192,6 +195,9 @@ export const ClubActions = ({
     : claimableAmount === 0n ? "No credit available to claim (already claimed or not vested yet)"
     : null;
 
+  // Check if we're still loading data after error recovery
+  const isStillLoading = isDataLoading || (!clubData && !memberNftData && !clubMember);
+
   return (
     <div className="p-4 border rounded-2xl bg-slate-50">
       <header className="flex items-center justify-between gap-2 border-b pb-4">
@@ -236,7 +242,7 @@ export const ClubActions = ({
 
           <RoundedButton
             onClick={claimCreditButtonProps.onClick}
-            disabled={claimCreditButtonProps.disabled || !!cannotClaimReason}
+            disabled={claimCreditButtonProps.disabled || !!cannotClaimReason || isStillLoading}
             className="bg-[#E3F6EC] hover:bg-[#E3F6EC] hover:opacity-90 h-[54px] text-[#1C9451] w-[156px] justify-start"
             icon={(
               <IconCube
@@ -247,9 +253,9 @@ export const ClubActions = ({
                 className="p-1"
               />
             )}
-            title={cannotClaimReason || undefined}
+            title={isStillLoading ? "Loading member data..." : cannotClaimReason || undefined}
           >
-            {claimCreditButtonProps.loading ? "Claiming..." : "Claim Credit"}
+            {claimCreditButtonProps.loading ? "Claiming..." : isStillLoading ? "Loading..." : "Claim Credit"}
           </RoundedButton>
         </div>
 
@@ -264,7 +270,7 @@ export const ClubActions = ({
 
           <RoundedButton
             onClick={() => openModal(REPAY_MODAL)}
-            disabled={owed === 0n}
+            disabled={owed === 0n || isStillLoading}
             icon={(
               <IconCube
                 width={18}
@@ -275,8 +281,9 @@ export const ClubActions = ({
               />
             )}
             className="bg-[#EEF2FF] hover:bg-[#EEF2FF] hover:opacity-90 h-[54px] text-[#5F85FF] w-[156px] justify-start"
+            title={isStillLoading ? "Loading member data..." : owed === 0n ? "No debt to repay" : undefined}
           >
-            Repay
+            {isStillLoading ? "Loading..." : "Repay"}
           </RoundedButton>
         </div>
       </div>
