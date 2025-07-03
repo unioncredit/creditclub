@@ -1,6 +1,7 @@
 import { Address } from "viem";
 import { useClubWithdrawBucket } from "@/hooks/useClubWithdrawBucket";
 import { useClubData } from "@/hooks/useClubData";
+import { useErc20Token } from "@/hooks/useErc20Token";
 import { formatDecimals, formatDurationUntil } from "@/lib/format";
 
 export const LockedWithdrawals = ({
@@ -9,9 +10,10 @@ export const LockedWithdrawals = ({
   clubAddress: Address;
 }) => {
   const { data: clubData } = useClubData(clubAddress);
+  const { data: assetToken } = useErc20Token(clubData?.assetAddress);
   const { data: withdrawBucketData } = useClubWithdrawBucket(clubAddress);
 
-  const { decimals } = clubData;
+  const decimals = assetToken?.decimals || 0;
   const { lockedWithdrawals } = withdrawBucketData;
 
   return (
@@ -21,8 +23,8 @@ export const LockedWithdrawals = ({
         {lockedWithdrawals.length <= 0 ? (
           <li>None</li>
         ) : (
-          lockedWithdrawals.map(({ amount, end }) => (
-            <li className="flex gap-2">
+          lockedWithdrawals.map(({ amount, end }, index) => (
+            <li className="flex gap-2" key={index}>
               <p className="bg-white border p-2 w-1/2 text-center rounded-lg">{formatDecimals(amount, decimals, 2)}</p>
               <p className="bg-white border p-2 w-1/2 text-center rounded-lg">{formatDurationUntil(end)}</p>
             </li>
