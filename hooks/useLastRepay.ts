@@ -4,7 +4,7 @@ import { formatDuration } from "@/lib/utils";
 
 export const useLastRepay = (lastRepay: bigint) => {
   const { data: unionData } = useUnionData();
-  const { overdueTime } = unionData || { overdueTime: 0n };
+  const overdueTime: bigint = unionData?.overdueTime ?? 0n;
 
   const today = new Date();
   const lastRepayData = useBlockTime(lastRepay);

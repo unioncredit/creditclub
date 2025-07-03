@@ -20,8 +20,11 @@ export const IcoFundOverview = ({
   const { data: clubContacts } = useClubContacts(clubAddress);
   const { activated, locked, remaining } = useClubActivation(clubAddress);
 
-  const { name = "", symbol = "", lockupPeriod = 0n, description = "" } = clubData || {};
-  const { maxMembers = 0n } = clubMemberNftData || {};
+  const name: string = clubData?.name ?? "";
+  const symbol: string = clubData?.symbol ?? "";
+  const lockupPeriod: bigint = clubData?.lockupPeriod ?? 0n;
+  const description: string = clubData?.description ?? "";
+  const maxMembers: bigint = clubMemberNftData?.maxMembers ?? 0n;
   const { current = "0", goal = "0" } = icoStats || {};
 
   const rows: StatGridRow[] = [

@@ -96,11 +96,13 @@ export const MintPanel = ({
   const amount = values.amount as IFormField || empty;
   const amountRaw = amount.raw || 0n;
 
-  const { data: amountReceived = 0n } = useMintRedeemPreview({
+  const amountReceivedQuery = useMintRedeemPreview({
     action: "mint",
     shares: amountRaw,
     erc4626Address: clubAddress,
   });
+
+  const amountReceived: bigint = amountReceivedQuery.data ?? 0n;
 
   const inputError = () => {
     if (errors.amount) {

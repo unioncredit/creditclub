@@ -29,7 +29,9 @@ export const ClubHeader = ({
   // Debug logging
 
 
-  const { creditLimit = 0n, owed = 0n } = unionMember || {};
+  // Safe extraction to prevent React Error #310
+  const creditLimit: bigint = unionMember?.creditLimit ?? 0n;
+  const owed: bigint = unionMember?.owed ?? 0n;
 
   return (
     <header className="w-full items-center flex flex-col">

@@ -43,7 +43,7 @@ export const BuyInvitesModal = ({
   const { data: clubMember } = useClubMember(connectedAddress, clubAddress);
 
   const { unionBalance } = member;
-  const { inviteCost = 0n } = memberNft;
+  const inviteCost: bigint = memberNft?.inviteCost ?? 0n;
   const { isMember } = clubMember;
 
   const rewardsManagerContract = useRewardsManagerContract();

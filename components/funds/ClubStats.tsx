@@ -24,7 +24,10 @@ export const ClubStats = ({
   const { open: openModal } = useModals();
   const { token } = useToken();
 
-  const { stakedBalance = 0n, totalLockedStake = 0n, unclaimedRewards = 0n } = clubData || {};
+  // Safe extraction to prevent React Error #310
+  const stakedBalance: bigint = clubData?.stakedBalance ?? 0n;
+  const totalLockedStake: bigint = clubData?.totalLockedStake ?? 0n;
+  const unclaimedRewards: bigint = clubData?.unclaimedRewards ?? 0n;
 
   const defaultedContacts = (clubContacts || []).filter((v) => v.isOverdue);
   const defaultedAmount = defaultedContacts.reduce((acc, c) => acc + (c.locking || 0n), 0n);

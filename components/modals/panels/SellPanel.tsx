@@ -29,7 +29,9 @@ export const SellPanel = ({
 
   const { image, decimals, symbol } = clubData;
   const { address: assetAddress, symbol: assetSymbol } = assetToken;
-  const { clubTokenBalance = 0n, stakedBalance = 0n } = clubMemberData;
+  // Safe extraction to prevent React Error #310
+  const clubTokenBalance: bigint = clubMemberData?.clubTokenBalance ?? 0n;
+  const stakedBalance: bigint = clubMemberData?.stakedBalance ?? 0n;
   
   // Total available balance includes both unstaked and staked tokens
   const totalAvailableBalance = clubTokenBalance + stakedBalance;
