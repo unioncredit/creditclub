@@ -6,6 +6,16 @@ import { useClubStaking } from "@/hooks/useClubStaking";
 import { useWithdrawBucketContract } from "@/hooks/useWithdrawBucketContract";
 import { useCurrentTime } from "@/hooks/useCurrentTime";
 
+const extractResult = (contractResult: any): any => {
+  if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
+    return contractResult.result;
+  }
+  if (contractResult?.result !== undefined) {
+    return contractResult.result;
+  }
+  return null;
+};
+
 export const useClubWithdrawBucket = (clubAddress: Address) => {
   const { address: connectedAddress } = useAccount();
   const { data: stakingData } = useClubStaking(clubAddress);
@@ -26,7 +36,7 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
     }
   });
 
-  const numWithdrawals: bigint = (numWithdrawalsQuery.data as bigint) ?? 0n;
+  const numWithdrawals: bigint = extractResult(numWithdrawalsQuery) || 0n;
 
   const contracts = Array(Number(numWithdrawals)).fill(0).map((_, i) => ({
     ...withdrawBucketContract,
@@ -45,12 +55,10 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
       staleTime: 30_000,
     }
   });
-
   // Extract withdrawal data with proper destructuring
-  const withdrawals = result.data || [];
+  const withdrawals = result.data?.map(d => extractResult(d)) || [];
 
-  const typedWithdrawals = withdrawals.map((w, id) => {
-    const withdrawalData = w?.result as any;
+  const typedWithdrawals = withdrawals.map((withdrawalData, id) => {
     return {
       id,
       amount: (withdrawalData?.[0] as bigint) || 0n,

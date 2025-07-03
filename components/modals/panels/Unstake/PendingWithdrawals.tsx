@@ -4,7 +4,7 @@ import { Address } from "viem";
 
 import { useClubWithdrawBucket } from "@/hooks/useClubWithdrawBucket";
 import { useClubData } from "@/hooks/useClubData";
-import { useErc20Token } from "@/hooks/useErc20Token";
+import { useWithdrawBucketContract } from "@/hooks/useWithdrawBucketContract";
 import { useWrite } from "@/hooks/useWrite";
 import { useAccount } from "wagmi";
 import { formatDecimals } from "@/lib/format";
@@ -21,7 +21,7 @@ const WithdrawButton = ({
   withdrawBucketAddress: Address;
   onComplete: (hash: string) => Promise<void>;
 }) => {
-  const withdrawBucketContract = useClubWithdrawBucket(withdrawBucketAddress);
+  const withdrawBucketContract = useWithdrawBucketContract(withdrawBucketAddress);
   const withdrawButtonProps = useWrite({
     ...withdrawBucketContract,
     functionName: "withdraw",
@@ -47,11 +47,10 @@ export const PendingWithdrawals = ({
 }) => {
   const { address: connectedAddress } = useAccount();
   const { data: clubData } = useClubData(clubAddress);
-  const { data: assetToken } = useErc20Token(clubData?.assetAddress);
   const { refetch: refetchClubMember } = useClubMember(connectedAddress, clubAddress);
   const { data: withdrawBucketData, refetch: refetchWithdrawBucket } = useClubWithdrawBucket(clubAddress);
 
-  const decimals = assetToken?.decimals || 0;
+  const decimals = clubData?.decimals || 18;
   const { withdrawBucketAddress, pendingWithdrawals } = withdrawBucketData;
 
   if (pendingWithdrawals.length <= 0) {
