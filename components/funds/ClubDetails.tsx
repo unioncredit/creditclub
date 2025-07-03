@@ -51,7 +51,11 @@ export const ClubDetails = ({
     shouldTruncate: true,
   });
 
-  const { name = "", image = "", symbol = "", creatorAddress, description = "" } = clubData || {};
+  const name: string = clubData?.name ?? "";
+  const image: string = clubData?.image ?? "";
+  const symbol: string = clubData?.symbol ?? "";
+  const creatorAddress: Address = clubData?.creatorAddress ?? "0x0";
+  const description: string = clubData?.description ?? "";
 
   const clubBadges = [
     {

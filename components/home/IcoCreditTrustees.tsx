@@ -30,7 +30,7 @@ export const IcoCreditTrustees = ({
   const initialTrustAmount: bigint = newMemberData?.initialTrustAmount ?? 0n;
   const membershipCost: bigint = memberNftData?.membershipCost ?? 0n;
   const maxMembers: bigint = memberNftData?.maxMembers ?? 0n;
-  const { decimals: assetTokenDecimals = 18 } = assetToken || {};
+  const assetTokenDecimals: number = assetToken?.decimals ?? 18;
 
   const rows: StatGridRow[] = [
     {

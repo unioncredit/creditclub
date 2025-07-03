@@ -44,8 +44,10 @@ export default function FundSinglePage() {
   const { data: clubMember } = useClubMember(address, clubAddress || "0x0");
   const { data: isQualified } = useIsQualified(clubAddress || "0x0");
 
-  const { isPublic, isActivated, isTokenEnabled } = clubData || {};
-  const { isMember } = clubMember || {};
+  const isPublic: boolean = clubData?.isPublic ?? false;
+  const isActivated: boolean = clubData?.isActivated ?? false;
+  const isTokenEnabled: boolean = clubData?.isTokenEnabled ?? false;
+  const isMember: boolean = clubMember?.isMember ?? false;
 
   // Wait for router to be ready or invalid address
   if (!router.isReady || !clubAddress) {

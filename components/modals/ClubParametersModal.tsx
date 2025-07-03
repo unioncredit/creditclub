@@ -45,7 +45,7 @@ export const ClubParametersModal = ({
     <span className="text-gray-400 italic">{text}</span>
   );
 
-  const { enabled: invitesEnabled } = inviteData || {};
+  const invitesEnabled: boolean = inviteData?.enabled ?? false;
   const {
     vestingDurationInSeconds,
     startingPercentTrust,
@@ -93,7 +93,7 @@ export const ClubParametersModal = ({
     feeManagerAddress = zeroAddress
   } = authData || {};
 
-  const { decimals: assetDecimals = 18 } = assetToken || {};
+  const assetDecimals: number = assetToken?.decimals ?? 18;
 
   // Organize parameters into sections
   const sections = [

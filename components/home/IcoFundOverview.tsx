@@ -25,7 +25,8 @@ export const IcoFundOverview = ({
   const lockupPeriod: bigint = clubData?.lockupPeriod ?? 0n;
   const description: string = clubData?.description ?? "";
   const maxMembers: bigint = clubMemberNftData?.maxMembers ?? 0n;
-  const { current = "0", goal = "0" } = icoStats || {};
+  const current: string = icoStats?.current ?? "0";
+  const goal: string = icoStats?.goal ?? "0";
 
   const rows: StatGridRow[] = [
     {

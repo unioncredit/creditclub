@@ -39,7 +39,7 @@ export const RewardsRaffleWinnerModal = ({
   const { address } = useAccount();
   const { data: clubData } = useClubData(clubAddress);
 
-  const { symbol = "" } = clubData || {};
+  const symbol: string = clubData?.symbol ?? "";
 
   const {
     bidBucketPercentage,

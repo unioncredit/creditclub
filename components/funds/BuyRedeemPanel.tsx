@@ -38,7 +38,7 @@ export const BuyRedeemPanel = ({
     totalSupply,
   } = clubData;
 
-  const { price: tokenPrice = 0 } = priceData || {};
+  const tokenPrice: number = priceData?.price ?? 0;
 
   const totalSupplyFormatted = commify((tokenPrice * Number(formatUnits(totalSupply || 0n, decimals || 18))), 0);
 

@@ -30,7 +30,9 @@ export const MembershipClaim = ({
   const { data: memberNftdata } = useClubMemberNft(clubAddress);
   const { data: isQualified } = useIsQualified(clubAddress);
 
-  const { name = "", image = "", isActivated = false } = clubData || {};
+  const name: string = clubData?.name ?? "";
+  const image: string = clubData?.image ?? "";
+  const isActivated: boolean = clubData?.isActivated ?? false;
   // Safe extraction to prevent React Error #310
   const maxMembers: bigint = memberNftdata?.maxMembers ?? 0n;
 

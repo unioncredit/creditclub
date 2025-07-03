@@ -20,8 +20,10 @@ export const IcoView = ({
   const { data: clubData } = useClubData(clubAddress);
   const { data: icoStats } = useIcoStats(clubAddress);
 
-  const { name = "" } = clubData || {};
-  const { current = "0", goal = "0", percentage = 0 } = icoStats || {};
+  const name: string = clubData?.name ?? "";
+  const current: string = icoStats?.current ?? "0";
+  const goal: string = icoStats?.goal ?? "0";
+  const percentage: number = icoStats?.percentage ?? 0;
 
   return (
     <section className={className}>

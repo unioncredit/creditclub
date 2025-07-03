@@ -50,7 +50,7 @@ const authAbi = [
 
 export const useClubAuth = (clubAddress: Address) => {
   const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
-  const { ownerAddress } = clubData || {};
+  const ownerAddress: Address = clubData?.ownerAddress ?? "0x0";
 
   const authContract = {
     address: ownerAddress,

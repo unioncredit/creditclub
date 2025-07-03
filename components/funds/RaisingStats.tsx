@@ -37,30 +37,24 @@ export const RaisingStats = ({
     return <div>Loading...</div>;
   }
 
-  const {
-    stakedBalance,
-    clubTokenBalance,
-  } = clubMember || {};
+  const stakedBalance: bigint = clubMember?.stakedBalance ?? 0n;
+  const clubTokenBalance: bigint = clubMember?.clubTokenBalance ?? 0n;
 
-  const {
-    symbol,
-    decimals,
-    isPublic,
-  } = clubData || {};
+  const symbol: string = clubData?.symbol ?? "";
+  const decimals: number = clubData?.decimals ?? 18;
+  const isPublic: boolean = clubData?.isPublic ?? false;
 
-  const {
-    minTarget,
-    maxTarget,
-    totalDeposits,
-    end,
-    isKilled,
-    isFailed,
-    hasMaxTarget,
-  } = auctionData || {};
+  const minTarget: bigint = auctionData?.minTarget ?? 0n;
+  const maxTarget: bigint = auctionData?.maxTarget ?? 0n;
+  const totalDeposits: bigint = auctionData?.totalDeposits ?? 0n;
+  const end: bigint = auctionData?.end ?? 0n;
+  const isKilled: boolean = auctionData?.isKilled ?? false;
+  const isFailed: boolean = auctionData?.isFailed ?? false;
+  const hasMaxTarget: boolean = auctionData?.hasMaxTarget ?? false;
 
-  const { price: tokenPrice = 0 } = priceData || {};
+  const tokenPrice: number = priceData?.price ?? 0;
 
-  const { decimals: assetDecimals = 18 } = assetToken;
+  const assetDecimals: number = assetToken?.decimals ?? 18;
 
 
 

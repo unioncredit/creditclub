@@ -15,7 +15,7 @@ export const BannerCta = ({
   const { open } = useModals();
   const { data: clubData } = useClubData(clubAddress);
 
-  const { name = "" } = clubData || {};
+  const name: string = clubData?.name ?? "";
 
   return (
     <div className={cn("p-6 text-center bg-blue-50 rounded-xl", className)}>
