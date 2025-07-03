@@ -32,7 +32,7 @@ export const RedeemPanel = ({
   const { address } = useAccount();
   const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress)
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
-  const { data: assetToken } = useErc20Token(clubData.assetAddress);
+  const { data: assetToken } = useErc20Token(clubData?.assetAddress);
   const { activated, locked, remaining } = useClubActivation(clubAddress);
   const { watchAsset } = useWatchAsset();
 

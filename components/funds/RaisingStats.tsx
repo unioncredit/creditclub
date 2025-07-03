@@ -1,7 +1,7 @@
 // @ts-ignore
 import { AddIcon, ConfettiIcon, ChartIcon, LinkOutIcon, WalletIcon, CalendarIcon, Text } from "@unioncredit/ui";
 import { useAccount } from "wagmi";
-import { Address, formatUnits, maxUint256, zeroAddress } from "viem";
+import { Address, formatUnits, maxUint256 } from "viem";
 
 import { RoundedButton } from "@/components/ui/RoundedButton";
 import { DistributionBarItem, DistributionBarValues } from "@/components/shared/DistributionBarValues";
@@ -28,10 +28,10 @@ export const RaisingStats = ({
   const { data: auctionData, refetch: refetchAuctionData } = useClubAuction(clubAddress);
   const { data: clubMember } = useClubMember(address, clubAddress);
   const { data: priceData } = useTokenPriceData(clubAddress);
-  const { data: assetToken } = useErc20Token(isClubDataLoading ? zeroAddress : clubData.assetAddress);
+  const { data: assetToken } = useErc20Token(clubData?.assetAddress);
   const { readyToSettle } = useClubActivation(clubAddress);
 
-  const auctionContract = useAuctionContract(isClubDataLoading ? zeroAddress : clubData.auctionAddress);
+  const auctionContract = useAuctionContract(clubData?.auctionAddress);
 
   if (isClubDataLoading) {
     return <div>Loading...</div>;

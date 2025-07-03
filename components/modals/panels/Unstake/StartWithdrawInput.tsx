@@ -3,7 +3,7 @@ import {
   Input,
   // @ts-ignore
 } from "@unioncredit/ui";
-import { Address, zeroAddress } from "viem";
+import { Address } from "viem";
 import { useAccount } from "wagmi";
 
 import { formatDecimals } from "@/lib/format";
@@ -25,7 +25,7 @@ export const StartWithdrawInput = ({
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(connectedAddress, clubAddress);
   const { refetch: refetchWithdrawBucket } = useClubWithdrawBucket(clubAddress);
 
-  const stakingContract = useStakingContract(isClubDataLoading ? zeroAddress : clubData.stakingAddress);
+  const stakingContract = useStakingContract(clubData?.stakingAddress);
 
   if (isClubDataLoading) {
     return <div>Loading...</div>;

@@ -28,7 +28,7 @@ export const MintNftModal = ({
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubMemberNft } = useClubMemberNft(clubAddress);
   const { data: newMemberData } = useNewMemberData(address, clubAddress);
-  const { data: assetToken } = useErc20Token(clubData.assetAddress);
+  const { data: assetToken } = useErc20Token(clubData?.assetAddress);
 
   const {
     symbol: assetTokenSymbol,

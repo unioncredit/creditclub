@@ -4,7 +4,7 @@ import {
   WalletIcon,
   // @ts-ignore
 } from "@unioncredit/ui";
-import { Address, erc20Abi, zeroAddress } from "viem";
+import { Address, erc20Abi } from "viem";
 import { useAccount, useWatchAsset } from "wagmi";
 
 import { useModals } from "@/providers/ModalManagerProvider";
@@ -36,7 +36,7 @@ export const StakePanel = ({
   const { activated } = useClubActivation(clubAddress);
   const { watchAsset } = useWatchAsset();
 
-  const stakingContract = useStakingContract(isClubDataLoading ? zeroAddress : clubData.stakingAddress);
+  const stakingContract = useStakingContract(clubData?.stakingAddress);
 
   if (isClubDataLoading) {
     return <div>Loading...</div>;
@@ -68,7 +68,7 @@ export const StakePanel = ({
     sendTokenDecimals: vaultTokenDecimals,
     receiveTokenSymbol: stakingTokenSymbol,
     receiveTokenDecimals: stakingTokenDecimals,
-    receiveTokenAddress: clubData.stakingAddress,
+    receiveTokenAddress: clubData?.stakingAddress,
   };
 
   const validate = (inputs: IFormValues) => {
@@ -96,7 +96,7 @@ export const StakePanel = ({
   const { data: amountReceived } = useMintRedeemPreview({
     action: "mint",
     shares: amountRaw,
-    erc4626Address: clubData.stakingAddress,
+    erc4626Address: clubData?.stakingAddress,
   });
 
   const inputError = () => {
@@ -109,7 +109,7 @@ export const StakePanel = ({
   const footerStats = [
     {
       title: "Withdraw Period",
-      value: formatDuration(Number(clubData.lockupPeriod)),
+      value: formatDuration(Number(clubData?.lockupPeriod || 0)),
     },
   ];
 
@@ -183,7 +183,7 @@ export const StakePanel = ({
 
                   <div className="flex items-center gap-2 my-4 text-sm text-blue-600">
                     <CalendarIcon width={24} className="fill" />
-                    Withdrawable in: {formatDuration(Number(clubData.lockupPeriod))}
+                    Withdrawable in: {formatDuration(Number(clubData?.lockupPeriod || 0))}
                   </div>
                 </>
               ),

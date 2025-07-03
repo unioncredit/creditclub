@@ -1,5 +1,5 @@
 import { StatGrid, StatGridRow } from "@/components/shared/StatGrid";
-import { Address, zeroAddress } from "viem";
+import { Address } from "viem";
 import { useClubData } from "@/hooks/useClubData";
 import { format, formatDecimals } from "@/lib/format";
 import { useToken } from "@/hooks/useToken";
@@ -18,7 +18,7 @@ export const FundStatsPanel = ({
   const { data: clubData, isLoading: isClubDataLoading } = useClubData(clubAddress);
   const { data: clubContacts } = useClubContacts(clubAddress);
   const { data: auctionData } = useClubAuction(clubAddress);
-  const { data: assetToken } = useErc20Token(isClubDataLoading ? zeroAddress : clubData.assetAddress);
+  const { data: assetToken } = useErc20Token(clubData?.assetAddress);
   const { data: protocol } = useUnionData();
 
   if (isClubDataLoading) {

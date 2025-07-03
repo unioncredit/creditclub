@@ -31,11 +31,11 @@ export const RefundPresalePanel = ({
   const { address } = useAccount();
   const { data: clubData, refetch: refetchClubData } = useClubData(clubAddress)
   const { data: clubMember, refetch: refetchClubMember } = useClubMember(address, clubAddress);
-  const { data: assetToken } = useErc20Token(clubData.assetAddress);
+  const { data: assetToken } = useErc20Token(clubData?.assetAddress);
   const { data: stakingData } = useClubStaking(clubAddress);
   const { watchAsset } = useWatchAsset();
 
-  const stakingContract = useCreditVaultContract(clubData.stakingAddress);
+  const stakingContract = useCreditVaultContract(clubData?.stakingAddress);
 
   const { clubTokenBalance } = clubMember;
 

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useAccount } from "wagmi";
-import { Address, zeroAddress } from "viem";
+import { Address } from "viem";
 import {
   Button,
   Modal,
@@ -43,7 +43,7 @@ export const InviteModal = ({
     sender: connectedAddress,
   });
 
-  const memberNftContract = useMemberNftContract(isClubDataLoading ? zeroAddress : clubData.memberNftAddress);
+  const memberNftContract = useMemberNftContract(clubData?.memberNftAddress);
 
   if (isClubDataLoading) {
     return (
