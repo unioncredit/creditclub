@@ -46,38 +46,20 @@ export const useClubStaking = (clubAddress: Address) => {
     }
   });
 
-  // Helper functions for safe data extraction
-  const safeString = (value: any): string => {
-    if (typeof value === 'string') return value;
-    if (value === null || value === undefined) return "";
-    return String(value);
-  };
+  // Extract staking data with proper wagmi result destructuring
+  const [
+    nameResult,
+    decimalsResult,
+    symbolResult,
+    totalAssetsResult,
+    withdrawBucketAddressResult,
+  ] = result.data || [];
 
-  const safeNumber = (value: any): number => {
-    if (typeof value === 'number') return value;
-    if (typeof value === 'bigint') return Number(value);
-    if (typeof value === 'string') return parseInt(value) || 0;
-    return 0;
-  };
-
-  const safeBigInt = (value: any): bigint => {
-    if (typeof value === 'bigint') return value;
-    if (typeof value === 'number') return BigInt(value);
-    if (typeof value === 'string') return BigInt(value || 0);
-    return 0n;
-  };
-
-  const safeAddress = (value: any): Address => {
-    if (typeof value === 'string' && value.startsWith('0x')) return value as Address;
-    return zeroAddress;
-  };
-
-  const stakingData = result.data || [];
-  const name = safeString(stakingData[0]);
-  const decimals = safeNumber(stakingData[1]);
-  const symbol = safeString(stakingData[2]);
-  const totalAssets = safeBigInt(stakingData[3]);
-  const withdrawBucketAddress = safeAddress(stakingData[4]);
+  const name: string = (nameResult?.result as string) ?? "";
+  const decimals: number = (decimalsResult?.result as number) ?? 0;
+  const symbol: string = (symbolResult?.result as string) ?? "";
+  const totalAssets: bigint = (totalAssetsResult?.result as bigint) ?? 0n;
+  const withdrawBucketAddress: Address = (withdrawBucketAddressResult?.result as Address) ?? zeroAddress;
 
   const data = {
     name,

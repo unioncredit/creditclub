@@ -62,18 +62,28 @@ export const useClubMemberNft = (clubAddress: Address) => {
     }
   });
 
-  // Extract data using safe extraction
+  // Extract data with proper wagmi result destructuring
   const [
-    contractURI = "",
-    membershipCost = 0n,
-    gatingTokenAddress = zeroAddress,
-    maxMembers = 0n,
-    isInviteEnabled = false,
-    minMembers = 0n,
-    gatingTokenAmount = 0n,
-    isSoulBound = false,
-    inviteCost = 0n,
+    contractURIResult,
+    membershipCostResult,
+    gatingTokenAddressResult,
+    maxMembersResult,
+    isInviteEnabledResult,
+    minMembersResult,
+    gatingTokenAmountResult,
+    isSoulBoundResult,
+    inviteCostResult,
   ] = result.data || [];
+
+  const contractURI: string = (contractURIResult?.result as string) ?? "";
+  const membershipCost: bigint = (membershipCostResult?.result as bigint) ?? 0n;
+  const gatingTokenAddress: Address = (gatingTokenAddressResult?.result as Address) ?? zeroAddress;
+  const maxMembers: bigint = (maxMembersResult?.result as bigint) ?? 0n;
+  const isInviteEnabled: boolean = (isInviteEnabledResult?.result as boolean) ?? false;
+  const minMembers: bigint = (minMembersResult?.result as bigint) ?? 0n;
+  const gatingTokenAmount: bigint = (gatingTokenAmountResult?.result as bigint) ?? 0n;
+  const isSoulBound: boolean = (isSoulBoundResult?.result as boolean) ?? false;
+  const inviteCost: bigint = (inviteCostResult?.result as bigint) ?? 0n;
 
   let contractMetadata: {
     name?: string;
@@ -102,14 +112,14 @@ export const useClubMemberNft = (clubAddress: Address) => {
     name,
     description,
     image,
-    membershipCost: membershipCost as bigint,
-    gatingTokenAddress: gatingTokenAddress as Address,
-    maxMembers: maxMembers as bigint,
-    isInviteEnabled: isInviteEnabled as boolean,
-    minMembers: minMembers as bigint,
-    gatingTokenAmount: gatingTokenAmount as bigint,
-    isSoulBound: isSoulBound as boolean,
-    inviteCost: inviteCost as bigint,
+    membershipCost,
+    gatingTokenAddress,
+    maxMembers,
+    isInviteEnabled,
+    minMembers,
+    gatingTokenAmount,
+    isSoulBound,
+    inviteCost,
   };
 
   const isLoading = clubDataLoading || result.isLoading;

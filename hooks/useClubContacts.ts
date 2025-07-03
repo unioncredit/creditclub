@@ -94,18 +94,25 @@ export const useClubContacts = (clubAddress: Address) => {
       };
     }
 
+    // Extract results with proper wagmi result destructuring
+    const relatedInfoResult = d[0]?.result;
+    const isMemberResult = d[1]?.result;
+    const isOverdueResult = d[2]?.result;
+    const lastRepayResult = d[3]?.result;
+    const numSharesResult = d[4]?.result;
+
     // Safety check: ensure voucher object exists
-    const voucherData = d[0] && typeof d[0] === 'object' && (d[0] as any).voucher ? (d[0] as any).voucher : {};
+    const voucherData = relatedInfoResult && typeof relatedInfoResult === 'object' && (relatedInfoResult as any).voucher ? (relatedInfoResult as any).voucher : {};
 
     return {
       address: borrowerAddresses[i]!,
       locking: safeBigInt(voucherData.locked),
       trust: safeBigInt(voucherData.trust),
       vouch: safeBigInt(voucherData.vouch),
-      isMember: safeBoolean(d[1]),
-      isOverdue: safeBoolean(d[2]),
-      lastRepay: safeBigInt(d[3]),
-      numShares: safeBigInt(d[4]),
+      isMember: safeBoolean(isMemberResult),
+      isOverdue: safeBoolean(isOverdueResult),
+      lastRepay: safeBigInt(lastRepayResult),
+      numShares: safeBigInt(numSharesResult),
     };
   });
 

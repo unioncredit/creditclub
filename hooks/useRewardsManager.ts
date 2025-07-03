@@ -40,19 +40,18 @@ export const useRewardsManager = (clubAddress: Address) => {
     }
   });
 
-  const safeBigInt = (value: any): bigint => {
-    if (typeof value === 'bigint') return value;
-    if (typeof value === 'number') return BigInt(value);
-    if (typeof value === 'string') return BigInt(value || 0);
-    return 0n;
-  };
+  // Extract rewards manager data with proper wagmi result destructuring
+  const [
+    allowanceResult,
+    unitOfCreditPerUnionClubResult,
+    unitOfCreditPerUnionPublicResult,
+    contractDaiBalanceResult,
+  ] = result.data || [];
 
-  const extractedResults = result.data || [];
-
-  const allowance = safeBigInt(extractedResults[0]);
-  const unitOfCreditPerUnionClub = safeBigInt(extractedResults[1]);
-  const unitOfCreditPerUnionPublic = safeBigInt(extractedResults[2]);
-  const contractDaiBalance = safeBigInt(extractedResults[3]);
+  const allowance: bigint = (allowanceResult?.result as bigint) ?? 0n;
+  const unitOfCreditPerUnionClub: bigint = (unitOfCreditPerUnionClubResult?.result as bigint) ?? 0n;
+  const unitOfCreditPerUnionPublic: bigint = (unitOfCreditPerUnionPublicResult?.result as bigint) ?? 0n;
+  const contractDaiBalance: bigint = (contractDaiBalanceResult?.result as bigint) ?? 0n;
 
   // Debug logging can be removed since invitePrice no longer exists
   // if (result.data) {
