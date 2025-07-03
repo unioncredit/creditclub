@@ -57,15 +57,24 @@ module.exports = {
       /Cannot use 'import\.meta' outside a module/,
     ];
 
-    // Use DefinePlugin to replace import.meta.webpackHot with undefined
-    const webpack = require('webpack');
-    config.plugins = config.plugins || [];
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'import.meta.webpackHot': 'undefined',
-        'import.meta.hot': 'undefined',
-      })
-    );
+    // Completely disable import.meta parsing for problematic modules
+    config.module.rules.unshift({
+      test: /node_modules\/@safe-global\/.*\.(js|mjs)$/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: [
+            ['@babel/preset-env', { modules: false }]
+          ],
+          plugins: [
+            ['babel-plugin-transform-define', {
+              'import.meta.webpackHot': 'undefined',
+              'import.meta.hot': 'undefined',
+            }]
+          ]
+        }
+      }
+    });
 
     // Handle viem with disabled import.meta parsing
     config.module.rules.push({
