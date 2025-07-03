@@ -36,12 +36,12 @@ export const ClubActions = ({
   const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
   const { data: memberNftData, isLoading: memberNftDataLoading } = useClubMemberNft(clubAddress);
   const { data: clubMember, refetch: refetchClubMember, isLoading: clubMemberLoading } = useClubMember(address, clubAddress);
-  const { data: vestingData } = useVesting(clubAddress);
+  const { data: vestingData, isLoading: vestingDataLoading } = useVesting(clubAddress);
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
   // Track if any data is still loading
-  const isDataLoading = clubDataLoading || memberNftDataLoading || clubMemberLoading;
+  const isDataLoading = clubDataLoading || memberNftDataLoading || clubMemberLoading || vestingDataLoading;
   
   // If any data is still loading, show loading state
   if (isDataLoading) {
@@ -142,6 +142,9 @@ export const ClubActions = ({
     : safeClaimableAmount === 0n ? "No credit available to claim (already claimed or not vested yet)"
     : null;
 
+  // Ensure cannotClaimReason is always a string or null (never an object)
+  const safeCannotClaimReason = typeof cannotClaimReason === 'string' ? cannotClaimReason : null;
+
   return (
     <div className="p-4 border rounded-2xl bg-slate-50">
       <header className="flex items-center justify-between gap-2 border-b pb-4">
@@ -186,7 +189,7 @@ export const ClubActions = ({
 
           <RoundedButton
             onClick={claimCreditButtonProps.onClick}
-            disabled={claimCreditButtonProps.disabled || !!cannotClaimReason}
+            disabled={claimCreditButtonProps.disabled || !!safeCannotClaimReason}
             className="bg-[#E3F6EC] hover:bg-[#E3F6EC] hover:opacity-90 h-[54px] text-[#1C9451] w-[156px] justify-start"
             icon={(
               <IconCube
@@ -197,7 +200,7 @@ export const ClubActions = ({
                 className="p-1"
               />
             )}
-            title={cannotClaimReason || undefined}
+            title={safeCannotClaimReason || undefined}
           >
             {claimCreditButtonProps.loading ? "Claiming..." : "Claim Credit"}
           </RoundedButton>

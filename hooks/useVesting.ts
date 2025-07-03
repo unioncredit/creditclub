@@ -7,8 +7,8 @@ import { useAccount } from "wagmi";
 export const useVesting = (clubAddress: Address) => {
   const { address } = useAccount();
 
-  const { data: clubData } = useClubData(clubAddress);
-  const { data: member } = useClubMember(address, clubAddress);
+  const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
+  const { data: member, isLoading: memberLoading } = useClubMember(address, clubAddress);
 
   // Safe extraction functions to ensure primitive values
   const safeBigInt = (value: any): bigint => {
@@ -52,5 +52,7 @@ export const useVesting = (clubAddress: Address) => {
     vestedDays: Number(vestedDays) // Ensure it's a number
   }
 
-  return { data };
+  const isLoading = clubDataLoading || memberLoading;
+
+  return { data, isLoading };
 }

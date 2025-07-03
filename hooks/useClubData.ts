@@ -285,6 +285,13 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
     return String(value);
   };
 
+  // Safe boolean conversion to ensure primitive booleans are always returned
+  const safeBoolean = (value: any): boolean => {
+    if (typeof value === 'boolean') return value;
+    if (value === null || value === undefined) return false;
+    return Boolean(value);
+  };
+
   // Extract basic info results with proper destructuring
   const [
     nameResult,
@@ -352,11 +359,11 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
     baseTrustResult,
   ] = configurationResult.data || [];
 
-  const isPublic: boolean = (isPublicResult?.result as boolean) ?? false;
-  const isActivated: boolean = (isActivatedResult?.result as boolean) ?? false;
-  const isTokenEnabled: boolean = (isTokenEnabledResult?.result as boolean) ?? false;
-  const isClosedEndFund: boolean = (isClosedEndFundResult?.result as boolean) ?? false;
-  const isTiersEnabled: boolean = (isTiersEnabledResult?.result as boolean) ?? false;
+  const isPublic: boolean = safeBoolean(isPublicResult?.result);
+  const isActivated: boolean = safeBoolean(isActivatedResult?.result);
+  const isTokenEnabled: boolean = safeBoolean(isTokenEnabledResult?.result);
+  const isClosedEndFund: boolean = safeBoolean(isClosedEndFundResult?.result);
+  const isTiersEnabled: boolean = safeBoolean(isTiersEnabledResult?.result);
   const lockupPeriod: bigint = (lockupPeriodResult?.result as bigint) ?? 0n;
   const lockupEnd: bigint = (lockupEndResult?.result as bigint) ?? 0n;
   const withdrawPeriod: bigint = (withdrawPeriodResult?.result as bigint) ?? 0n;

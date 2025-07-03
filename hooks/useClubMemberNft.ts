@@ -62,6 +62,13 @@ export const useClubMemberNft = (clubAddress: Address) => {
     }
   });
 
+  // Safe boolean conversion to ensure primitive booleans are always returned
+  const safeBoolean = (value: any): boolean => {
+    if (typeof value === 'boolean') return value;
+    if (value === null || value === undefined) return false;
+    return Boolean(value);
+  };
+
   // Extract data with proper wagmi result destructuring
   const [
     contractURIResult,
@@ -79,10 +86,10 @@ export const useClubMemberNft = (clubAddress: Address) => {
   const membershipCost: bigint = (membershipCostResult?.result as bigint) ?? 0n;
   const gatingTokenAddress: Address = (gatingTokenAddressResult?.result as Address) ?? zeroAddress;
   const maxMembers: bigint = (maxMembersResult?.result as bigint) ?? 0n;
-  const isInviteEnabled: boolean = (isInviteEnabledResult?.result as boolean) ?? false;
+  const isInviteEnabled: boolean = safeBoolean(isInviteEnabledResult?.result);
   const minMembers: bigint = (minMembersResult?.result as bigint) ?? 0n;
   const gatingTokenAmount: bigint = (gatingTokenAmountResult?.result as bigint) ?? 0n;
-  const isSoulBound: boolean = (isSoulBoundResult?.result as boolean) ?? false;
+  const isSoulBound: boolean = safeBoolean(isSoulBoundResult?.result);
   const inviteCost: bigint = (inviteCostResult?.result as bigint) ?? 0n;
 
   let contractMetadata: {
