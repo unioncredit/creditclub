@@ -25,10 +25,34 @@ export const useContactCounts = (address: Address) => {
     }
   });
 
-  const [
-    voucherCount= 0,
-    voucheeCount = 0n,
-  ] = result.data || [];
+  const extractResult = (contractResult: any): any => {
+    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    if (contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    return null;
+  };
+
+  const safeBigInt = (value: any): bigint => {
+    if (typeof value === 'bigint') return value;
+    if (typeof value === 'number') return BigInt(value);
+    if (typeof value === 'string' && value !== '') {
+      try {
+        return BigInt(value);
+      } catch {
+        return 0n;
+      }
+    }
+    return 0n;
+  };
+
+  const voucherCountResult = result.data?.[0] ? extractResult(result.data[0]) : null;
+  const voucheeCountResult = result.data?.[1] ? extractResult(result.data[1]) : null;
+
+  const voucherCount = safeBigInt(voucherCountResult);
+  const voucheeCount = safeBigInt(voucheeCountResult);
 
   return {
     voucherCount,

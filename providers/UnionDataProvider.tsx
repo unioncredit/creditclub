@@ -36,12 +36,30 @@ export const UnionDataProvider = ({ children }: { children: React.ReactNode; }) 
     })),
   });
 
-  const [
-    minBorrow = 0n,
-    originationFee = 0n,
-    overdueTime = 0n,
-    borrowRatePerSecond = 0n,
-  ] = result.data?.map(d => d.result as never) || [];
+  // Helper function to safely extract contract result values
+  const extractResult = (contractResult: any): any => {
+    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    if (contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    return null;
+  };
+
+  const safeBigInt = (value: any): bigint => {
+    const extracted = extractResult(value);
+    if (typeof extracted === 'bigint') return extracted;
+    if (typeof extracted === 'number') return BigInt(extracted);
+    if (typeof extracted === 'string') return BigInt(extracted || 0);
+    return 0n;
+  };
+
+  const resultData = result.data || [];
+  const minBorrow = safeBigInt(resultData[0]);
+  const originationFee = safeBigInt(resultData[1]);
+  const overdueTime = safeBigInt(resultData[2]);
+  const borrowRatePerSecond = safeBigInt(resultData[3]);
 
   const data = {
     minBorrow,

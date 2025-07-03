@@ -10,8 +10,18 @@ export default function useRelatedAddresses(address: Address) {
 
   const { voucherCount, voucheeCount, refetch: refetchCounts } = useContactCounts(address);
 
+  const safeArrayLength = (value: bigint | number): number => {
+    try {
+      const num = typeof value === 'bigint' ? Number(value) : value;
+      if (isNaN(num) || num < 0 || num > 10000) return 0; // Cap at reasonable limit
+      return Math.floor(num);
+    } catch {
+      return 0;
+    }
+  };
+
   const { data: voucherData, refetch: refetchVouchers } = useReadContracts({
-    contracts: Array(Number(voucherCount))
+    contracts: Array(safeArrayLength(voucherCount))
       .fill(null)
       .map((_, i) => ({
         ...userManagerContract,
@@ -22,7 +32,7 @@ export default function useRelatedAddresses(address: Address) {
   });
 
   const { data: voucheeData, refetch: refetchVouchees } = useReadContracts({
-    contracts: Array(Number(voucheeCount))
+    contracts: Array(safeArrayLength(voucheeCount))
       .fill(null)
       .map((_, i) => ({
         ...userManagerContract,

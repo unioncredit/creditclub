@@ -67,14 +67,38 @@ export const UnionMemberProvider = ({ children }: { children: React.ReactNode; }
     }
   });
 
-  const [
-    isOverdue = false,
-    creditLimit = 0n,
-    owed = 0n,
-    daiBalance = 0n,
-    interest = 0n,
-    unionBalance = 0n,
-  ] = result.data?.map(d => d.result as never) || [];
+  // Helper function to safely extract contract result values
+  const extractResult = (contractResult: any): any => {
+    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    if (contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    return null;
+  };
+
+  const safeBoolean = (value: any): boolean => {
+    const extracted = extractResult(value);
+    if (typeof extracted === 'boolean') return extracted;
+    return Boolean(extracted);
+  };
+
+  const safeBigInt = (value: any): bigint => {
+    const extracted = extractResult(value);
+    if (typeof extracted === 'bigint') return extracted;
+    if (typeof extracted === 'number') return BigInt(extracted);
+    if (typeof extracted === 'string') return BigInt(extracted || 0);
+    return 0n;
+  };
+
+  const resultData = result.data || [];
+  const isOverdue = safeBoolean(resultData[0]);
+  const creditLimit = safeBigInt(resultData[1]);
+  const owed = safeBigInt(resultData[2]);
+  const daiBalance = safeBigInt(resultData[3]);
+  const interest = safeBigInt(resultData[4]);
+  const unionBalance = safeBigInt(resultData[5]);
 
   const data = {
     isOverdue,

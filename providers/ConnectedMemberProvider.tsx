@@ -28,10 +28,27 @@ export const ConnectedMemberProvider = ({ children }: { children: React.ReactNod
     }
   });
 
-  const [
-    tokenBalance = 0n,
-    // @ts-ignore
-  ] = result.data?.map(d => d.result as never) || [];
+  // Helper function to safely extract contract result values
+  const extractResult = (contractResult: any): any => {
+    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    if (contractResult?.result !== undefined) {
+      return contractResult.result;
+    }
+    return null;
+  };
+
+  const safeBigInt = (value: any): bigint => {
+    const extracted = extractResult(value);
+    if (typeof extracted === 'bigint') return extracted;
+    if (typeof extracted === 'number') return BigInt(extracted);
+    if (typeof extracted === 'string') return BigInt(extracted || 0);
+    return 0n;
+  };
+
+  const resultData = result.data || [];
+  const tokenBalance = safeBigInt(resultData[0]);
 
   const data = {
     tokenBalance,
