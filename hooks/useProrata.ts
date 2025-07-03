@@ -1,4 +1,4 @@
-import { Address, zeroAddress } from "viem";
+import { Address } from "viem";
 import { useClubData } from "@/hooks/useClubData";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { useClubContacts } from "@/hooks/useClubContacts";
@@ -32,7 +32,7 @@ export const useProrata = (clubAddress: Address) => {
   
   // Only call useErc20Token if we have an asset address
   const { data: assetToken, isLoading: assetTokenLoading } = useErc20Token(
-    clubData?.assetAddress || zeroAddress
+    clubData?.assetAddress
   );
 
   // Check if any data is still loading

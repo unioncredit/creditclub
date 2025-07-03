@@ -39,21 +39,30 @@ export default function FundSinglePage() {
 
   const { address } = useAccount();
   
-  // Only run hooks when router is ready and we have a valid clubAddress
+  // Always call hooks first (Rules of Hooks)
   const { data: clubData } = useClubData(clubAddress || "0x0");
   const { data: clubMember } = useClubMember(address, clubAddress || "0x0");
   const { data: isQualified } = useIsQualified(clubAddress || "0x0");
+
+  // Wait for router to be ready and validate address
+  if (!router.isReady) {
+    if (typeof window !== 'undefined') {
+      console.log("=== Router not ready, returning null ===");
+    }
+    return null;
+  }
+
+  if (!clubAddress) {
+    if (typeof window !== 'undefined') {
+      console.log("=== No valid club address, returning null ===");
+    }
+    return null;
+  }
 
   const isPublic: boolean = clubData?.isPublic ?? false;
   const isActivated: boolean = clubData?.isActivated ?? false;
   const isTokenEnabled: boolean = clubData?.isTokenEnabled ?? false;
   const isMember: boolean = clubMember?.isMember ?? false;
-
-  // Wait for router to be ready or invalid address
-  if (!router.isReady || !clubAddress) {
-    console.log("=== Returning null - router not ready or no address ===");
-    return null;
-  }
 
   return (
     <>
