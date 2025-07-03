@@ -57,19 +57,17 @@ module.exports = {
       /Cannot use 'import\.meta' outside a module/,
     ];
 
-    // Completely exclude problematic Safe Global SDK modules from webpack processing
-    config.module.rules.push({
-      test: /node_modules\/@safe-global\/.*\.(js|mjs)$/,
-      type: 'javascript/auto',
-      parser: {
-        javascript: {
-          importMeta: false,
-          dynamicImport: false,
-        },
-      },
-    });
+    // Use DefinePlugin to replace import.meta.webpackHot with undefined
+    const webpack = require('webpack');
+    config.plugins = config.plugins || [];
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'import.meta.webpackHot': 'undefined',
+        'import.meta.hot': 'undefined',
+      })
+    );
 
-    // Handle viem separately with less strict parsing
+    // Handle viem with disabled import.meta parsing
     config.module.rules.push({
       test: /node_modules\/viem\/.*\.(js|mjs)$/,
       type: 'javascript/auto',
