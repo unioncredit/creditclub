@@ -6,15 +6,7 @@ import { useClubStaking } from "@/hooks/useClubStaking";
 import { useWithdrawBucketContract } from "@/hooks/useWithdrawBucketContract";
 import { useCurrentTime } from "@/hooks/useCurrentTime";
 
-const extractResult = (contractResult: any): any => {
-  if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
-    return contractResult.result;
-  }
-  if (contractResult?.result !== undefined) {
-    return contractResult.result;
-  }
-  return null;
-};
+
 
 export const useClubWithdrawBucket = (clubAddress: Address) => {
   const { address: connectedAddress } = useAccount();
@@ -36,7 +28,9 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
     }
   });
 
-  const numWithdrawals: bigint = extractResult(numWithdrawalsQuery) || 0n;
+  const numWithdrawals: bigint = (numWithdrawalsQuery.data as bigint) || 0n;
+
+
 
   const contracts = Array(Number(numWithdrawals)).fill(0).map((_, i) => ({
     ...withdrawBucketContract,
@@ -56,9 +50,10 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
     }
   });
   // Extract withdrawal data with proper destructuring
-  const withdrawals = result.data?.map(d => extractResult(d)) || [];
+  const withdrawalResults = result.data || [];
 
-  const typedWithdrawals = withdrawals.map((withdrawalData, id) => {
+  const typedWithdrawals = withdrawalResults.map((withdrawalResult, id) => {
+    const withdrawalData = withdrawalResult?.result as any;
     return {
       id,
       amount: (withdrawalData?.[0] as bigint) || 0n,
@@ -67,13 +62,17 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
     };
   })
 
+  const lockedWithdrawals = typedWithdrawals.filter(w => !hasPassed(w.end));
+  const pendingWithdrawals = typedWithdrawals.filter(w => hasPassed(w.end) && !w.isComplete);
+  const completedWithdrawals = typedWithdrawals.filter(w => w.isComplete);
+
   const data = {
     withdrawBucketAddress,
     numWithdrawals,
     withdrawals: typedWithdrawals,
-    lockedWithdrawals: typedWithdrawals.filter(w => !hasPassed(w.end)),
-    pendingWithdrawals: typedWithdrawals.filter(w => hasPassed(w.end) && !w.isComplete),
-    completedWithdrawals: typedWithdrawals.filter(w => w.isComplete),
+    lockedWithdrawals,
+    pendingWithdrawals,
+    completedWithdrawals,
   };
 
   return { 
