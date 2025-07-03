@@ -8,10 +8,11 @@ export const useVesting = (clubAddress: Address) => {
   const { address } = useAccount();
 
   const { data: clubData } = useClubData(clubAddress);
-  const { vestingDurationInSeconds, startingPercentTrust } = clubData;
+  const vestingDurationInSeconds: bigint = clubData?.vestingDurationInSeconds ?? 0n;
+  const startingPercentTrust: bigint = clubData?.startingPercentTrust ?? 0n;
 
   const { data: member } = useClubMember(address, clubAddress);
-  const { percentVested } = member;
+  const percentVested: bigint = member?.percentVested ?? 0n;
 
   // Number of days to fully vest
   const duration = Math.round(Number(vestingDurationInSeconds) / SECONDS_PER_DAY);

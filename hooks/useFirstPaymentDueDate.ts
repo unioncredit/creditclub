@@ -4,7 +4,7 @@ import { BLOCK_SPEED } from "@/constants";
 
 export const useFirstPaymentDueDate = () => {
   const { data: protocol } = useUnionData();
-  const { overdueTime } = protocol;
+  const overdueTime: bigint = protocol?.overdueTime ?? 0n;
 
   const milliseconds = overdueTime * BigInt(BLOCK_SPEED);
 

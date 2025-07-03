@@ -17,7 +17,7 @@ export const InviteesTableRow = ({
   clubAddress: Address;
 }) => {
   const { data: member, isLoading } = useClubMember(receiver, clubAddress);
-  const { isMember } = member;
+  const isMember: boolean = member?.isMember ?? false;
 
   return (
     <TableRow>

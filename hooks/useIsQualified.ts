@@ -6,15 +6,11 @@ export const useIsQualified = (clubAddress: Address) => {
   const { data: gatingTokenData, refetch: refetchGatingToken } = useGatingToken(clubAddress);
   const { data: inviteData, refetch: refetchInvites } = useInvites(clubAddress);
 
-  const {
-    enabled: inviteEnabled = false,
-    qualified: inviteQualified = false
-  } = inviteData || {};
+  const inviteEnabled: boolean = inviteData?.enabled ?? false;
+  const inviteQualified: boolean = inviteData?.qualified ?? false;
 
-  const {
-    enabled: tokenEnabled = false,
-    qualified: tokenQualified = false,
-  } = gatingTokenData || {};
+  const tokenEnabled: boolean = gatingTokenData?.enabled ?? false;
+  const tokenQualified: boolean = gatingTokenData?.qualified ?? false;
 
   // Ensure we return a boolean, not undefined
   const isQualified = Boolean(

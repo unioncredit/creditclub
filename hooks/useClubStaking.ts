@@ -7,7 +7,7 @@ import { useStakingContract } from "@/hooks/useStakingContract";
 
 export const useClubStaking = (clubAddress: Address) => {
   const { data: clubData } = useClubData(clubAddress);
-  const { stakingAddress } = clubData;
+  const stakingAddress: Address = clubData?.stakingAddress ?? zeroAddress;
 
   const stakingContract = useStakingContract(stakingAddress);
 

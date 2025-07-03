@@ -6,7 +6,8 @@ import { Address } from "viem";
 
 export const useRaffleCooldown = (clubAddress: Address) => {
   const { data: creditClub } = useClubData(clubAddress);
-  const { rewardCooldown, lastReward } = creditClub;
+  const rewardCooldown: number = creditClub?.rewardCooldown ?? 0;
+  const lastReward: bigint = creditClub?.lastReward ?? 0n;
   
   const deadline = useMemo(() => {
     try {

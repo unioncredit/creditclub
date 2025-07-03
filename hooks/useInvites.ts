@@ -9,8 +9,8 @@ export const useInvites = (clubAddress: Address) => {
   const { data: memberNftData, refetch: refetchClubMemberNft } = useClubMemberNft(clubAddress);
   const { data: memberData, refetch: refetchClubMember } = useClubMember(address, clubAddress);
 
-  const { isInviteEnabled } = memberNftData;
-  const { isInvited } = memberData;
+  const isInviteEnabled: boolean = memberNftData?.isInviteEnabled ?? false;
+  const isInvited: boolean = memberData?.isInvited ?? false;
 
   const data = {
     enabled: isInviteEnabled,

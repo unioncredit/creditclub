@@ -69,7 +69,8 @@ export const FundHoldersTable = ({
   const { data: clubData } = useClubData(clubAddress);
   const { data: priceData }  = useTokenPriceData(clubAddress);
 
-  const { decimals, totalSupply } = clubData;
+  const decimals: number = clubData?.decimals ?? 18;
+  const totalSupply: bigint = clubData?.totalSupply ?? 0n;
   const tokenPrice: number = priceData?.price ?? 0;
 
   const rows: FundHolderRow[] = holders.map(({ address, amount }, index) => ({

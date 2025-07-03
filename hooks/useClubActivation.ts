@@ -6,8 +6,12 @@ export const useClubActivation = (clubAddress: Address) => {
   const { data: clubData } = useClubData(clubAddress);
   const { data: auctionData } = useClubAuction(clubAddress);
   
-  const { isActivated, lockupEnd } = clubData;
-  const { maxTarget, minTarget, totalDeposits, end } = auctionData;
+  const isActivated: boolean = clubData?.isActivated ?? false;
+  const lockupEnd: bigint = clubData?.lockupEnd ?? 0n;
+  const maxTarget: bigint = auctionData?.maxTarget ?? 0n;
+  const minTarget: bigint = auctionData?.minTarget ?? 0n;
+  const totalDeposits: bigint = auctionData?.totalDeposits ?? 0n;
+  const end: bigint = auctionData?.end ?? 0n;
 
   // Current time in seconds
   const currentTime = Math.floor(Date.now() / 1000);

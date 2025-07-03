@@ -7,7 +7,7 @@ import { useMemberNftContract } from "@/hooks/useMemberNftContract";
 
 export const useClubMemberNft = (clubAddress: Address) => {
   const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
-  const { memberNftAddress } = clubData;
+  const memberNftAddress: Address = clubData?.memberNftAddress ?? zeroAddress;
 
   const memberNftContract = useMemberNftContract(memberNftAddress);
 
@@ -102,11 +102,9 @@ export const useClubMemberNft = (clubAddress: Address) => {
     contractMetadata = {};
   }
 
-  const {
-    name = "",
-    description = "",
-    image = ""
-  } = contractMetadata;
+  const name: string = contractMetadata?.name ?? "";
+  const description: string = contractMetadata?.description ?? "";
+  const image: string = contractMetadata?.image ?? "";
 
   const data = {
     name,

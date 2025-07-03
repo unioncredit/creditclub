@@ -46,52 +46,44 @@ export const ClubParametersModal = ({
   );
 
   const invitesEnabled: boolean = inviteData?.enabled ?? false;
-  const {
-    vestingDurationInSeconds,
-    startingPercentTrust,
-    creatorAddress,
-    memberNftAddress,
-    stakingAddress,
-    fixedBidPrice,
-    lockupPeriod,
-    withdrawPeriod,
-    vaultWithdrawFeeBps,
-    stakingWithdrawFeeBps,
-    feeRecipient,
-    isClosedEndFund,
-    isPublic,
-    isTokenEnabled,
-    isTiersEnabled,
-    costToCall,
-    rewardCooldown,
-    name: clubName,
-    symbol: clubSymbol,
-    image: clubImage,
-    description: clubDescription,
-    ownerAddress
-  } = clubData || {};
-  const {
-    name: membershipName,
-    gatingTokenAddress,
-    gatingTokenAmount,
-    membershipCost,
-    inviteCost,
-    maxMembers,
-    minMembers,
-    isSoulBound
-  } = memberNftData || {};
-  const {
-    minTarget,
-    maxTarget,
-    period,
-    vaultRatio,
-    assetRatio
-  } = auctionData || {};
-  const {
-    creditManagerAddress = zeroAddress,
-    managerAddress = zeroAddress,
-    feeManagerAddress = zeroAddress
-  } = authData || {};
+  const vestingDurationInSeconds: bigint = clubData?.vestingDurationInSeconds ?? 0n;
+  const startingPercentTrust: bigint = clubData?.startingPercentTrust ?? 0n;
+  const creatorAddress: Address = clubData?.creatorAddress ?? "0x0";
+  const memberNftAddress: Address = clubData?.memberNftAddress ?? "0x0";
+  const stakingAddress: Address = clubData?.stakingAddress ?? "0x0";
+  const fixedBidPrice: bigint = clubData?.fixedBidPrice ?? 0n;
+  const lockupPeriod: bigint = clubData?.lockupPeriod ?? 0n;
+  const withdrawPeriod: bigint = clubData?.withdrawPeriod ?? 0n;
+  const vaultWithdrawFeeBps: bigint = clubData?.vaultWithdrawFeeBps ?? 0n;
+  const stakingWithdrawFeeBps: bigint = clubData?.stakingWithdrawFeeBps ?? 0n;
+  const feeRecipient: Address = clubData?.feeRecipient ?? "0x0";
+  const isClosedEndFund: boolean = clubData?.isClosedEndFund ?? false;
+  const isPublic: boolean = clubData?.isPublic ?? false;
+  const isTokenEnabled: boolean = clubData?.isTokenEnabled ?? false;
+  const isTiersEnabled: boolean = clubData?.isTiersEnabled ?? false;
+  const costToCall: bigint = clubData?.costToCall ?? 0n;
+  const rewardCooldown: number = clubData?.rewardCooldown ?? 0;
+  const clubName: string = clubData?.name ?? "";
+  const clubSymbol: string = clubData?.symbol ?? "";
+  const clubImage: string = clubData?.image ?? "";
+  const clubDescription: string = clubData?.description ?? "";
+  const ownerAddress: Address = clubData?.ownerAddress ?? "0x0";
+  const membershipName: string = memberNftData?.name ?? "";
+  const gatingTokenAddress: Address = memberNftData?.gatingTokenAddress ?? "0x0";
+  const gatingTokenAmount: bigint = memberNftData?.gatingTokenAmount ?? 0n;
+  const membershipCost: bigint = memberNftData?.membershipCost ?? 0n;
+  const inviteCost: bigint = memberNftData?.inviteCost ?? 0n;
+  const maxMembers: bigint = memberNftData?.maxMembers ?? 0n;
+  const minMembers: bigint = memberNftData?.minMembers ?? 0n;
+  const isSoulBound: boolean = memberNftData?.isSoulBound ?? false;
+  const minTarget: bigint = auctionData?.minTarget ?? 0n;
+  const maxTarget: bigint = auctionData?.maxTarget ?? 0n;
+  const period: bigint = auctionData?.period ?? 0n;
+  const vaultRatio: bigint = auctionData?.vaultRatio ?? 0n;
+  const assetRatio: bigint = auctionData?.assetRatio ?? 0n;
+  const creditManagerAddress: Address = authData?.creditManagerAddress ?? zeroAddress;
+  const managerAddress: Address = authData?.managerAddress ?? zeroAddress;
+  const feeManagerAddress: Address = authData?.feeManagerAddress ?? zeroAddress;
 
   const assetDecimals: number = assetToken?.decimals ?? 18;
 

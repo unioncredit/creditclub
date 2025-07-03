@@ -48,16 +48,10 @@ export const useProrata = (clubAddress: Address) => {
     };
   }
 
-  const {
-    stakedBalance: clubStake,
-  } = clubData;
-
-  const {
-    minMembers,
-  } = memberNftData;
-
+  const clubStake: bigint = clubData?.stakedBalance ?? 0n;
+  const minMembers: bigint = memberNftData?.minMembers ?? 0n;
   const currentMembers = clubContacts.length;
-  const { decimals: assetDecimals } = assetToken;
+  const assetDecimals: number = assetToken?.decimals ?? 18;
 
   // Calculate prorata: club stake / max(minMembers, currentMembers)
   const divisor = Math.max(Number(minMembers), currentMembers);

@@ -7,7 +7,7 @@ import { useAuctionContract } from "@/hooks/useAuctionContract";
 
 export const useClubAuction = (clubAddress: Address) => {
   const { data: clubData } = useClubData(clubAddress);
-  const { auctionAddress } = clubData;
+  const auctionAddress: Address = clubData?.auctionAddress ?? "0x0";
 
   const auctionContract = useAuctionContract(auctionAddress);
 

@@ -47,10 +47,14 @@ export const MintMemberNftMultichain = ({
   const creditVaultContract = useCreditVaultContract(clubAddress);
   const tokenContract = useContract("token");
 
-  const { isMember } = clubMember;
-  const { name, image, memberNftAddress, isActivated } = clubData;
-  const { membershipCost } = clubMemberNftData;
-  const { initialTrustAmount, tokenId } = newMemberData;
+  const isMember: boolean = clubMember?.isMember ?? false;
+  const name: string = clubData?.name ?? "";
+  const image: string = clubData?.image ?? "";
+  const memberNftAddress: Address = clubData?.memberNftAddress ?? "0x0";
+  const isActivated: boolean = clubData?.isActivated ?? false;
+  const membershipCost: bigint = clubMemberNftData?.membershipCost ?? 0n;
+  const initialTrustAmount: bigint = newMemberData?.initialTrustAmount ?? 0n;
+  const tokenId: bigint = newMemberData?.tokenId ?? 0n;
 
   // Monitor token allowance for approval detection
   const currentAllowanceQuery = useReadContract({

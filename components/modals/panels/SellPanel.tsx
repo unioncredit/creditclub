@@ -25,10 +25,13 @@ export const SellPanel = ({
   const { address } = useAccount();
   const { data: clubData } = useClubData(clubAddress);
   const { data: clubMemberData, refetch: refetchClubMember } = useClubMember(address, clubAddress);
-  const { data: assetToken } = useErc20Token(clubData.assetAddress);
+  const { data: assetToken } = useErc20Token(clubData?.assetAddress);
 
-  const { image, decimals, symbol } = clubData;
-  const { address: assetAddress, symbol: assetSymbol } = assetToken;
+  const image: string = clubData?.image ?? "";
+  const decimals: number = clubData?.decimals ?? 18;
+  const symbol: string = clubData?.symbol ?? "";
+  const assetAddress: Address = assetToken?.address ?? "0x0";
+  const assetSymbol: string = assetToken?.symbol ?? "";
   // Safe extraction to prevent React Error #310
   const clubTokenBalance: bigint = clubMemberData?.clubTokenBalance ?? 0n;
   const stakedBalance: bigint = clubMemberData?.stakedBalance ?? 0n;

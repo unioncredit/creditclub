@@ -9,11 +9,11 @@ export const useIcoStats = (clubAddress: Address) => {
   const { data } = result;
 
   const { data: auctionData } = useClubAuction(clubAddress);
-  const { data: assetToken } = useErc20Token(data.assetAddress);
+  const { data: assetToken } = useErc20Token(data?.assetAddress);
 
-  const { totalAssets } = data;
-  const { decimals } = assetToken;
-  const { minTarget } = auctionData;
+  const totalAssets: bigint = data?.totalAssets ?? 0n;
+  const decimals: number = assetToken?.decimals ?? 18;
+  const minTarget: bigint = auctionData?.minTarget ?? 0n;
 
   const percentage = minTarget > 0n ?
     Math.min(Math.max(Number((totalAssets * BigInt(100)) / minTarget), 0), 100)

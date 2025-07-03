@@ -11,7 +11,7 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
   const { data: stakingData } = useClubStaking(clubAddress);
   const { hasPassed } = useCurrentTime();
 
-  const { withdrawBucketAddress } = stakingData;
+  const withdrawBucketAddress: Address = stakingData?.withdrawBucketAddress ?? "0x0";
 
   const withdrawBucketContract = useWithdrawBucketContract(withdrawBucketAddress);
 

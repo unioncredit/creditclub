@@ -36,17 +36,13 @@ export const MembershipClaim = ({
   // Safe extraction to prevent React Error #310
   const maxMembers: bigint = memberNftdata?.maxMembers ?? 0n;
 
-  const {
-    memberInvitesEnabled = false,
-    qualified: inviteQualified = false
-  } = inviteData || {};
+  const memberInvitesEnabled: boolean = inviteData?.memberInvitesEnabled ?? false;
+  const inviteQualified: boolean = inviteData?.qualified ?? false;
 
-  const {
-    enabled: tokenEnabled = false,
-    qualified: tokenQualified = false,
-    symbol = "",
-    name: tokenName = ""
-  } = gatingTokenData || {};
+  const tokenEnabled: boolean = gatingTokenData?.enabled ?? false;
+  const tokenQualified: boolean = gatingTokenData?.qualified ?? false;
+  const symbol: string = gatingTokenData?.symbol ?? "";
+  const tokenName: string = gatingTokenData?.name ?? "";
 
   const requirementRows = [
     {
