@@ -278,6 +278,13 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
 
   // Extract data from batch results with proper wagmi result destructuring
 
+  // Safe string conversion to ensure primitive strings are always returned
+  const safeString = (value: any): string => {
+    if (typeof value === 'string') return value;
+    if (value === null || value === undefined) return "";
+    return String(value);
+  };
+
   // Extract basic info results with proper destructuring
   const [
     nameResult,
@@ -294,8 +301,8 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
     descriptionResult,
   ] = basicInfoResult.data || [];
 
-  const name: string = (nameResult?.result as string) ?? "";
-  const symbol: string = (symbolResult?.result as string) ?? "";
+  const name: string = safeString(nameResult?.result);
+  const symbol: string = safeString(symbolResult?.result);
   const decimals: number = (decimalsResult?.result as number) ?? 18;
   const memberNftAddress: Address = (memberNftAddressResult?.result as Address) ?? zeroAddress;
   const assetAddress: Address = (assetAddressResult?.result as Address) ?? zeroAddress;
@@ -304,8 +311,8 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
   const rewardsManagerAddress: Address = (rewardsManagerAddressResult?.result as Address) ?? zeroAddress;
   const creatorAddress: Address = (creatorAddressResult?.result as Address) ?? zeroAddress;
   const ownerAddress: Address = (ownerAddressResult?.result as Address) ?? zeroAddress;
-  const image: string = (imageResult?.result as string) ?? "";
-  const description: string = (descriptionResult?.result as string) ?? "";
+  const image: string = safeString(imageResult?.result);
+  const description: string = safeString(descriptionResult?.result);
 
   // Extract financial info results with proper destructuring
   const [
