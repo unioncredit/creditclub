@@ -138,64 +138,35 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     }
   });
 
-  // Extract values with proper type handling
-  const extractResult = (contractResult: any): any => {
-    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
-      return contractResult.result;
-    }
-    if (contractResult?.result !== undefined) {
-      return contractResult.result;
-    }
-    return null;
-  };
+  // Extract values with proper wagmi result destructuring
 
-  const safeBigInt = (value: any): bigint => {
-    const extracted = extractResult(value);
-    const result = (() => {
-      if (typeof extracted === 'bigint') return extracted;
-      if (typeof extracted === 'number') return BigInt(extracted);
-      if (typeof extracted === 'string') return BigInt(extracted);
-      return 0n;
-    })();
-    
-    // Debug logging for React Error #310
-    if (typeof result === 'object' && result !== null) {
-      console.error('🔴 useClubMember safeBigInt returning object:', { input: value, extracted, result });
-    }
-    
-    return result;
-  };
-
-  const safeAddress = (value: any): Address => {
-    const extracted = extractResult(value);
-    const result = (() => {
-      if (typeof extracted === 'string' && extracted.startsWith('0x')) return extracted as Address;
-      return zeroAddress;
-    })();
-    
-    // Debug logging for React Error #310
-    if (typeof result === 'object' && result !== null && result !== zeroAddress) {
-      console.error('🔴 useClubMember safeAddress returning object:', { input: value, extracted, result });
-    }
-    
-    return result;
-  };
-
-  // Extract balance data
+  // Extract balance data with proper destructuring
   const [
-    clubTokenBalance = 0n,
-    memberNftBalance = 0n,
-    stakedBalance = 0n,
-    assetBalance = 0n,
-  ] = balanceResult.data?.map((d: any) => safeBigInt(d)) || [];
+    clubTokenBalanceResult,
+    memberNftBalanceResult,
+    stakedBalanceResult,
+    assetBalanceResult,
+  ] = balanceResult.data || [];
 
-  // Extract member info data
-  const memberInfoData = memberInfoResult.data || [];
-  const owed = safeBigInt(memberInfoData[0]);
-  const vouch = safeBigInt(memberInfoData[1]);
-  const tokenId = safeBigInt(memberInfoData[2]);
-  const invitedByAddress = safeAddress(memberInfoData[3]);
-  const inviteCount = safeBigInt(memberInfoData[4]);
+  const clubTokenBalance: bigint = (clubTokenBalanceResult?.result as bigint) ?? 0n;
+  const memberNftBalance: bigint = (memberNftBalanceResult?.result as bigint) ?? 0n;
+  const stakedBalance: bigint = (stakedBalanceResult?.result as bigint) ?? 0n;
+  const assetBalance: bigint = (assetBalanceResult?.result as bigint) ?? 0n;
+
+  // Extract member info data with proper destructuring
+  const [
+    owedResult,
+    vouchResult,
+    tokenIdResult,
+    invitedByAddressResult,
+    inviteCountResult,
+  ] = memberInfoResult.data || [];
+
+  const owed: bigint = (owedResult?.result as bigint) ?? 0n;
+  const vouch: bigint = (vouchResult?.result as bigint) ?? 0n;
+  const tokenId: bigint = (tokenIdResult?.result as bigint) ?? 0n;
+  const invitedByAddress: Address = (invitedByAddressResult?.result as Address) ?? zeroAddress;
+  const inviteCount: bigint = (inviteCountResult?.result as bigint) ?? 0n;
 
   // Get member details from getMember function (only if tokenId is available)
   const memberDataQuery = useReadContract({
@@ -231,14 +202,14 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
         referrer = zeroAddress;
       }
       
-      baseTrust = safeBigInt(memberDetails.baseTrust);
-      badDebt = safeBigInt(memberDetails.badDebt);
-      updatedAt = safeBigInt(memberDetails.updatedAt);
+      baseTrust = (typeof memberDetails.baseTrust === 'bigint') ? memberDetails.baseTrust : 0n;
+      badDebt = (typeof memberDetails.badDebt === 'bigint') ? memberDetails.badDebt : 0n;
+      updatedAt = (typeof memberDetails.updatedAt === 'bigint') ? memberDetails.updatedAt : 0n;
       active = Boolean(memberDetails.isActive);
       
       // Safely extract tier as number
       tier = (typeof memberDetails.tier === 'number') ? memberDetails.tier : 0;
-      tierPercentage = safeBigInt(memberDetails.tierPercentage);
+      tierPercentage = (typeof memberDetails.tierPercentage === 'bigint') ? memberDetails.tierPercentage : 0n;
       
       // Ensure tierLabel is always a string, even if it's an object or other type
       if (typeof memberDetails.tierLabel === 'string') {
@@ -272,7 +243,7 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
     }
   });
 
-  const percentVested = safeBigInt(percentVestedQuery.data);
+  const percentVested: bigint = (percentVestedQuery.data as bigint) ?? 0n;
 
   // Calculate values based on available data
   const WAD = 10n ** 18n;

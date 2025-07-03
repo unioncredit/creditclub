@@ -64,7 +64,7 @@ export const RaisingStats = ({
 
 
 
-  const markValue = (minTarget && minTarget > 0n) && (maxTarget && maxTarget == maxUint256) ? Number(minTarget) : undefined;
+  const markValue = (minTarget && minTarget > 0n) && (maxTarget && maxTarget === maxUint256) ? Number(minTarget) : undefined;
 
   const activateClubButtonProps = useWrite({
     ...auctionContract,
@@ -90,7 +90,7 @@ export const RaisingStats = ({
         title: "Raised",
       },
     ] : []),
-    ...((minTarget && minTarget == 0n) && hasMaxTarget && (maxTarget && maxTarget > 0n) ? [
+    ...((minTarget && minTarget === 0n) && hasMaxTarget && (maxTarget && maxTarget > 0n) ? [
       {
         value: Number(totalDeposits || 0n),
         label: `$${formatDecimals(totalDeposits || 0n, assetDecimals, 2)}`,

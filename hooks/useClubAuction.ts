@@ -62,29 +62,29 @@ export const useClubAuction = (clubAddress: Address) => {
     }
   });
 
-  // Helper functions for safe data extraction
-  const safeBigInt = (value: any): bigint => {
-    if (typeof value === 'bigint') return value;
-    if (typeof value === 'number') return BigInt(value);
-    if (typeof value === 'string') return BigInt(value || 0);
-    return 0n;
-  };
+  // Properly extract wagmi contract results
+  const [
+    minTargetResult,
+    maxTargetResult,
+    totalDepositsResult,
+    endResult,
+    isKilledResult,
+    isFailedResult,
+    periodResult,
+    vaultRatioResult,
+    assetRatioResult,
+  ] = result.data || [];
 
-  const safeBoolean = (value: any): boolean => {
-    if (typeof value === 'boolean') return value;
-    return Boolean(value);
-  };
-
-  const auctionData = result.data || [];
-  const minTarget = safeBigInt(auctionData[0]);
-  const maxTarget = safeBigInt(auctionData[1]);
-  const totalDeposits = safeBigInt(auctionData[2]);
-  const end = safeBigInt(auctionData[3]);
-  const isKilled = safeBoolean(auctionData[4]);
-  const isFailed = safeBoolean(auctionData[5]);
-  const period = safeBigInt(auctionData[6]);
-  const vaultRatio = safeBigInt(auctionData[7]);
-  const assetRatio = safeBigInt(auctionData[8]);
+  // Extract actual values with proper typing and safe conversion
+  const minTarget: bigint = (minTargetResult?.result as bigint) ?? 0n;
+  const maxTarget: bigint = (maxTargetResult?.result as bigint) ?? 0n;
+  const totalDeposits: bigint = (totalDepositsResult?.result as bigint) ?? 0n;
+  const end: bigint = (endResult?.result as bigint) ?? 0n;
+  const isKilled: boolean = (isKilledResult?.result as boolean) ?? false;
+  const isFailed: boolean = (isFailedResult?.result as boolean) ?? false;
+  const period: bigint = (periodResult?.result as bigint) ?? 0n;
+  const vaultRatio: bigint = (vaultRatioResult?.result as bigint) ?? 0n;
+  const assetRatio: bigint = (assetRatioResult?.result as bigint) ?? 0n;
 
   const data = {
     minTarget,

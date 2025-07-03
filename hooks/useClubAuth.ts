@@ -84,36 +84,18 @@ export const useClubAuth = (clubAddress: Address) => {
     }
   });
 
-  // Get the role hashes
-  const extractResult = (contractResult: any): any => {
-    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
-      return contractResult.result;
-    }
-    if (contractResult?.result !== undefined) {
-      return contractResult.result;
-    }
-    return null;
-  };
+  // Extract role hashes and member data with proper destructuring
 
-  const safeString = (value: any): string => {
-    const extracted = extractResult(value);
-    if (typeof extracted === 'string') return extracted;
-    if (extracted === null || extracted === undefined) return "";
-    return String(extracted);
-  };
+  // Extract role hashes with proper destructuring
+  const [
+    creditManagerRoleResult,
+    managerRoleResult,
+    feeManagerRoleResult,
+  ] = roleResult.data || [];
 
-  const safeBigInt = (value: any): bigint => {
-    const extracted = extractResult(value);
-    if (typeof extracted === 'bigint') return extracted;
-    if (typeof extracted === 'number') return BigInt(extracted);
-    if (typeof extracted === 'string') return BigInt(extracted || 0);
-    return 0n;
-  };
-
-  const roleData = roleResult.data || [];
-  const creditManagerRoleHash = safeString(roleData[0]) as `0x${string}`;
-  const managerRoleHash = safeString(roleData[1]) as `0x${string}`;
-  const feeManagerRoleHash = safeString(roleData[2]) as `0x${string}`;
+  const creditManagerRoleHash = (creditManagerRoleResult?.result as string) ?? "" as `0x${string}`;
+  const managerRoleHash = (managerRoleResult?.result as string) ?? "" as `0x${string}`;
+  const feeManagerRoleHash = (feeManagerRoleResult?.result as string) ?? "" as `0x${string}`;
 
   // Check role member counts first
   const countContracts = [
@@ -145,11 +127,16 @@ export const useClubAuth = (clubAddress: Address) => {
     }
   });
 
-  // Get the role member counts
-  const countData = countResult.data || [];
-  const creditManagerCount = safeBigInt(countData[0]);
-  const managerCount = safeBigInt(countData[1]);
-  const feeManagerCount = safeBigInt(countData[2]);
+  // Extract role member counts with proper destructuring
+  const [
+    creditManagerCountResult,
+    managerCountResult,
+    feeManagerCountResult,
+  ] = countResult.data || [];
+
+  const creditManagerCount: bigint = (creditManagerCountResult?.result as unknown as bigint) ?? 0n;
+  const managerCount: bigint = (managerCountResult?.result as unknown as bigint) ?? 0n;
+  const feeManagerCount: bigint = (feeManagerCountResult?.result as unknown as bigint) ?? 0n;
 
   // Only get role members if there are any members assigned
   const memberContracts = [];
@@ -230,11 +217,12 @@ export const useClubAuth = (clubAddress: Address) => {
   let managerAddress: Address = zeroAddress;
   let feeManagerAddress: Address = zeroAddress;
 
+  // Extract member addresses with proper destructuring
   const memberData = memberResult.data || [];
   let memberIndex = 0;
   
   if (creditManagerCount > BigInt(0) && memberData[memberIndex]) {
-    const result = safeString(memberData[memberIndex]);
+    const result = (memberData[memberIndex]?.result as string) ?? "";
     if (result && result.startsWith('0x')) {
       creditManagerAddress = result as Address;
     }
@@ -242,7 +230,7 @@ export const useClubAuth = (clubAddress: Address) => {
   }
   
   if (managerCount > BigInt(0) && memberData[memberIndex]) {
-    const result = safeString(memberData[memberIndex]);
+    const result = (memberData[memberIndex]?.result as string) ?? "";
     if (result && result.startsWith('0x')) {
       managerAddress = result as Address;
     }
@@ -250,7 +238,7 @@ export const useClubAuth = (clubAddress: Address) => {
   }
   
   if (feeManagerCount > BigInt(0) && memberData[memberIndex]) {
-    const result = safeString(memberData[memberIndex]);
+    const result = (memberData[memberIndex]?.result as string) ?? "";
     if (result && result.startsWith('0x')) {
       feeManagerAddress = result as Address;
     }

@@ -42,35 +42,16 @@ export const useGatingToken = (clubAddress: Address) => {
     }
   });
 
-  const extractResult = (contractResult: any): any => {
-    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
-      return contractResult.result;
-    }
-    if (contractResult?.result !== undefined) {
-      return contractResult.result;
-    }
-    return null;
-  };
+  // Extract gating token data with proper destructuring
+  const [
+    balanceResult,
+    nameResult,
+    symbolResult,
+  ] = result.data || [];
 
-  const safeBigInt = (value: any): bigint => {
-    const extracted = extractResult(value);
-    if (typeof extracted === 'bigint') return extracted;
-    if (typeof extracted === 'number') return BigInt(extracted);
-    if (typeof extracted === 'string') return BigInt(extracted || 0);
-    return 0n;
-  };
-
-  const safeString = (value: any): string => {
-    const extracted = extractResult(value);
-    if (typeof extracted === 'string') return extracted;
-    if (extracted === null || extracted === undefined) return "";
-    return String(extracted);
-  };
-
-  const resultData = result.data || [];
-  const balance = safeBigInt(resultData[0]);
-  const name = safeString(resultData[1]) || "Unknown";
-  const symbol = safeString(resultData[2]) || "UNKNOWN";
+  const balance: bigint = (balanceResult?.result as bigint) ?? 0n;
+  const name: string = (nameResult?.result as string) ?? "Unknown";
+  const symbol: string = (symbolResult?.result as string) ?? "UNKNOWN";
 
   const data = {
     balance,

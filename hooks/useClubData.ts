@@ -276,145 +276,101 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
     }
   });
 
-  // Extract data from batch results
-  // Helper function to safely extract contract result values
-  const extractResult = (contractResult: any): any => {
-    // If the result is successful and has a result property, return it
-    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
-      return contractResult.result;
-    }
-    // If it's a direct result (for backwards compatibility), return it
-    if (contractResult?.result !== undefined) {
-      return contractResult.result;
-    }
-    // Otherwise return null for failed/missing results
-    return null;
-  };
+  // Extract data from batch results with proper wagmi result destructuring
 
-  const safeString = (value: any): string => {
-    const extracted = extractResult(value);
-    const result = (() => {
-      if (typeof extracted === 'string') return extracted;
-      if (extracted === null || extracted === undefined) return "";
-      return String(extracted);
-    })();
-    
-    // Debug logging for React Error #310
-    if (typeof result === 'object' && result !== null) {
-      console.error('🔴 safeString returning object:', { input: value, extracted, result });
-    }
-    
-    return result;
-  };
+  // Extract basic info results with proper destructuring
+  const [
+    nameResult,
+    symbolResult,
+    decimalsResult,
+    memberNftAddressResult,
+    assetAddressResult,
+    stakingAddressResult,
+    auctionAddressResult,
+    rewardsManagerAddressResult,
+    creatorAddressResult,
+    ownerAddressResult,
+    imageResult,
+    descriptionResult,
+  ] = basicInfoResult.data || [];
 
-  const safeNumber = (value: any): number => {
-    const extracted = extractResult(value);
-    const result = (() => {
-      if (typeof extracted === 'number') return extracted;
-      if (typeof extracted === 'bigint') return Number(extracted);
-      if (typeof extracted === 'string') return parseInt(extracted) || 0;
-      return 0;
-    })();
-    
-    // Debug logging for React Error #310
-    if (typeof result === 'object' && result !== null) {
-      console.error('🔴 safeNumber returning object:', { input: value, extracted, result });
-    }
-    
-    return result;
-  };
+  const name: string = (nameResult?.result as string) ?? "";
+  const symbol: string = (symbolResult?.result as string) ?? "";
+  const decimals: number = (decimalsResult?.result as number) ?? 18;
+  const memberNftAddress: Address = (memberNftAddressResult?.result as Address) ?? zeroAddress;
+  const assetAddress: Address = (assetAddressResult?.result as Address) ?? zeroAddress;
+  const stakingAddress: Address = (stakingAddressResult?.result as Address) ?? zeroAddress;
+  const auctionAddress: Address = (auctionAddressResult?.result as Address) ?? zeroAddress;
+  const rewardsManagerAddress: Address = (rewardsManagerAddressResult?.result as Address) ?? zeroAddress;
+  const creatorAddress: Address = (creatorAddressResult?.result as Address) ?? zeroAddress;
+  const ownerAddress: Address = (ownerAddressResult?.result as Address) ?? zeroAddress;
+  const image: string = (imageResult?.result as string) ?? "";
+  const description: string = (descriptionResult?.result as string) ?? "";
 
-  const safeBigInt = (value: any): bigint => {
-    const extracted = extractResult(value);
-    const result = (() => {
-      if (typeof extracted === 'bigint') return extracted;
-      if (typeof extracted === 'number') return BigInt(extracted);
-      if (typeof extracted === 'string') return BigInt(extracted || 0);
-      return 0n;
-    })();
-    
-    // Debug logging for React Error #310
-    if (typeof result === 'object' && result !== null) {
-      console.error('🔴 safeBigInt returning object:', { input: value, extracted, result });
-    }
-    
-    return result;
-  };
+  // Extract financial info results with proper destructuring
+  const [
+    totalLockedStakeResult,
+    stakedBalanceResult,
+    totalAssetsResult,
+    totalSupplyResult,
+    fixedBidPriceResult,
+    vaultWithdrawFeeBpsResult,
+    feeRecipientResult,
+    unionBalanceResult,
+    unclaimedRewardsResult,
+  ] = financialInfoResult.data || [];
 
-  const safeBoolean = (value: any): boolean => {
-    const extracted = extractResult(value);
-    const result = (() => {
-      if (typeof extracted === 'boolean') return extracted;
-      return Boolean(extracted);
-    })();
-    
-    // Debug logging for React Error #310
-    if (typeof result === 'object' && result !== null) {
-      console.error('🔴 safeBoolean returning object:', { input: value, extracted, result });
-    }
-    
-    return result;
-  };
+  const totalLockedStake: bigint = (totalLockedStakeResult?.result as bigint) ?? 0n;
+  const stakedBalance: bigint = (stakedBalanceResult?.result as bigint) ?? 0n;
+  const totalAssets: bigint = (totalAssetsResult?.result as bigint) ?? 0n;
+  const totalSupply: bigint = (totalSupplyResult?.result as bigint) ?? 0n;
+  const fixedBidPrice: bigint = (fixedBidPriceResult?.result as bigint) ?? 0n;
+  const vaultWithdrawFeeBps: bigint = (vaultWithdrawFeeBpsResult?.result as bigint) ?? 0n;
+  const feeRecipient: Address = (feeRecipientResult?.result as Address) ?? zeroAddress;
+  const unionBalance: bigint = (unionBalanceResult?.result as bigint) ?? 0n;
+  const unclaimedRewards: bigint = (unclaimedRewardsResult?.result as bigint) ?? 0n;
 
-  const safeAddress = (value: any): Address => {
-    const extracted = extractResult(value);
-    const result = (() => {
-      if (typeof extracted === 'string' && extracted.startsWith('0x')) return extracted as Address;
-      return zeroAddress;
-    })();
-    
-    // Debug logging for React Error #310
-    if (typeof result === 'object' && result !== null && result !== zeroAddress) {
-      console.error('🔴 safeAddress returning object:', { input: value, extracted, result });
-    }
-    
-    return result;
-  };
+  // Extract configuration results with proper destructuring
+  const [
+    isPublicResult,
+    isActivatedResult,
+    isTokenEnabledResult,
+    isClosedEndFundResult,
+    isTiersEnabledResult,
+    lockupPeriodResult,
+    lockupEndResult,
+    withdrawPeriodResult,
+    vestingDurationInSecondsResult,
+    startingPercentTrustResult,
+    baseTrustResult,
+  ] = configurationResult.data || [];
 
-  const basicInfoData = basicInfoResult.data || [];
-  const name = safeString(basicInfoData[0]);
-  const symbol = safeString(basicInfoData[1]);
-  const decimals = safeNumber(basicInfoData[2]);
-  const memberNftAddress = safeAddress(basicInfoData[3]);
-  const assetAddress = safeAddress(basicInfoData[4]);
-  const stakingAddress = safeAddress(basicInfoData[5]);
-  const auctionAddress = safeAddress(basicInfoData[6]);
-  const rewardsManagerAddress = safeAddress(basicInfoData[7]);
-  const creatorAddress = safeAddress(basicInfoData[8]);
-  const ownerAddress = safeAddress(basicInfoData[9]);
-  const image = safeString(basicInfoData[10]);
-  const description = safeString(basicInfoData[11]);
+  const isPublic: boolean = (isPublicResult?.result as boolean) ?? false;
+  const isActivated: boolean = (isActivatedResult?.result as boolean) ?? false;
+  const isTokenEnabled: boolean = (isTokenEnabledResult?.result as boolean) ?? false;
+  const isClosedEndFund: boolean = (isClosedEndFundResult?.result as boolean) ?? false;
+  const isTiersEnabled: boolean = (isTiersEnabledResult?.result as boolean) ?? false;
+  const lockupPeriod: bigint = (lockupPeriodResult?.result as bigint) ?? 0n;
+  const lockupEnd: bigint = (lockupEndResult?.result as bigint) ?? 0n;
+  const withdrawPeriod: bigint = (withdrawPeriodResult?.result as bigint) ?? 0n;
+  const vestingDurationInSeconds: bigint = (vestingDurationInSecondsResult?.result as bigint) ?? 0n;
+  const startingPercentTrust: bigint = (startingPercentTrustResult?.result as bigint) ?? 0n;
+  const baseTrust: bigint = (baseTrustResult?.result as bigint) ?? 0n;
 
-  const financialInfoData = financialInfoResult.data || [];
-  const totalLockedStake = safeBigInt(financialInfoData[0]);
-  const stakedBalance = safeBigInt(financialInfoData[1]);
-  const totalAssets = safeBigInt(financialInfoData[2]);
-  const totalSupply = safeBigInt(financialInfoData[3]);
-  const fixedBidPrice = safeBigInt(financialInfoData[4]);
-  const vaultWithdrawFeeBps = safeBigInt(financialInfoData[5]);
-  const feeRecipient = safeAddress(financialInfoData[6]);
-  const unionBalance = safeBigInt(financialInfoData[7]);
-  const unclaimedRewards = safeBigInt(financialInfoData[8]);
+  // Extract rewards results with proper destructuring
+  const [
+    callerPercentResult,
+    winnerPercentResult,
+    costToCallResult,
+    lastRewardResult,
+    rewardCooldownResult,
+  ] = rewardsResult.data || [];
 
-  const configurationData = configurationResult.data || [];
-  const isPublic = safeBoolean(configurationData[0]);
-  const isActivated = safeBoolean(configurationData[1]);
-  const isTokenEnabled = safeBoolean(configurationData[2]);
-  const isClosedEndFund = safeBoolean(configurationData[3]);
-  const isTiersEnabled = safeBoolean(configurationData[4]);
-  const lockupPeriod = safeBigInt(configurationData[5]);
-  const lockupEnd = safeBigInt(configurationData[6]);
-  const withdrawPeriod = safeBigInt(configurationData[7]);
-  const vestingDurationInSeconds = safeBigInt(configurationData[8]);
-  const startingPercentTrust = safeBigInt(configurationData[9]);
-  const baseTrust = safeBigInt(configurationData[10]);
-
-  const rewardsData = rewardsResult.data || [];
-  const callerPercent = safeBigInt(rewardsData[0]);
-  const winnerPercent = safeBigInt(rewardsData[1]);
-  const costToCall = safeBigInt(rewardsData[2]);
-  const lastReward = safeBigInt(rewardsData[3]);
-  const rewardCooldown = safeNumber(rewardsData[4]);
+  const callerPercent: bigint = (callerPercentResult?.result as bigint) ?? 0n;
+  const winnerPercent: bigint = (winnerPercentResult?.result as bigint) ?? 0n;
+  const costToCall: bigint = (costToCallResult?.result as bigint) ?? 0n;
+  const lastReward: bigint = (lastRewardResult?.result as bigint) ?? 0n;
+  const rewardCooldown: number = (rewardCooldownResult?.result as number) ?? 0;
 
   // Get staking withdraw fee from staking contract (kept as separate call)
   const stakingContract = useStakingContract(stakingAddress);
@@ -428,7 +384,7 @@ export const useClubData = (clubAddress: Address): UseClubDataReturn => {
     }
   });
 
-  const stakingWithdrawFeeBps = safeBigInt(stakingWithdrawFeeBpsQuery.data);
+  const stakingWithdrawFeeBps: bigint = (stakingWithdrawFeeBpsQuery.data as bigint) ?? 0n;
 
   // Check if all data is loading
   const isLoading = 

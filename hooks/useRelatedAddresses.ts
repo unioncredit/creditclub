@@ -42,24 +42,15 @@ export default function useRelatedAddresses(address: Address) {
       })),
   });
 
-  const extractResult = (contractResult: any): any => {
-    if (contractResult?.status === 'success' && contractResult?.result !== undefined) {
-      return contractResult.result;
-    }
-    if (contractResult?.result !== undefined) {
-      return contractResult.result;
-    }
-    return null;
-  };
-
+  // Extract related addresses with proper destructuring
   const stakerAddresses: Address[] = voucherData?.map(d => {
-    const result = extractResult(d);
-    return result?.[0]?.toLowerCase() || zeroAddress;
+    const voucherResult = d?.result as any;
+    return voucherResult?.[0]?.toLowerCase() || zeroAddress;
   }) || [];
 
   const borrowerAddresses: Address[] = voucheeData?.map(d => {
-    const result = extractResult(d);
-    return result?.[0]?.toLowerCase() || zeroAddress;
+    const voucheeResult = d?.result as any;
+    return voucheeResult?.[0]?.toLowerCase() || zeroAddress;
   }) || [];
 
   return {
