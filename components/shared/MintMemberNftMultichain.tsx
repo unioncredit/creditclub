@@ -53,7 +53,7 @@ export const MintMemberNftMultichain = ({
   const { initialTrustAmount, tokenId } = newMemberData;
 
   // Monitor token allowance for approval detection
-  const { data: currentAllowance = 0n } = useReadContract({
+  const currentAllowanceQuery = useReadContract({
     ...tokenContract,
     functionName: "allowance",
     args: [address, memberNftAddress],
@@ -62,7 +62,9 @@ export const MintMemberNftMultichain = ({
       refetchOnWindowFocus: false,
       refetchInterval: isWaitingForApproval ? 2000 : false, // Poll when waiting for approval
     }
-  }) as { data: bigint };
+  });
+
+  const currentAllowance: bigint = (currentAllowanceQuery.data as bigint) ?? 0n;
 
   const needsApproval = membershipCost > currentAllowance;
 

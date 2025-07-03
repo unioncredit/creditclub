@@ -53,7 +53,7 @@ export const DecentSwapButton = ({
     onSwapPrepared?.(data as BoxActionResponse | undefined);
   }, [data, onSwapPrepared]);
 
-  const { data: allowance = 0n, refetch: refetchAllowance, isLoading } = useReadContract({
+  const allowanceQuery = useReadContract({
     abi: erc20Abi,
     address: srcToken,
     functionName: "allowance",
@@ -64,8 +64,11 @@ export const DecentSwapButton = ({
     }
   });
 
+  const allowance: bigint = (allowanceQuery.data as bigint) ?? 0n;
+  const { refetch: refetchAllowance, isLoading } = allowanceQuery;
+
   // Get token balance to check if user has sufficient funds
-  const { data: tokenBalance = 0n } = useReadContract({
+  const tokenBalanceQuery = useReadContract({
     abi: erc20Abi,
     address: srcToken,
     functionName: "balanceOf",
@@ -75,6 +78,8 @@ export const DecentSwapButton = ({
       refetchOnWindowFocus: false,
     }
   });
+
+  const tokenBalance: bigint = (tokenBalanceQuery.data as bigint) ?? 0n;
 
   const transactionApproveProps = useWrite({
     abi: erc20Abi,

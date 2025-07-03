@@ -14,7 +14,7 @@ export const ApprovalDebug = ({
   amount: bigint;
 }) => {
   const { data: token } = useErc20Token(tokenAddress);
-  const { data: allowance = 0n } = useReadContract({
+  const allowanceQuery = useReadContract({
     abi: [
       {
         name: "allowance",
@@ -32,7 +32,7 @@ export const ApprovalDebug = ({
     args: [owner || "0x0", spender],
   });
 
-  const { data: balance = 0n } = useReadContract({
+  const balanceQuery = useReadContract({
     abi: [
       {
         name: "balanceOf",
@@ -46,6 +46,9 @@ export const ApprovalDebug = ({
     functionName: "balanceOf",
     args: [owner || "0x0"],
   });
+
+  const allowance: bigint = (allowanceQuery.data as bigint) ?? 0n;
+  const balance: bigint = (balanceQuery.data as bigint) ?? 0n;
 
   if (process.env.NODE_ENV !== "development") {
     return null;

@@ -43,7 +43,7 @@ export const ApprovalButton = ({
     Contract Functions
    --------------------------------------------------------------*/
 
-  const { data: allowance = 0n, refetch: refetchAllowance, isLoading, error: allowanceError } = useReadContract({
+  const allowanceQuery = useReadContract({
     ...tokenContract,
     functionName: "allowance",
     args: [owner, spender],
@@ -52,6 +52,9 @@ export const ApprovalButton = ({
       refetchOnWindowFocus: false,
     }
   });
+
+  const allowance: bigint = (allowanceQuery.data as bigint) ?? 0n;
+  const { refetch: refetchAllowance, isLoading, error: allowanceError } = allowanceQuery;
 
   const transactionApproveProps = useWrite({
     ...tokenContract,
