@@ -15,7 +15,7 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
 
   const withdrawBucketContract = useWithdrawBucketContract(withdrawBucketAddress);
 
-  const { data: numWithdrawals = 0n } = useReadContract({
+  const numWithdrawalsQuery = useReadContract({
     ...withdrawBucketContract,
     functionName: "getWithdrawalsLen",
     // @ts-ignore
@@ -24,7 +24,9 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
       enabled: !!connectedAddress && !!clubAddress,
       staleTime: 30_000,
     }
-  })
+  });
+
+  const numWithdrawals: bigint = (numWithdrawalsQuery.data as bigint) ?? 0n;
 
   const contracts = Array(Number(numWithdrawals)).fill(0).map((_, i) => ({
     ...withdrawBucketContract,
@@ -68,8 +70,11 @@ export const useClubWithdrawBucket = (clubAddress: Address) => {
 
   return { 
     data,
-    isLoading: result.isLoading,
-    isRefetching: result.isRefetching,
-    refetch: result.refetch,
+    isLoading: result.isLoading || numWithdrawalsQuery.isLoading,
+    isRefetching: result.isRefetching || numWithdrawalsQuery.isRefetching,
+    refetch: async () => {
+      await result.refetch();
+      await numWithdrawalsQuery.refetch();
+    },
   };
 };

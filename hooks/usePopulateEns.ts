@@ -4,7 +4,7 @@ import { mainnet } from "wagmi/chains";
 import { IContact } from "@/providers/types";
 
 export const usePopulateEns = (contacts: IContact[]) => {
-  const { data: ensNames } = useReadContract({
+  const ensNamesQuery = useReadContract({
     chainId: mainnet.id,
     address: "0x3671ae578e63fdf66ad4f3e12cc0c0d71ac7510c",
     abi: [
@@ -27,6 +27,8 @@ export const usePopulateEns = (contacts: IContact[]) => {
       staleTime: Infinity,
     }
   });
+
+  const ensNames: string[] = (ensNamesQuery.data as string[]) ?? [];
 
   return contacts?.map((row, i) => ({
     ...row,

@@ -26,7 +26,7 @@ export const useNewMemberData = (_userAddress: Address | undefined, clubAddress:
     }
   });
 
-  const tokenId = totalSupplyQuery.data || 0n;
+  const tokenId: bigint = (totalSupplyQuery.data as bigint) ?? 0n;
   
   // Since previewCreditClaim doesn't exist, we'll use baseTrust as the total trust amount
   const totalTrustAmount = baseTrust || 0n;

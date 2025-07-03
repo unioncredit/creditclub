@@ -21,7 +21,7 @@ export const useMintRedeemPreview = ({
   })
 
   return {
-    data: result?.data || 0n,
+    data: (result?.data as bigint) ?? 0n,
     isLoading: result.isLoading,
     isRefetching: result.isRefetching,
     refetch: result.refetch,
