@@ -70,17 +70,6 @@ export const ClubActions = ({
     );
   }
 
-  // Debug logging to identify React Error #310 source
-  if (process.env.NODE_ENV === 'development') {
-    console.log('ClubActions Debug:', {
-      clubData: typeof clubData,
-      memberNftData: typeof memberNftData,
-      clubMember: typeof clubMember,
-      token: typeof token,
-      tokenValue: token
-    });
-  }
-
   // Extract values using the established wagmi pattern - hooks already provide safe values
   const {
     name = "",

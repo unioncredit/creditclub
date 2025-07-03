@@ -211,21 +211,13 @@ export const useClubMember = (memberAddress: Address | undefined, clubAddress: A
       tier = (typeof memberDetails.tier === 'number') ? memberDetails.tier : 0;
       tierPercentage = (typeof memberDetails.tierPercentage === 'bigint') ? memberDetails.tierPercentage : 0n;
       
-      // Ensure tierLabel is always a string, even if it's an object or other type
+      // CRITICAL FIX: Ensure tierLabel is ALWAYS a primitive string
+      // This prevents React Error #310 by ensuring no objects are ever returned
       if (typeof memberDetails.tierLabel === 'string') {
         tierLabel = memberDetails.tierLabel;
-      } else if (memberDetails.tierLabel !== null && memberDetails.tierLabel !== undefined) {
-        // Convert any non-null/undefined value to string safely
-        try {
-          if (typeof memberDetails.tierLabel === 'object') {
-            tierLabel = JSON.stringify(memberDetails.tierLabel);
-          } else {
-            tierLabel = String(memberDetails.tierLabel);
-          }
-        } catch {
-          tierLabel = "";
-        }
       } else {
+        // Always convert to empty string for any non-string value
+        // This prevents objects from being rendered as React children
         tierLabel = "";
       }
     }

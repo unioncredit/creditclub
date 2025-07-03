@@ -159,7 +159,7 @@ export const ClubParametersModal = ({
         { label: "Min Members", value: memberNftData ? Number(minMembers) : <LoadingPlaceholder /> },
         { label: "Membership Cost", value: memberNftData && assetToken ? `$${formatDecimals(membershipCost, assetDecimals, 4)}` : <LoadingPlaceholder /> },
         { label: "Invite Cost", value: memberNftData ? `${formatDecimals(inviteCost, 18, 4)} UNION` : <LoadingPlaceholder /> },
-        { label: "Member ProRata", value: prorataData?.formatted?.prorataAmount ? prorataData.formatted.prorataAmount : <LoadingPlaceholder /> },
+        { label: "Member ProRata", value: prorataData?.formatted?.prorataAmount ? String(prorataData.formatted.prorataAmount) : <LoadingPlaceholder /> },
       ]
     },
     {
