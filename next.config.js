@@ -24,7 +24,7 @@ module.exports = {
     '@uniswap/widgets',
     'viem',
   ],
-  webpack(config, { isServer }) {
+  webpack(config) {
     // Grab the existing rule that handles SVG imports
     // @ts-ignore
     const fileLoaderRule = config.module.rules.find((rule) =>
@@ -37,32 +37,11 @@ module.exports = {
       Browser: false,
     };
 
-    // Intercept and block Safe connector imports at the webpack resolver level
-    const originalResolve = config.resolve;
-    config.resolve = {
-      ...originalResolve,
-      plugins: [
-        ...(originalResolve.plugins || []),
-        {
-          // @ts-ignore
-          apply(resolver) {
-            // @ts-ignore
-            resolver.hooks.beforeResolve.tap('BlockSafeConnector', (request) => {
-              if (request.request) {
-                // Block any imports related to Safe Global SDK
-                if (request.request.includes('@safe-global') ||
-                    request.request.includes('safe-apps-sdk') ||
-                    request.request.includes('safe-apps-provider') ||
-                    (request.request.includes('safe.js') && request.request.includes('@wagmi/connectors'))) {
-                  
-                  // Return a dummy module instead
-                  request.request = 'data:text/javascript,export default {};';
-                }
-              }
-            });
-          }
-        }
-      ]
+    // Add webpack alias to block Safe Global SDK modules
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@safe-global/safe-apps-sdk': false,
+      '@safe-global/safe-apps-provider': false,
     };
 
     // Ignore webpack warnings for modules we're blocking
