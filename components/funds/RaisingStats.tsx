@@ -58,7 +58,7 @@ export const RaisingStats = ({
 
 
 
-  const markValue = (minTarget && minTarget > 0n) && (maxTarget && maxTarget === maxUint256) ? Number(minTarget) : undefined;
+  const markValue = (minTarget && minTarget > 0n && maxTarget && maxTarget === maxUint256) ? Number(minTarget) : undefined;
 
   const activateClubButtonProps = useWrite({
     ...auctionContract,
@@ -70,7 +70,7 @@ export const RaisingStats = ({
   });
 
   const barValues: DistributionBarItem[] = [
-    ...((minTarget && minTarget > 0n) && !hasMaxTarget ? [
+    ...((minTarget && minTarget > 0n && !hasMaxTarget) ? [
       {
         value: Number(totalDeposits || 0n),
         label: `$${formatDecimals(totalDeposits || 0n, assetDecimals, 2)}`,
@@ -84,7 +84,7 @@ export const RaisingStats = ({
         title: "Raised",
       },
     ] : []),
-    ...((minTarget && minTarget === 0n) && hasMaxTarget && (maxTarget && maxTarget > 0n) ? [
+    ...((minTarget && minTarget === 0n && hasMaxTarget && maxTarget && maxTarget > 0n) ? [
       {
         value: Number(totalDeposits || 0n),
         label: `$${formatDecimals(totalDeposits || 0n, assetDecimals, 2)}`,
@@ -98,7 +98,7 @@ export const RaisingStats = ({
         title: "Max",
       }
     ] : []),
-    ...((minTarget && minTarget > 0n) && hasMaxTarget && (maxTarget && maxTarget > 0n) ? [
+    ...((minTarget && minTarget > 0n && hasMaxTarget && maxTarget && maxTarget > 0n) ? [
       {
         value: Number(totalDeposits || 0n),
         label: `$${formatDecimals(totalDeposits || 0n, assetDecimals, 2)}`,
@@ -143,7 +143,7 @@ export const RaisingStats = ({
             {
               !isPublic
                 ? "Private Sale"
-                : end < maxUint256
+                : (end && end < maxUint256)
                   ? `ICO: ${formatDurationUntil(Number(end))}`
                   : "ICO: Open"
             }
