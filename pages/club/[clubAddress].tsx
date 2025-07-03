@@ -19,6 +19,7 @@ import { ClubActions } from "@/components/funds/ClubActions";
 import { BuyRedeemPanel } from "@/components/funds/BuyRedeemPanel";
 import { useRouter } from "next/router";
 import { ClubActivity } from "@/components/funds/ClubActivity";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 export default function FundSinglePage() {
   if (typeof window !== 'undefined') {
@@ -44,6 +45,34 @@ export default function FundSinglePage() {
   const { data: clubMember } = useClubMember(address, clubAddress || "0x0");
   const { data: isQualified } = useIsQualified(clubAddress || "0x0");
 
+  // Debug hook data to catch potential object rendering issues
+  if (typeof window !== 'undefined' && clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
+    console.log("=== Hook Data Debug ===");
+    console.log("clubData:", clubData);
+    console.log("clubData type:", typeof clubData);
+    console.log("clubMember:", clubMember);
+    console.log("clubMember type:", typeof clubMember);
+    console.log("isQualified:", isQualified);
+    console.log("isQualified type:", typeof isQualified);
+    
+    // Check for any non-primitive values that might be rendered
+    if (clubData) {
+      Object.entries(clubData).forEach(([key, value]) => {
+        if (value && typeof value === 'object' && value !== null) {
+          console.warn(`⚠️ clubData.${key} is an object:`, value);
+        }
+      });
+    }
+    
+    if (clubMember) {
+      Object.entries(clubMember).forEach(([key, value]) => {
+        if (value && typeof value === 'object' && value !== null) {
+          console.warn(`⚠️ clubMember.${key} is an object:`, value);
+        }
+      });
+    }
+  }
+
   // Wait for router to be ready and validate address
   if (!router.isReady) {
     if (typeof window !== 'undefined') {
@@ -64,6 +93,15 @@ export default function FundSinglePage() {
   const isTokenEnabled: boolean = clubData?.isTokenEnabled ?? false;
   const isMember: boolean = clubMember?.isMember ?? false;
 
+  // Additional safety checks for rendering
+  if (typeof window !== 'undefined' && clubAddress === "0xf82501018Fe8c6b0DbEb51604FDb636bdd741F74") {
+    console.log("=== Pre-render Safety Checks ===");
+    console.log("isPublic:", isPublic, typeof isPublic);
+    console.log("isActivated:", isActivated, typeof isActivated);
+    console.log("isTokenEnabled:", isTokenEnabled, typeof isTokenEnabled);
+    console.log("isMember:", isMember, typeof isMember);
+  }
+
   return (
     <>
       <Head>
@@ -71,41 +109,63 @@ export default function FundSinglePage() {
       </Head>
 
       <main>
-        <Columned width={1020} className="py-8">
-          <ClubHeader clubAddress={clubAddress} />
-          {isQualified && !isMember && <BannerCta clubAddress={clubAddress} className="mt-4" />}
+        <ErrorBoundary>
+          <Columned width={1020} className="py-8">
+            <ClubHeader clubAddress={clubAddress} />
+            {isQualified && !isMember && <BannerCta clubAddress={clubAddress} className="mt-4" />}
 
-          <Container className="mt-4">
-            <div className="flex w-full md:flex-col">
-              <section className="flex flex-col flex-1 text-left">
-                <ClubDetails clubAddress={clubAddress} />
-                {isActivated && (
-                  <ClubStats clubAddress={clubAddress} />
-                )}
-                <ClubActivity clubAddress={clubAddress} />
-              </section>
-              <section className="flex-1 pl-6 flex flex-col justify-between max-w-[450px] md:pl-0 md:mt-4 md:max-w-none">
-                {isTokenEnabled && (
-                  <>
-                    {isPublic && !isActivated && <RaisingStats clubAddress={clubAddress} />}
-                    {isActivated && <BuyRedeemPanel clubAddress={clubAddress} />}
-                  </>
-                )}
-                {isMember ? (
-                  <ClubActions clubAddress={clubAddress} />
-                ) : (
-                  <MembershipClaim clubAddress={clubAddress} />
-                )}
-              </section>
-            </div>
+            <Container className="mt-4">
+              <div className="flex w-full md:flex-col">
+                <section className="flex flex-col flex-1 text-left">
+                  <ErrorBoundary>
+                    <ClubDetails clubAddress={clubAddress} />
+                  </ErrorBoundary>
+                  {isActivated && (
+                    <ErrorBoundary>
+                      <ClubStats clubAddress={clubAddress} />
+                    </ErrorBoundary>
+                  )}
+                  <ErrorBoundary>
+                    <ClubActivity clubAddress={clubAddress} />
+                  </ErrorBoundary>
+                </section>
+                <section className="flex-1 pl-6 flex flex-col justify-between max-w-[450px] md:pl-0 md:mt-4 md:max-w-none">
+                  {isTokenEnabled && (
+                    <>
+                      {isPublic && !isActivated && (
+                        <ErrorBoundary>
+                          <RaisingStats clubAddress={clubAddress} />
+                        </ErrorBoundary>
+                      )}
+                      {isActivated && (
+                        <ErrorBoundary>
+                          <BuyRedeemPanel clubAddress={clubAddress} />
+                        </ErrorBoundary>
+                      )}
+                    </>
+                  )}
+                  {isMember ? (
+                    <ErrorBoundary>
+                      <ClubActions clubAddress={clubAddress} />
+                    </ErrorBoundary>
+                  ) : (
+                    <ErrorBoundary>
+                      <MembershipClaim clubAddress={clubAddress} />
+                    </ErrorBoundary>
+                  )}
+                </section>
+              </div>
 
-            <FundTables
-              clubAddress={clubAddress}
-              className="mt-8"
-            />
-          </Container>
-          <Footer />
-        </Columned>
+              <ErrorBoundary>
+                <FundTables
+                  clubAddress={clubAddress}
+                  className="mt-8"
+                />
+              </ErrorBoundary>
+            </Container>
+            <Footer />
+          </Columned>
+        </ErrorBoundary>
       </main>
     </>
   )

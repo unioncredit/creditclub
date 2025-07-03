@@ -1,195 +1,130 @@
-import * as React from 'react';
+import React, { Component, ErrorInfo, ReactNode } from "react";
 
-interface ErrorBoundaryState {
-  hasError: boolean;
-  error: Error | null;
-  errorInfo: React.ErrorInfo | null;
+interface Props {
+  children: ReactNode;
+  fallback?: ReactNode;
 }
 
-export class ErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  ErrorBoundaryState
-> {
-  constructor(props: { children: React.ReactNode }) {
-    super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
-  }
+interface State {
+  hasError: boolean;
+  error?: Error;
+  errorInfo?: ErrorInfo;
+}
 
-  static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
-    // Don't log in getDerivedStateFromError as it runs during render
+export class ErrorBoundary extends Component<Props, State> {
+  public state: State = {
+    hasError: false,
+  };
+
+  public static getDerivedStateFromError(error: Error): State {
+    // Update state so the next render will show the fallback UI
     return { hasError: true, error };
   }
 
-  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Enhanced logging for React Error #310
-    if (error.message.includes('310') || error.message.includes('Objects are not valid as a React child')) {
-      console.group('🔴 REACT ERROR #310 DETECTED');
-      console.log('🕐 Timestamp:', new Date().toISOString());
-      console.log('📝 Error Message:', error.message);
-      console.log('📍 Error Stack:', error.stack);
-      console.log('🧩 Component Stack:', errorInfo.componentStack);
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("=== ERROR BOUNDARY CAUGHT ERROR ===");
+    console.error("Error:", error);
+    console.error("Error message:", error.message);
+    console.error("Error stack:", error.stack);
+    console.error("Component stack:", errorInfo.componentStack);
+    console.error("Error info:", errorInfo);
+    
+    // Check specifically for React Error #310
+    if (error.message.includes("310") || error.message.includes("Objects are not valid as a React child")) {
+      console.error("=== REACT ERROR #310 DETECTED ===");
+      console.error("This means an object is being rendered as a React child");
+      console.error("Component stack trace:", errorInfo.componentStack);
       
-      // Try to identify the problematic component
-      const componentMatch = errorInfo.componentStack.match(/at (\w+)/g);
-      if (componentMatch) {
-        console.log('🎯 Component Chain:', componentMatch.slice(0, 5));
-      }
-      
-      // Log current URL and any relevant state
-      console.log('🌐 Current URL:', window.location.href);
-      console.log('📊 User Agent:', navigator.userAgent);
-      
-      // Try to capture any React dev tools info if available
-      if (typeof window !== 'undefined' && (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__) {
-        console.log('⚛️ React DevTools available');
-      }
-      
-      console.groupEnd();
-      
-      // Also send to external logging if needed
-      if (typeof window !== 'undefined') {
-        (window as any).__REACT_310_ERROR__ = {
-          error: error.message,
-          stack: error.stack,
-          componentStack: errorInfo.componentStack,
-          url: window.location.href,
-          timestamp: new Date().toISOString()
-        };
+      // Try to extract more details
+      if (error.stack) {
+        console.error("Full error stack:", error.stack);
       }
     }
 
-    console.error("Error caught by boundary:", error, errorInfo);
-    // Store errorInfo for display
-    this.setState({ errorInfo });
+    // Store error details in state
+    this.setState({
+      error,
+      errorInfo,
+    });
+
+    // Send to error reporting service (if you have one)
+    // Example: Sentry, LogRocket, etc.
+    if (typeof window !== 'undefined') {
+      // Log to browser console with full details
+      console.group("🚨 React Error Boundary");
+      console.error("Error:", error);
+      console.error("Component Stack:", errorInfo.componentStack);
+      console.error("Props that might have caused this:", this.props);
+      console.groupEnd();
+
+      // Store in localStorage for debugging
+      try {
+        localStorage.setItem('lastReactError', JSON.stringify({
+          message: error.message,
+          stack: error.stack,
+          componentStack: errorInfo.componentStack,
+          timestamp: new Date().toISOString(),
+          url: window.location.href,
+        }));
+      } catch (e) {
+        console.error("Failed to store error in localStorage:", e);
+      }
+    }
   }
 
-  override render() {
+  public render() {
     if (this.state.hasError) {
-      const { error, errorInfo } = this.state;
-      
-      let errorMessage = "An unexpected error occurred";
-      let errorStack = "";
-      let componentStack = "";
-      let isReact310 = false;
-      
-      if (error) {
-        errorMessage = error.toString();
-        errorStack = error.stack || "";
-        
-        // Check for React Error #310
-        if (errorMessage.includes("Minified React error #310") || errorMessage.includes("Objects are not valid as a React child")) {
-          isReact310 = true;
-          errorMessage = "🔴 React Error #310: Objects are not valid as a React child.\n\nThis error occurs when trying to render an object, array, or other non-renderable value directly in JSX.";
-          
-          // Try to extract more context from the error
-          const stackLines = errorStack.split('\n');
-          const relevantLine = stackLines.find(line => 
-            line.includes('components/') && 
-            !line.includes('ErrorBoundary')
-          );
-          
-          if (relevantLine) {
-            errorMessage += `\n\n🎯 Likely source: ${relevantLine.trim()}`;
-          }
-          
-          // Add troubleshooting info
-          errorMessage += `\n\n🔍 Common causes:
-- Contract hook returning complex objects instead of primitives
-- Missing null checks in data extraction
-- Async data not properly handled
-- Array/object being rendered directly in JSX
+      // You can render any custom fallback UI
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
 
-💡 Check browser console for detailed logging.`;
-        }
-      }
-      
-      if (errorInfo && errorInfo.componentStack) {
-        componentStack = errorInfo.componentStack;
-      }
-      
       return (
-        <div style={{ padding: '20px', backgroundColor: '#fff', color: '#000', maxWidth: '800px', margin: '0 auto' }}>
-          <h1 style={{ color: 'red', marginBottom: '20px' }}>
-            {isReact310 ? '🔴 React Error #310 Detected' : 'Something went wrong.'}
-          </h1>
+        <div className="p-8 border border-red-500 bg-red-50 rounded-lg m-4">
+          <h2 className="text-red-800 text-xl font-bold mb-4">Something went wrong</h2>
           
-          {isReact310 && (
-            <div style={{ 
-              backgroundColor: '#fff3cd', 
-              border: '1px solid #ffeaa7', 
-              padding: '15px', 
-              borderRadius: '5px',
-              marginBottom: '20px'
-            }}>
-              <strong>🚨 This is a React Error #310 - Objects as React children</strong>
-              <p>Check the browser console for detailed logging that will help identify the exact component and data causing this issue.</p>
-            </div>
+          {process.env.NODE_ENV === 'development' && (
+            <details className="mb-4">
+              <summary className="cursor-pointer text-red-700 font-medium">
+                Error Details (Development Only)
+              </summary>
+              <div className="mt-2 p-4 bg-red-100 rounded text-sm font-mono">
+                <div className="mb-2">
+                  <strong>Error:</strong> {this.state.error?.message}
+                </div>
+                {this.state.error?.stack && (
+                  <div className="mb-2">
+                    <strong>Stack:</strong>
+                    <pre className="whitespace-pre-wrap text-xs">
+                      {this.state.error.stack}
+                    </pre>
+                  </div>
+                )}
+                {this.state.errorInfo?.componentStack && (
+                  <div>
+                    <strong>Component Stack:</strong>
+                    <pre className="whitespace-pre-wrap text-xs">
+                      {this.state.errorInfo.componentStack}
+                    </pre>
+                  </div>
+                )}
+              </div>
+            </details>
           )}
           
-          <details style={{ whiteSpace: 'pre-wrap', marginTop: '20px' }}>
-            <summary style={{ cursor: 'pointer', marginBottom: '10px', fontSize: '16px', fontWeight: 'bold' }}>
-              🔍 View Error Details
-            </summary>
-            <div style={{ fontFamily: 'monospace', fontSize: '12px', backgroundColor: '#f8f9fa', padding: '15px', borderRadius: '5px' }}>
-              <strong>Error Message:</strong>
-              <br />
-              {String(errorMessage)}
-              <br />
-              <br />
-              <strong>Component Stack:</strong>
-              <br />
-              {componentStack ? String(componentStack) : 'No component stack available'}
-              <br />
-              <br />
-              <strong>Error Stack:</strong>
-              <br />
-              {String(errorStack)}
-              <br />
-              <br />
-              <strong>URL:</strong> {typeof window !== 'undefined' ? window.location.href : 'N/A'}
-              <br />
-              <strong>Timestamp:</strong> {new Date().toISOString()}
-            </div>
-          </details>
+          <button 
+            onClick={() => this.setState({ hasError: false, error: undefined, errorInfo: undefined })}
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          >
+            Try Again
+          </button>
           
-          <div style={{ marginTop: '20px' }}>
-            <button 
-              onClick={() => window.location.reload()} 
-              style={{
-                marginRight: '10px',
-                padding: '10px 20px',
-                backgroundColor: '#0070f3',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer'
-              }}
-            >
-              🔄 Reload Page
-            </button>
-            
-            <button 
-              onClick={() => {
-                if (typeof window !== 'undefined') {
-                  const errorData = (window as any).__REACT_310_ERROR__;
-                  if (errorData) {
-                    navigator.clipboard.writeText(JSON.stringify(errorData, null, 2));
-                    alert('Error details copied to clipboard!');
-                  }
-                }
-              }} 
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#28a745',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer'
-              }}
-            >
-              📋 Copy Error Details
-            </button>
-          </div>
+          <button 
+            onClick={() => window.location.reload()}
+            className="ml-2 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+          >
+            Reload Page
+          </button>
         </div>
       );
     }
