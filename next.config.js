@@ -57,22 +57,19 @@ module.exports = {
       /Cannot use 'import\.meta' outside a module/,
     ];
 
-    // Completely disable import.meta parsing for problematic modules
+    // Force Safe Global SDK modules to be treated as CommonJS to prevent import.meta issues
     config.module.rules.unshift({
       test: /node_modules\/@safe-global\/.*\.(js|mjs)$/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: [
-            ['@babel/preset-env', { modules: false }]
-          ],
-          plugins: [
-            ['babel-plugin-transform-define', {
-              'import.meta.webpackHot': 'undefined',
-              'import.meta.hot': 'undefined',
-            }]
-          ]
+      type: 'javascript/auto',
+      parser: {
+        javascript: {
+          commonjsMagicComments: true,
+          importMeta: false,
+          dynamicImport: false,
         }
+      },
+      resolve: {
+        fullySpecified: false
       }
     });
 
