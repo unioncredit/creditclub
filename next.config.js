@@ -57,9 +57,22 @@ module.exports = {
       /Cannot use 'import\.meta' outside a module/,
     ];
 
-    // Fix import.meta issues by treating as external expressions
+    // Completely exclude problematic Safe Global SDK modules from webpack processing
     config.module.rules.push({
-      test: /node_modules\/(@safe-global|viem)\/.*\.(js|mjs)$/,
+      test: /node_modules\/@safe-global\/.*\.(js|mjs)$/,
+      type: 'javascript/auto',
+      parser: {
+        javascript: {
+          importMeta: false,
+          dynamicImport: false,
+        },
+      },
+    });
+
+    // Handle viem separately with less strict parsing
+    config.module.rules.push({
+      test: /node_modules\/viem\/.*\.(js|mjs)$/,
+      type: 'javascript/auto',
       parser: {
         javascript: {
           importMeta: false,
