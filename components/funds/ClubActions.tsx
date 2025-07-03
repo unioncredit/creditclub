@@ -59,16 +59,38 @@ export const ClubActions = ({
     );
   }
 
+  // Additional safety check - if critical data is missing, don't render
+  if (!clubData || !memberNftData || !clubMember) {
+    return (
+      <div className="p-4 border rounded-2xl bg-slate-50">
+        <div className="text-center text-gray-500">
+          Loading member data...
+        </div>
+      </div>
+    );
+  }
+
+  // Debug logging to identify React Error #310 source
+  if (process.env.NODE_ENV === 'development') {
+    console.log('ClubActions Debug:', {
+      clubData: typeof clubData,
+      memberNftData: typeof memberNftData,
+      clubMember: typeof clubMember,
+      token: typeof token,
+      tokenValue: token
+    });
+  }
+
   // Extract values using the established wagmi pattern - hooks already provide safe values
   const {
     name = "",
     isActivated = false,
     startingPercentTrust = 0n,
-  } = clubData;
+  } = clubData || {};
 
   const {
     isInviteEnabled = false,
-  } = memberNftData;
+  } = memberNftData || {};
 
   const {
     owed = 0n,
@@ -80,13 +102,22 @@ export const ClubActions = ({
     memberNftBalance = 0n,
     percentVested = 0n,
     baseTrust = 0n,
-  } = clubMember;
+  } = clubMember || {};
 
   const {
     enabled: vestingEnabled = false,
     duration: vestingDuration = 0,
     vestedDays = 0,
-  } = vestingData;
+  } = vestingData || {};
+
+  // Ensure all values are safe primitives
+  const safeName = String(name || "");
+  const safeTokenId = typeof tokenId === 'bigint' ? tokenId : 0n;
+  const safeVestedDays = Number(vestedDays || 0);
+  const safeVestingDuration = Number(vestingDuration || 0);
+  const safeVouch = typeof vouch === 'bigint' ? vouch : 0n;
+  const safeOwed = typeof owed === 'bigint' ? owed : 0n;
+  const safeToken = token || "USDC";
 
   // Calculate claimable credit amount using established pattern
   const WAD = 10n ** 18n;
@@ -100,12 +131,15 @@ export const ClubActions = ({
   
   const totalVested = startingAmount + additionalVested;
   const claimableAmount = totalVested > vouch ? totalVested - vouch : 0n;
+  
+  // Ensure claimableAmount is a safe bigint
+  const safeClaimableAmount = typeof claimableAmount === 'bigint' ? claimableAmount : 0n;
 
   const claimCreditButtonProps = useWrite({
     address: creditVaultContract.address,
     abi: creditVaultContract.abi,
     functionName: "claimCredit",
-    args: [tokenId],
+    args: [safeTokenId],
     onComplete: refetchClubMember,
   });
 
@@ -113,10 +147,10 @@ export const ClubActions = ({
   const cannotClaimReason = !isActivated ? "Vault is not activated"
     : !isMember ? "You must be a member to claim credit"
     : memberNftBalance === 0n ? "You don't own a member NFT"
-    : tokenId === 0n ? "Unable to find your member NFT token ID"
+    : safeTokenId === 0n ? "Unable to find your member NFT token ID"
     : !active ? "Your membership is not active - you may need to activate it first"
     : badDebt > 0n ? "Cannot claim with outstanding bad debt"
-    : claimableAmount === 0n ? "No credit available to claim (already claimed or not vested yet)"
+    : safeClaimableAmount === 0n ? "No credit available to claim (already claimed or not vested yet)"
     : null;
 
   return (
@@ -138,15 +172,15 @@ export const ClubActions = ({
 
       <div className="mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-slate-100 rounded-2xl border">
         <TextCube width={48} height={48} background="#1F1D29" foreground="white">
-          {getInitials(name)}
+          {getInitials(safeName)}
         </TextCube>
-        <p className="text-lg">{name} Member #{tokenId.toString()}</p>
+        <p className="text-lg">{safeName} Member #{safeTokenId.toString()}</p>
       </div>
 
       {vestingEnabled && (
         <div className="flex items-center justify-center gap-0.5 mt-2">
           <CalendarIcon width={24} height={24} />
-          <p className="text-xs text-blue-600">Vesting: {vestedDays} of {vestingDuration} days vested</p>
+          <p className="text-xs text-blue-600">Vesting: {safeVestedDays} of {safeVestingDuration} days vested</p>
         </div>
       )}
 
@@ -156,8 +190,8 @@ export const ClubActions = ({
             <p>Club Credit</p>
 
             <div className="text-right">
-              <p className="text-sm font-medium">${format(vouch, token)}</p>
-              <p className="text-xs text-stone-400">+${format(claimableAmount, token)}</p>
+              <p className="text-sm font-medium">${format(safeVouch, safeToken)}</p>
+              <p className="text-xs text-stone-400">+${format(safeClaimableAmount, safeToken)}</p>
             </div>
           </div>
 
@@ -185,13 +219,13 @@ export const ClubActions = ({
             <p>Club Debt</p>
 
             <div>
-              <p className="text-sm font-medium">${format(owed, token)}</p>
+              <p className="text-sm font-medium">${format(safeOwed, safeToken)}</p>
             </div>
           </div>
 
           <RoundedButton
             onClick={() => openModal(REPAY_MODAL)}
-            disabled={owed === 0n}
+            disabled={safeOwed === 0n}
             icon={(
               <IconCube
                 width={18}
@@ -202,7 +236,7 @@ export const ClubActions = ({
               />
             )}
             className="bg-[#EEF2FF] hover:bg-[#EEF2FF] hover:opacity-90 h-[54px] text-[#5F85FF] w-[156px] justify-start"
-            title={owed === 0n ? "No debt to repay" : undefined}
+            title={safeOwed === 0n ? "No debt to repay" : undefined}
           >
             Repay
           </RoundedButton>
