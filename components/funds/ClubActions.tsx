@@ -59,123 +59,47 @@ export const ClubActions = ({
     );
   }
 
-  // Helper function to safely calculate claimable amount
-  const calculateClaimableAmount = (total: bigint, vouched: bigint): bigint => {
-    if (total > vouched) {
-      return total - vouched;
-    }
-    return 0n;
-  };
-
-  // Create clean objects without prototype pollution
-  const cleanClubData = clubData ? {
-    name: clubData.name || "",
-    isActivated: clubData.isActivated || false,
-    startingPercentTrust: clubData.startingPercentTrust || 0n,
-  } : {
-    name: "",
-    isActivated: false,
-    startingPercentTrust: 0n,
-  };
-
-  const cleanMemberNftData = memberNftData ? {
-    isInviteEnabled: memberNftData.isInviteEnabled || false,
-  } : {
-    isInviteEnabled: false,
-  };
-
-  // Safely extract values with defaults
-  const cleanClubMember = clubMember ? {
-    owed: clubMember.owed || 0n,
-    vouch: clubMember.vouch || 0n,
-    tokenId: clubMember.tokenId || 0n,
-    active: clubMember.active || false,
-    isMember: clubMember.isMember || false,
-    badDebt: clubMember.badDebt || 0n,
-    memberNftBalance: clubMember.memberNftBalance || 0n,
-    percentVested: clubMember.percentVested || 0n,
-    baseTrust: clubMember.baseTrust || 0n,
-  } : {
-    owed: 0n,
-    vouch: 0n,
-    tokenId: 0n,
-    active: false,
-    isMember: false,
-    badDebt: 0n,
-    memberNftBalance: 0n,
-    percentVested: 0n,
-    baseTrust: 0n,
-  };
+  // Extract values using the established wagmi pattern - hooks already provide safe values
+  const {
+    name = "",
+    isActivated = false,
+    startingPercentTrust = 0n,
+  } = clubData;
 
   const {
-    name,
-    isActivated,
-    startingPercentTrust,
-  } = cleanClubData;
+    isInviteEnabled = false,
+  } = memberNftData;
 
   const {
-    isInviteEnabled,
-  } = cleanMemberNftData;
+    owed = 0n,
+    vouch = 0n,
+    tokenId = 0n,
+    active = false,
+    isMember = false,
+    badDebt = 0n,
+    memberNftBalance = 0n,
+    percentVested = 0n,
+    baseTrust = 0n,
+  } = clubMember;
 
   const {
-    owed,
-    vouch,
-    tokenId,
-    active,
-    isMember,
-    badDebt,
-    memberNftBalance,
-    percentVested,
-    baseTrust,
-  } = cleanClubMember;
+    enabled: vestingEnabled = false,
+    duration: vestingDuration = 0,
+    vestedDays = 0,
+  } = vestingData;
 
-  const cleanVestingData = vestingData ? {
-    enabled: vestingData.enabled || false,
-    duration: vestingData.duration || 0,
-    vestedDays: vestingData.vestedDays || 0,
-  } : {
-    enabled: false,
-    duration: 0,
-    vestedDays: 0,
-  };
-
-  const {
-    enabled: vestingEnabled,
-    duration: vestingDuration,
-    vestedDays,
-  } = cleanVestingData;
-  
-  // Ensure vesting values are primitives
-  const safeVestingDuration = typeof vestingDuration === 'number' ? vestingDuration : 0;
-  const safeVestedDays = typeof vestedDays === 'number' ? vestedDays : 0;
-
-  // Calculate claimable credit amount
+  // Calculate claimable credit amount using established pattern
   const WAD = 10n ** 18n;
-  
-  // Ensure all values are bigints before calculations
-  const safeBigInt = (value: any): bigint => {
-    try {
-      return BigInt(value || 0);
-    } catch {
-      return 0n;
-    }
-  };
-  
-  const safeBaseTrust = safeBigInt(baseTrust);
-  const safeStartingPercentTrust = safeBigInt(startingPercentTrust);
-  const safePercentVested = safeBigInt(percentVested);
-  const safeVouch = safeBigInt(vouch);
-  
-  const startingAmount = safeBaseTrust > 0n && safeStartingPercentTrust > 0n
-    ? (safeBaseTrust * safeStartingPercentTrust) / WAD 
+  const startingAmount = baseTrust > 0n && startingPercentTrust > 0n
+    ? (baseTrust * startingPercentTrust) / WAD 
     : 0n;
   
-  const additionalVested = safeBaseTrust > startingAmount && safePercentVested > 0n
-    ? ((safeBaseTrust - startingAmount) * safePercentVested) / WAD 
+  const additionalVested = baseTrust > startingAmount && percentVested > 0n
+    ? ((baseTrust - startingAmount) * percentVested) / WAD 
     : 0n;
   
   const totalVested = startingAmount + additionalVested;
-  const claimableAmount = calculateClaimableAmount(totalVested, safeVouch);
+  const claimableAmount = totalVested > vouch ? totalVested - vouch : 0n;
 
   const claimCreditButtonProps = useWrite({
     address: creditVaultContract.address,
@@ -194,9 +118,6 @@ export const ClubActions = ({
     : badDebt > 0n ? "Cannot claim with outstanding bad debt"
     : claimableAmount === 0n ? "No credit available to claim (already claimed or not vested yet)"
     : null;
-
-  // Check if we're still loading data after error recovery
-  const isStillLoading = isDataLoading || (!clubData && !memberNftData && !clubMember);
 
   return (
     <div className="p-4 border rounded-2xl bg-slate-50">
@@ -217,15 +138,15 @@ export const ClubActions = ({
 
       <div className="mt-4 flex items-center justify-center gap-3 py-3 px-5 bg-slate-100 rounded-2xl border">
         <TextCube width={48} height={48} background="#1F1D29" foreground="white">
-          {getInitials(String(name || ""))}
+          {getInitials(name)}
         </TextCube>
-        <p className="text-lg">{String(name || "")} Member #{String(tokenId || 0)}</p>
+        <p className="text-lg">{name} Member #{tokenId.toString()}</p>
       </div>
 
       {vestingEnabled && (
         <div className="flex items-center justify-center gap-0.5 mt-2">
           <CalendarIcon width={24} height={24} />
-          <p className="text-xs text-blue-600">Vesting: {safeVestedDays} of {safeVestingDuration} days vested</p>
+          <p className="text-xs text-blue-600">Vesting: {vestedDays} of {vestingDuration} days vested</p>
         </div>
       )}
 
@@ -242,7 +163,7 @@ export const ClubActions = ({
 
           <RoundedButton
             onClick={claimCreditButtonProps.onClick}
-            disabled={claimCreditButtonProps.disabled || !!cannotClaimReason || isStillLoading}
+            disabled={claimCreditButtonProps.disabled || !!cannotClaimReason}
             className="bg-[#E3F6EC] hover:bg-[#E3F6EC] hover:opacity-90 h-[54px] text-[#1C9451] w-[156px] justify-start"
             icon={(
               <IconCube
@@ -253,9 +174,9 @@ export const ClubActions = ({
                 className="p-1"
               />
             )}
-            title={isStillLoading ? "Loading member data..." : cannotClaimReason || undefined}
+            title={cannotClaimReason || undefined}
           >
-            {claimCreditButtonProps.loading ? "Claiming..." : isStillLoading ? "Loading..." : "Claim Credit"}
+            {claimCreditButtonProps.loading ? "Claiming..." : "Claim Credit"}
           </RoundedButton>
         </div>
 
@@ -270,7 +191,7 @@ export const ClubActions = ({
 
           <RoundedButton
             onClick={() => openModal(REPAY_MODAL)}
-            disabled={owed === 0n || isStillLoading}
+            disabled={owed === 0n}
             icon={(
               <IconCube
                 width={18}
@@ -281,9 +202,9 @@ export const ClubActions = ({
               />
             )}
             className="bg-[#EEF2FF] hover:bg-[#EEF2FF] hover:opacity-90 h-[54px] text-[#5F85FF] w-[156px] justify-start"
-            title={isStillLoading ? "Loading member data..." : owed === 0n ? "No debt to repay" : undefined}
+            title={owed === 0n ? "No debt to repay" : undefined}
           >
-            {isStillLoading ? "Loading..." : "Repay"}
+            Repay
           </RoundedButton>
         </div>
       </div>

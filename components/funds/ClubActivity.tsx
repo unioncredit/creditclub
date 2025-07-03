@@ -22,9 +22,7 @@ import React from "react";
 
 // prettier-ignore
 const texts = {
-  [ActivityTypes.LOADING]: () => (
-    <Skeleton width={320} height={28} shimmer />
-  ),
+  [ActivityTypes.LOADING]: () => "Loading...",
   [ActivityTypes.CLUB_CREATED]: (x: IClubEvent) => (
     <>
       <AddressLink address={x.address} /> ·
@@ -141,7 +139,6 @@ const ActivityRow = ({
     [ActivityTypes.REDEEM]: DepositIcon,
   };
 
-  // @ts-ignore
   // Handle loading state specially to avoid React Error #310
   if (type === ActivityTypes.LOADING) {
     return (
@@ -180,7 +177,7 @@ export function ClubActivity({ clubAddress }: { clubAddress: Address }) {
       </header>
 
       <div className="mt-4 flex flex-col gap-1.5">
-      {activity.length <= 0 ? (
+        {activity.length <= 0 ? (
           <Card.Body>
             <EmptyState label="No activity to show" />
           </Card.Body>

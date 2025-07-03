@@ -76,18 +76,15 @@ export const FundHoldersTable = ({
   const rows: FundHolderRow[] = holders.map(({ address, amount }, index) => ({
     id: index,
     address,
-    shares: decimals !== undefined ? formatDecimals(amount, decimals) : "…",
-    marketValue:
-      decimals !== undefined
-        ? `$${(parseFloat(formatDecimals(amount, decimals)) * (tokenPrice || 0)).toFixed(2)}`
-        : "…",
+    shares: formatDecimals(amount, decimals),
+    marketValue: `$${(parseFloat(formatDecimals(amount, decimals)) * (tokenPrice || 0)).toFixed(2)}`,
   }));
 
   // @ts-ignore
   return (
     <div>
       {/* Render debug panel only when decimals is defined to avoid non-renderable values */}
-      {process.env.NODE_ENV === 'development' && decimals !== undefined && (
+      {process.env.NODE_ENV === 'development' && (
         <div className="mb-4 p-2 bg-blue-50 border border-blue-200 rounded text-xs font-mono">
           <div className="font-bold mb-1">Debug Info:</div>
           <div>Club Address: {String(clubAddress)}</div>

@@ -58,7 +58,7 @@ export const InviteModal = ({
     );
   }
 
-  const { inviteCount } = member;
+  const { inviteCount = 0n } = member;
 
   const clearAddressInput = () => {
     if (addressInputRef.current) {
@@ -97,7 +97,7 @@ export const InviteModal = ({
               <Skeleton width={125} height={25} shimmer />
             ) : (
               <>
-                {inviteCount === 1n ? "1 invite" : `${String(inviteCount || 0)} invites`} remaining
+                {inviteCount === 1n ? "1 invite" : `${inviteCount.toString()} invites`} remaining
 
                 <RoundedButton
                   size="pill"
@@ -113,7 +113,7 @@ export const InviteModal = ({
 
           <Button
             {...inviteUserButtonProps}
-            label={inviteCount <= 0 ? "No invites remaining" : "Invite user"}
+            label={inviteCount <= 0n ? "No invites remaining" : "Invite user"}
             icon={VouchIcon}
             size="large"
             mt="16px"

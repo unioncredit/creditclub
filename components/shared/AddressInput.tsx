@@ -77,7 +77,7 @@ export const AddressInput = ({
       {...props}
       error={error || errorProp || undefined}
       onChange={handleChange}
-      caption={ens || address ? String(ens || address) : undefined}
+      caption={ens || address || undefined}
       suffix={
         isLoadingName || isLoadingAddress ? (
           <LoadingSpinner />
