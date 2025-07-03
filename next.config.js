@@ -24,7 +24,7 @@ module.exports = {
     '@uniswap/widgets',
     'viem',
   ],
-  webpack(config) {
+  webpack(config, { isServer }) {
     // Grab the existing rule that handles SVG imports
     // @ts-ignore
     const fileLoaderRule = config.module.rules.find((rule) =>
@@ -37,52 +37,42 @@ module.exports = {
       Browser: false,
     };
 
-    // Fix viem and Safe Global SDK import.meta issues
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      'viem/_cjs': 'viem',
+    // Intercept and block Safe connector imports at the webpack resolver level
+    const originalResolve = config.resolve;
+    config.resolve = {
+      ...originalResolve,
+      plugins: [
+        ...(originalResolve.plugins || []),
+        {
+          // @ts-ignore
+          apply(resolver) {
+            // @ts-ignore
+            resolver.hooks.beforeResolve.tap('BlockSafeConnector', (request) => {
+              if (request.request) {
+                // Block any imports related to Safe Global SDK
+                if (request.request.includes('@safe-global') ||
+                    request.request.includes('safe-apps-sdk') ||
+                    request.request.includes('safe-apps-provider') ||
+                    (request.request.includes('safe.js') && request.request.includes('@wagmi/connectors'))) {
+                  
+                  // Return a dummy module instead
+                  request.request = 'data:text/javascript,export default {};';
+                }
+              }
+            });
+          }
+        }
+      ]
     };
 
-    // Handle import.meta in modules
-    config.module.rules.push({
-      test: /\.m?js$/,
-      resolve: {
-        fullySpecified: false,
-      },
-    });
-
-    // Ignore webpack import.meta warnings for Safe Global SDK
+    // Ignore webpack warnings for modules we're blocking
     config.ignoreWarnings = [
       /Module parse failed.*import\.meta/,
       /Cannot use 'import\.meta' outside a module/,
+      /Failed to resolve import/,
+      /Module not found/,
+      /Critical dependency/,
     ];
-
-    // Force Safe Global SDK modules to be treated as CommonJS to prevent import.meta issues
-    config.module.rules.unshift({
-      test: /node_modules\/@safe-global\/.*\.(js|mjs)$/,
-      type: 'javascript/auto',
-      parser: {
-        javascript: {
-          commonjsMagicComments: true,
-          importMeta: false,
-          dynamicImport: false,
-        }
-      },
-      resolve: {
-        fullySpecified: false
-      }
-    });
-
-    // Handle viem with disabled import.meta parsing
-    config.module.rules.push({
-      test: /node_modules\/viem\/.*\.(js|mjs)$/,
-      type: 'javascript/auto',
-      parser: {
-        javascript: {
-          importMeta: false,
-        },
-      },
-    });
 
     config.module.rules.push(
       // Reapply the existing rule, but only for svg imports ending in ?url
