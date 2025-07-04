@@ -40,37 +40,7 @@ export const ClubActions = ({
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
-  // Track if any data is still loading
-  const isDataLoading = clubDataLoading || memberNftDataLoading || clubMemberLoading || vestingDataLoading;
-  
-  // If any data is still loading, show loading state
-  if (isDataLoading) {
-    return (
-      <div className="p-4 border rounded-2xl bg-slate-50">
-        <div className="animate-pulse">
-          <div className="h-8 bg-slate-200 rounded w-1/3 mb-4"></div>
-          <div className="h-16 bg-slate-200 rounded mb-4"></div>
-          <div className="space-y-2">
-            <div className="h-14 bg-slate-200 rounded"></div>
-            <div className="h-14 bg-slate-200 rounded"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Additional safety check - if critical data is missing, don't render
-  if (!clubData || !memberNftData || !clubMember) {
-    return (
-      <div className="p-4 border rounded-2xl bg-slate-50">
-        <div className="text-center text-gray-500">
-          Loading member data...
-        </div>
-      </div>
-    );
-  }
-
-  // Extract values using the established wagmi pattern - hooks already provide safe values
+  // Extract values with safe defaults - do this immediately after hooks
   const {
     name = "",
     isActivated = false,
@@ -124,14 +94,6 @@ export const ClubActions = ({
   // Ensure claimableAmount is a safe bigint
   const safeClaimableAmount = typeof claimableAmount === 'bigint' ? claimableAmount : 0n;
 
-  const claimCreditButtonProps = useWrite({
-    address: creditVaultContract.address,
-    abi: creditVaultContract.abi,
-    functionName: "claimCredit",
-    args: [safeTokenId],
-    onComplete: refetchClubMember,
-  });
-
   // Determine if claim credit should be disabled and why
   const cannotClaimReason = !isActivated ? "Vault is not activated"
     : !isMember ? "You must be a member to claim credit"
@@ -144,6 +106,44 @@ export const ClubActions = ({
 
   // Ensure cannotClaimReason is always a string or null (never an object)
   const safeCannotClaimReason = typeof cannotClaimReason === 'string' ? cannotClaimReason : null;
+
+  const claimCreditButtonProps = useWrite({
+    address: creditVaultContract.address,
+    abi: creditVaultContract.abi,
+    functionName: "claimCredit",
+    args: [safeTokenId],
+    onComplete: refetchClubMember,
+  });
+
+  // Track if any data is still loading - moved after all hooks
+  const isDataLoading = clubDataLoading || memberNftDataLoading || clubMemberLoading || vestingDataLoading;
+  
+  // If any data is still loading, show loading state
+  if (isDataLoading) {
+    return (
+      <div className="p-4 border rounded-2xl bg-slate-50">
+        <div className="animate-pulse">
+          <div className="h-8 bg-slate-200 rounded w-1/3 mb-4"></div>
+          <div className="h-16 bg-slate-200 rounded mb-4"></div>
+          <div className="space-y-2">
+            <div className="h-14 bg-slate-200 rounded"></div>
+            <div className="h-14 bg-slate-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Additional safety check - if critical data is missing, don't render
+  if (!clubData || !memberNftData || !clubMember) {
+    return (
+      <div className="p-4 border rounded-2xl bg-slate-50">
+        <div className="text-center text-gray-500">
+          Loading member data...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 border rounded-2xl bg-slate-50">
