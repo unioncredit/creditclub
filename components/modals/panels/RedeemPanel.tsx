@@ -9,7 +9,7 @@ import {
 import { useModals } from "@/providers/ModalManagerProvider";
 import { useClubData } from "@/hooks/useClubData";
 import { Address, erc20Abi } from "viem";
-import { useAccount, useWatchAsset } from "wagmi";
+import { useAccount, useWatchAsset, useReadContract } from "wagmi";
 import { useClubMember } from "@/hooks/useClubMember";
 import { useErc20Token } from "@/hooks/useErc20Token";
 import { formatDecimals } from "@/lib/format";
@@ -96,6 +96,41 @@ export const RedeemPanel = ({
     clubAddress,
   });
 
+  // Check vault limits
+  const { data: maxWithdrawAmount } = useReadContract({
+    ...creditVaultContract,
+    functionName: "maxWithdraw",
+    args: [address!],
+    query: { enabled: !!address },
+  });
+
+  const { data: maxRedeemShares } = useReadContract({
+    ...creditVaultContract,
+    functionName: "maxRedeem",
+    args: [address!],
+    query: { enabled: !!address },
+  });
+
+  // Debug logs
+  console.log("🔍 RedeemPanel Debug:", {
+    sharesFormatted: shares.formatted,
+    sharesDisplay: shares.display,
+    sharesRaw: sharesRaw.toString(),
+    amountReceived: amountReceived.toString(),
+    clubTokenBalance: clubTokenBalance.toString(),
+    maxWithdrawAmount: maxWithdrawAmount?.toString() || "loading",
+    maxRedeemShares: maxRedeemShares?.toString() || "loading",
+    sendTokenDecimals,
+    receiveTokenDecimals,
+    activated,
+    locked,
+    remaining,
+    assetTokenAddress,
+    clubAddress,
+    canRedeem: sharesRaw <= (maxRedeemShares || 0n),
+    canWithdraw: amountReceived <= (maxWithdrawAmount || 0n),
+  });
+
   const isLocked = !activated || locked;
   
   const isDisabled = !!errors.shares || sharesRaw <= 0n || clubTokenBalance < sharesRaw || isLocked;
@@ -109,6 +144,19 @@ export const RedeemPanel = ({
         : sharesRaw > clubTokenBalance
           ? "Insufficient balance"
           : `Redeem ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`;
+
+  // Debug button state
+  console.log("🎯 Button Debug:", {
+    buttonLabel,
+    isDisabled,
+    isLocked,
+    activated,
+    locked,
+    remaining,
+    sharesRawZero: sharesRaw <= 0n,
+    insufficientBalance: sharesRaw > clubTokenBalance,
+    hasErrors: !!errors.shares,
+  });
 
   const inputError = () => {
     if (errors.shares) {
@@ -179,7 +227,31 @@ export const RedeemPanel = ({
           functionName: "redeem",
           args: [sharesRaw, address, address],
           label: buttonLabel,
+          onTransactionStart: () => {
+            console.log("🚀 Starting redeem transaction:", {
+              contractAddress: creditVaultContract.address,
+              functionName: "redeem",
+              args: [sharesRaw.toString(), address, address],
+              userAddress: address,
+              expectedReceived: amountReceived.toString(),
+            });
+          },
+          onError: (error: any) => {
+            console.error("❌ Redeem transaction failed:", {
+              error: error.message || error,
+              errorCode: error.code,
+              sharesRaw: sharesRaw.toString(),
+              amountReceived: amountReceived.toString(),
+              userAddress: address,
+              contractAddress: creditVaultContract.address,
+            });
+          },
           onComplete: async (hash: string) => {
+            console.log("✅ Redeem transaction successful:", {
+              hash,
+              sharesRedeemed: sharesRaw.toString(),
+              amountReceived: amountReceived.toString(),
+            });
             close();
             refetchClubData();
             refetchClubMember();

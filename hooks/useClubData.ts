@@ -107,6 +107,10 @@ export const useClubData = (clubAddress: Address) => {
     },
     {
       ...creditVaultContract,
+      functionName: "lockupEnd"
+    },
+    {
+      ...creditVaultContract,
       functionName: "asset",
     },
     {
@@ -172,6 +176,7 @@ export const useClubData = (clubAddress: Address) => {
     initialRaise = 0n,
     decimals = 0,
     lockupPeriod = 0n,
+    lockupEnd = 0n,
     assetAddress = zeroAddress,
     openRaise = false,
     vestingDurationInSeconds = 0n,
@@ -206,6 +211,7 @@ export const useClubData = (clubAddress: Address) => {
     initialRaise,
     decimals,
     lockupPeriod,
+    lockupEnd,
     assetAddress,
     openRaise,
     vestingDurationInSeconds,
