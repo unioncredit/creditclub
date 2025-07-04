@@ -1,5 +1,4 @@
 import {
-  Button,
   Input,
   Usdc,
   InfoBanner,
@@ -9,7 +8,7 @@ import {
 
 import { useModals } from "@/providers/ModalManagerProvider";
 import { useClubData } from "@/hooks/useClubData";
-import { Address } from "viem";
+import { Address, erc20Abi } from "viem";
 import { useAccount, useWatchAsset } from "wagmi";
 import { useClubMember } from "@/hooks/useClubMember";
 import { useErc20Token } from "@/hooks/useErc20Token";
@@ -17,13 +16,13 @@ import { formatDecimals } from "@/lib/format";
 import { IFormField, IFormValues, useForm } from "@/hooks/useForm";
 import { useMintRedeemPreview } from "@/hooks/useMintRedeemPreview";
 import { useCreditVaultContract } from "@/hooks/useCreditVaultContract";
-import { useWrite } from "@/hooks/useWrite";
 import { useClubActivation } from "@/hooks/useClubActivation";
 import { formatDuration } from "@/lib/utils";
 import { POST_TX_MODAL } from "@/components/modals/PostTxModal";
 import Image from "next/image";
 import { createIpfsImageUrl } from "@/lib/links";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
+import { ApprovalButton } from "@/components/shared/ApprovalButton";
 
 export const RedeemPanel = ({
   clubAddress,
@@ -98,40 +97,18 @@ export const RedeemPanel = ({
   });
 
   const isLocked = !activated || locked;
-
-  const redeemButtonProps = useWrite({
-    ...creditVaultContract,
-    functionName: "redeem",
-    args: [sharesRaw, address, address],
-    label: sharesRaw <= 0n
-      ? "Enter an amount"
-      : `Redeem ${formatDecimals(amountReceived, receiveTokenDecimals, 0)} ${receiveTokenSymbol}`,
-    disabled: !!errors.shares || sharesRaw <= 0n || clubTokenBalance < sharesRaw || isLocked,
-    onComplete: async (hash: string) => {
-      close();
-      refetchClubData();
-      refetchClubMember();
-      openModal(POST_TX_MODAL, {
-        header: `Your redeem was successful`,
-        title: "Redeem",
-        content: <p className="font-mono mt-2">You successfully
-          redeemed {formatDecimals(amountReceived, receiveTokenDecimals, 2, false)} {receiveTokenSymbol}</p>,
-        action: {
-          icon: WalletIcon,
-          label: "Add token to wallet",
-          onClick: () => watchAsset({
-            type: 'ERC20',
-            options: {
-              address: receiveTokenAddress,
-              symbol: receiveTokenSymbol,
-              decimals: receiveTokenDecimals,
-            },
-          })
-        },
-        hash,
-      })
-    }
-  });
+  
+  const isDisabled = !!errors.shares || sharesRaw <= 0n || clubTokenBalance < sharesRaw || isLocked;
+  
+  const buttonLabel = !activated
+    ? "Club not activated"
+    : isLocked
+      ? `Locked for ${formatDuration(remaining)}`
+      : sharesRaw <= 0n
+        ? "Enter an amount"
+        : sharesRaw > clubTokenBalance
+          ? "Insufficient balance"
+          : `Redeem ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`;
 
   const inputError = () => {
     if (errors.shares) {
@@ -188,21 +165,45 @@ export const RedeemPanel = ({
         />
       )}
 
-      <Button
-        fluid
-        className="mt-4"
-        color="primary"
-        size="large"
-        label={!activated
-          ? "Club not activated"
-          : isLocked
-            ? `Locked for ${formatDuration(remaining)}`
-            : sharesRaw <= 0n
-              ? "Enter an amount"
-              : sharesRaw > clubTokenBalance
-                ? "Insufficient balance"
-                : `Redeem ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`}
-        {...redeemButtonProps}
+      <ApprovalButton
+        owner={address}
+        amount={sharesRaw}
+        disabled={isDisabled}
+        spender={clubAddress}
+        tokenContract={{
+          abi: erc20Abi,
+          address: clubAddress,
+        }}
+        actionProps={{
+          ...creditVaultContract,
+          functionName: "redeem",
+          args: [sharesRaw, address, address],
+          label: buttonLabel,
+          onComplete: async (hash: string) => {
+            close();
+            refetchClubData();
+            refetchClubMember();
+            openModal(POST_TX_MODAL, {
+              header: `Your redeem was successful`,
+              title: "Redeem",
+              content: <p className="font-mono mt-2">You successfully
+                redeemed {formatDecimals(amountReceived, receiveTokenDecimals, 2, false)} {receiveTokenSymbol}</p>,
+              action: {
+                icon: WalletIcon,
+                label: "Add token to wallet",
+                onClick: () => watchAsset({
+                  type: 'ERC20',
+                  options: {
+                    address: receiveTokenAddress,
+                    symbol: receiveTokenSymbol,
+                    decimals: receiveTokenDecimals,
+                  },
+                })
+              },
+              hash,
+            })
+          }
+        }}
       />
     </>
   )
