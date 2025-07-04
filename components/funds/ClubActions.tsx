@@ -1,5 +1,6 @@
 import { Address } from "viem";
-import { useAccount, useReadContract } from "wagmi";
+import { useAccount, useReadContract, useChainId, useConnectorClient } from "wagmi";
+import { usePrivy } from "@privy-io/react-auth";
 import {
   ClaimIcon,
   CalendarIcon,
@@ -33,8 +34,11 @@ export const ClubActions = ({
   clubAddress: Address;
 }) => {
   const { token } = useToken();
-  const { address } = useAccount();
+  const { address, isConnected, connector } = useAccount();
+  const chainId = useChainId();
+  const { data: connectorClient } = useConnectorClient();
   const { open: openModal } = useModals();
+  const { user, ready, authenticated } = usePrivy();
   const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
   const { data: memberNftData, isLoading: memberNftDataLoading } = useClubMemberNft(clubAddress);
   const { data: clubMember, refetch: refetchClubMember, isLoading: clubMemberLoading } = useClubMember(address, clubAddress);
@@ -48,6 +52,33 @@ export const ClubActions = ({
     address: creditVaultContract.address,
     abi: creditVaultContract.abi,
     functionName: "creditMultiple",
+  });
+
+  // CRITICAL WALLET DEBUG - This could be the root cause!
+  console.log("🚨 WALLET CONNECTION DEBUG:", {
+    // Wagmi state
+    wagmi: {
+      address,
+      isConnected,
+      chainId,
+      expectedChainId: DEFAULT_CHAIN_ID,
+      chainMismatch: chainId !== DEFAULT_CHAIN_ID,
+      connector: connector?.name || "none",
+      connectorId: connector?.id || "none", 
+      hasConnectorClient: !!connectorClient,
+    },
+    // Privy state  
+    privy: {
+      ready,
+      authenticated,
+      userId: user?.id || "none",
+      walletAddress: user?.wallet?.address || "none",
+      walletType: user?.wallet?.walletClientType || "none",
+      connectorType: user?.wallet?.connectorType || "none",
+    },
+    // Mismatch detection
+    addressMismatch: address !== user?.wallet?.address,
+    bothConnected: isConnected && authenticated,
   });
 
   // Extract values with safe defaults - do this immediately after hooks
@@ -157,19 +188,6 @@ export const ClubActions = ({
     onComplete: refetchClubMember,
   });
 
-  // Debug transaction parameters
-  console.log("Transaction Debug Info:", {
-    contractAddress: creditVaultContract.address,
-    functionName: "claimCredit",
-    args: [safeTokenId.toString()],
-    userAddress: address,
-    chainId: DEFAULT_CHAIN_ID,
-    isConnected: !!address,
-    tokenId: safeTokenId.toString(),
-    contractTrustAmount: contractTrustAmount.toString(),
-    claimableAmount: safeClaimableAmount.toString(),
-  });
-
   // Track if any data is still loading - moved after all hooks
   const isDataLoading = clubDataLoading || memberNftDataLoading || clubMemberLoading || vestingDataLoading || prorataDataLoading || creditMultipleLoading;
 
@@ -226,17 +244,29 @@ export const ClubActions = ({
 
       {/* TEMP DEBUG: Transaction Status */}
       <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-        <h3 className="font-medium text-red-800 mb-2">Transaction Debug - Remove After Fix</h3>
+        <h3 className="font-medium text-red-800 mb-2">🚨 WALLET CONNECTION DEBUG</h3>
         <div className="text-xs text-red-700 space-y-1">
-          <div>Wallet Connected: {address ? "✅ Yes" : "❌ No"}</div>
-          <div>Wallet Address: {address || "Not connected"}</div>
-          <div>Contract Address: {creditVaultContract.address}</div>
-          <div>Token ID: {safeTokenId.toString()}</div>
-          <div>Chain ID: {DEFAULT_CHAIN_ID}</div>
-          <div>Button Disabled: {claimCreditButtonProps.disabled ? "❌ Yes" : "✅ No"}</div>
-          <div>Button Loading: {claimCreditButtonProps.loading ? "Yes" : "No"}</div>
-          <div>Contract Trust Amount: {contractTrustAmount.toString()}</div>
-          <div>Function: claimCredit({safeTokenId.toString()})</div>
+          <div><strong>WAGMI STATE:</strong></div>
+          <div>• Connected: {isConnected ? "✅ Yes" : "❌ No"}</div>
+          <div>• Address: {address || "❌ None"}</div>
+          <div>• Chain ID: {chainId} (Expected: {DEFAULT_CHAIN_ID})</div>
+          <div>• Chain Match: {chainId === DEFAULT_CHAIN_ID ? "✅ Yes" : "❌ NO - WRONG CHAIN!"}</div>
+          <div>• Connector: {connector?.name || "❌ None"}</div>
+          <div>• Has Signer: {connectorClient ? "✅ Yes" : "❌ NO - NO SIGNER!"}</div>
+          
+          <div className="pt-2"><strong>PRIVY STATE:</strong></div>
+          <div>• Ready: {ready ? "✅ Yes" : "❌ No"}</div>
+          <div>• Authenticated: {authenticated ? "✅ Yes" : "❌ No"}</div>
+          <div>• User ID: {user?.id || "❌ None"}</div>
+          <div>• Wallet Address: {user?.wallet?.address || "❌ None"}</div>
+          
+          <div className="pt-2"><strong>CRITICAL CHECKS:</strong></div>
+          <div>• Address Match: {address === user?.wallet?.address ? "✅ Yes" : "❌ MISMATCH!"}</div>
+          <div>• Both Connected: {isConnected && authenticated ? "✅ Yes" : "❌ NOT FULLY CONNECTED!"}</div>
+          
+          <div className="pt-2"><strong>TRANSACTION:</strong></div>
+          <div>• Button Disabled: {claimCreditButtonProps.disabled ? "❌ Yes" : "✅ No"}</div>
+          <div>• Contract Trust: {format(contractTrustAmount, safeToken)}</div>
         </div>
       </div>
 
