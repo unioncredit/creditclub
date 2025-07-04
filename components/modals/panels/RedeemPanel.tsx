@@ -98,7 +98,7 @@ export const RedeemPanel = ({
     clubAddress,
   });
 
-  const isLocked = !activated || locked || Number(lockupPeriod) > 0;
+  const isLocked = !activated || locked;
 
   const redeemButtonProps = useWrite({
     ...creditVaultContract,
