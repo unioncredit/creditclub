@@ -1,6 +1,5 @@
 import { Address } from "viem";
-import { useAccount, useReadContract, useChainId, useConnectorClient } from "wagmi";
-import { usePrivy } from "@privy-io/react-auth";
+import { useAccount, useReadContract } from "wagmi";
 import {
   ClaimIcon,
   CalendarIcon,
@@ -25,7 +24,6 @@ import { REPAY_MODAL } from "@/components/modals/RepayModal";
 import { INVITE_MODAL } from "@/components/modals/InviteModal";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { useProrata } from "@/hooks/useProrata";
-import { DEFAULT_CHAIN_ID } from "@/constants";
 
 
 export const ClubActions = ({
@@ -34,11 +32,8 @@ export const ClubActions = ({
   clubAddress: Address;
 }) => {
   const { token } = useToken();
-  const { address, isConnected, connector } = useAccount();
-  const chainId = useChainId();
-  const { data: connectorClient } = useConnectorClient();
+  const { address } = useAccount();
   const { open: openModal } = useModals();
-  const { user, ready, authenticated } = usePrivy();
   const { data: clubData, isLoading: clubDataLoading } = useClubData(clubAddress);
   const { data: memberNftData, isLoading: memberNftDataLoading } = useClubMemberNft(clubAddress);
   const { data: clubMember, refetch: refetchClubMember, isLoading: clubMemberLoading } = useClubMember(address, clubAddress);
@@ -52,33 +47,6 @@ export const ClubActions = ({
     address: creditVaultContract.address,
     abi: creditVaultContract.abi,
     functionName: "creditMultiple",
-  });
-
-  // CRITICAL WALLET DEBUG - This could be the root cause!
-  console.log("🚨 WALLET CONNECTION DEBUG:", {
-    // Wagmi state
-    wagmi: {
-      address,
-      isConnected,
-      chainId,
-      expectedChainId: DEFAULT_CHAIN_ID,
-      chainMismatch: chainId !== DEFAULT_CHAIN_ID,
-      connector: connector?.name || "none",
-      connectorId: connector?.id || "none", 
-      hasConnectorClient: !!connectorClient,
-    },
-    // Privy state  
-    privy: {
-      ready,
-      authenticated,
-      userId: user?.id || "none",
-      walletAddress: user?.wallet?.address || "none",
-      walletType: user?.wallet?.walletClientType || "none",
-      connectorType: user?.wallet?.connectorType || "none",
-    },
-    // Mismatch detection
-    addressMismatch: address !== user?.wallet?.address,
-    bothConnected: isConnected && authenticated,
   });
 
   // Extract values with safe defaults - do this immediately after hooks
@@ -166,6 +134,12 @@ export const ClubActions = ({
   const claimableAmount = contractTrustAmount > vouch ? contractTrustAmount - vouch : 0n;
   const safeClaimableAmount = typeof claimableAmount === 'bigint' ? claimableAmount : 0n;
 
+  // Calculate effective vesting percentage for display
+  const effectiveVestingPercent = percentVested < WAD 
+    ? ((WAD - startingPercentTrust) * percentVested) / WAD + startingPercentTrust
+    : WAD;
+  const effectiveVestingDisplay = `${(Number(effectiveVestingPercent) / 1e18 * 100).toFixed(1)}%`;
+
   // Determine if claim credit should be disabled and why
   const cannotClaimReason = !isActivated ? "Vault is not activated"
     : !isMember ? "You must be a member to claim credit"
@@ -242,38 +216,15 @@ export const ClubActions = ({
         <p className="text-lg">{safeName} Member #{safeTokenId.toString()}</p>
       </div>
 
-      {/* TEMP DEBUG: Transaction Status */}
-      <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-        <h3 className="font-medium text-red-800 mb-2">🚨 WALLET CONNECTION DEBUG</h3>
-        <div className="text-xs text-red-700 space-y-1">
-          <div><strong>WAGMI STATE:</strong></div>
-          <div>• Connected: {isConnected ? "✅ Yes" : "❌ No"}</div>
-          <div>• Address: {address || "❌ None"}</div>
-          <div>• Chain ID: {chainId} (Expected: {DEFAULT_CHAIN_ID})</div>
-          <div>• Chain Match: {chainId === DEFAULT_CHAIN_ID ? "✅ Yes" : "❌ NO - WRONG CHAIN!"}</div>
-          <div>• Connector: {connector?.name || "❌ None"}</div>
-          <div>• Has Signer: {connectorClient ? "✅ Yes" : "❌ NO - NO SIGNER!"}</div>
-          
-          <div className="pt-2"><strong>PRIVY STATE:</strong></div>
-          <div>• Ready: {ready ? "✅ Yes" : "❌ No"}</div>
-          <div>• Authenticated: {authenticated ? "✅ Yes" : "❌ No"}</div>
-          <div>• User ID: {user?.id || "❌ None"}</div>
-          <div>• Wallet Address: {user?.wallet?.address || "❌ None"}</div>
-          
-          <div className="pt-2"><strong>CRITICAL CHECKS:</strong></div>
-          <div>• Address Match: {address === user?.wallet?.address ? "✅ Yes" : "❌ MISMATCH!"}</div>
-          <div>• Both Connected: {isConnected && authenticated ? "✅ Yes" : "❌ NOT FULLY CONNECTED!"}</div>
-          
-          <div className="pt-2"><strong>TRANSACTION:</strong></div>
-          <div>• Button Disabled: {claimCreditButtonProps.disabled ? "❌ Yes" : "✅ No"}</div>
-          <div>• Contract Trust: {format(contractTrustAmount, safeToken)}</div>
-        </div>
-      </div>
-
       {vestingEnabled && (
         <div className="flex items-center justify-center gap-0.5 mt-2">
           <CalendarIcon width={24} height={24} />
-          <p className="text-xs text-blue-600">Vesting: {safeVestedDays} of {safeVestingDuration} days vested</p>
+          <p className="text-xs text-blue-600">
+            Effective Vesting: {effectiveVestingDisplay} ({safeVestedDays} of {safeVestingDuration} days)
+            {Number(startingPercentTrust) > 0 && (
+              <span className="text-blue-500"> • Includes {(Number(startingPercentTrust) / 1e18 * 100).toFixed(0)}% starting trust</span>
+            )}
+          </p>
         </div>
       )}
 
