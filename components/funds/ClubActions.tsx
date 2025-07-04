@@ -24,6 +24,7 @@ import { REPAY_MODAL } from "@/components/modals/RepayModal";
 import { INVITE_MODAL } from "@/components/modals/InviteModal";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
 import { useProrata } from "@/hooks/useProrata";
+import { DEFAULT_CHAIN_ID } from "@/constants";
 
 
 export const ClubActions = ({
@@ -48,14 +49,6 @@ export const ClubActions = ({
     abi: creditVaultContract.abi,
     functionName: "creditMultiple",
   });
-
-  // DEBUG: Check environment and RPC setup
-  const debugRpcInfo = {
-    apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY ? `${process.env.NEXT_PUBLIC_ALCHEMY_KEY.substring(0, 8)}...` : "MISSING",
-    hasApiKey: !!process.env.NEXT_PUBLIC_ALCHEMY_KEY,
-    isClient: typeof window !== 'undefined',
-    environment: process.env.NODE_ENV,
-  };
 
   // Extract values with safe defaults - do this immediately after hooks
   const {
@@ -164,6 +157,19 @@ export const ClubActions = ({
     onComplete: refetchClubMember,
   });
 
+  // Debug transaction parameters
+  console.log("Transaction Debug Info:", {
+    contractAddress: creditVaultContract.address,
+    functionName: "claimCredit",
+    args: [safeTokenId.toString()],
+    userAddress: address,
+    chainId: DEFAULT_CHAIN_ID,
+    isConnected: !!address,
+    tokenId: safeTokenId.toString(),
+    contractTrustAmount: contractTrustAmount.toString(),
+    claimableAmount: safeClaimableAmount.toString(),
+  });
+
   // Track if any data is still loading - moved after all hooks
   const isDataLoading = clubDataLoading || memberNftDataLoading || clubMemberLoading || vestingDataLoading || prorataDataLoading || creditMultipleLoading;
 
@@ -218,32 +224,19 @@ export const ClubActions = ({
         <p className="text-lg">{safeName} Member #{safeTokenId.toString()}</p>
       </div>
 
-      {/* TEMP DEBUG: RPC Connection Info */}
-      <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-        <h3 className="font-medium text-blue-800 mb-2">RPC Debug - Remove After Fix</h3>
-        <div className="text-xs text-blue-700 space-y-1">
-          <div>API Key: {debugRpcInfo.apiKey}</div>
-          <div>Has API Key: {debugRpcInfo.hasApiKey ? "✅ Yes" : "❌ No"}</div>
-          <div>Environment: {debugRpcInfo.environment}</div>
-          <div>Is Client: {debugRpcInfo.isClient ? "✅ Yes" : "❌ No"}</div>
-        </div>
-      </div>
-
-      {/* TEMP DEBUG: Credit Calculation */}
-      <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-        <h3 className="font-medium text-green-800 mb-2">Credit Calculation Debug</h3>
-        <div className="text-xs text-green-700 space-y-1">
-          <div>Base Trust: {format(baseTrust, safeToken)}</div>
-          <div>Prorata Amount: {format(safeProrataAmount, safeToken)}</div>
-          <div>Credit Multiple: {safeCreditMultiple.toString()}</div>
-          <div>Tier Percentage: {safeTierPercentage.toString()}%</div>
-          <div>Percent Vested: {(Number(percentVested) / 1e18 * 100).toFixed(2)}%</div>
-          <div>Contract Trust Amount: {format(contractTrustAmount, safeToken)}</div>
-          <div>Current Vouch: {format(safeVouch, safeToken)}</div>
-          <div>Claimable Amount: {format(safeClaimableAmount, safeToken)}</div>
-          {safeCannotClaimReason && (
-            <div className="font-medium text-red-600">Issue: {safeCannotClaimReason}</div>
-          )}
+      {/* TEMP DEBUG: Transaction Status */}
+      <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+        <h3 className="font-medium text-red-800 mb-2">Transaction Debug - Remove After Fix</h3>
+        <div className="text-xs text-red-700 space-y-1">
+          <div>Wallet Connected: {address ? "✅ Yes" : "❌ No"}</div>
+          <div>Wallet Address: {address || "Not connected"}</div>
+          <div>Contract Address: {creditVaultContract.address}</div>
+          <div>Token ID: {safeTokenId.toString()}</div>
+          <div>Chain ID: {DEFAULT_CHAIN_ID}</div>
+          <div>Button Disabled: {claimCreditButtonProps.disabled ? "❌ Yes" : "✅ No"}</div>
+          <div>Button Loading: {claimCreditButtonProps.loading ? "Yes" : "No"}</div>
+          <div>Contract Trust Amount: {contractTrustAmount.toString()}</div>
+          <div>Function: claimCredit({safeTokenId.toString()})</div>
         </div>
       </div>
 
