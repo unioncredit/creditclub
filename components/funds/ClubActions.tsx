@@ -117,6 +117,28 @@ export const ClubActions = ({
 
   // Track if any data is still loading - moved after all hooks
   const isDataLoading = clubDataLoading || memberNftDataLoading || clubMemberLoading || vestingDataLoading;
+
+  // DEBUG: Add debug info to help troubleshoot button state
+  const debugInfo = {
+    isActivated,
+    isMember,
+    memberNftBalance: memberNftBalance.toString(),
+    tokenId: safeTokenId.toString(),
+    active,
+    badDebt: badDebt.toString(),
+    claimableAmount: safeClaimableAmount.toString(),
+    vouch: safeVouch.toString(),
+    baseTrust: baseTrust.toString(),
+    percentVested: percentVested.toString(),
+    startingPercentTrust: startingPercentTrust.toString(),
+    totalVested: totalVested.toString(),
+    buttonDisabled: claimCreditButtonProps.disabled,
+    buttonLoading: claimCreditButtonProps.loading,
+    disabledReason: safeCannotClaimReason,
+  };
+
+  // Log debug info to console
+  console.log("Claim Credit Debug Info:", debugInfo);
   
   // If any data is still loading, show loading state
   if (isDataLoading) {
@@ -175,6 +197,28 @@ export const ClubActions = ({
           <p className="text-xs text-blue-600">Vesting: {safeVestedDays} of {safeVestingDuration} days vested</p>
         </div>
       )}
+
+      {/* DEBUG: Show debug info in UI */}
+      <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <h3 className="font-medium text-yellow-800 mb-2">Debug Info - Claim Credit Button State</h3>
+        <div className="text-xs text-yellow-700 space-y-1">
+          <div>Vault Activated: {isActivated ? "✅ Yes" : "❌ No"}</div>
+          <div>Is Member: {isMember ? "✅ Yes" : "❌ No"}</div>
+          <div>Member NFT Balance: {memberNftBalance.toString()}</div>
+          <div>Token ID: {safeTokenId.toString()}</div>
+          <div>Membership Active: {active ? "✅ Yes" : "❌ No"}</div>
+          <div>Bad Debt: {format(badDebt, safeToken)}</div>
+          <div>Current Vouch: {format(safeVouch, safeToken)}</div>
+          <div>Base Trust: {format(baseTrust, safeToken)}</div>
+          <div>Percent Vested: {(Number(percentVested) / 1e18 * 100).toFixed(2)}%</div>
+          <div>Claimable Amount: {format(safeClaimableAmount, safeToken)}</div>
+          <div>Button Disabled: {claimCreditButtonProps.disabled ? "❌ Yes" : "✅ No"}</div>
+          <div>Button Loading: {claimCreditButtonProps.loading ? "Yes" : "No"}</div>
+          {safeCannotClaimReason && (
+            <div className="font-medium text-red-600">Disabled Reason: {safeCannotClaimReason}</div>
+          )}
+        </div>
+      </div>
 
       <div className="flex flex-col mt-4 gap-2">
         <div className="flex gap-2">
