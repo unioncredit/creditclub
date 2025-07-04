@@ -17,8 +17,19 @@ const RPCS: Record<number, string> = {
   [baseSepolia.id]: "https://base-sepolia.g.alchemy.com/v2",
 };
 
-export const RPC_URL = (chainId: number) =>
-  `${RPCS[chainId]}/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`;
+export const RPC_URL = (chainId: number) => {
+  const apiKey = process.env.NEXT_PUBLIC_ALCHEMY_KEY;
+  const url = `${RPCS[chainId]}/${apiKey}`;
+  
+  // Debug logging to see what's actually being used
+  console.log("RPC Debug Info:", {
+    chainId,
+    apiKey: apiKey ? `${apiKey.substring(0, 8)}...` : "MISSING",
+    url: `${RPCS[chainId]}/${apiKey ? `${apiKey.substring(0, 8)}...` : "MISSING"}`
+  });
+  
+  return url;
+};
 
 export type IToken = "DAI" | "USDC" | "UNION";
 

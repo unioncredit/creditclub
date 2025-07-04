@@ -49,6 +49,14 @@ export const ClubActions = ({
     functionName: "creditMultiple",
   });
 
+  // DEBUG: Check environment and RPC setup
+  const debugRpcInfo = {
+    apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY ? `${process.env.NEXT_PUBLIC_ALCHEMY_KEY.substring(0, 8)}...` : "MISSING",
+    hasApiKey: !!process.env.NEXT_PUBLIC_ALCHEMY_KEY,
+    isClient: typeof window !== 'undefined',
+    environment: process.env.NODE_ENV,
+  };
+
   // Extract values with safe defaults - do this immediately after hooks
   const {
     name = "",
@@ -113,42 +121,6 @@ export const ClubActions = ({
   // Ensure claimableAmount is a safe bigint
   const safeClaimableAmount = typeof claimableAmount === 'bigint' ? claimableAmount : 0n;
 
-  // SMART CONTRACT CALCULATION: Replicate the exact logic from CreditMixin._claimCredit
-  // This is what the contract actually calculates as trustAmount
-  const contractCalculatedTrustAmount = (() => {
-    // From contract: trustAmount = member.baseTrust
-    let trustAmount = baseTrust;
-    
-    // From contract: if (member.isActive) { ... }
-    if (active) {
-      // From contract: uint256 proRataAmount = _calcProRataTrustAmount();
-      const proRataAmount = safeProrataAmount;
-      
-      // From contract: uint256 vestedAmount = _calcVestedTrustAmount(member.updatedAt, proRataAmount);
-      // This uses the same vesting logic but applied to proRataAmount
-      const currentPercentTrust = percentVested < WAD 
-        ? ((WAD - startingPercentTrust) * percentVested) / WAD + startingPercentTrust
-        : WAD;
-      
-      let vestedAmount = (proRataAmount * currentPercentTrust) / WAD;
-      
-      // From contract: if (tierPercent != 0) vestedAmount = vestedAmount * tierPercent / 100;
-      const safeTierPercentage = typeof tierPercentage === 'bigint' ? tierPercentage : 0n;
-      if (safeTierPercentage !== 0n) {
-        vestedAmount = (vestedAmount * safeTierPercentage) / 100n;
-      }
-      
-      // From contract: vestedAmount = vestedAmount * creditMultiple / 1e18;
-      const safeCreditMultiple = typeof creditMultiple === 'bigint' ? creditMultiple : 1000000000000000000n; // 1e18 as default
-      vestedAmount = (vestedAmount * safeCreditMultiple) / WAD;
-      
-      // From contract: trustAmount += vestedAmount;
-      trustAmount += vestedAmount;
-    }
-    
-    return trustAmount;
-  })();
-
   // Determine if claim credit should be disabled and why
   const cannotClaimReason = !isActivated ? "Vault is not activated"
     : !isMember ? "You must be a member to claim credit"
@@ -156,7 +128,7 @@ export const ClubActions = ({
     : safeTokenId === 0n ? "Unable to find your member NFT token ID"
     : !active ? "Your membership is not active - you may need to activate it first"
     : badDebt > 0n ? "Cannot claim with outstanding bad debt"
-    : contractCalculatedTrustAmount === 0n ? "Contract would calculate 0 trust amount - Union protocol rejects 0 trust updates"
+    : safeClaimableAmount === 0n ? "No credit available to claim"
     : null;
 
   // Ensure cannotClaimReason is always a string or null (never an object)
@@ -173,33 +145,6 @@ export const ClubActions = ({
   // Track if any data is still loading - moved after all hooks
   const isDataLoading = clubDataLoading || memberNftDataLoading || clubMemberLoading || vestingDataLoading || prorataDataLoading || creditMultipleLoading;
 
-  // DEBUG: Add debug info to help troubleshoot button state
-  const debugInfo = {
-    isActivated,
-    isMember,
-    memberNftBalance: memberNftBalance.toString(),
-    tokenId: safeTokenId.toString(),
-    active,
-    badDebt: badDebt.toString(),
-    claimableAmount: safeClaimableAmount.toString(),
-    vouch: safeVouch.toString(),
-    baseTrust: baseTrust.toString(),
-    prorataAmount: safeProrataAmount.toString(),
-    effectiveBaseTrust: effectiveBaseTrust.toString(),
-    contractCalculatedTrustAmount: contractCalculatedTrustAmount.toString(),
-    tierPercentage: tierPercentage.toString(),
-    creditMultiple: creditMultiple?.toString() || "loading",
-    percentVested: percentVested.toString(),
-    startingPercentTrust: startingPercentTrust.toString(),
-    totalVested: totalVested.toString(),
-    buttonDisabled: claimCreditButtonProps.disabled,
-    buttonLoading: claimCreditButtonProps.loading,
-    disabledReason: safeCannotClaimReason,
-  };
-
-  // Log debug info to console
-  console.log("Claim Credit Debug Info:", debugInfo);
-  
   // If any data is still loading, show loading state
   if (isDataLoading) {
     return (
@@ -251,39 +196,23 @@ export const ClubActions = ({
         <p className="text-lg">{safeName} Member #{safeTokenId.toString()}</p>
       </div>
 
+      {/* TEMP DEBUG: RPC Connection Info */}
+      <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+        <h3 className="font-medium text-blue-800 mb-2">RPC Debug - Remove After Fix</h3>
+        <div className="text-xs text-blue-700 space-y-1">
+          <div>API Key: {debugRpcInfo.apiKey}</div>
+          <div>Has API Key: {debugRpcInfo.hasApiKey ? "✅ Yes" : "❌ No"}</div>
+          <div>Environment: {debugRpcInfo.environment}</div>
+          <div>Is Client: {debugRpcInfo.isClient ? "✅ Yes" : "❌ No"}</div>
+        </div>
+      </div>
+
       {vestingEnabled && (
         <div className="flex items-center justify-center gap-0.5 mt-2">
           <CalendarIcon width={24} height={24} />
           <p className="text-xs text-blue-600">Vesting: {safeVestedDays} of {safeVestingDuration} days vested</p>
         </div>
       )}
-
-      {/* DEBUG: Show debug info in UI */}
-      <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-        <h3 className="font-medium text-yellow-800 mb-2">Debug Info - Claim Credit Button State</h3>
-        <div className="text-xs text-yellow-700 space-y-1">
-          <div>Vault Activated: {isActivated ? "✅ Yes" : "❌ No"}</div>
-          <div>Is Member: {isMember ? "✅ Yes" : "❌ No"}</div>
-          <div>Member NFT Balance: {memberNftBalance.toString()}</div>
-          <div>Token ID: {safeTokenId.toString()}</div>
-          <div>Membership Active: {active ? "✅ Yes" : "❌ No"}</div>
-          <div>Bad Debt: {format(badDebt, safeToken)}</div>
-          <div>Current Vouch: {format(safeVouch, safeToken)}</div>
-          <div>Base Trust: {format(baseTrust, safeToken)}</div>
-          <div>Prorata Amount: {format(safeProrataAmount, safeToken)}</div>
-          <div>Effective Base Trust: {format(effectiveBaseTrust, safeToken)}</div>
-          <div>Tier Percentage: {tierPercentage.toString()}%</div>
-          <div>Credit Multiple: {creditMultiple?.toString() || "loading"}</div>
-          <div>Contract Trust Amount: {format(contractCalculatedTrustAmount, safeToken)}</div>
-          <div>Percent Vested: {(Number(percentVested) / 1e18 * 100).toFixed(2)}%</div>
-          <div>Claimable Amount: {format(safeClaimableAmount, safeToken)}</div>
-          <div>Button Disabled: {claimCreditButtonProps.disabled ? "❌ Yes" : "✅ No"}</div>
-          <div>Button Loading: {claimCreditButtonProps.loading ? "Yes" : "No"}</div>
-          {safeCannotClaimReason && (
-            <div className="font-medium text-red-600">Disabled Reason: {safeCannotClaimReason}</div>
-          )}
-        </div>
-      </div>
 
       <div className="flex flex-col mt-4 gap-2">
         <div className="flex gap-2">
