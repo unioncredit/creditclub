@@ -54,7 +54,6 @@ export const RedeemPanel = ({
   const {
     symbol: clubTokenSymbol,
     decimals: clubTokenDecimals,
-    lockupPeriod,
   } = clubData;
 
   const {
@@ -182,7 +181,9 @@ export const RedeemPanel = ({
           variant="warning"
           label={!activated 
             ? "Redeem is not available until the club has been activated and the lock period has expired." 
-            : `Redeem is not available until the club locked period has expired. There are ${formatDuration(remaining)} remaining until the club is unlocked.`}
+            : remaining > 0
+              ? `Redeem is not available until the club locked period has expired. There are ${formatDuration(remaining)} remaining until the club is unlocked.`
+              : "Redeem is not available until the club locked period has expired. The club will be unlocked shortly."}
           className="text-sm mt-4 p-2 bg-slate-50 font-mono border border-black"
         />
       )}

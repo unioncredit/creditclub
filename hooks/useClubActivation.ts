@@ -10,11 +10,12 @@ export const useClubActivation = (clubAddress: Address) => {
   const currentTime = Math.floor(Date.now() / 1000);
 
   const activated = activationDate > 0n;
-  const remaining = Math.max(Number(activationDate + lockupPeriod) - currentTime, 0);
+  const lockEndTime = Number(activationDate + lockupPeriod);
+  const remaining = Math.max(lockEndTime - currentTime, 0);
 
   return {
     activated,
-    locked: !activated || currentTime < (activationDate + lockupPeriod),
+    locked: !activated || currentTime < lockEndTime,
     remaining,
   }
 };
