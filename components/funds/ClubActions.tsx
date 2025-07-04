@@ -42,7 +42,7 @@ export const ClubActions = ({
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
-  // Get creditMultiple from contract
+  // Get creditMultiple from contract - needed for accurate calculation
   const { data: creditMultiple, isLoading: creditMultipleLoading } = useReadContract({
     address: creditVaultContract.address,
     abi: creditVaultContract.abi,
@@ -100,25 +100,46 @@ export const ClubActions = ({
   const safeOwed = typeof owed === 'bigint' ? owed : 0n;
   const safeToken = token || "USDC";
   const safeProrataAmount = typeof prorataAmount === 'bigint' ? prorataAmount : 0n;
+  const safeCreditMultiple = typeof creditMultiple === 'bigint' ? creditMultiple : 1000000000000000000n; // 1e18 as default
+  const safeTierPercentage = typeof tierPercentage === 'bigint' ? tierPercentage : 0n;
 
-  // Calculate claimable credit amount using prorata + base trust
+  // Calculate claimable credit amount using the EXACT smart contract logic
   const WAD = 10n ** 18n;
   
-  // Use prorata amount as the effective base trust if baseTrust is 0
-  const effectiveBaseTrust = baseTrust > 0n ? baseTrust : safeProrataAmount;
-  
-  const startingAmount = effectiveBaseTrust > 0n && startingPercentTrust > 0n
-    ? (effectiveBaseTrust * startingPercentTrust) / WAD 
-    : 0n;
-  
-  const additionalVested = effectiveBaseTrust > startingAmount && percentVested > 0n
-    ? ((effectiveBaseTrust - startingAmount) * percentVested) / WAD 
-    : 0n;
-  
-  const totalVested = startingAmount + additionalVested;
-  const claimableAmount = totalVested > vouch ? totalVested - vouch : 0n;
-  
-  // Ensure claimableAmount is a safe bigint
+  // Smart contract calculation replicates CreditMixin._claimCredit exactly
+  const contractTrustAmount = (() => {
+    // From contract: trustAmount = member.baseTrust
+    let trustAmount = baseTrust;
+    
+    // From contract: if (member.isActive) { ... }
+    if (active) {
+      // From contract: uint256 proRataAmount = _calcProRataTrustAmount();
+      const proRataAmount = safeProrataAmount;
+      
+      // From contract: uint256 vestedAmount = _calcVestedTrustAmount(member.updatedAt, proRataAmount);
+      const currentPercentTrust = percentVested < WAD 
+        ? ((WAD - startingPercentTrust) * percentVested) / WAD + startingPercentTrust
+        : WAD;
+      
+      let vestedAmount = (proRataAmount * currentPercentTrust) / WAD;
+      
+      // From contract: if (tierPercent != 0) vestedAmount = vestedAmount * tierPercent / 100;
+      if (safeTierPercentage !== 0n) {
+        vestedAmount = (vestedAmount * safeTierPercentage) / 100n;
+      }
+      
+      // From contract: vestedAmount = vestedAmount * creditMultiple / 1e18;
+      vestedAmount = (vestedAmount * safeCreditMultiple) / WAD;
+      
+      // From contract: trustAmount += vestedAmount;
+      trustAmount += vestedAmount;
+    }
+    
+    return trustAmount;
+  })();
+
+  // Calculate what would be claimable (total trust - current vouch)
+  const claimableAmount = contractTrustAmount > vouch ? contractTrustAmount - vouch : 0n;
   const safeClaimableAmount = typeof claimableAmount === 'bigint' ? claimableAmount : 0n;
 
   // Determine if claim credit should be disabled and why
@@ -128,7 +149,8 @@ export const ClubActions = ({
     : safeTokenId === 0n ? "Unable to find your member NFT token ID"
     : !active ? "Your membership is not active - you may need to activate it first"
     : badDebt > 0n ? "Cannot claim with outstanding bad debt"
-    : safeClaimableAmount === 0n ? "No credit available to claim"
+    : contractTrustAmount === 0n ? "No trust amount calculated by contract"
+    : safeClaimableAmount === 0n ? "No credit available to claim (already claimed)"
     : null;
 
   // Ensure cannotClaimReason is always a string or null (never an object)
@@ -204,6 +226,24 @@ export const ClubActions = ({
           <div>Has API Key: {debugRpcInfo.hasApiKey ? "✅ Yes" : "❌ No"}</div>
           <div>Environment: {debugRpcInfo.environment}</div>
           <div>Is Client: {debugRpcInfo.isClient ? "✅ Yes" : "❌ No"}</div>
+        </div>
+      </div>
+
+      {/* TEMP DEBUG: Credit Calculation */}
+      <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+        <h3 className="font-medium text-green-800 mb-2">Credit Calculation Debug</h3>
+        <div className="text-xs text-green-700 space-y-1">
+          <div>Base Trust: {format(baseTrust, safeToken)}</div>
+          <div>Prorata Amount: {format(safeProrataAmount, safeToken)}</div>
+          <div>Credit Multiple: {safeCreditMultiple.toString()}</div>
+          <div>Tier Percentage: {safeTierPercentage.toString()}%</div>
+          <div>Percent Vested: {(Number(percentVested) / 1e18 * 100).toFixed(2)}%</div>
+          <div>Contract Trust Amount: {format(contractTrustAmount, safeToken)}</div>
+          <div>Current Vouch: {format(safeVouch, safeToken)}</div>
+          <div>Claimable Amount: {format(safeClaimableAmount, safeToken)}</div>
+          {safeCannotClaimReason && (
+            <div className="font-medium text-red-600">Issue: {safeCannotClaimReason}</div>
+          )}
         </div>
       </div>
 
