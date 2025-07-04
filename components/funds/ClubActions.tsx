@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import { useAccount } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 import {
   ClaimIcon,
   CalendarIcon,
@@ -42,6 +42,13 @@ export const ClubActions = ({
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
+  // Get creditMultiple from contract
+  const { data: creditMultiple, isLoading: creditMultipleLoading } = useReadContract({
+    address: creditVaultContract.address,
+    abi: creditVaultContract.abi,
+    functionName: "creditMultiple",
+  });
+
   // Extract values with safe defaults - do this immediately after hooks
   const {
     name = "",
@@ -63,6 +70,7 @@ export const ClubActions = ({
     memberNftBalance = 0n,
     percentVested = 0n,
     baseTrust = 0n,
+    tierPercentage = 0n,
   } = clubMember || {};
 
   const {
@@ -105,6 +113,42 @@ export const ClubActions = ({
   // Ensure claimableAmount is a safe bigint
   const safeClaimableAmount = typeof claimableAmount === 'bigint' ? claimableAmount : 0n;
 
+  // SMART CONTRACT CALCULATION: Replicate the exact logic from CreditMixin._claimCredit
+  // This is what the contract actually calculates as trustAmount
+  const contractCalculatedTrustAmount = (() => {
+    // From contract: trustAmount = member.baseTrust
+    let trustAmount = baseTrust;
+    
+    // From contract: if (member.isActive) { ... }
+    if (active) {
+      // From contract: uint256 proRataAmount = _calcProRataTrustAmount();
+      const proRataAmount = safeProrataAmount;
+      
+      // From contract: uint256 vestedAmount = _calcVestedTrustAmount(member.updatedAt, proRataAmount);
+      // This uses the same vesting logic but applied to proRataAmount
+      const currentPercentTrust = percentVested < WAD 
+        ? ((WAD - startingPercentTrust) * percentVested) / WAD + startingPercentTrust
+        : WAD;
+      
+      let vestedAmount = (proRataAmount * currentPercentTrust) / WAD;
+      
+      // From contract: if (tierPercent != 0) vestedAmount = vestedAmount * tierPercent / 100;
+      const safeTierPercentage = typeof tierPercentage === 'bigint' ? tierPercentage : 0n;
+      if (safeTierPercentage !== 0n) {
+        vestedAmount = (vestedAmount * safeTierPercentage) / 100n;
+      }
+      
+      // From contract: vestedAmount = vestedAmount * creditMultiple / 1e18;
+      const safeCreditMultiple = typeof creditMultiple === 'bigint' ? creditMultiple : 1000000000000000000n; // 1e18 as default
+      vestedAmount = (vestedAmount * safeCreditMultiple) / WAD;
+      
+      // From contract: trustAmount += vestedAmount;
+      trustAmount += vestedAmount;
+    }
+    
+    return trustAmount;
+  })();
+
   // Determine if claim credit should be disabled and why
   const cannotClaimReason = !isActivated ? "Vault is not activated"
     : !isMember ? "You must be a member to claim credit"
@@ -112,7 +156,7 @@ export const ClubActions = ({
     : safeTokenId === 0n ? "Unable to find your member NFT token ID"
     : !active ? "Your membership is not active - you may need to activate it first"
     : badDebt > 0n ? "Cannot claim with outstanding bad debt"
-    : safeClaimableAmount === 0n ? "No credit available to claim (already claimed or not vested yet)"
+    : contractCalculatedTrustAmount === 0n ? "Contract would calculate 0 trust amount - Union protocol rejects 0 trust updates"
     : null;
 
   // Ensure cannotClaimReason is always a string or null (never an object)
@@ -127,7 +171,7 @@ export const ClubActions = ({
   });
 
   // Track if any data is still loading - moved after all hooks
-  const isDataLoading = clubDataLoading || memberNftDataLoading || clubMemberLoading || vestingDataLoading || prorataDataLoading;
+  const isDataLoading = clubDataLoading || memberNftDataLoading || clubMemberLoading || vestingDataLoading || prorataDataLoading || creditMultipleLoading;
 
   // DEBUG: Add debug info to help troubleshoot button state
   const debugInfo = {
@@ -142,6 +186,9 @@ export const ClubActions = ({
     baseTrust: baseTrust.toString(),
     prorataAmount: safeProrataAmount.toString(),
     effectiveBaseTrust: effectiveBaseTrust.toString(),
+    contractCalculatedTrustAmount: contractCalculatedTrustAmount.toString(),
+    tierPercentage: tierPercentage.toString(),
+    creditMultiple: creditMultiple?.toString() || "loading",
     percentVested: percentVested.toString(),
     startingPercentTrust: startingPercentTrust.toString(),
     totalVested: totalVested.toString(),
@@ -225,6 +272,9 @@ export const ClubActions = ({
           <div>Base Trust: {format(baseTrust, safeToken)}</div>
           <div>Prorata Amount: {format(safeProrataAmount, safeToken)}</div>
           <div>Effective Base Trust: {format(effectiveBaseTrust, safeToken)}</div>
+          <div>Tier Percentage: {tierPercentage.toString()}%</div>
+          <div>Credit Multiple: {creditMultiple?.toString() || "loading"}</div>
+          <div>Contract Trust Amount: {format(contractCalculatedTrustAmount, safeToken)}</div>
           <div>Percent Vested: {(Number(percentVested) / 1e18 * 100).toFixed(2)}%</div>
           <div>Claimable Amount: {format(safeClaimableAmount, safeToken)}</div>
           <div>Button Disabled: {claimCreditButtonProps.disabled ? "❌ Yes" : "✅ No"}</div>
