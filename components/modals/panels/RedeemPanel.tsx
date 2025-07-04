@@ -122,7 +122,7 @@ export const RedeemPanel = ({
     <>
       <Input
         type="number"
-        name="amount"
+        name="shares"
         label="Redeem Amount"
         placeholder="0.0"
         className="mt-4"
