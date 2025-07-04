@@ -23,6 +23,7 @@ import { useModals } from "@/providers/ModalManagerProvider";
 import { REPAY_MODAL } from "@/components/modals/RepayModal";
 import { INVITE_MODAL } from "@/components/modals/InviteModal";
 import { useClubMemberNft } from "@/hooks/useClubMemberNft";
+import { useProrata } from "@/hooks/useProrata";
 
 
 export const ClubActions = ({
@@ -37,6 +38,7 @@ export const ClubActions = ({
   const { data: memberNftData, isLoading: memberNftDataLoading } = useClubMemberNft(clubAddress);
   const { data: clubMember, refetch: refetchClubMember, isLoading: clubMemberLoading } = useClubMember(address, clubAddress);
   const { data: vestingData, isLoading: vestingDataLoading } = useVesting(clubAddress);
+  const { data: prorataData, isLoading: prorataDataLoading } = useProrata(clubAddress);
 
   const creditVaultContract = useCreditVaultContract(clubAddress);
 
@@ -69,6 +71,10 @@ export const ClubActions = ({
     vestedDays = 0,
   } = vestingData || {};
 
+  const {
+    prorataAmount = 0n,
+  } = prorataData || {};
+
   // Ensure all values are safe primitives
   const safeName = String(name || "");
   const safeTokenId = typeof tokenId === 'bigint' ? tokenId : 0n;
@@ -77,15 +83,20 @@ export const ClubActions = ({
   const safeVouch = typeof vouch === 'bigint' ? vouch : 0n;
   const safeOwed = typeof owed === 'bigint' ? owed : 0n;
   const safeToken = token || "USDC";
+  const safeProrataAmount = typeof prorataAmount === 'bigint' ? prorataAmount : 0n;
 
-  // Calculate claimable credit amount using established pattern
+  // Calculate claimable credit amount using prorata + base trust
   const WAD = 10n ** 18n;
-  const startingAmount = baseTrust > 0n && startingPercentTrust > 0n
-    ? (baseTrust * startingPercentTrust) / WAD 
+  
+  // Use prorata amount as the effective base trust if baseTrust is 0
+  const effectiveBaseTrust = baseTrust > 0n ? baseTrust : safeProrataAmount;
+  
+  const startingAmount = effectiveBaseTrust > 0n && startingPercentTrust > 0n
+    ? (effectiveBaseTrust * startingPercentTrust) / WAD 
     : 0n;
   
-  const additionalVested = baseTrust > startingAmount && percentVested > 0n
-    ? ((baseTrust - startingAmount) * percentVested) / WAD 
+  const additionalVested = effectiveBaseTrust > startingAmount && percentVested > 0n
+    ? ((effectiveBaseTrust - startingAmount) * percentVested) / WAD 
     : 0n;
   
   const totalVested = startingAmount + additionalVested;
@@ -116,7 +127,7 @@ export const ClubActions = ({
   });
 
   // Track if any data is still loading - moved after all hooks
-  const isDataLoading = clubDataLoading || memberNftDataLoading || clubMemberLoading || vestingDataLoading;
+  const isDataLoading = clubDataLoading || memberNftDataLoading || clubMemberLoading || vestingDataLoading || prorataDataLoading;
 
   // DEBUG: Add debug info to help troubleshoot button state
   const debugInfo = {
@@ -129,6 +140,8 @@ export const ClubActions = ({
     claimableAmount: safeClaimableAmount.toString(),
     vouch: safeVouch.toString(),
     baseTrust: baseTrust.toString(),
+    prorataAmount: safeProrataAmount.toString(),
+    effectiveBaseTrust: effectiveBaseTrust.toString(),
     percentVested: percentVested.toString(),
     startingPercentTrust: startingPercentTrust.toString(),
     totalVested: totalVested.toString(),
@@ -210,6 +223,8 @@ export const ClubActions = ({
           <div>Bad Debt: {format(badDebt, safeToken)}</div>
           <div>Current Vouch: {format(safeVouch, safeToken)}</div>
           <div>Base Trust: {format(baseTrust, safeToken)}</div>
+          <div>Prorata Amount: {format(safeProrataAmount, safeToken)}</div>
+          <div>Effective Base Trust: {format(effectiveBaseTrust, safeToken)}</div>
           <div>Percent Vested: {(Number(percentVested) / 1e18 * 100).toFixed(2)}%</div>
           <div>Claimable Amount: {format(safeClaimableAmount, safeToken)}</div>
           <div>Button Disabled: {claimCreditButtonProps.disabled ? "❌ Yes" : "✅ No"}</div>
