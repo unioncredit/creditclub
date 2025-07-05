@@ -66,7 +66,7 @@ export const FundStatsPanel = ({
     },
     {
       name: "Total Supply",
-      value: `${formatDecimals(totalSupply, decimals)}`
+      value: `${formatDecimals(totalSupply, decimals, 0)}` // Supply should be a whole number
     },
   ];
 

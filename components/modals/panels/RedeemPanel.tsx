@@ -94,7 +94,11 @@ export const RedeemPanel = ({
     erc4626Address: clubAddress,
   });
 
-  const isLocked = !activated || locked || Number(lockupEnd) > 0;
+  // A club is locked if it hasn't been activated yet or the current time is still within the lock-up period.
+  // `locked` already encapsulates both of these checks via the `useClubActivation` hook so there's no need for
+  // the additional `Number(lockupEnd) > 0` condition which incorrectly kept the club locked even after the
+  // lock-up period had expired.
+  const isLocked = !activated || locked;
 
   const redeemButtonProps = useWrite({
     ...creditVaultContract,
@@ -112,7 +116,7 @@ export const RedeemPanel = ({
         header: `Your redeem was successful`,
         title: "Redeem",
         content: <p className="font-mono mt-2">You successfully
-          redeemed {formatDecimals(amountReceived, receiveTokenDecimals, 2, false)} {receiveTokenSymbol}</p>,
+          redeemed {formatDecimals(amountReceived, receiveTokenDecimals, displayDigits, false)} {receiveTokenSymbol}</p>,
         action: {
           icon: WalletIcon,
           label: "Add token to wallet",
@@ -137,6 +141,8 @@ export const RedeemPanel = ({
 
     return null;
   };
+
+  const displayDigits = Math.min(receiveTokenDecimals ?? 18, 6); // Show up to 6 decimals (or fewer if token has less)
 
   return (
     <>
@@ -166,8 +172,8 @@ export const RedeemPanel = ({
       <div className="bg-stone-100 p-1 rounded-2xl">
         <Input
           disabled={true}
-          placeHolder="0.0"
-          value={formatDecimals(amountReceived, receiveTokenDecimals, 2, false)}
+          placeholder="0.0"
+          value={formatDecimals(amountReceived, receiveTokenDecimals, displayDigits, false)}
           suffix={<Usdc />}
         />
       </div>
@@ -196,7 +202,7 @@ export const RedeemPanel = ({
               ? "Enter an amount"
               : sharesRaw > clubTokenBalance
                 ? "Insufficient balance"
-                : `Redeem ${formatDecimals(amountReceived, receiveTokenDecimals, 2)} ${receiveTokenSymbol}`}
+                : `Redeem ${formatDecimals(amountReceived, receiveTokenDecimals, displayDigits)} ${receiveTokenSymbol}`}
         {...redeemButtonProps}
       />
     </>
