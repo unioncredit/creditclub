@@ -150,6 +150,16 @@ export const RedeemPanel = ({
     query: { enabled: !!address },
   });
 
+  // Check specific lockup conditions that contract might be checking
+  const { data: activationDate } = useReadContract({
+    ...creditVaultContract,
+    functionName: "activationDate",
+    query: { enabled: true },
+  });
+
+  // Get current timestamp for comparison
+  const currentTimestamp = Math.floor(Date.now() / 1000);
+
   // Simulate the redeem call to catch errors early
   const { data: simulateData, error: simulateError } = useSimulateContract({
     ...creditVaultContract,
@@ -194,6 +204,32 @@ export const RedeemPanel = ({
     totalSupply: totalSupply?.toString() || "loading", 
     userActualBalance: userBalance?.toString() || "loading",
     balanceMismatch: userBalance?.toString() !== clubTokenBalance.toString(),
+    // NEW: Specific lockup debugging
+    activationDate: activationDate?.toString() || "loading", 
+    currentTimestamp: currentTimestamp.toString(),
+          lockupEndReached: activationDate && Number(activationDate) > 0 
+        ? currentTimestamp >= Number(activationDate) + Number(clubData.lockupPeriod || 0) 
+        : "unknown",
+    activationDateSet: activationDate ? Number(activationDate) > 0 : "unknown",
+    timeSinceActivation: activationDate && Number(activationDate) > 0 
+      ? currentTimestamp - Number(activationDate) 
+      : "not activated",
+          actualLockupExpired: activationDate && Number(activationDate) > 0 
+        ? currentTimestamp >= Number(activationDate) + Number(clubData.lockupPeriod || 0) 
+        : "unknown",
+  });
+
+  // Additional debugging for membership and credit requirements
+  console.log("👤 Membership Debug:", {
+    isMember: clubMember.isMember,
+    tokenId: clubMember.tokenId?.toString() || "none",
+    memberNftAddress: clubData.memberNftAddress,
+    clubTokenBalance: clubTokenBalance.toString(),
+    hasClubTokens: clubTokenBalance > 0n,
+    userAddress: address,
+    active: clubMember.active,
+    badDebt: clubMember.badDebt?.toString() || "0",
+    baseTrust: clubMember.baseTrust?.toString() || "0",
   });
 
   const isLocked = !activated || locked;
