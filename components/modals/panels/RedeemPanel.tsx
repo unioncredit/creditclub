@@ -232,6 +232,71 @@ export const RedeemPanel = ({
     baseTrust: clubMember.baseTrust?.toString() || "0",
   });
 
+  // DECIMAL DEBUGGING - Check for decimal conversion issues
+  console.log("🔢 Decimal Debug:", {
+    // Input values
+    sharesFormatted: shares.formatted,
+    sharesDisplay: shares.display, 
+    sharesRaw: sharesRaw.toString(),
+    
+    // Decimal info
+    clubTokenDecimals: clubTokenDecimals,
+    assetTokenDecimals: assetTokenDecimals,
+    sendTokenDecimals: sendTokenDecimals,
+    receiveTokenDecimals: receiveTokenDecimals,
+    
+    // Balance comparisons
+    clubTokenBalance: clubTokenBalance.toString(),
+    userBalance: userBalance?.toString() || "loading",
+    
+    // Preview amounts
+    amountReceived: amountReceived.toString(),
+    
+    // Redeem function arguments
+    redeemArgs: [sharesRaw.toString(), address, address],
+    
+    // Check if shares amount is valid
+    sharesInCorrectDecimals: sharesRaw,
+    isValidSharesAmount: sharesRaw > 0n && sharesRaw <= clubTokenBalance,
+    
+    // Decimal conversion check
+    sharesInHumanReadable: Number(sharesRaw) / Math.pow(10, sendTokenDecimals),
+    amountInHumanReadable: Number(amountReceived) / Math.pow(10, receiveTokenDecimals),
+    
+    // Check for very small amounts that might cause issues
+    sharesTooSmall: sharesRaw < BigInt(Math.pow(10, sendTokenDecimals - 6)), // Less than 0.000001 tokens
+    amountTooSmall: amountReceived < BigInt(Math.pow(10, receiveTokenDecimals - 6)), // Less than 0.000001 assets
+  });
+
+  // ERC4626 LIMITS DEBUGGING - Check if we're exceeding vault limits
+  console.log("🏦 ERC4626 Limits Debug:", {
+    // Compare against vault limits
+    sharesRaw: sharesRaw.toString(),
+    maxRedeemShares: maxRedeemShares?.toString() || "loading",
+    exceedsMaxRedeem: maxRedeemShares ? sharesRaw > maxRedeemShares : "unknown",
+    
+    amountReceived: amountReceived.toString(), 
+    maxWithdrawAmount: maxWithdrawAmount?.toString() || "loading",
+    exceedsMaxWithdraw: maxWithdrawAmount ? amountReceived > maxWithdrawAmount : "unknown",
+    
+    // Check for zero amounts that might cause issues
+    sharesIsZero: sharesRaw === 0n,
+    amountIsZero: amountReceived === 0n,
+    
+    // Check for dust amounts (very small values)
+    dustThresholdShares: BigInt(Math.pow(10, sendTokenDecimals - 2)),
+    isDustAmountShares: sharesRaw > 0n && sharesRaw < BigInt(Math.pow(10, sendTokenDecimals - 2)),
+    
+    dustThresholdAssets: BigInt(Math.pow(10, receiveTokenDecimals - 2)), 
+    isDustAmountAssets: amountReceived > 0n && amountReceived < BigInt(Math.pow(10, receiveTokenDecimals - 2)),
+    
+    // Check for precision loss in conversion
+    previewRedeemMatches: true, // We'll check this separately
+    
+    // Ratio check
+    shareToAssetRatio: amountReceived > 0n ? Number(sharesRaw) / Number(amountReceived) : "infinite",
+  });
+
   const isLocked = !activated || locked;
   
   const isDisabled = !!errors.shares || sharesRaw <= 0n || clubTokenBalance < sharesRaw || isLocked;
