@@ -45,7 +45,7 @@ export const ToastsProvider = ({ children }: { children: React.ReactNode; }) => 
         {toasts.map(({ id, link, title, variant, content }) => (
           <Notification
             key={id}
-            link={link}
+            {...(link ? { link } : {})}
             title={title}
             variant={variant}
             content={content}
