@@ -130,6 +130,26 @@ export const RedeemPanel = ({
     query: { enabled: true },
   });
 
+  // Check more vault state conditions that could cause InvalidState
+  const { data: totalAssets } = useReadContract({
+    ...creditVaultContract,
+    functionName: "totalAssets",
+    query: { enabled: true },
+  });
+
+  const { data: totalSupply } = useReadContract({
+    ...creditVaultContract,
+    functionName: "totalSupply", 
+    query: { enabled: true },
+  });
+
+  const { data: userBalance } = useReadContract({
+    ...creditVaultContract,
+    functionName: "balanceOf",
+    args: [address!],
+    query: { enabled: !!address },
+  });
+
   // Simulate the redeem call to catch errors early
   const { data: simulateData, error: simulateError } = useSimulateContract({
     ...creditVaultContract,
@@ -170,6 +190,10 @@ export const RedeemPanel = ({
     isKilled: isKilled || false,
     openRaise: openRaise || false,
     vaultTokenEnabled: vaultTokenEnabled || false,
+    totalAssets: totalAssets?.toString() || "loading",
+    totalSupply: totalSupply?.toString() || "loading", 
+    userActualBalance: userBalance?.toString() || "loading",
+    balanceMismatch: userBalance?.toString() !== clubTokenBalance.toString(),
   });
 
   const isLocked = !activated || locked;
