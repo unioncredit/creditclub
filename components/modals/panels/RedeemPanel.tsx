@@ -50,7 +50,6 @@ export const RedeemPanel = ({
     image,
     symbol: clubTokenSymbol,
     decimals: clubTokenDecimals,
-    lockupEnd,
   } = clubData;
 
   const {
