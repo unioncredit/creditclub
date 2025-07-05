@@ -9,7 +9,7 @@ import {
 import { useModals } from "@/providers/ModalManagerProvider";
 import { useClubData } from "@/hooks/useClubData";
 import { Address, erc20Abi } from "viem";
-import { useAccount, useWatchAsset, useReadContract } from "wagmi";
+import { useAccount, useWatchAsset, useReadContract, useSimulateContract } from "wagmi";
 import { useClubMember } from "@/hooks/useClubMember";
 import { useErc20Token } from "@/hooks/useErc20Token";
 import { formatDecimals } from "@/lib/format";
@@ -111,6 +111,17 @@ export const RedeemPanel = ({
     query: { enabled: !!address },
   });
 
+  // Simulate the redeem call to catch errors early
+  const { data: simulateData, error: simulateError } = useSimulateContract({
+    ...creditVaultContract,
+    functionName: "redeem",
+    args: [sharesRaw, address!, address!],
+    query: { 
+      enabled: !!address && sharesRaw > 0n,
+      retry: false,
+    },
+  });
+
   // Debug logs
   console.log("🔍 RedeemPanel Debug:", {
     sharesFormatted: shares.formatted,
@@ -129,6 +140,13 @@ export const RedeemPanel = ({
     clubAddress,
     canRedeem: sharesRaw <= (maxRedeemShares || 0n),
     canWithdraw: amountReceived <= (maxWithdrawAmount || 0n),
+    simulateSuccess: !!simulateData,
+    simulateError: simulateError?.message || "none",
+    simulateErrorDetails: simulateError ? {
+      cause: (simulateError as any).cause,
+      shortMessage: (simulateError as any).shortMessage,
+      details: (simulateError as any).details,
+    } : null,
   });
 
   const isLocked = !activated || locked;
@@ -240,6 +258,11 @@ export const RedeemPanel = ({
             console.error("❌ Redeem transaction failed:", {
               error: error.message || error,
               errorCode: error.code,
+              errorData: error.data,
+              errorReason: error.reason,
+              errorShortMessage: error.shortMessage,
+              errorDetails: error.details,
+              fullError: JSON.stringify(error, null, 2),
               sharesRaw: sharesRaw.toString(),
               amountReceived: amountReceived.toString(),
               userAddress: address,
