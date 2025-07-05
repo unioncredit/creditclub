@@ -111,6 +111,25 @@ export const RedeemPanel = ({
     query: { enabled: !!address },
   });
 
+  // Check additional vault state
+  const { data: isKilled } = useReadContract({
+    ...creditVaultContract,
+    functionName: "isKilled",
+    query: { enabled: true },
+  });
+
+  const { data: openRaise } = useReadContract({
+    ...creditVaultContract,
+    functionName: "openRaise",
+    query: { enabled: true },
+  });
+
+  const { data: vaultTokenEnabled } = useReadContract({
+    ...creditVaultContract,
+    functionName: "vaultTokenEnabled",
+    query: { enabled: true },
+  });
+
   // Simulate the redeem call to catch errors early
   const { data: simulateData, error: simulateError } = useSimulateContract({
     ...creditVaultContract,
@@ -147,6 +166,10 @@ export const RedeemPanel = ({
       shortMessage: (simulateError as any).shortMessage,
       details: (simulateError as any).details,
     } : null,
+    // Additional vault state
+    isKilled: isKilled || false,
+    openRaise: openRaise || false,
+    vaultTokenEnabled: vaultTokenEnabled || false,
   });
 
   const isLocked = !activated || locked;
@@ -236,6 +259,7 @@ export const RedeemPanel = ({
         amount={sharesRaw}
         disabled={isDisabled}
         spender={clubAddress}
+        requireApproval={false}
         tokenContract={{
           abi: erc20Abi,
           address: clubAddress,
