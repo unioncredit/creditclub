@@ -6,6 +6,7 @@ import {
 } from "@unioncredit/ui";
 import { Address, erc20Abi } from "viem";
 import { useAccount, useWatchAsset } from "wagmi";
+import { useEffect } from "react";
 
 import { useModals } from "@/providers/ModalManagerProvider";
 import { useClubData } from "@/hooks/useClubData";
@@ -76,9 +77,9 @@ export const StakePanel = ({
     if (amount.raw > sendTokenBalance) {
       return `Only ${formatDecimals(sendTokenBalance, sendTokenDecimals)} ${sendTokenSymbol} Available`;
     }
-    // Check if the amount would result in 0 shares (prevent rounding to zero)
+    // Don't show "0 shares" error while preview is loading
     if (amount.raw > 0n && amountReceived === 0n) {
-      return "Amount too small - would result in 0 shares";
+      return; // Return nothing while preview is loading
     }
   };
 
@@ -98,6 +99,14 @@ export const StakePanel = ({
     shares: amountRaw,
     erc4626Address: clubData?.stakingAddress,
   });
+
+  // Re-run validation when preview data changes to fix "0 shares" error on first keystroke
+  useEffect(() => {
+    if (Object.keys(values).length > 0 && amountRaw > 0n) {
+      // Trigger re-validation when preview data becomes available
+      setRawValue("amount", amountRaw, false);
+    }
+  }, [amountReceived]);
 
   const inputError = () => {
     if (errors.amount) {
