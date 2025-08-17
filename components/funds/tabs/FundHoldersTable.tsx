@@ -1,7 +1,10 @@
 import {
-  ColumnDef
+  ColumnDef,
+  getCoreRowModel,
+  getSortedRowModel
 } from "@tanstack/react-table"
 import { Address } from "viem";
+import { useMemo, useState } from "react";
 
 import { DataTable } from "@/components/ui/DataTable";
 import { formatDecimals, truncateAddress } from "@/lib/format";
@@ -10,6 +13,9 @@ import { useTokenPriceData } from "@/hooks/useTokenPriceData";
 import { useClubData } from "@/hooks/useClubData";
 import { Avatar } from "@/components/shared/Avatar";
 import { useHolders } from "@/hooks/useHolders";
+import { useBatchEns } from "@/hooks/useBatchEns";
+import { useClubHolders } from "@/hooks/useClubHolders";
+import { Table } from "@/components/shared/Table";
 
 interface FundHolderRow {
   id: number;
@@ -65,7 +71,10 @@ export const FundHoldersTable = ({
 }: {
   clubAddress: Address;
 }) => {
-  const { data: holders } = useHolders();
+  const { data: holders = [], isLoading } = useClubHolders(clubAddress);
+  const addresses = useMemo(() => holders.map(h => h.id), [holders]);
+  const { data: ensData, isLoading: ensLoading } = useBatchEns(addresses);
+
   const { data: clubData } = useClubData(clubAddress);
   const { data: priceData }  = useTokenPriceData(clubAddress);
 
@@ -79,6 +88,17 @@ export const FundHoldersTable = ({
     marketValue: `$${(parseFloat(formatDecimals(amount, decimals)) * tokenPrice).toFixed(2)}`,
   }));
 
-  // @ts-ignore
-  return <DataTable columns={columns} data={rows} />
+  const table = useTable({
+    data: holders,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  });
+
+  return (
+    <Table
+      table={table}
+      isLoading={isLoading || ensLoading}
+    />
+  );
 };
